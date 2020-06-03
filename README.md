@@ -23,3 +23,4 @@ Parallel läuft die Entwicklung einer Android App mit den gleichen Funktionen
 - Implementierung von Statuseffekten nach dem Regelwerk von [Das schwarze Auge](https://ulisses-spiele.de/spielsysteme/das-schwarze-auge/) Edition 5
 - Vorlagen für häufig genutzte Gegner
 - Würfel und Modifikatoren
+
