@@ -1,9 +1,9 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, text, br, h2, ul, li, b, a)
+import Html exposing (Html, button, div, text, br, h1, h2, ul, li, b, a)
 import Html.Events exposing (onClick)
-import Html.Attributes exposing (href)
+import Html.Attributes as Attr exposing (href, class)
 
 type alias Model =
     { count : Int }
@@ -32,16 +32,27 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [  br [] []
-        , h2 [] [ text "Meine Adresse" ]
-        , ul [] [ li [] [ b[] [ text "Name: " ], text "Herr/Frau Mustermann" ]
-                , li [] [ b[] [ text "Straße und Hausnummer: " ], text "Von-Seckendorff-Platz 1" ]
-                , li [] [ b[] [ text "Postleitzahl und Ort: " ], text "06120 Halle" ]
-                , li [] [ b[] [ text "Land: " ], text "Deutschland" ]
-                , li [] [ b[] [ text "Telefonnummer: " ], text "0345 12345" ]
-                , li [] [ b[] [ text "email: " ], a [ href "mailto:mustermann@informatik.uni-halle.de" ] [ text "mustermann@informatik.uni-halle.de" ] ]
-                , li [] [ b[] [ text "Web-Seite: " ], a [ href "http://www.informatik.uni-halle.de" ] [ text "http://www.informatik.uni-halle.de" ] ]
+        [ Html.section [class "hero is-primary is-bold"]
+            [ div [class "hero-body"]
+                [ div [class "container"]
+                    [ h1 [class "title"] [text "Pen & Paper Manager"]
+                    , h2 [class "subtitle"] [text "Für \"Das schwarze Auge\" Version 5"]
+                    ]
                 ]
+            ]
+        , body
+        , Html.footer [class "footer"]
+            [ div [class "content has-text-centered"]
+                [ Html.p [] [ text "Entwickelt von Laura Spilling und Stefan Kranz" ]
+                , Html.p [] [ text "Einführung in das World Wide Web" ]
+                ]
+            ]
+        ]
+
+body : Html Msg
+body =
+    div []
+        [text "Hier kommt Inhalt rein :)"
         ]
 
 

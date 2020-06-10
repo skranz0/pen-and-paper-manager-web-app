@@ -5178,11 +5178,16 @@ var $author$project$Main$update = F2(
 				{count: model.count - 1});
 		}
 	});
-var $elm$html$Html$a = _VirtualDom_node('a');
-var $elm$html$Html$b = _VirtualDom_node('b');
-var $elm$html$Html$br = _VirtualDom_node('br');
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$h2 = _VirtualDom_node('h2');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$Main$body = A2(
+	$elm$html$Html$div,
+	_List_Nil,
+	_List_fromArray(
+		[
+			$elm$html$Html$text('Hier kommt Inhalt rein :)')
+		]));
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -5191,149 +5196,95 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			key,
 			$elm$json$Json$Encode$string(string));
 	});
-var $elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
-};
-var $elm$html$Html$li = _VirtualDom_node('li');
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$html$Html$footer = _VirtualDom_node('footer');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$h2 = _VirtualDom_node('h2');
+var $elm$html$Html$p = _VirtualDom_node('p');
+var $elm$html$Html$section = _VirtualDom_node('section');
 var $author$project$Main$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
-				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
-				$elm$html$Html$h2,
-				_List_Nil,
+				$elm$html$Html$section,
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Meine Adresse')
-					])),
-				A2(
-				$elm$html$Html$ul,
-				_List_Nil,
+						$elm$html$Html$Attributes$class('hero is-primary is-bold')
+					]),
 				_List_fromArray(
 					[
 						A2(
-						$elm$html$Html$li,
-						_List_Nil,
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('hero-body')
+							]),
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$b,
-								_List_Nil,
+								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$text('Name: ')
-									])),
-								$elm$html$Html$text('Herr/Frau Mustermann')
-							])),
-						A2(
-						$elm$html$Html$li,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$b,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Straße und Hausnummer: ')
-									])),
-								$elm$html$Html$text('Von-Seckendorff-Platz 1')
-							])),
-						A2(
-						$elm$html$Html$li,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$b,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Postleitzahl und Ort: ')
-									])),
-								$elm$html$Html$text('06120 Halle')
-							])),
-						A2(
-						$elm$html$Html$li,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$b,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Land: ')
-									])),
-								$elm$html$Html$text('Deutschland')
-							])),
-						A2(
-						$elm$html$Html$li,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$b,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Telefonnummer: ')
-									])),
-								$elm$html$Html$text('0345 12345')
-							])),
-						A2(
-						$elm$html$Html$li,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$b,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('email: ')
-									])),
-								A2(
-								$elm$html$Html$a,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$href('mailto:mustermann@informatik.uni-halle.de')
+										$elm$html$Html$Attributes$class('container')
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('mustermann@informatik.uni-halle.de')
+										A2(
+										$elm$html$Html$h1,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('title')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Pen & Paper Manager')
+											])),
+										A2(
+										$elm$html$Html$h2,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('subtitle')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Für \"Das schwarze Auge\" Version 5')
+											]))
 									]))
-							])),
+							]))
+					])),
+				$author$project$Main$body,
+				A2(
+				$elm$html$Html$footer,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('footer')
+					]),
+				_List_fromArray(
+					[
 						A2(
-						$elm$html$Html$li,
-						_List_Nil,
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('content has-text-centered')
+							]),
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$b,
+								$elm$html$Html$p,
 								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$text('Web-Seite: ')
+										$elm$html$Html$text('Entwickelt von Laura Spilling und Stefan Kranz')
 									])),
 								A2(
-								$elm$html$Html$a,
+								$elm$html$Html$p,
+								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$href('http://www.informatik.uni-halle.de')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('http://www.informatik.uni-halle.de')
+										$elm$html$Html$text('Einführung in das World Wide Web')
 									]))
 							]))
 					]))
