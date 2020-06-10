@@ -14,7 +14,7 @@ Diese Web App soll das verhindern, indem die Berechnungen automatisiert werden.
 
 Außerdem ist es schön eine Übersicht zu haben.
 
-Parallel läuft die Entwicklung einer Android App mit den gleichen Funktionen
+Parallel läuft die Entwicklung einer [Android App](https://github.com/skranz27/PnPManager) mit den gleichen Funktionen
 
 ## geplante Funktionen
 

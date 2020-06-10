@@ -5,7 +5,6 @@ import Browser.Navigation as Nav
 import Html
 import Http exposing (expectJson)
 import Json.Decode exposing (Decoder)
-import List
 import Url
 
 main =
