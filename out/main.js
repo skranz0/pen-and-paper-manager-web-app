@@ -5212,7 +5212,7 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$section,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('hero is-primary is-bold')
+						$elm$html$Html$Attributes$class('hero is-primary is-bold animate__animated animate__fadeInDown')
 					]),
 				_List_fromArray(
 					[
@@ -5260,7 +5260,7 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$footer,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('footer')
+						$elm$html$Html$Attributes$class('footer animate__animated animate__fadeInUp')
 					]),
 				_List_fromArray(
 					[

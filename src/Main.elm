@@ -32,7 +32,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ Html.section [class "hero is-primary is-bold"]
+        [ Html.section [class "hero is-primary is-bold animate__animated animate__fadeInDown"]
             [ div [class "hero-body"]
                 [ div [class "container"]
                     [ h1 [class "title"] [text "Pen & Paper Manager"]
@@ -41,7 +41,7 @@ view model =
                 ]
             ]
         , body
-        , Html.footer [class "footer"]
+        , Html.footer [class "footer animate__animated animate__fadeInUp"]
             [ div [class "content has-text-centered"]
                 [ Html.p [] [ text "Entwickelt von Laura Spilling und Stefan Kranz" ]
                 , Html.p [] [ text "Einführung in das World Wide Web" ]
