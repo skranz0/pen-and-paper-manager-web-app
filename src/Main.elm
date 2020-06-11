@@ -5,26 +5,28 @@ import Html exposing (Html, button, div, text, br, h1, h2, ul, li, b, a)
 import Html.Events exposing (onClick)
 import Html.Attributes as Attr exposing (href, class)
 import Json.Decode
+import Http
 
 type alias Model =
-    { name : Maybe String
-    , health : Maybe Int
-    , armor : Maybe Int
-     }
-
-
-initialModel : Model
-initialModel =
-    { name = Nothing
-    , health = Nothing
-    , armor = Nothing
+    { enemy : Character
+    , showString : String
     }
+
+type Character
+    = Enemy String Int Int
 
 init : () -> (Model, Cmd Msg)
 init _ = 
-    (initialModel
+    ( 
+        { enemy = initEnemy
+        , showString = ""
+        }
     , Cmd.none
     )
+
+initEnemy : Character
+initEnemy =
+    Enemy "none" 0 0
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -32,18 +34,39 @@ subscriptions model =
 
 
 type Msg
-    = LoadEnemy String
+    = LoadEnemy String -- call this with the name of the enemy to load its values into the enemy object
+    | EnemyLoaded (Result Http.Error Character)
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         LoadEnemy enemy ->
-            ({ model | name = Just (Json.Decode.field "name" Json.Decode.string) }, Cmd.none)
-                --(model.health = Json.Decode.field "health" Json.Decode.int)
-                --(model.armor = Json.Decode.field "armor" Json.Decode.int)
+            ( model
+            , Http.get
+                { url = "../res/"++enemy++".json"
+                , expect =
+                    Http.expectJson EnemyLoaded parseEnemy
+                }
+            )
+        
+        EnemyLoaded (Ok newEnemy) ->
+            ( { model | enemy = newEnemy }, Cmd.none )
 
-        _ -> (model, Cmd.none)
+        EnemyLoaded (Err error) ->
+            case error of
+                Http.BadBody errorMsg ->
+                    ( { model | showString = "Error:  " ++ errorMsg }, Cmd.none )
+
+                _ ->
+                    ( { model | showString = "Error:  " }, Cmd.none )
+
+parseEnemy : Json.Decode.Decoder Character
+parseEnemy =
+    Json.Decode.map3 Enemy
+        (Json.Decode.field "name" Json.Decode.string)
+        (Json.Decode.field "health" Json.Decode.int)
+        (Json.Decode.field "armor" Json.Decode.int)
 
 view : Model -> Html Msg
 view model =
