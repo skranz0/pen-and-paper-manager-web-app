@@ -4,6 +4,7 @@ import Browser
 import Html exposing (Html, button, div, text, br, h1, h2, ul, li, b, a)
 import Html.Events exposing (onClick)
 import Html.Attributes as Attr exposing (href, class)
+import Json.Decode
 
 type alias Model =
     { count : Int }
@@ -13,20 +14,26 @@ initialModel : Model
 initialModel =
     { count = 0 }
 
+init : () -> (Model, Cmd Msg)
+init _ = 
+    (initialModel
+    , Cmd.none
+    )
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
+
 
 type Msg
     = Increment
     | Decrement
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
-        Increment ->
-            { model | count = model.count + 1 }
-
-        Decrement ->
-            { model | count = model.count - 1 }
+        _ -> (model, Cmd.none)
 
 
 view : Model -> Html Msg
@@ -66,8 +73,9 @@ footer =
 
 main : Program () Model Msg
 main =
-    Browser.sandbox
-        { init = initialModel
+    Browser.element
+        { init = init
         , view = view
         , update = update
+        , subscriptions = subscriptions
         }
