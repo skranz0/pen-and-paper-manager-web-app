@@ -7,12 +7,18 @@ import Html.Attributes as Attr exposing (href, class)
 import Json.Decode
 
 type alias Model =
-    { count : Int }
+    { name : Maybe String
+    , health : Maybe Int
+    , armor : Maybe Int
+     }
 
 
 initialModel : Model
 initialModel =
-    { count = 0 }
+    { name = Nothing
+    , health = Nothing
+    , armor = Nothing
+    }
 
 init : () -> (Model, Cmd Msg)
 init _ = 
@@ -26,15 +32,18 @@ subscriptions model =
 
 
 type Msg
-    = Increment
-    | Decrement
+    = LoadEnemy String
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
-        _ -> (model, Cmd.none)
+        LoadEnemy enemy ->
+            ({ model | name = Just (Json.Decode.field "name" Json.Decode.string) }, Cmd.none)
+                --(model.health = Json.Decode.field "health" Json.Decode.int)
+                --(model.armor = Json.Decode.field "armor" Json.Decode.int)
 
+        _ -> (model, Cmd.none)
 
 view : Model -> Html Msg
 view model =
