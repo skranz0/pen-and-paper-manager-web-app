@@ -44,7 +44,7 @@ update msg model =
         LoadEnemy enemy ->
             ( model
             , Http.get
-                { url = "../res/"++enemy++".json"
+                { url = "./res/"++enemy++".json"
                 , expect =
                     Http.expectJson EnemyLoaded parseEnemy
                 }
@@ -79,7 +79,7 @@ view model =
 body : Html Msg
 body =
     div []
-        [text "Hier kommt Inhalt rein :)"
+        [button [ Html.Events.onClick <| LoadEnemy "Ork" ] [ text "Ork laden" ]
         ]
 
 header : Html Msg

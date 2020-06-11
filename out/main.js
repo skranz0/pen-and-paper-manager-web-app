@@ -6145,7 +6145,7 @@ var $author$project$Main$update = F2(
 				$elm$http$Http$get(
 					{
 						expect: A2($elm$http$Http$expectJson, $author$project$Main$EnemyLoaded, $author$project$Main$parseEnemy),
-						url: '../res/' + (enemy + '.json')
+						url: './res/' + (enemy + '.json')
 					}));
 		} else {
 			if (msg.a.$ === 'Ok') {
@@ -6174,7 +6174,28 @@ var $author$project$Main$update = F2(
 			}
 		}
 	});
+var $author$project$Main$LoadEnemy = function (a) {
+	return {$: 'LoadEnemy', a: a};
+};
+var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$Main$body = A2(
@@ -6182,7 +6203,17 @@ var $author$project$Main$body = A2(
 	_List_Nil,
 	_List_fromArray(
 		[
-			$elm$html$Html$text('Hier kommt Inhalt rein :)')
+			A2(
+			$elm$html$Html$button,
+			_List_fromArray(
+				[
+					$elm$html$Html$Events$onClick(
+					$author$project$Main$LoadEnemy('Ork'))
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Ork laden')
+				]))
 		]));
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
