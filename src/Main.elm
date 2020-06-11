@@ -79,7 +79,7 @@ view model =
 body : Html Msg
 body =
     div []
-        [button [ Html.Events.onClick <| LoadEnemy "Ork" ] [ text "Ork laden" ]
+        [button [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork laden" ]
         ]
 
 header : Html Msg
