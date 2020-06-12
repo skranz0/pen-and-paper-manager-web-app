@@ -4,35 +4,87 @@ import Browser
 import Html exposing (Html, button, div, text, br, h1, h2, ul, li, b, a)
 import Html.Events exposing (onClick)
 import Html.Attributes as Attr exposing (href, class)
+import Json.Decode
+import Http
 
 type alias Model =
-    { count : Int }
+    { enemy : Character
+    , showString : String
+    }
 
+type Character
+    = Enemy String Int Int
 
-initialModel : Model
-initialModel =
-    { count = 0 }
+init : () -> (Model, Cmd Msg)
+init _ = 
+    ( 
+        { enemy = initEnemy
+        , showString = ""
+        }
+    , Cmd.none
+    )
+
+initEnemy : Character
+initEnemy =
+    Enemy "none" 0 0
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
 
 
 type Msg
-    = Increment
-    | Decrement
+    = LoadEnemy String -- call this with the name of the enemy to load its values into the enemy object
+    | EnemyLoaded (Result Http.Error Character)
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
-        Increment ->
-            { model | count = model.count + 1 }
+        LoadEnemy enemy ->
+            ( model
+            , Http.get
+                { url = "./res/"++enemy++".json"
+                , expect =
+                    Http.expectJson EnemyLoaded parseEnemy
+                }
+            )
+        
+        EnemyLoaded (Ok newEnemy) ->
+            ( { model | enemy = newEnemy }, Cmd.none )
 
-        Decrement ->
-            { model | count = model.count - 1 }
+        EnemyLoaded (Err error) ->
+            case error of
+                Http.BadBody errorMsg ->
+                    ( { model | showString = "Error:  " ++ errorMsg }, Cmd.none )
 
+                _ ->
+                    ( { model | showString = "Error:  " }, Cmd.none )
+
+parseEnemy : Json.Decode.Decoder Character
+parseEnemy =
+    Json.Decode.map3 Enemy
+        (Json.Decode.field "name" Json.Decode.string)
+        (Json.Decode.field "health" Json.Decode.int)
+        (Json.Decode.field "armor" Json.Decode.int)
 
 view : Model -> Html Msg
 view model =
     div []
-        [ Html.section [class "hero is-primary is-bold animate__animated animate__fadeInDown"]
+        [ header
+        , body
+        , footer
+        ]
+
+body : Html Msg
+body =
+    div []
+        [button [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork laden" ]
+        ]
+
+header : Html Msg
+header =
+    Html.section [class "hero is-primary is-bold animate__animated animate__fadeInDown"]
             [ div [class "hero-body"]
                 [ div [class "container"]
                     [ h1 [class "title"] [text "Pen & Paper Manager"]
@@ -40,26 +92,22 @@ view model =
                     ]
                 ]
             ]
-        , body
-        , Html.footer [class "footer animate__animated animate__fadeInUp"]
+
+footer : Html Msg
+footer =
+    Html.footer [class "footer animate__animated animate__fadeInUp"]
             [ div [class "content has-text-centered"]
                 [ Html.p [] [ text "Entwickelt von Laura Spilling und Stefan Kranz" ]
                 , Html.p [] [ text "Einführung in das World Wide Web" ]
                 ]
             ]
-        ]
-
-body : Html Msg
-body =
-    div []
-        [text "Hier kommt Inhalt rein :)"
-        ]
 
 
 main : Program () Model Msg
 main =
-    Browser.sandbox
-        { init = initialModel
+    Browser.element
+        { init = init
         , view = view
         , update = update
+        , subscriptions = subscriptions
         }
