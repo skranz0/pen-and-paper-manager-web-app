@@ -104,8 +104,7 @@ view model =
 body : Model -> Html Msg
 body model =
     div []
-        [ button [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork laden" ]
-        , displayEnemy model
+        [ displayEnemy model
         , dropdownMenu model
         ]
 
@@ -149,9 +148,9 @@ dropdownMenu model =
             , toggleButton =
                 Dropdown.toggle [ Button.primary ] [ text "Gegner" ]
             , items =
-                [ Dropdown.buttonItem [ ] [ text "Ork" ]
-                , Dropdown.buttonItem [ ] [ text "Tatzelwurm" ]
-                , Dropdown.buttonItem [ ] [ text "Wolfsratte" ]
+                [ Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork" ]
+                , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "tatzelwurm" ] [ text "Tatzelwurm" ]
+                , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "wolfsratte" ] [ text "Wolfsratte" ]
                 ]
             }
         ]

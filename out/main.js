@@ -7004,6 +7004,23 @@ var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropdown = F2(
 					A3($rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownMenu, state, config, items)
 				]));
 	});
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring = function (a) {
 	return {$: 'Coloring', a: a};
 };
@@ -7322,17 +7339,6 @@ var $rundis$elm_bootstrap$Bootstrap$Dropdown$clickHandler = F2(
 			},
 			$rundis$elm_bootstrap$Bootstrap$Dropdown$sizeDecoder);
 	});
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var $elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
 var $rundis$elm_bootstrap$Bootstrap$Dropdown$togglePrivate = F4(
 	function (buttonOptions, children, toggleMsg, state) {
 		return A2(
@@ -7369,21 +7375,33 @@ var $author$project$Main$dropdownMenu = function (model) {
 						[
 							A2(
 							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('ork'))
+								]),
 							_List_fromArray(
 								[
 									$elm$html$Html$text('Ork')
 								])),
 							A2(
 							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('tatzelwurm'))
+								]),
 							_List_fromArray(
 								[
 									$elm$html$Html$text('Tatzelwurm')
 								])),
 							A2(
 							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('wolfsratte'))
+								]),
 							_List_fromArray(
 								[
 									$elm$html$Html$text('Wolfsratte')
@@ -7401,12 +7419,6 @@ var $author$project$Main$dropdownMenu = function (model) {
 					toggleMsg: $author$project$Main$MyDrop1Msg
 				})
 			]));
-};
-var $elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
 };
 var $author$project$Main$body = function (model) {
 	return A2(
