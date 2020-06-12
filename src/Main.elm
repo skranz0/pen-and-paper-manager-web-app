@@ -1,15 +1,18 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, text, br, h1, h2, ul, li, b, a)
+import Html exposing (Html, button, div, text, h1, h2)
 import Html.Events exposing (onClick)
 import Html.Attributes as Attr exposing (href, class)
 import Json.Decode
 import Http
+import Bootstrap.Button as Button
+import Bootstrap.Dropdown as Dropdown
 
 type alias Model =
     { enemy : Character
     , showString : String
+    ,myDrop1State : Dropdown.State
     }
 
 type Character
@@ -20,6 +23,7 @@ init _ =
     ( 
         { enemy = initEnemy
         , showString = ""
+        , myDrop1State = Dropdown.initialState
         }
     , Cmd.none
     )
@@ -30,13 +34,15 @@ initEnemy =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Sub.batch
+        [ Dropdown.subscriptions model.myDrop1State MyDrop1Msg ]
+    --Sub.none
 
 
 type Msg
     = LoadEnemy String -- call this with the name of the enemy to load its values into the enemy object
     | EnemyLoaded (Result Http.Error Character)
-
+    | MyDrop1Msg Dropdown.State
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -49,7 +55,11 @@ update msg model =
                     Http.expectJson EnemyLoaded parseEnemy
                 }
             )
-        
+        MyDrop1Msg state ->
+            ( { model | myDrop1State = state }
+            , Cmd.none
+            )
+
         EnemyLoaded (Ok newEnemy) ->
             ( { model | enemy = newEnemy }, Cmd.none )
 
@@ -72,14 +82,15 @@ view : Model -> Html Msg
 view model =
     div []
         [ header
-        , body
+        , body model
         , footer
         ]
 
-body : Html Msg
-body =
+body : Model -> Html Msg
+body model =
     div []
-        [button [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork laden" ]
+        [ button [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork laden" ]
+        ,  dropdownMenu model
         ]
 
 header : Html Msg
@@ -111,3 +122,20 @@ main =
         , update = update
         , subscriptions = subscriptions
         }
+
+dropdownMenu : Model -> Html Msg
+dropdownMenu model =
+    div []
+        [ Dropdown.dropdown
+            model.myDrop1State
+            { options = [ ]
+            , toggleMsg = MyDrop1Msg
+            , toggleButton =
+                Dropdown.toggle [ Button.primary ] [ text "Genger" ]
+            , items =
+                [ Dropdown.buttonItem [ ] [ text "Ork" ]
+                , Dropdown.buttonItem [ ] [ text "Tatzelwurm" ]
+                , Dropdown.buttonItem [ ] [ text "Wolfsratte" ]
+                ]
+            }
+        ]
