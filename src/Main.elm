@@ -12,7 +12,7 @@ import Bootstrap.Dropdown as Dropdown
 type alias Model =
     { enemy : Character
     , showString : String
-    , myDrop1State : Dropdown.State
+    ,myDrop1State : Dropdown.State
     }
 
 type Character
@@ -27,18 +27,26 @@ init _ =
         }
     , Cmd.none
     )
-    
+
+initEnemy : Character
+initEnemy =
+    Enemy "none" 0 0
+
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Dropdown.subscriptions model.myDrop1State MyDrop1Msg ]
 
+
+
 type Msg
     = LoadEnemy String -- call this with the name of the enemy to load its values into the enemy object
     | EnemyLoaded (Result Http.Error Character)
+
     | MyDrop1Msg Dropdown.State
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         LoadEnemy enemy ->
@@ -46,9 +54,11 @@ update msg model =
             , Http.get
                 { url = "./res/"++enemy++".json"
                 , expect =
+
                     Http.expectJson EnemyLoaded parseEnemy
                 }
             )
+        
         MyDrop1Msg state ->
             ( { model | myDrop1State = state }
             , Cmd.none
@@ -71,7 +81,7 @@ parseEnemy =
         (Json.Decode.field "name" Json.Decode.string)
         (Json.Decode.field "health" Json.Decode.int)
         (Json.Decode.field "armor" Json.Decode.int)
-        
+
 displayEnemy : Model -> Html Msg
 displayEnemy model =
     case model.enemy of
@@ -95,8 +105,8 @@ body : Model -> Html Msg
 body model =
     div []
         [ button [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork laden" ]
-        , dropdownMenu model
         , displayEnemy model
+        , dropdownMenu model
         ]
 
 header : Html Msg
@@ -109,28 +119,24 @@ header =
                     ]
                 ]
             ]
-        , body
-        , Html.footer [class "footer animate__animated animate__fadeInUp"]
+
+footer : Html Msg
+footer =
+    Html.footer [class "footer animate__animated animate__fadeInUp"]
             [ div [class "content has-text-centered"]
                 [ Html.p [] [ text "Entwickelt von Laura Spilling und Stefan Kranz" ]
                 , Html.p [] [ text "Einführung in das World Wide Web" ]
                 ]
             ]
-        ]
-
-body : Html Msg
-body =
-    div []
-        [text "Hier kommt Inhalt rein :)"
-        ]
-
 
 main : Program () Model Msg
 main =
-    Browser.sandbox
-        { init = initialModel
+    Browser.element
+        { init = init
         , view = view
+
         , update = update
+        , subscriptions = subscriptions
         }
 
 dropdownMenu : Model -> Html Msg
@@ -141,7 +147,7 @@ dropdownMenu model =
             { options = [ ]
             , toggleMsg = MyDrop1Msg
             , toggleButton =
-                Dropdown.toggle [ Button.primary ] [ text "Genger" ]
+                Dropdown.toggle [ Button.primary ] [ text "Gegner" ]
             , items =
                 [ Dropdown.buttonItem [ ] [ text "Ork" ]
                 , Dropdown.buttonItem [ ] [ text "Tatzelwurm" ]
