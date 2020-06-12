@@ -68,18 +68,31 @@ parseEnemy =
         (Json.Decode.field "health" Json.Decode.int)
         (Json.Decode.field "armor" Json.Decode.int)
 
+displayEnemy : Model -> Html Msg
+displayEnemy model =
+    case model.enemy of
+        Enemy name health armor ->
+            div []
+                [ Html.table [Attr.style "margin-top" "20px"] 
+                    [ Html.tr [] [ Html.th[][text "Name"], Html.th[][text "LeP"], Html.th[][text "RS"] ]
+                    , Html.tr [] [ Html.td[][text name], Html.td[][text <| String.fromInt health], Html.td[][text <| String.fromInt armor] ]
+                    ]
+                ]
+
+
 view : Model -> Html Msg
 view model =
     div []
         [ header
-        , body
+        , body model
         , footer
         ]
 
-body : Html Msg
-body =
+body : Model -> Html Msg
+body model =
     div []
-        [button [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork laden" ]
+        [ div [][ button [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork laden" ] ]
+        , displayEnemy model
         ]
 
 header : Html Msg
