@@ -4,7 +4,6 @@ import Browser
 import Html exposing (Html, button, div, text, h1, h2)
 import Html.Events exposing (onClick)
 import Html.Attributes as Attr exposing (href, class)
-<<<<<<< src/Main.elm
 import Json.Decode
 import Http
 import Bootstrap.Button as Button
@@ -13,7 +12,7 @@ import Bootstrap.Dropdown as Dropdown
 type alias Model =
     { enemy : Character
     , showString : String
-    ,myDrop1State : Dropdown.State
+    , myDrop1State : Dropdown.State
     }
 
 type Character
@@ -28,41 +27,20 @@ init _ =
         }
     , Cmd.none
     )
-=======
-
-type alias Model =
-    { count : Int }
->>>>>>> src/Main.elm
-
-
-<<<<<<< src/Main.elm
+    
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Dropdown.subscriptions model.myDrop1State MyDrop1Msg ]
-    --Sub.none
-
 
 type Msg
     = LoadEnemy String -- call this with the name of the enemy to load its values into the enemy object
     | EnemyLoaded (Result Http.Error Character)
     | MyDrop1Msg Dropdown.State
-=======
-initialModel : Model
-initialModel =
-    { count = 0 }
-
-
-type Msg
-    = Increment
-    | Decrement
-
->>>>>>> src/Main.elm
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-<<<<<<< src/Main.elm
         LoadEnemy enemy ->
             ( model
             , Http.get
@@ -105,27 +83,6 @@ displayEnemy model =
                     ]
                 ]
 
-=======
-        Increment ->
-            { model | count = model.count + 1 }
-
-        Decrement ->
-            { model | count = model.count - 1 }
-
-
-displayEnemy : Model -> Html Msg
-displayEnemy model =
-    case model.enemy of
-        Enemy name health armor ->
-            div []
-                [ Html.table [Attr.style "margin-top" "20px"] 
-                    [ Html.tr [] [ Html.th[][text "Name"], Html.th[][text "LeP"], Html.th[][text "RS"] ]
-                    , Html.tr [] [ Html.td[][text name], Html.td[][text <| String.fromInt health], Html.td[][text <| String.fromInt armor] ]
-                    ]
-                ]
-
->>>>>>> src/Main.elm
-
 view : Model -> Html Msg
 view model =
     div []
@@ -137,14 +94,9 @@ view model =
 body : Model -> Html Msg
 body model =
     div []
-<<<<<<< src/Main.elm
         [ button [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork laden" ]
         , dropdownMenu model
         , displayEnemy model
-=======
-        [ div [][ button [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork laden" ] ]
-        , displayEnemy model
->>>>>>> src/Main.elm
         ]
 
 header : Html Msg
