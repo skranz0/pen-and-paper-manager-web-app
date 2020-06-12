@@ -4,6 +4,7 @@ import Browser
 import Html exposing (Html, button, div, text, h1, h2)
 import Html.Events exposing (onClick)
 import Html.Attributes as Attr exposing (href, class)
+<<<<<<< src/Main.elm
 import Json.Decode
 import Http
 import Bootstrap.Button as Button
@@ -27,11 +28,14 @@ init _ =
         }
     , Cmd.none
     )
+=======
 
-initEnemy : Character
-initEnemy =
-    Enemy "none" 0 0
+type alias Model =
+    { count : Int }
+>>>>>>> src/Main.elm
 
+
+<<<<<<< src/Main.elm
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
@@ -43,10 +47,22 @@ type Msg
     = LoadEnemy String -- call this with the name of the enemy to load its values into the enemy object
     | EnemyLoaded (Result Http.Error Character)
     | MyDrop1Msg Dropdown.State
+=======
+initialModel : Model
+initialModel =
+    { count = 0 }
 
-update : Msg -> Model -> (Model, Cmd Msg)
+
+type Msg
+    = Increment
+    | Decrement
+
+>>>>>>> src/Main.elm
+
+update : Msg -> Model -> Model
 update msg model =
     case msg of
+<<<<<<< src/Main.elm
         LoadEnemy enemy ->
             ( model
             , Http.get
@@ -77,6 +93,38 @@ parseEnemy =
         (Json.Decode.field "name" Json.Decode.string)
         (Json.Decode.field "health" Json.Decode.int)
         (Json.Decode.field "armor" Json.Decode.int)
+        
+displayEnemy : Model -> Html Msg
+displayEnemy model =
+    case model.enemy of
+        Enemy name health armor ->
+            div []
+                [ Html.table [Attr.style "margin-top" "20px"] 
+                    [ Html.tr [] [ Html.th[][text "Name"], Html.th[][text "LeP"], Html.th[][text "RS"] ]
+                    , Html.tr [] [ Html.td[][text name], Html.td[][text <| String.fromInt health], Html.td[][text <| String.fromInt armor] ]
+                    ]
+                ]
+
+=======
+        Increment ->
+            { model | count = model.count + 1 }
+
+        Decrement ->
+            { model | count = model.count - 1 }
+
+
+displayEnemy : Model -> Html Msg
+displayEnemy model =
+    case model.enemy of
+        Enemy name health armor ->
+            div []
+                [ Html.table [Attr.style "margin-top" "20px"] 
+                    [ Html.tr [] [ Html.th[][text "Name"], Html.th[][text "LeP"], Html.th[][text "RS"] ]
+                    , Html.tr [] [ Html.td[][text name], Html.td[][text <| String.fromInt health], Html.td[][text <| String.fromInt armor] ]
+                    ]
+                ]
+
+>>>>>>> src/Main.elm
 
 view : Model -> Html Msg
 view model =
@@ -89,8 +137,14 @@ view model =
 body : Model -> Html Msg
 body model =
     div []
+<<<<<<< src/Main.elm
         [ button [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork laden" ]
-        ,  dropdownMenu model
+        , dropdownMenu model
+        , displayEnemy model
+=======
+        [ div [][ button [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork laden" ] ]
+        , displayEnemy model
+>>>>>>> src/Main.elm
         ]
 
 header : Html Msg
@@ -103,24 +157,28 @@ header =
                     ]
                 ]
             ]
-
-footer : Html Msg
-footer =
-    Html.footer [class "footer animate__animated animate__fadeInUp"]
+        , body
+        , Html.footer [class "footer animate__animated animate__fadeInUp"]
             [ div [class "content has-text-centered"]
                 [ Html.p [] [ text "Entwickelt von Laura Spilling und Stefan Kranz" ]
                 , Html.p [] [ text "Einführung in das World Wide Web" ]
                 ]
             ]
+        ]
+
+body : Html Msg
+body =
+    div []
+        [text "Hier kommt Inhalt rein :)"
+        ]
 
 
 main : Program () Model Msg
 main =
-    Browser.element
-        { init = init
+    Browser.sandbox
+        { init = initialModel
         , view = view
         , update = update
-        , subscriptions = subscriptions
         }
 
 dropdownMenu : Model -> Html Msg
