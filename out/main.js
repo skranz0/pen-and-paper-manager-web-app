@@ -6605,7 +6605,7 @@ var $author$project$Main$update = F2(
 						model,
 						{myDrop1State: state}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'EnemyLoaded':
 				if (msg.a.$ === 'Ok') {
 					var newEnemy = msg.a.a;
 					return _Utils_Tuple2(
@@ -6630,11 +6630,27 @@ var $author$project$Main$update = F2(
 							$elm$core$Platform$Cmd$none);
 					}
 				}
+			default:
+				var afterAttack = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{enemy: afterAttack}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
-var $author$project$Main$LoadEnemy = function (a) {
-	return {$: 'LoadEnemy', a: a};
+var $author$project$Main$UpdateEnemy = function (a) {
+	return {$: 'UpdateEnemy', a: a};
 };
+var $author$project$Main$attack = F2(
+	function (model, damage) {
+		var _v0 = model.enemy;
+		var name = _v0.a;
+		var health = _v0.b;
+		var armor = _v0.c;
+		return $author$project$Main$UpdateEnemy(
+			A3($author$project$Main$Enemy, name, (health - damage) + armor, armor));
+	});
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
@@ -6721,6 +6737,9 @@ var $author$project$Main$displayEnemy = function (model) {
 							]))
 					]))
 			]));
+};
+var $author$project$Main$LoadEnemy = function (a) {
+	return {$: 'LoadEnemy', a: a};
 };
 var $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem = function (a) {
 	return {$: 'DropdownItem', a: a};
@@ -7426,19 +7445,19 @@ var $author$project$Main$body = function (model) {
 		_List_Nil,
 		_List_fromArray(
 			[
+				$author$project$Main$dropdownMenu(model),
+				$author$project$Main$displayEnemy(model),
 				A2(
 				$elm$html$Html$button,
 				_List_fromArray(
 					[
 						$elm$html$Html$Events$onClick(
-						$author$project$Main$LoadEnemy('ork'))
+						A2($author$project$Main$attack, model, 5))
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Ork laden')
-					])),
-				$author$project$Main$displayEnemy(model),
-				$author$project$Main$dropdownMenu(model)
+						$elm$html$Html$text('5 Schaden')
+					]))
 			]));
 };
 var $elm$html$Html$footer = _VirtualDom_node('footer');

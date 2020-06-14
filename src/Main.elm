@@ -1,9 +1,9 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, text, h1, h2)
+import Html exposing (Html, div, text, h1, h2)
 import Html.Events exposing (onClick)
-import Html.Attributes as Attr exposing (href, class)
+import Html.Attributes as Attr exposing (class)
 import Json.Decode
 import Http
 import Bootstrap.Button as Button
@@ -32,7 +32,6 @@ initEnemy : Character
 initEnemy =
     Enemy "none" 0 0
 
-
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
@@ -43,8 +42,8 @@ subscriptions model =
 type Msg
     = LoadEnemy String -- call this with the name of the enemy to load its values into the enemy object
     | EnemyLoaded (Result Http.Error Character)
-
     | MyDrop1Msg Dropdown.State
+    | UpdateEnemy Character
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -74,6 +73,11 @@ update msg model =
 
                 _ ->
                     ( { model | showString = "Error:  " }, Cmd.none )
+        
+        UpdateEnemy afterAttack ->
+            ( { model | enemy = afterAttack }
+            , Cmd.none
+            )
 
 parseEnemy : Json.Decode.Decoder Character
 parseEnemy =
@@ -93,6 +97,13 @@ displayEnemy model =
                     ]
                 ]
 
+attack : Model -> Int -> Msg
+attack model damage =
+    case model.enemy of
+        Enemy name health armor ->
+            UpdateEnemy <| Enemy name (health - damage + armor) armor
+            
+
 view : Model -> Html Msg
 view model =
     div []
@@ -104,8 +115,9 @@ view model =
 body : Model -> Html Msg
 body model =
     div []
-        [ displayEnemy model
-        , dropdownMenu model
+        [ dropdownMenu model
+        , displayEnemy model
+        , Html.button [ Html.Events.onClick (attack model 5)] [ text "5 Schaden" ]
         ]
 
 header : Html Msg
