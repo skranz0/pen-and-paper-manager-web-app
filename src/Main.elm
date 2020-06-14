@@ -42,8 +42,8 @@ subscriptions model =
 type Msg
     = LoadEnemy String -- call this with the name of the enemy to load its values into the enemy object
     | EnemyLoaded (Result Http.Error Character)
-    | MyDrop1Msg Dropdown.State
     | UpdateEnemy Character
+    | MyDrop1Msg Dropdown.State
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -56,11 +56,6 @@ update msg model =
 
                     Http.expectJson EnemyLoaded parseEnemy
                 }
-            )
-        
-        MyDrop1Msg state ->
-            ( { model | myDrop1State = state }
-            , Cmd.none
             )
 
         EnemyLoaded (Ok newEnemy) ->
@@ -76,6 +71,11 @@ update msg model =
         
         UpdateEnemy afterAttack ->
             ( { model | enemy = afterAttack }
+            , Cmd.none
+            )
+
+        MyDrop1Msg state ->
+            ( { model | myDrop1State = state }
             , Cmd.none
             )
 
@@ -117,7 +117,7 @@ body model =
     div []
         [ dropdownMenu model
         , displayEnemy model
-        , Html.button [ Html.Events.onClick (attack model 5)] [ text "5 Schaden" ]
+        , Html.button [ Html.Events.onClick <| attack model 5 ] [ text "5 Schaden" ]
         ]
 
 header : Html Msg
