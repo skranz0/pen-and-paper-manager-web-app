@@ -1,5 +1,123 @@
 {
     "name" : "Ork",
+    "size" : {
+        "min" : 1.55,
+        "max" : 1.70,
+        "category" : "medium"
+    },
+    "weight" : {
+        "min" : 60,
+        "max" : 75
+    },
+    "stats" : {
+        "mu" : 15,
+        "kl" : 10,
+        "in" : 11,
+        "ch" : 10,
+        "ff" : 13,
+        "ge" : 12,
+        "ko" : 14,
+        "kk" : 13
+    },
     "health" : 36,
-    "armor" : 0
+    "astral" : 0,
+    "initiative" : "14+1W6",
+    "evade" : 6,
+    "speed" : 8,
+    "weapons" : {
+        "unarmed" : {
+            "at" : 12,
+            "pa" : 6,
+            "tp" : "1W6",
+            "rw" : "short"
+        },
+        "saber" : {
+            "at" : 12,
+            "pa" : 6,
+            "tp" : "1W6+3",
+            "rw" : "medium"
+        },
+        "spear" : {
+            "at" : 12,
+            "pa" : 6,
+            "tp" : "1W6+4",
+            "rw" : "long"
+        },
+        "waraxe" : {
+            "at" : 12,
+            "pa" : 5,
+            "tp" : "1W6+4",
+            "rw" : "medium"
+        },
+        "shortbow" : {
+            "fk" : 12,
+            "lz" : 1,
+            "tp" : "1W6+4",
+            "rw" : [10,50,80]
+        }
+    },
+    "armor" : 0,
+    "advantages" : [
+        "Dunkelsicht I",
+        "Kälteresistenz",
+        "Zäher Hund"
+    ],
+    "disadvantages" : [
+        "Schlechte Eigenschaft (Aberglaube, Jähzorn)"
+    ],
+    "abilities" : [
+        "Wuchtschlag I"
+    ],
+    "talents" : {
+        "Einschüchtern" : {
+            "skill" : 5,
+            "dice" : [15,11,10]
+        },
+        "Klettern" : {
+            "skill" : 5,
+            "dice" : [15,12,13]
+        },
+        "Körperbeherrschung" : {
+            "skill" : 4,
+            "dice" : [12,12,14]
+        },
+        "Kraftakt" : {
+            "skill" : 4,
+            "dice" : [14,13,13]
+        },
+        "Menschenkenntnis" : {
+            "skill" : 3,
+            "dice" : [10,11,10]
+        },
+        "Schwimmen" : {
+            "skill" : 3,
+            "dice" : [12,14,13]
+        },
+        "Selbstbeherrschung" : {
+            "skill" : 5,
+            "dice" : [15,15,14]
+        },
+        "Sinnesschärfe" : {
+            "skill" : 4,
+            "dice" : [10,11,11]
+        },
+        "Überreden" : {
+            "skill" : 4,
+            "dice" : [15,11,10]
+        },
+        "Verbergen" : {
+            "skill" : 7,
+            "dice" : [15,11,12]
+        },
+        "Willenskraft" : {
+            "skill" : 4,
+            "dice" : [15,11,10]
+        }
+    },
+    "group" : {
+        "usual" : 1,
+        "Orkbande" : "1W6+1",
+        "Orksippe" : "2W20+10"
+    },
+    "type" : "Kulturschaffender"
 }
