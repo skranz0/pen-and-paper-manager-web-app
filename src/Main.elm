@@ -12,7 +12,8 @@ import Bootstrap.Dropdown as Dropdown
 type alias Model =
     { enemy : Character
     , showString : String
-    ,myDrop1State : Dropdown.State
+    , myDrop1State : Dropdown.State
+    , damage : String
     }
 
 type Character
@@ -24,6 +25,7 @@ init _ =
         { enemy = initEnemy
         , showString = ""
         , myDrop1State = Dropdown.initialState
+        , damage = ""
         }
     , Cmd.none
     )
@@ -44,6 +46,7 @@ type Msg
     | EnemyLoaded (Result Http.Error Character)
     | UpdateEnemy Character
     | MyDrop1Msg Dropdown.State
+    | ChangeDamage String
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -79,6 +82,11 @@ update msg model =
             , Cmd.none
             )
 
+        ChangeDamage newDamage -> 
+            ( { model | damage = newDamage }
+            , Cmd.none
+            )
+
 parseEnemy : Json.Decode.Decoder Character
 parseEnemy =
     Json.Decode.map3 Enemy
@@ -97,12 +105,35 @@ displayEnemy model =
                     ]
                 ]
 
-attack : Model -> Int -> Msg
+attack : Model -> Maybe Int -> Msg
 attack model damage =
-    case model.enemy of
-        Enemy name health armor ->
-            UpdateEnemy <| Enemy name (health - damage + armor) armor
-            
+    case damage of
+        Just value ->
+            case model.enemy of
+                Enemy name health armor ->
+                    UpdateEnemy <| Enemy name (health - value + armor) armor
+        Nothing -> 
+            case model.enemy of
+                Enemy name health armor ->
+                    UpdateEnemy <| Enemy name (health - 0 + armor) armor
+        
+
+dropdownMenu : Model -> Html Msg
+dropdownMenu model =
+    div []
+        [ Dropdown.dropdown
+            model.myDrop1State
+            { options = [ ]
+            , toggleMsg = MyDrop1Msg
+            , toggleButton =
+                Dropdown.toggle [ Button.primary ] [ text "Gegner" ]
+            , items =
+                [ Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork" ]
+                , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "tatzelwurm" ] [ text "Tatzelwurm" ]
+                , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "wolfsratte" ] [ text "Wolfsratte" ]
+                ]
+            }
+        ]
 
 view : Model -> Html Msg
 view model =
@@ -117,7 +148,13 @@ body model =
     div []
         [ dropdownMenu model
         , displayEnemy model
-        , Html.button [ Html.Events.onClick <| attack model 5 ] [ text "5 Schaden" ]
+        , Html.input 
+            [ Attr.type_ "number"
+            , Attr.name "Damage" 
+            , Attr.placeholder "Schaden"
+            , Html.Events.onInput ChangeDamage
+            ]  []
+        , Html.button [ Html.Events.onClick <| attack model <| String.toInt model.damage ] [ text "Schaden" ]
         ]
 
 header : Html Msg
@@ -149,20 +186,3 @@ main =
         , update = update
         , subscriptions = subscriptions
         }
-
-dropdownMenu : Model -> Html Msg
-dropdownMenu model =
-    div []
-        [ Dropdown.dropdown
-            model.myDrop1State
-            { options = [ ]
-            , toggleMsg = MyDrop1Msg
-            , toggleButton =
-                Dropdown.toggle [ Button.primary ] [ text "Gegner" ]
-            , items =
-                [ Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork" ]
-                , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "tatzelwurm" ] [ text "Tatzelwurm" ]
-                , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "wolfsratte" ] [ text "Wolfsratte" ]
-                ]
-            }
-        ]
