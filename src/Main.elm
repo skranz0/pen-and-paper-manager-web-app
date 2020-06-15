@@ -12,7 +12,7 @@ import Bootstrap.Dropdown as Dropdown
 type alias Model =
     { enemy : Character
     , showString : String
-    ,myDrop1State : Dropdown.State
+    , myDrop1State : Dropdown.State
     }
 
 type Character
@@ -43,7 +43,9 @@ type Msg
     = LoadEnemy String -- call this with the name of the enemy to load its values into the enemy object
     | EnemyLoaded (Result Http.Error Character)
     | UpdateEnemy Character
+    | CharacterDeath
     | MyDrop1Msg Dropdown.State
+    | DoNothing
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -73,11 +75,17 @@ update msg model =
             ( { model | enemy = afterAttack }
             , Cmd.none
             )
+        
+        CharacterDeath ->
+            (model, Cmd.none) --TODO display alert
 
         MyDrop1Msg state ->
             ( { model | myDrop1State = state }
             , Cmd.none
             )
+
+        DoNothing ->
+            (model, Cmd.none)
 
 parseEnemy : Json.Decode.Decoder Character
 parseEnemy =
@@ -100,10 +108,12 @@ displayEnemy model =
 attack : Model -> Int -> Msg
 attack model damage =
     case model.enemy of
-        Enemy name health armor ->
-            UpdateEnemy <| Enemy name (health - damage + armor) armor
+        Enemy name health armor ->   
+            if health - damage + armor <= 0 then
+                CharacterDeath
+            else
+                UpdateEnemy <| Enemy name (health - damage + armor) armor
             
-
 view : Model -> Html Msg
 view model =
     div []
