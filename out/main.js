@@ -6630,6 +6630,8 @@ var $author$project$Main$update = F2(
 						model,
 						{enemy: afterAttack}),
 					$elm$core$Platform$Cmd$none);
+			case 'CharacterDeath':
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			case 'MyDrop1Msg':
 				var state = msg.a;
 				return _Utils_Tuple2(
@@ -6637,18 +6639,22 @@ var $author$project$Main$update = F2(
 						model,
 						{myDrop1State: state}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'ChangeDamage':
 				var newDamage = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{damage: newDamage}),
 					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Main$ChangeDamage = function (a) {
 	return {$: 'ChangeDamage', a: a};
 };
+var $author$project$Main$CharacterDeath = {$: 'CharacterDeath'};
+var $author$project$Main$DoNothing = {$: 'DoNothing'};
 var $author$project$Main$UpdateEnemy = function (a) {
 	return {$: 'UpdateEnemy', a: a};
 };
@@ -6660,15 +6666,10 @@ var $author$project$Main$attack = F2(
 			var name = _v1.a;
 			var health = _v1.b;
 			var armor = _v1.c;
-			return $author$project$Main$UpdateEnemy(
-				A3($author$project$Main$Enemy, name, (health - value) + armor, armor));
+			return (_Utils_cmp(value, armor) > 0) ? ((((health - value) + armor) <= 0) ? $author$project$Main$CharacterDeath : $author$project$Main$UpdateEnemy(
+				A3($author$project$Main$Enemy, name, (health - value) + armor, armor))) : $author$project$Main$DoNothing;
 		} else {
-			var _v2 = model.enemy;
-			var name = _v2.a;
-			var health = _v2.b;
-			var armor = _v2.c;
-			return $author$project$Main$UpdateEnemy(
-				A3($author$project$Main$Enemy, name, (health - 0) + armor, armor));
+			return $author$project$Main$DoNothing;
 		}
 	});
 var $elm$html$Html$button = _VirtualDom_node('button');

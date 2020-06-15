@@ -119,13 +119,16 @@ attack model damage =
         Just value ->
             case model.enemy of
                 Enemy name health armor ->
-                    UpdateEnemy <| Enemy name (health - value + armor) armor
+                    if value > armor then
+                        if health - value + armor <= 0 then
+                            CharacterDeath
+                        else
+                            UpdateEnemy <| Enemy name (health - value + armor) armor
+                    else
+                        DoNothing
         Nothing -> 
-            case model.enemy of
-                Enemy name health armor ->
-                    UpdateEnemy <| Enemy name (health - 0 + armor) armor
-        
-
+            DoNothing
+      
 dropdownMenu : Model -> Html Msg
 dropdownMenu model =
     div []
