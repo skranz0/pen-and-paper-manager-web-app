@@ -5342,7 +5342,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{enemy: $author$project$Main$initEnemy, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showString: ''},
+		{damage: '', enemy: $author$project$Main$initEnemy, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showString: ''},
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Main$MyDrop1Msg = function (a) {
@@ -6598,13 +6598,6 @@ var $author$project$Main$update = F2(
 							expect: A2($elm$http$Http$expectJson, $author$project$Main$EnemyLoaded, $author$project$Main$parseEnemy),
 							url: './res/' + (enemy + '.json')
 						}));
-			case 'MyDrop1Msg':
-				var state = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{myDrop1State: state}),
-					$elm$core$Platform$Cmd$none);
 			case 'EnemyLoaded':
 				if (msg.a.$ === 'Ok') {
 					var newEnemy = msg.a.a;
@@ -6630,26 +6623,53 @@ var $author$project$Main$update = F2(
 							$elm$core$Platform$Cmd$none);
 					}
 				}
-			default:
+			case 'UpdateEnemy':
 				var afterAttack = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{enemy: afterAttack}),
 					$elm$core$Platform$Cmd$none);
+			case 'MyDrop1Msg':
+				var state = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{myDrop1State: state}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				var newDamage = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{damage: newDamage}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
+var $author$project$Main$ChangeDamage = function (a) {
+	return {$: 'ChangeDamage', a: a};
+};
 var $author$project$Main$UpdateEnemy = function (a) {
 	return {$: 'UpdateEnemy', a: a};
 };
 var $author$project$Main$attack = F2(
 	function (model, damage) {
-		var _v0 = model.enemy;
-		var name = _v0.a;
-		var health = _v0.b;
-		var armor = _v0.c;
-		return $author$project$Main$UpdateEnemy(
-			A3($author$project$Main$Enemy, name, (health - damage) + armor, armor));
+		if (damage.$ === 'Just') {
+			var value = damage.a;
+			var _v1 = model.enemy;
+			var name = _v1.a;
+			var health = _v1.b;
+			var armor = _v1.c;
+			return $author$project$Main$UpdateEnemy(
+				A3($author$project$Main$Enemy, name, (health - value) + armor, armor));
+		} else {
+			var _v2 = model.enemy;
+			var name = _v2.a;
+			var health = _v2.b;
+			var armor = _v2.c;
+			return $author$project$Main$UpdateEnemy(
+				A3($author$project$Main$Enemy, name, (health - 0) + armor, armor));
+		}
 	});
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$div = _VirtualDom_node('div');
@@ -7439,6 +7459,36 @@ var $author$project$Main$dropdownMenu = function (model) {
 				})
 			]));
 };
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
+var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
 var $author$project$Main$body = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -7448,15 +7498,28 @@ var $author$project$Main$body = function (model) {
 				$author$project$Main$dropdownMenu(model),
 				$author$project$Main$displayEnemy(model),
 				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('number'),
+						$elm$html$Html$Attributes$name('Damage'),
+						$elm$html$Html$Attributes$placeholder('Schaden'),
+						$elm$html$Html$Events$onInput($author$project$Main$ChangeDamage)
+					]),
+				_List_Nil),
+				A2(
 				$elm$html$Html$button,
 				_List_fromArray(
 					[
 						$elm$html$Html$Events$onClick(
-						A2($author$project$Main$attack, model, 5))
+						A2(
+							$author$project$Main$attack,
+							model,
+							$elm$core$String$toInt(model.damage)))
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('5 Schaden')
+						$elm$html$Html$text('Schaden')
 					]))
 			]));
 };
