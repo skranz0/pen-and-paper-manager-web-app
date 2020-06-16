@@ -6687,6 +6687,101 @@ var $author$project$Main$attack = F2(
 		}
 	});
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$html$Html$br = _VirtualDom_node('br');
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$html$Html$form = _VirtualDom_node('form');
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$label = _VirtualDom_node('label');
+var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$customEnemy = function (model) {
+	return A2(
+		$elm$html$Html$form,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('name')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Name')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('text'),
+						$elm$html$Html$Attributes$id('name'),
+						$elm$html$Html$Attributes$name('name')
+					]),
+				_List_Nil),
+				A2($elm$html$Html$br, _List_Nil, _List_Nil),
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('health')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('LeP')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('number'),
+						$elm$html$Html$Attributes$id('health'),
+						$elm$html$Html$Attributes$name('health')
+					]),
+				_List_Nil),
+				A2($elm$html$Html$br, _List_Nil, _List_Nil),
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('armor')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('RS')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('number'),
+						$elm$html$Html$Attributes$id('armor'),
+						$elm$html$Html$Attributes$name('armor')
+					]),
+				_List_Nil),
+				A2($elm$html$Html$br, _List_Nil, _List_Nil),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('submit'),
+						$elm$html$Html$Attributes$value('Hinzufügen')
+					]),
+				_List_Nil)
+			]));
+};
 var $author$project$Main$CloseDeathAlert = {$: 'CloseDeathAlert'};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
 	return {$: 'Attrs', a: a};
@@ -6755,14 +6850,6 @@ var $rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier = F2(
 						attributes: _Utils_ap(options.attributes, attrs)
 					});
 		}
-	});
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$core$List$filter = F2(
@@ -7009,8 +7096,6 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$small = function (_v0) {
 					})
 			}));
 };
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$virtual_dom$VirtualDom$attribute = F2(
 	function (key, value) {
 		return A2(
@@ -7516,7 +7601,6 @@ var $author$project$Main$LoadEnemy = function (a) {
 var $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem = function (a) {
 	return {$: 'DropdownItem', a: a};
 };
-var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem = F2(
 	function (attributes, children) {
 		return $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem(
@@ -7939,6 +8023,17 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('goblin'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Goblin')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
 									$author$project$Main$LoadEnemy('ork'))
 								]),
 							_List_fromArray(
@@ -7981,8 +8076,6 @@ var $author$project$Main$dropdownMenu = function (model) {
 				})
 			]));
 };
-var $elm$html$Html$input = _VirtualDom_node('input');
-var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
@@ -8043,6 +8136,7 @@ var $author$project$Main$body = function (model) {
 					[
 						$elm$html$Html$text('Schaden')
 					])),
+				$author$project$Main$customEnemy(model),
 				$author$project$Main$deathAlert(model)
 			]));
 };

@@ -174,6 +174,21 @@ dropdownMenu model =
             }
         ]
 
+customEnemy : Model -> Html Msg
+customEnemy model =
+    Html.form []
+        [ Html.label [Attr.for "name"] [text "Name"]
+        , Html.input [Attr.type_ "text", Attr.id "name", Attr.name "name"] []
+        , Html.br [] []
+        , Html.label [Attr.for "health"] [text "LeP"]
+        , Html.input [Attr.type_ "number", Attr.id "health", Attr.name "health"] []
+        , Html.br [] []
+        , Html.label [Attr.for "armor"] [text "RS"]
+        , Html.input [Attr.type_ "number", Attr.id "armor", Attr.name "armor"] []
+        , Html.br [] []
+        , Html.input [Attr.type_ "submit", Attr.value "Hinzufügen"] []
+        ]
+
 view : Model -> Html Msg
 view model =
     div []
@@ -194,6 +209,7 @@ body model =
             , Html.Events.onInput ChangeDamage
             ]  []
         , Html.button [ Html.Events.onClick <| attack model <| String.toInt model.damage ] [ text "Schaden" ]
+        , customEnemy model
         , deathAlert model
         ]
 
