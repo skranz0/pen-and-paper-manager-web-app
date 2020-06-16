@@ -1,0 +1,91 @@
+{
+    "name" : "Grimwolf",
+    "size" : {
+        "min" : 1.10,
+        "max" : 1.20,
+        "category" : "small"
+    },
+    "weight" : {
+        "min" : 50,
+        "max" : 60
+    },
+    "stats" : {
+        "mu" : 14,
+        "kl" : 14,
+        "in" : 13,
+        "ch" : 12,
+        "ff" : 14,
+        "ge" : 13,
+        "ko" : 13,
+        "kk" : 13
+    },
+    "health" : 22,
+    "astral" : 0,
+    "karma" : 0, 
+    "initiative" : "14+1W6",
+    "defense" : 7,
+    "soulstrength" : -2,
+    "toughness" : 0,
+    "speed" : 12,
+    "weapons" : {
+        "bite" : {
+            "at" : 14,
+            "tp" : "1W6+3(+Krankheit)",
+            "rw" : "short"
+        }
+    },
+    "armor" : 0,
+    "load" : 0,
+    "actions" : 1,
+    "advantages" : [
+        "Dunkelsicht I, Herausraender Sinn (Geruch)"
+    ],
+    "disadvantages" : [
+    ],
+    "abilities" : [
+        "Verbeißen (Biss)"
+    ],
+    "talents" : {
+        "Einschüchtern" : {
+            "skill" : 7,
+            "dice" : [14,13,12]
+        },
+        "Klettern" : {
+            "skill" : 0,
+            "dice" : [14,13,13]
+        },
+        "Körperbeherrschung" : {
+            "skill" : 7,
+            "dice" : [13,13,13]
+        },
+        "Kraftakt" : {
+            "skill" : 5,
+            "dice" : [13,13,13]
+        },
+        "Schwimmen" : {
+            "skill" : 7,
+            "dice" : [13,13,13]
+        },
+        "Selbstbeherrschung" : {
+            "skill" : 4,
+            "dice" : [14,14,13]
+        },
+        "Sinnesschärfe" : {
+            "skill" : 7,
+            "dice" : [14,13,13]
+        },
+        "Verbergen" : {
+            "skill" : 7,
+            "dice" : [14,13,13]
+        },
+        "Willenskraft" : {
+            "skill" : 4,
+            "dice" : [14,13,12]
+        }
+    },
+    "group" : {
+        "usual" : 1,
+        "kleines Rudel" : "1W6+2"
+    },
+    "type" : "Tier, nicht humanoid"
+}
