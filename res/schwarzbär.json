@@ -42,6 +42,7 @@
     "armor" : 1,
     "load" : 0,
     "actions" : 2,
+    "action-rules" : "max 1x Biss",
     "advantages" : [
         "Herausraender Sinn (Geruch)"
     ],

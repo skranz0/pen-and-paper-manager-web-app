@@ -45,6 +45,7 @@
     "armor" : 1,
     "load" : 0,
     "actions" : 4,
+    "action-rules" : "max 1x Biss, max 3x Fangarm",
     "advantages" : [
         "Dunkelsicht II"
     ],

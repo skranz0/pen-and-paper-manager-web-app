@@ -49,6 +49,7 @@
     "armor" : 4,
     "load" : 0,
     "actions" : 2,
+    "action-rules" : "max 1x Biss und max 1x Schwanz",
     "advantages" : [
         "Dunkelsicht I"
     ],
