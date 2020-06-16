@@ -7939,6 +7939,17 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('goblin'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Goblin')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
 									$author$project$Main$LoadEnemy('ork'))
 								]),
 							_List_fromArray(
