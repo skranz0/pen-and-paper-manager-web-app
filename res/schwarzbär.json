@@ -1,0 +1,98 @@
+{
+    "name" : "Schwarzbär",
+    "size" : {
+        "min" : 3.00,
+        "max" : 3.20,
+        "category" : "medium"
+    },
+    "weight" : {
+        "min" : 600,
+        "max" : 750
+    },
+    "stats" : {
+        "mu" : 14,
+        "kl" : 12,
+        "in" : 12,
+        "ch" : 12,
+        "ff" : 11,
+        "ge" : 11,
+        "ko" : 20,
+        "kk" : 21
+    },
+    "health" : 60,
+    "astral" : 0,
+    "karma" : 0, 
+    "initiative" : "13+1W6",
+    "defense" : 6,
+    "soulstrength" : 0,
+    "toughness" : 5,
+    "speed" : 10,
+    "weapons" : {
+        "paw" : {
+            "at" : 13,
+            "tp" : "1W6+6",
+            "rw" : "medium"
+        },
+        "bite" : {
+            "at" : 11,
+            "tp" : "2W6+2",
+            "rw" : "short"
+        }
+    },
+    "armor" : 1,
+    "load" : 0,
+    "actions" : 2,
+    "advantages" : [
+        "Herausraender Sinn (Geruch)"
+    ],
+    "disadvantages" : [
+        "Schlechte Eigenschaft (Neugier)"
+    ],
+    "abilities" : [
+        "Wuchtschlag I (Biss, Tatze)",
+        "Zu Fall bringen (Tatze)"
+    ],
+    "talents" : {
+        "Einschüchtern" : {
+            "skill" : 10,
+            "dice" : [14,12,12]
+        },
+        "Klettern" : {
+            "skill" : 7,
+            "dice" : [14,11,21]
+        },
+        "Körperbeherrschung" : {
+            "skill" : 4,
+            "dice" : [11,11,20]
+        },
+        "Kraftakt" : {
+            "skill" : 12,
+            "dice" : [20,21,21]
+        },
+        "Schwimmen" : {
+            "skill" : 7,
+            "dice" : [11,20,21]
+        },
+        "Selbstbeherrschung" : {
+            "skill" : 12,
+            "dice" : [14,14,20]
+        },
+        "Sinnesschärfe" : {
+            "skill" : 10,
+            "dice" : [12,12,12]
+        },
+        "Verbergen" : {
+            "skill" : 2,
+            "dice" : [14,12,11]
+        },
+        "Willenskraft" : {
+            "skill" : 4,
+            "dice" : [14,12,12]
+        }
+    },
+    "group" : {
+        "usual" : 1,
+        "Familie" : "1W3+1"
+    },
+    "type" : "Tier, nicht humanoid"
+}

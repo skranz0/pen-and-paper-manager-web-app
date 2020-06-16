@@ -38,7 +38,8 @@
     "load" : 0,
     "actions" : 1,
     "advantages" : [
-        "Dunkelsicht I, Herausraender Sinn (Geruch)"
+        "Dunkelsicht I", 
+        "Herausraender Sinn (Geruch)"
     ],
     "disadvantages" : [
     ],
