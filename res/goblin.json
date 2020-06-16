@@ -1,0 +1,134 @@
+{
+    "name" : "Goblin",
+    "size" : {
+        "min" : 1.40,
+        "max" : 1.60,
+        "category" : "medium"
+    },
+    "weight" : {
+        "min" : 40,
+        "max" : 60
+    },
+    "stats" : {
+        "mu" : 10,
+        "kl" : 10,
+        "in" : 13,
+        "ch" : 13,
+        "ff" : 14,
+        "ge" : 15,
+        "ko" : 12,
+        "kk" : 11
+    },
+    "health" : 24,
+    "astral" : 0,
+    "karma" : 0, 
+    "initiative" : "13+1W6",
+    "defense" : 8,
+    "soulstrength" : -1,
+    "toughness" : 0,
+    "speed" : 8,
+    "weapons" : {
+        "unarmed" : {
+            "at" : 11,
+            "pa" : 6,
+            "tp" : "1W6+1",
+            "rw" : "short"
+        },
+        "dagger" : {
+            "at" : 12,
+            "pa" : 8,
+            "tp" : "1W6+2",
+            "rw" : "short"
+        },
+        "saber" : {
+            "at" : 10,
+            "pa" : 7,
+            "tp" : "1W6+3",
+            "rw" : "medium"
+        },
+        "woodspear" : {
+            "at" : 10,
+            "pa" : 7,
+            "tp" : "1W6+2",
+            "rw" : "long"
+        },
+        "club" : {
+            "at" : 9,
+            "pa" : 3,
+            "tp" : "1W6+2",
+            "rw" : "medium"
+        },
+        "shortbow" : {
+            "fk" : 9,
+            "lz" : 1,
+            "tp" : "1W6+4",
+            "rw" : [10,50,80]
+        }
+    },
+    "armor" : 0,
+    "load" : 0,
+    "actions" : 1,
+    "advantages" : [
+        "Dunkelsicht I",
+        "Herausragender Sinn (Gehör)",
+        "Kälteresistenz"
+    ],
+    "disadvantages" : [
+        "Schlechte Eigenschaft (Aberglaube, Neugier)"
+    ],
+    "abilities" : [
+        "Finte I"
+    ],
+    "talents" : {
+        "Einschüchtern" : {
+            "skill" : 4,
+            "dice" : [10,13,13]
+        },
+        "Klettern" : {
+            "skill" : 5,
+            "dice" : [10,15,11]
+        },
+        "Körperbeherrschung" : {
+            "skill" : 4,
+            "dice" : [15,15,12]
+        },
+        "Kraftakt" : {
+            "skill" : 4,
+            "dice" : [12,11,11]
+        },
+        "Menschenkenntnis" : {
+            "skill" : 4,
+            "dice" : [10,13,13]
+        },
+        "Schwimmen" : {
+            "skill" : 3,
+            "dice" : [15,12,11]
+        },
+        "Selbstbeherrschung" : {
+            "skill" : 4,
+            "dice" : [10,10,12]
+        },
+        "Sinnesschärfe" : {
+            "skill" : 7,
+            "dice" : [10,13,13]
+        },
+        "Überreden" : {
+            "skill" : 3,
+            "dice" : [10,13,13]
+        },
+        "Verbergen" : {
+            "skill" : 7,
+            "dice" : [10,13,15]
+        },
+        "Willenskraft" : {
+            "skill" : 1,
+            "dice" : [10,13,13]
+        }
+    },
+    "group" : {
+        "usual" : 1,
+        "Goblinbande" : "2W6+2",
+        "Goblinsippe" : "3W20+20"
+    },
+    "type" : "Kulturschaffender, humanoid"
+}

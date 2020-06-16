@@ -21,8 +21,11 @@
     },
     "health" : 36,
     "astral" : 0,
+    "karma" : 0,
     "initiative" : "14+1W6",
-    "evade" : 6,
+    "defense" : 6,
+    "soulstrength" : -1,
+    "toughness" : 2,
     "speed" : 8,
     "weapons" : {
         "unarmed" : {
@@ -57,6 +60,8 @@
         }
     },
     "armor" : 0,
+    "load" : 0,
+    "actions" : 1,
     "advantages" : [
         "Dunkelsicht I",
         "Kälteresistenz",
@@ -119,5 +124,5 @@
         "Orkbande" : "1W6+1",
         "Orksippe" : "2W20+10"
     },
-    "type" : "Kulturschaffender"
+    "type" : "Kulturschaffender, humanoid"
 }
