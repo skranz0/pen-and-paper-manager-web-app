@@ -1,0 +1,101 @@
+{
+    "name" : "Krakenmolch",
+    "size" : {
+        "min" : 4.00,
+        "max" : 5.00,
+        "min-tentacle" : 6.00,
+        "max-tentacle" : 8.00,
+        "category" : "huge"
+    },
+    "weight" : {
+        "min" : 900,
+        "max" : 1200
+    },
+    "stats" : {
+        "mu" : 15,
+        "kl" : 6,
+        "in" : 13,
+        "ch" : 8,
+        "ff" : 13,
+        "ge" : 12,
+        "ko" : 35,
+        "kk" : 36
+    },
+    "health" : 350,
+    "astral" : 0,
+    "karma" : 0, 
+    "initiative" : "14+1W6",
+    "defense" : 6,
+    "soulstrength" : 1,
+    "toughness" : 7,
+    "speed" : 2,
+    "speed-water" : 9,
+    "weapons" : {
+        "tentacle" : {
+            "at" : 13,
+            "tp" : "1W6+8",
+            "rw" : "long"
+        } ,
+        "bite" : {
+            "at" : 10,
+            "tp" : "1W6+8",
+            "rw" : "short"
+        }
+    },
+    "armor" : 1,
+    "load" : 0,
+    "actions" : 4,
+    "advantages" : [
+        "Dunkelsicht II"
+    ],
+    "disadvantages" : [
+    ],
+    "abilities" : [
+        "Klammergriff (Fangarm)",
+        "Mächtiger Schlaf (Fangarm)",
+        "Tentakelschwung (Fangarm)",
+        "Verbeißen (Biss)"
+    ],
+    "talents" : {
+        "Einschüchtern" : {
+            "skill" : 13,
+            "dice" : [15,13,8]
+        },
+        "Klettern" : {
+            "skill" : 2,
+            "dice" : [15,12,36]
+        },
+        "Körperbeherrschung" : {
+            "skill" : 5,
+            "dice" : [12,12,35]
+        },
+        "Kraftakt" : {
+            "skill" : 12,
+            "dice" : [35,36,36]
+        },
+        "Schwimmen" : {
+            "skill" : 9,
+            "dice" : [12,35,36]
+        },
+        "Selbstbeherrschung" : {
+            "skill" : 10,
+            "dice" : [15,15,35]
+        },
+        "Sinnesschärfe" : {
+            "skill" : 7,
+            "dice" : [6,13,13]
+        },
+        "Verbergen" : {
+            "skill" : 10,
+            "dice" : [15,13,12]
+        },
+        "Willenskraft" : {
+            "skill" : 4,
+            "dice" : [15,13,8]
+        }
+    },
+    "group" : {
+        "usual" : 1
+    },
+    "type" : "übernatürliches Wesen, nicht humanoid"
+}
