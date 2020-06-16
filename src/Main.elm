@@ -8,12 +8,14 @@ import Json.Decode
 import Http
 import Bootstrap.Button as Button
 import Bootstrap.Dropdown as Dropdown
+import Bootstrap.Modal as Modal
 
 type alias Model =
     { enemy : Character
     , showString : String
     , myDrop1State : Dropdown.State
     , damage : String
+    , deathAlertVisibility : Modal.Visibility
     }
 
 type Character
@@ -26,6 +28,7 @@ init _ =
         , showString = ""
         , myDrop1State = Dropdown.initialState
         , damage = ""
+        , deathAlertVisibility = Modal.hidden
         }
     , Cmd.none
     )
@@ -48,6 +51,7 @@ type Msg
     | CharacterDeath
     | MyDrop1Msg Dropdown.State
     | ChangeDamage String
+    | CloseDeathAlert
     | DoNothing
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -80,7 +84,14 @@ update msg model =
             )
         
         CharacterDeath ->
-            (model, Cmd.none) --TODO display alert
+            ( { model | deathAlertVisibility = Modal.shown }
+            , Cmd.none
+            )
+
+        CloseDeathAlert ->
+            ( { model | deathAlertVisibility = Modal.hidden } 
+            , Cmd.none
+            )
 
         MyDrop1Msg state ->
             ( { model | myDrop1State = state }
@@ -128,6 +139,22 @@ attack model damage =
                         DoNothing
         Nothing -> 
             DoNothing
+
+deathAlert : Model -> Html Msg
+deathAlert model =
+    Modal.config CloseDeathAlert
+        |> Modal.small
+        |> Modal.hideOnBackdropClick True
+        |> Modal.h3 [] [ text "Gewonnen ☠" ]
+        |> Modal.body [] [ Html.p [] [ text "Das Monster ist besiegt!"] ]
+        |> Modal.footer []
+            [ Button.button
+                [ Button.outlinePrimary
+                , Button.attrs [ onClick CloseDeathAlert ]
+                ]
+                [ text "Schließen" ]
+            ]
+        |> Modal.view model.deathAlertVisibility
       
 dropdownMenu : Model -> Html Msg
 dropdownMenu model =
@@ -166,6 +193,7 @@ body model =
             , Html.Events.onInput ChangeDamage
             ]  []
         , Html.button [ Html.Events.onClick <| attack model <| String.toInt model.damage ] [ text "Schaden" ]
+        , deathAlert model
         ]
 
 header : Html Msg
