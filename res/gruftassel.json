@@ -1,0 +1,92 @@
+{
+    "name" : "Gruftassel",
+    "size" : {
+        "min" : 0.50,
+        "max" : 1.00,
+        "min-length" : 1.80,
+        "max-length" : 2.40,
+        "category" : "medium"
+    },
+    "weight" : {
+        "min" : 40,
+        "max" : 70
+    },
+    "stats" : {
+        "mu" : 10,
+        "kl" : 6,
+        "in" : 13,
+        "ch" : 8,
+        "ff" : 10,
+        "ge" : 14,
+        "ko" : 15,
+        "kk" : 13
+    },
+    "health" : 40,
+    "astral" : 0,
+    "karma" : 0, 
+    "initiative" : "6+1W6",
+    "defense" : 7,
+    "soulstrength" : -4,
+    "toughness" : 0,
+    "speed" : 4,
+    "weapons" : {
+        "pincer" : {
+            "at" : 10,
+            "tp" : "1W6+4",
+            "rw" : "short"
+        }
+    },
+    "armor" : 4,
+    "load" : 0,
+    "actions" : 1,
+    "advantages" : [
+        "Dunkelsicht II",
+    ],
+    "disadvantages" : [
+    ],
+    "abilities" : [
+    ],
+    "talents" : {
+        "Einschüchtern" : {
+            "skill" : 6,
+            "dice" : [10,13,8]
+        },
+        "Klettern" : {
+            "skill" : 10,
+            "dice" : [10,14,13]
+        },
+        "Körperbeherrschung" : {
+            "skill" : 4,
+            "dice" : [14,14,15]
+        },
+        "Kraftakt" : {
+            "skill" : 5,
+            "dice" : [15,13,13]
+        },
+        "Schwimmen" : {
+            "skill" : 2,
+            "dice" : [14,15,13]
+        },
+        "Selbstbeherrschung" : {
+            "skill" : 10,
+            "dice" : [10,10,13]
+        },
+        "Sinnesschärfe" : {
+            "skill" : 7,
+            "dice" : [6,13,13]
+        },
+        "Verbergen" : {
+            "skill" : 14,
+            "dice" : [10,13,14]
+        },
+        "Willenskraft" : {
+            "skill" : 13,
+            "dice" : [10,13,8]
+        }
+    },
+    "group" : {
+        "usual" : 1,
+        "nest" : "2W6"
+    },
+    "type" : "Tier, nicht humanoid"
+}
