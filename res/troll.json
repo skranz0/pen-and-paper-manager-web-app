@@ -1,0 +1,115 @@
+{
+    "name" : "Troll",
+    "size" : {
+        "min" : 3.50,
+        "max" : 5.00,
+        "category" : "big"
+    },
+    "weight" : {
+        "min" : 500,
+        "max" : 700
+    },
+    "stats" : {
+        "mu" : 17,
+        "kl" : 11,
+        "in" : 12,
+        "ch" : 11,
+        "ff" : 9,
+        "ge" : 11,
+        "ko" : 25,
+        "kk" : 26
+    },
+    "health" : 120,
+    "astral" : 0,
+    "karma" : 0, 
+    "initiative" : "14+1W6",
+    "defense" : 6,
+    "soulstrength" : 3,
+    "toughness" : 8,
+    "speed" : 10,
+    "weapons" : {
+        "unarmed" : {
+            "at" : 13,
+            "pa" : 12,
+            "tp" : "2W6+6",
+            "rw" : "medium"
+        },
+        "troll-axe" : {
+            "at" : 13,
+            "pa" : 9,
+            "tp" : "3W6+12",
+            "rw" : "long"
+        },
+        "big stone" : {
+            "fk" : 8,
+            "lz" : 3,
+            "tp" : "3W6",
+            "rw" : [5,25,40]
+        }
+    },
+    "armor" : 2,
+    "load" : 0,
+    "actions" : 1,
+    "advantages" : [
+    ],
+    "disadvantages" : [
+        "Schlechte Eigenschaft (Jähzorn, Rachsucht)"
+    ],
+    "abilities" : [
+        "Mächtiger Schlag (Waffenlos, Troll-Axt)",
+        "Schildspalter (Waffenlos, Troll-Axt)",
+        "Wutschlag I (Waffenlos, Troll-Axt)"
+    ],
+    "talents" : {
+        "Einschüchtern" : {
+            "skill" : 8,
+            "dice" : [17,12,11]
+        },
+        "Klettern" : {
+            "skill" : 4,
+            "dice" : [17,11,26]
+        },
+        "Körperbeherrschung" : {
+            "skill" : 5,
+            "dice" : [11,11,25]
+        },
+        "Kraftakt" : {
+            "skill" : 12,
+            "dice" : [25,26,26]
+        },
+        "Menschenkenntnis" : {
+            "skill" : 3,
+            "dice" : [11,12,11]
+        },
+        "Schwimmen" : {
+            "skill" : 0,
+            "dice" : [11,25,26]
+        },
+        "Selbstbeherrschung" : {
+            "skill" : 8,
+            "dice" : [17,17,25]
+        },
+        "Sinnesschärfe" : {
+            "skill" : 7,
+            "dice" : [11,12,12]
+        },
+        "Überreden" : {
+            "skill" : 3,
+            "dice" : [17,12,11]
+        },
+        "Verbergen" : {
+            "skill" : 2,
+            "dice" : [17,12,11]
+        },
+        "Willenskraft" : {
+            "skill" : 3,
+            "dice" : [17,12,11]
+        }
+    },
+    "group" : {
+        "usual" : 1,
+        "trollpaar" : 2,
+        "trollfamilie" : "1W3+2"
+    },
+    "type" : "Kulturschaffender, humanoid"
+}
