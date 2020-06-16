@@ -1,0 +1,114 @@
+{
+    "name" : "Oger",
+    "size" : {
+        "min" : 2.60,
+        "max" : 2.80,
+        "category" : "big"
+    },
+    "weight" : {
+        "min" : 200,
+        "max" : 250
+    },
+    "stats" : {
+        "mu" : 16,
+        "kl" : 6,
+        "in" : 10,
+        "ch" : 8,
+        "ff" : 10,
+        "ge" : 12,
+        "ko" : 10,
+        "kk" : 22
+    },
+    "health" : 60,
+    "astral" : 0,
+    "karma" : 0, 
+    "initiative" : "13+1W6",
+    "defense" : 6,
+    "soulstrength" : -1,
+    "toughness" : 5,
+    "speed" : 8,
+    "weapons" : {
+        "unarmed" : {
+            "at" : 10,
+            "pa" : 8,
+            "tp" : "1W6+8",
+            "rw" : "medium"
+        },
+        "ogre-club" : {
+            "at" : 9,
+            "pa" : 7,
+            "tp" : "2W6+7",
+            "rw" : "medium"
+        },
+        "big stone" : {
+            "fk" : 10,
+            "lz" : 3,
+            "tp" : "2W6",
+            "rw" : [4,20,32]
+        }
+    },
+    "armor" : 2,
+    "load" : 0,
+    "actions" : 1,
+    "advantages" : [
+    ],
+    "disadvantages" : [
+        "Schlechte Eigenschaft (Aberglaube)"
+    ],
+    "abilities" : [
+        "Mächtiger Schlag (Oger-Keule)",
+        "Schildspalter (Waffenlos, Oger-Keule)",
+        "Wuchtschlag I (Waffenlos, Oger-Keule)"
+    ],
+    "talents" : {
+        "Einschüchtern" : {
+            "skill" : 7,
+            "dice" : [16,10,8]
+        },
+        "Klettern" : {
+            "skill" : 3,
+            "dice" : [16,12,22]
+        },
+        "Körperbeherrschung" : {
+            "skill" : 4,
+            "dice" : [12,12,20]
+        },
+        "Kraftakt" : {
+            "skill" : 9,
+            "dice" : [20,22,22]
+        },
+        "Menschenkenntnis" : {
+            "skill" : 0,
+            "dice" : [6,10,8]
+        },
+        "Schwimmen" : {
+            "skill" : 3,
+            "dice" : [12,20,22]
+        },
+        "Selbstbeherrschung" : {
+            "skill" : 5,
+            "dice" : [16,16,20]
+        },
+        "Sinnesschärfe" : {
+            "skill" : 7,
+            "dice" : [6,10,10]
+        },
+        "Überreden" : {
+            "skill" : 0,
+            "dice" : [16,10,8]
+        },
+        "Verbergen" : {
+            "skill" : 2,
+            "dice" : [16,10,12]
+        },
+        "Willenskraft" : {
+            "skill" : 1,
+            "dice" : [16,10,8]
+        }
+    },
+    "group" : {
+        "usual" : 1,
+        "Ogerfamilie" : "2W3"
+    },
+    "type" : "Kulturschaffender, humanoid"
+}

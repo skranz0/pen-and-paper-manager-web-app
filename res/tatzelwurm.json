@@ -1,5 +1,108 @@
 {
     "name" : "Tatzelwurm",
+    "size" : {
+        "min" : 1.00,
+        "max" : 1.20,
+        "min-length" : 3.00,
+        "max-length" : 4.00,
+        "category" : "big"
+    },
+    "weight" : {
+        "min" : 400,
+        "max" : 700
+    },
+    "stats" : {
+        "mu" : 15,
+        "kl" : 9,
+        "in" : 13,
+        "ch" : 8,
+        "ff" : 0,
+        "ge" : 12,
+        "ko" : 22,
+        "kk" : 28
+    },
     "health" : 200,
-    "armor" : 4
+    "astral" : 0,
+    "karma" : 0, 
+    "initiative" : "14+1W6",
+    "defense" : 6,
+    "soulstrength" : 1,
+    "toughness" : 7,
+    "speed" : 5,
+    "weapons" : {
+        "bite" : {
+            "at" : 15,
+            "tp" : "2W6+8",
+            "rw" : "short"
+        },
+        "claws" : {
+            "at" : 15,
+            "tp" : "1W6+6",
+            "rw" : "medium"
+        },
+        "tail" : {
+            "at" : 13,
+            "tp" : "1W6+4",
+            "rw" : "long"
+        }
+    },
+    "armor" : 4,
+    "load" : 0,
+    "actions" : 2,
+    "action-rules" : "max 1x Biss und max 1x Schwanz",
+    "advantages" : [
+        "Dunkelsicht I"
+    ],
+    "disadvantages" : [
+    ],
+    "abilities" : [
+        "Mächtiger Schlag (Klauen, Schwanz)",
+        "Schildspalter (Biss, Klauen)",
+        "Schwanzschwung (Schwanz)",
+        "Wuchtschlag I (Biss, Klauen, Schwanz)",
+        "Zu Fall bringen (Klauen, Schwanz)"
+    ],
+    "talents" : {
+        "Einschüchtern" : {
+            "skill" : 10,
+            "dice" : [15,13,8]
+        },
+        "Klettern" : {
+            "skill" : 1,
+            "dice" : [15,12,28]
+        },
+        "Körperbeherrschung" : {
+            "skill" : 4,
+            "dice" : [12,12,22]
+        },
+        "Kraftakt" : {
+            "skill" : 14,
+            "dice" : [22,28,28]
+        },
+        "Schwimmen" : {
+            "skill" : 1,
+            "dice" : [12,22,28]
+        },
+        "Selbstbeherrschung" : {
+            "skill" : 7,
+            "dice" : [15,15,22]
+        },
+        "Sinnesschärfe" : {
+            "skill" : 7,
+            "dice" : [9,13,13]
+        },
+        "Verbergen" : {
+            "skill" : 1,
+            "dice" : [15,13,12]
+        },
+        "Willenskraft" : {
+            "skill" : 12,
+            "dice" : [15,13,8]
+        }
+    },
+    "group" : {
+        "usual" : 1,
+        "paar" : 2
+    },
+    "type" : "Drache, nicht humanoid"
 }

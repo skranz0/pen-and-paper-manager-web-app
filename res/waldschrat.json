@@ -1,0 +1,106 @@
+{
+    "name" : "Waldschrat",
+    "size" : {
+        "min" : 4.00,
+        "max" : 8.00,
+        "category" : "huge"
+    },
+    "weight" : {
+        "min" : 500,
+        "max" : 2500
+    },
+    "stats" : {
+        "mu" : 13,
+        "kl" : 10,
+        "in" : 11,
+        "ch" : 11,
+        "ff" : 11,
+        "ge" : 11,
+        "ko" : 30,
+        "kk" : 30
+    },
+    "health" : 250,
+    "astral" : 0,
+    "karma" : 0, 
+    "initiative" : "12+1W6",
+    "defense" : 6,
+    "soulstrength" : 1,
+    "toughness" : 10,
+    "speed" : 11,
+    "weapons" : {
+        "hit" : {
+            "at" : 14,
+            "tp" : "2W6+4",
+            "rw" : "long"
+        },
+        "claws" : {
+            "at" : 12,
+            "tp" : "3W6+6",
+            "rw" : "medium"
+        }
+    },
+    "armor" : 4,
+    "load" : 0,
+    "actions" : 1,
+    "advantages" : [
+    ],
+    "disadvantages" : [
+        "Angst vor Feuer III"
+    ],
+    "abilities" : [
+        "Mächtiger Schlag (Hieb, Tritt)",
+        "Schildspalter (Hieb, Tritt)",
+        "Wuchtschlag I (Hieb, Tritt)"
+    ],
+    "talents" : {
+        "Einschüchtern" : {
+            "skill" : 9,
+            "dice" : [13,11,11]
+        },
+        "Klettern" : {
+            "skill" : 4,
+            "dice" : [13,11,30]
+        },
+        "Körperbeherrschung" : {
+            "skill" : 2,
+            "dice" : [11,11,30]
+        },
+        "Kraftakt" : {
+            "skill" : 13,
+            "dice" : [30,30,30]
+        },
+        "Menschenkenntnis" : {
+            "skill" : 1,
+            "dice" : [10,11,11]
+        },
+        "Schwimmen" : {
+            "skill" : 10,
+            "dice" : [11,30,30]
+        },
+        "Selbstbeherrschung" : {
+            "skill" : 12,
+            "dice" : [13,13,30]
+        },
+        "Sinnesschärfe" : {
+            "skill" : 7,
+            "dice" : [10,11,11]
+        },
+        "Überreden" : {
+            "skill" : 2,
+            "dice" : [13,11,11]
+        },
+        "Verbergen" : {
+            "skill" : 7,
+            "dice" : [13,11,11]
+        },
+        "Willenskraft" : {
+            "skill" : 9,
+            "dice" : [13,11,11]
+        }
+    },
+    "group" : {
+        "usual" : 1,
+        "Waldschrat-Thing" : "1W6+1"
+    },
+    "type" : "Pflanze, nicht humanoid"
+}

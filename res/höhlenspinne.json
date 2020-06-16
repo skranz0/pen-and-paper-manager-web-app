@@ -1,0 +1,93 @@
+{
+    "name" : "Höhlenspinne",
+    "size" : {
+        "min" : 0.30,
+        "max" : 0.50,
+        "min-length" : 1.40,
+        "max-length" : 1.60,
+        "category" : "medium"
+    },
+    "weight" : {
+        "min" : 30,
+        "max" : 40
+    },
+    "stats" : {
+        "mu" : 11,
+        "kl" : 9,
+        "in" : 14,
+        "ch" : 8,
+        "ff" : 12,
+        "ge" : 15,
+        "ko" : 12,
+        "kk" : 14
+    },
+    "health" : 22,
+    "astral" : 0,
+    "karma" : 0, 
+    "initiative" : "13+2W6",
+    "defense" : 5,
+    "soulstrength" : 2,
+    "toughness" : 0,
+    "speed" : 7,
+    "weapons" : {
+        "bite" : {
+            "at" : 14,
+            "tp" : "1W6+2(+Gift)",
+            "rw" : "short"
+        }
+    },
+    "armor" : 2,
+    "load" : 0,
+    "actions" : 1,
+    "advantages" : [
+        "Dunkelsicht I",
+        "Herausragender Sinn (Tastsinn)"
+    ],
+    "disadvantages" : [
+    ],
+    "abilities" : [
+    ],
+    "talents" : {
+        "Einschüchtern" : {
+            "skill" : 7,
+            "dice" : [11,14,8]
+        },
+        "Klettern" : {
+            "skill" : 14,
+            "dice" : [11,15,14]
+        },
+        "Körperbeherrschung" : {
+            "skill" : 12,
+            "dice" : [15,15,12]
+        },
+        "Kraftakt" : {
+            "skill" : 7,
+            "dice" : [12,14,14]
+        },
+        "Schwimmen" : {
+            "skill" : 2,
+            "dice" : [15,12,14]
+        },
+        "Selbstbeherrschung" : {
+            "skill" : 10,
+            "dice" : [11,11,12]
+        },
+        "Sinnesschärfe" : {
+            "skill" : 12,
+            "dice" : [9,14,14]
+        },
+        "Verbergen" : {
+            "skill" : 14,
+            "dice" : [11,14,15]
+        },
+        "Willenskraft" : {
+            "skill" : 5,
+            "dice" : [11,14,8]
+        }
+    },
+    "group" : {
+        "usual" : 1,
+        "spinnennest" : "1W3+2"
+    },
+    "type" : "Tier, nicht humanoid"
+}
