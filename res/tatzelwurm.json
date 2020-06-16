@@ -58,7 +58,7 @@
         "Mächtiger Schlag (Klauen, Schwanz)",
         "Schildspalter (Biss, Klauen)",
         "Schwanzschwung (Schwanz)",
-        "Wutschlag II (Biss, Klauen, Schwanz)",
+        "Wuchtschlag I (Biss, Klauen, Schwanz)",
         "Zu Fall bringen (Klauen, Schwanz)"
     ],
     "talents" : {
@@ -103,5 +103,5 @@
         "usual" : 1,
         "paar" : 2
     },
-    "type" : "Tier, nicht humanoid"
+    "type" : "Drache, nicht humanoid"
 }
