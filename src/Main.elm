@@ -1,18 +1,21 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, text, h1, h2)
+import Html exposing (Html, div, text, h1, h2)
 import Html.Events exposing (onClick)
-import Html.Attributes as Attr exposing (href, class)
+import Html.Attributes as Attr exposing (class)
 import Json.Decode
 import Http
 import Bootstrap.Button as Button
 import Bootstrap.Dropdown as Dropdown
+import Bootstrap.Modal as Modal
 
 type alias Model =
     { enemy : Character
     , showString : String
-    ,myDrop1State : Dropdown.State
+    , myDrop1State : Dropdown.State
+    , damage : String
+    , deathAlertVisibility : Modal.Visibility
     }
 
 type Character
@@ -24,6 +27,8 @@ init _ =
         { enemy = initEnemy
         , showString = ""
         , myDrop1State = Dropdown.initialState
+        , damage = ""
+        , deathAlertVisibility = Modal.hidden
         }
     , Cmd.none
     )
@@ -31,7 +36,6 @@ init _ =
 initEnemy : Character
 initEnemy =
     Enemy "none" 0 0
-
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -43,8 +47,12 @@ subscriptions model =
 type Msg
     = LoadEnemy String -- call this with the name of the enemy to load its values into the enemy object
     | EnemyLoaded (Result Http.Error Character)
-
+    | UpdateEnemy Character
+    | CharacterDeath
     | MyDrop1Msg Dropdown.State
+    | ChangeDamage String
+    | CloseDeathAlert
+    | DoNothing
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -58,11 +66,6 @@ update msg model =
                     Http.expectJson EnemyLoaded parseEnemy
                 }
             )
-        
-        MyDrop1Msg state ->
-            ( { model | myDrop1State = state }
-            , Cmd.none
-            )
 
         EnemyLoaded (Ok newEnemy) ->
             ( { model | enemy = newEnemy }, Cmd.none )
@@ -74,6 +77,34 @@ update msg model =
 
                 _ ->
                     ( { model | showString = "Error:  " }, Cmd.none )
+        
+        UpdateEnemy afterAttack ->
+            ( { model | enemy = afterAttack }
+            , Cmd.none
+            )
+        
+        CharacterDeath ->
+            ( { model | deathAlertVisibility = Modal.shown }
+            , Cmd.none
+            )
+
+        CloseDeathAlert ->
+            ( { model | deathAlertVisibility = Modal.hidden } 
+            , Cmd.none
+            )
+
+        MyDrop1Msg state ->
+            ( { model | myDrop1State = state }
+            , Cmd.none
+            )
+
+        ChangeDamage newDamage -> 
+            ( { model | damage = newDamage }
+            , Cmd.none
+            )
+
+        DoNothing ->
+            (model, Cmd.none)
 
 parseEnemy : Json.Decode.Decoder Character
 parseEnemy =
@@ -93,6 +124,55 @@ displayEnemy model =
                     ]
                 ]
 
+attack : Model -> Maybe Int -> Msg
+attack model damage =
+    case damage of
+        Just value ->
+            case model.enemy of
+                Enemy name health armor ->
+                    if value > armor then
+                        if health - value + armor <= 0 then
+                            CharacterDeath
+                        else
+                            UpdateEnemy <| Enemy name (health - value + armor) armor
+                    else
+                        DoNothing
+        Nothing -> 
+            DoNothing
+
+deathAlert : Model -> Html Msg
+deathAlert model =
+    Modal.config CloseDeathAlert
+        |> Modal.small
+        |> Modal.hideOnBackdropClick True
+        |> Modal.h3 [] [ text "Gewonnen ☠" ]
+        |> Modal.body [] [ Html.p [] [ text "Das Monster ist besiegt!"] ]
+        |> Modal.footer []
+            [ Button.button
+                [ Button.outlinePrimary
+                , Button.attrs [ onClick CloseDeathAlert ]
+                ]
+                [ text "Schließen" ]
+            ]
+        |> Modal.view model.deathAlertVisibility
+      
+dropdownMenu : Model -> Html Msg
+dropdownMenu model =
+    div []
+        [ Dropdown.dropdown
+            model.myDrop1State
+            { options = [ ]
+            , toggleMsg = MyDrop1Msg
+            , toggleButton =
+                Dropdown.toggle [ Button.primary ] [ text "Gegner" ]
+            , items =
+                [ Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork" ]
+                , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "tatzelwurm" ] [ text "Tatzelwurm" ]
+                , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "wolfsratte" ] [ text "Wolfsratte" ]
+                ]
+            }
+        ]
+
 view : Model -> Html Msg
 view model =
     div []
@@ -104,8 +184,16 @@ view model =
 body : Model -> Html Msg
 body model =
     div []
-        [ displayEnemy model
-        , dropdownMenu model
+        [ dropdownMenu model
+        , displayEnemy model
+        , Html.input 
+            [ Attr.type_ "number"
+            , Attr.name "Damage" 
+            , Attr.placeholder "Schaden"
+            , Html.Events.onInput ChangeDamage
+            ]  []
+        , Html.button [ Html.Events.onClick <| attack model <| String.toInt model.damage ] [ text "Schaden" ]
+        , deathAlert model
         ]
 
 header : Html Msg
@@ -137,20 +225,3 @@ main =
         , update = update
         , subscriptions = subscriptions
         }
-
-dropdownMenu : Model -> Html Msg
-dropdownMenu model =
-    div []
-        [ Dropdown.dropdown
-            model.myDrop1State
-            { options = [ ]
-            , toggleMsg = MyDrop1Msg
-            , toggleButton =
-                Dropdown.toggle [ Button.primary ] [ text "Gegner" ]
-            , items =
-                [ Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "ork" ] [ text "Ork" ]
-                , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "tatzelwurm" ] [ text "Tatzelwurm" ]
-                , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "wolfsratte" ] [ text "Wolfsratte" ]
-                ]
-            }
-        ]
