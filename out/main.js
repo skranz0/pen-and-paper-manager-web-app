@@ -6642,10 +6642,21 @@ var $author$project$Main$update = F2(
 						{tmpEnemy: _new}),
 					$elm$core$Platform$Cmd$none);
 			case 'CharacterDeath':
+				var _v2 = function () {
+					var _v3 = model.enemy;
+					var n = _v3.a;
+					var a = _v3.c;
+					return _Utils_Tuple2(n, a);
+				}();
+				var name = _v2.a;
+				var armor = _v2.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$shown}),
+						{
+							deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$shown,
+							enemy: A3($author$project$Main$Enemy, name, 0, armor)
+						}),
 					$elm$core$Platform$Cmd$none);
 			case 'CloseDeathAlert':
 				return _Utils_Tuple2(
@@ -6900,7 +6911,7 @@ var $author$project$Main$customEnemy = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Hinzufuegen')
+						$elm$html$Html$text('Hinzufügen')
 					]))
 			]));
 };

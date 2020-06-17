@@ -91,10 +91,18 @@ update msg model =
             , Cmd.none
             )
         
-        CharacterDeath ->
-            ( { model | deathAlertVisibility = Modal.shown }
-            , Cmd.none
-            )
+        CharacterDeath -> 
+            let 
+                (name, armor) =
+                    case model.enemy of
+                        Enemy n _ a -> (n, a)
+            in
+                ( 
+                    { model | deathAlertVisibility = Modal.shown 
+                    , enemy = Enemy name 0 armor 
+                    }
+                    , Cmd.none
+                )
 
         CloseDeathAlert ->
             ( { model | deathAlertVisibility = Modal.hidden } 
@@ -232,7 +240,7 @@ customEnemy model =
                     UpdateTmp <| Enemy name health (Maybe.withDefault 0 <| String.toInt a)
             )] []
         , Html.br [] []
-        , Html.button [ Html.Events.onClick <| UpdateEnemy model.tmpEnemy ] [ text "Hinzufuegen" ]
+        , Html.button [ Html.Events.onClick <| UpdateEnemy model.tmpEnemy ] [ text "Hinzufügen" ]
         ]
 
 view : Model -> Html Msg
