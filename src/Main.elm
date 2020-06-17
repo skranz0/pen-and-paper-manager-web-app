@@ -12,6 +12,7 @@ import Bootstrap.Modal as Modal
 
 type alias Model =
     { enemy : Character
+    , tmpEnemy : Character
     , showString : String
     , myDrop1State : Dropdown.State
     , damage : String
@@ -25,6 +26,7 @@ init : () -> (Model, Cmd Msg)
 init _ = 
     ( 
         { enemy = initEnemy
+        , tmpEnemy = initEnemy
         , showString = ""
         , myDrop1State = Dropdown.initialState
         , damage = ""
@@ -48,6 +50,7 @@ type Msg
     = LoadEnemy String -- call this with the name of the enemy to load its values into the enemy object
     | EnemyLoaded (Result Http.Error Character)
     | UpdateEnemy Character
+    | UpdateTmp Character
     | CharacterDeath
     | MyDrop1Msg Dropdown.State
     | ChangeDamage String
@@ -78,8 +81,13 @@ update msg model =
                 _ ->
                     ( { model | showString = "Error:  " }, Cmd.none )
         
-        UpdateEnemy afterAttack ->
-            ( { model | enemy = afterAttack }
+        UpdateEnemy new ->
+            ( { model | enemy = new }
+            , Cmd.none
+            )
+
+        UpdateTmp new ->
+            ( { model | tmpEnemy = new }
             , Cmd.none
             )
         
@@ -176,17 +184,41 @@ dropdownMenu model =
 
 customEnemy : Model -> Html Msg
 customEnemy model =
-    Html.form []
+    div []
         [ Html.label [Attr.for "name"] [text "Name"]
-        , Html.input [Attr.type_ "text", Attr.id "name", Attr.name "name"] []
+        , Html.input [Attr.type_ "text", Attr.id "name", Attr.name "name", Html.Events.onInput 
+            (\n -> 
+                let 
+                    (health, armor) =
+                        case model.tmpEnemy of
+                            Enemy _ h a -> (h,a)
+                in 
+                    UpdateTmp <| Enemy n health armor
+            )] []
         , Html.br [] []
         , Html.label [Attr.for "health"] [text "LeP"]
-        , Html.input [Attr.type_ "number", Attr.id "health", Attr.name "health"] []
+        , Html.input [Attr.type_ "number", Attr.id "health", Attr.name "health", Html.Events.onInput
+            (\h -> 
+                let 
+                    (name, armor) =
+                        case model.tmpEnemy of
+                            Enemy n _ a -> (n,a)
+                in 
+                    UpdateTmp <| Enemy name (Maybe.withDefault 1 <| String.toInt h) armor
+            )] []
         , Html.br [] []
         , Html.label [Attr.for "armor"] [text "RS"]
-        , Html.input [Attr.type_ "number", Attr.id "armor", Attr.name "armor"] []
+        , Html.input [Attr.type_ "number", Attr.id "armor", Attr.name "armor", Html.Events.onInput
+            (\a -> 
+                let 
+                    (name, health) =
+                        case model.tmpEnemy of
+                            Enemy n h _ -> (n,h)
+                in 
+                    UpdateTmp <| Enemy name health (Maybe.withDefault 0 <| String.toInt a)
+            )] []
         , Html.br [] []
-        , Html.input [Attr.type_ "submit", Attr.value "Hinzufügen"] []
+        , Html.button [ Html.Events.onClick <| UpdateEnemy model.tmpEnemy ] [ text "Hinzufügen" ]
         ]
 
 view : Model -> Html Msg
@@ -207,7 +239,7 @@ body model =
             , Attr.name "Damage" 
             , Attr.placeholder "Schaden"
             , Html.Events.onInput ChangeDamage
-            ]  []
+            ] []
         , Html.button [ Html.Events.onClick <| attack model <| String.toInt model.damage ] [ text "Schaden" ]
         , customEnemy model
         , deathAlert model

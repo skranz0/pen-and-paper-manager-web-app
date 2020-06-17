@@ -5344,7 +5344,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{damage: '', deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, enemy: $author$project$Main$initEnemy, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showString: ''},
+		{damage: '', deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, enemy: $author$project$Main$initEnemy, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showString: '', tmpEnemy: $author$project$Main$initEnemy},
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Main$MyDrop1Msg = function (a) {
@@ -6628,11 +6628,18 @@ var $author$project$Main$update = F2(
 					}
 				}
 			case 'UpdateEnemy':
-				var afterAttack = msg.a;
+				var _new = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{enemy: afterAttack}),
+						{enemy: _new}),
+					$elm$core$Platform$Cmd$none);
+			case 'UpdateTmp':
+				var _new = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tmpEnemy: _new}),
 					$elm$core$Platform$Cmd$none);
 			case 'CharacterDeath':
 				return _Utils_Tuple2(
@@ -6687,7 +6694,11 @@ var $author$project$Main$attack = F2(
 		}
 	});
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $author$project$Main$UpdateTmp = function (a) {
+	return {$: 'UpdateTmp', a: a};
+};
 var $elm$html$Html$br = _VirtualDom_node('br');
+var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -6697,18 +6708,73 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
-var $elm$html$Html$form = _VirtualDom_node('form');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
-var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Main$customEnemy = function (model) {
 	return A2(
-		$elm$html$Html$form,
+		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
@@ -6728,7 +6794,20 @@ var $author$project$Main$customEnemy = function (model) {
 					[
 						$elm$html$Html$Attributes$type_('text'),
 						$elm$html$Html$Attributes$id('name'),
-						$elm$html$Html$Attributes$name('name')
+						$elm$html$Html$Attributes$name('name'),
+						$elm$html$Html$Events$onInput(
+						function (n) {
+							var _v0 = function () {
+								var _v1 = model.tmpEnemy;
+								var h = _v1.b;
+								var a = _v1.c;
+								return _Utils_Tuple2(h, a);
+							}();
+							var health = _v0.a;
+							var armor = _v0.b;
+							return $author$project$Main$UpdateTmp(
+								A3($author$project$Main$Enemy, n, health, armor));
+						})
 					]),
 				_List_Nil),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
@@ -6748,7 +6827,27 @@ var $author$project$Main$customEnemy = function (model) {
 					[
 						$elm$html$Html$Attributes$type_('number'),
 						$elm$html$Html$Attributes$id('health'),
-						$elm$html$Html$Attributes$name('health')
+						$elm$html$Html$Attributes$name('health'),
+						$elm$html$Html$Events$onInput(
+						function (h) {
+							var _v2 = function () {
+								var _v3 = model.tmpEnemy;
+								var n = _v3.a;
+								var a = _v3.c;
+								return _Utils_Tuple2(n, a);
+							}();
+							var name = _v2.a;
+							var armor = _v2.b;
+							return $author$project$Main$UpdateTmp(
+								A3(
+									$author$project$Main$Enemy,
+									name,
+									A2(
+										$elm$core$Maybe$withDefault,
+										1,
+										$elm$core$String$toInt(h)),
+									armor));
+						})
 					]),
 				_List_Nil),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
@@ -6768,18 +6867,41 @@ var $author$project$Main$customEnemy = function (model) {
 					[
 						$elm$html$Html$Attributes$type_('number'),
 						$elm$html$Html$Attributes$id('armor'),
-						$elm$html$Html$Attributes$name('armor')
+						$elm$html$Html$Attributes$name('armor'),
+						$elm$html$Html$Events$onInput(
+						function (a) {
+							var _v4 = function () {
+								var _v5 = model.tmpEnemy;
+								var n = _v5.a;
+								var h = _v5.b;
+								return _Utils_Tuple2(n, h);
+							}();
+							var name = _v4.a;
+							var health = _v4.b;
+							return $author$project$Main$UpdateTmp(
+								A3(
+									$author$project$Main$Enemy,
+									name,
+									health,
+									A2(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toInt(a))));
+						})
 					]),
 				_List_Nil),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
-				$elm$html$Html$input,
+				$elm$html$Html$button,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$type_('submit'),
-						$elm$html$Html$Attributes$value('Hinzufügen')
+						$elm$html$Html$Events$onClick(
+						$author$project$Main$UpdateEnemy(model.tmpEnemy))
 					]),
-				_List_Nil)
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Hinzufügen')
+					]))
 			]));
 };
 var $author$project$Main$CloseDeathAlert = {$: 'CloseDeathAlert'};
@@ -7054,23 +7176,6 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick = F2(
 						{hideOnBackdropClick: hide})
 				}));
 	});
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var $elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var $elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
-};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring = function (a) {
 	return {$: 'Coloring', a: a};
 };
@@ -7104,7 +7209,6 @@ var $elm$virtual_dom$VirtualDom$attribute = F2(
 			_VirtualDom_noJavaScriptOrHtmlUri(value));
 	});
 var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
-var $elm$html$Html$div = _VirtualDom_node('div');
 var $rundis$elm_bootstrap$Bootstrap$Modal$StartClose = {$: 'StartClose'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$getCloseMsg = function (config_) {
 	var _v0 = config_.withAnimation;
@@ -7123,15 +7227,6 @@ var $elm$core$Maybe$map = F2(
 				f(value));
 		} else {
 			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
 		}
 	});
 var $rundis$elm_bootstrap$Bootstrap$Modal$isFade = function (conf) {
@@ -7211,10 +7306,6 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$backdrop = F2(
 			]);
 	});
 var $elm$json$Json$Decode$andThen = _Json_andThen;
-var $elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
-	});
 var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$className = A2(
 	$elm$json$Json$Decode$at,
 	_List_fromArray(
@@ -8075,33 +8166,6 @@ var $author$project$Main$dropdownMenu = function (model) {
 					toggleMsg: $author$project$Main$MyDrop1Msg
 				})
 			]));
-};
-var $elm$html$Html$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
-};
-var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
-};
-var $elm$html$Html$Events$stopPropagationOn = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
-var $elm$html$Html$Events$targetValue = A2(
-	$elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	$elm$json$Json$Decode$string);
-var $elm$html$Html$Events$onInput = function (tagger) {
-	return A2(
-		$elm$html$Html$Events$stopPropagationOn,
-		'input',
-		A2(
-			$elm$json$Json$Decode$map,
-			$elm$html$Html$Events$alwaysStop,
-			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
 var $author$project$Main$body = function (model) {
