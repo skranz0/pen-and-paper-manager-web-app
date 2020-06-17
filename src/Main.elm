@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, div, text, h1, h2)
+import Html exposing (Html, div, text, h1, h2, h4, p)
 import Html.Events exposing (onClick)
 import Html.Attributes as Attr exposing (class)
 import Json.Decode
@@ -9,6 +9,8 @@ import Http
 import Bootstrap.Button as Button
 import Bootstrap.Dropdown as Dropdown
 import Bootstrap.Modal as Modal
+import Bootstrap.Tab as Tab
+import Bootstrap.Utilities.Spacing as Spacing exposing (mt3)
 
 type alias Model =
     { enemy : Character -- The enemy displayed on the homepage
@@ -17,6 +19,7 @@ type alias Model =
     , myDrop1State : Dropdown.State
     , damage : String
     , deathAlertVisibility : Modal.Visibility
+    , tabState : Tab.State
     }
 
 type Character
@@ -32,6 +35,7 @@ init _ =
         , myDrop1State = Dropdown.initialState
         , damage = ""
         , deathAlertVisibility = Modal.hidden
+        , tabState = Tab.initialState
         }
     , Cmd.none
     )
@@ -57,6 +61,7 @@ type Msg
     | ChangeDamage String -- Will eventually be useless after refactor, I just have to get a better feel for let and in
     | CloseDeathAlert
     | DoNothing -- does nothing (yes, this IS necessary)
+    | TabMsg Tab.State
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -117,6 +122,11 @@ update msg model =
 
         ChangeDamage newDamage -> -- Will eventually be useless after refactor, I just have to get a better feel for let and in
             ( { model | damage = newDamage }
+            , Cmd.none
+            )
+
+        TabMsg state ->
+            ( { model | tabState = state }
             , Cmd.none
             )
 
@@ -255,7 +265,24 @@ view : Model -> Html Msg
 view model =
     div []
         [ header
-        , body model
+        , Tab.config TabMsg
+            |> Tab.items
+                [ Tab.item
+                    { id = "tabItem1"
+                    , link = Tab.link [ Spacing.mt3 ] [ text "Overview" ]
+                    , pane =
+                        Tab.pane []
+                            [ body model ]
+                    }
+                , Tab.item
+                    { id = "tabItem2"
+                    , link = Tab.link [ Spacing.mt3 ] [ text "Map" ]
+                    , pane =
+                        Tab.pane []
+                            [] -- Map
+                    }
+                ]
+            |> Tab.view model.tabState
         , footer
         ]
 
