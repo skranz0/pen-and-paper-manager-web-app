@@ -1,0 +1,96 @@
+{
+    "name" : "Wildschwein",
+    "size" : {
+        "min" : 1.00,
+        "max" : 1.20,
+        "category" : "medium"
+    },
+    "weight" : {
+        "min" : 200,
+        "max" : 250
+    },
+    "stats" : {
+        "mu" : 15,
+        "kl" : 13,
+        "in" : 12,
+        "ch" : 10,
+        "ff" : 11,
+        "ge" : 10,
+        "ko" : 15,
+        "kk" : 15
+    },
+    "health" : 35,
+    "astral" : 0,
+    "karma" : 0, 
+    "initiative" : "11+1W6",
+    "defense" : 2,
+    "soulstrength" : -2,
+    "toughness" : 2,
+    "speed" : 10,
+    "weapons" : {
+        "bite and push" : {
+            "at" : 15,
+            "tp" : "1W6+4",
+            "rw" : "short"
+        },
+        "ram" : {
+            "at" : 13,
+            "tp" : "1W6+3",
+            "rw" : "short"
+        }
+    },
+    "armor" : 0,
+    "load" : 0,
+    "actions" : 1,
+    "advantages" : [
+        "Herausraender Sinn (Geruch)"
+    ],
+    "disadvantages" : [
+    ],
+    "abilities" : [
+        "Zu Fall bringen (Rammen)"
+    ],
+    "talents" : {
+        "Einschüchtern" : {
+            "skill" : 1,
+            "dice" : [15,12,10]
+        },
+        "Klettern" : {
+            "skill" : 0,
+            "dice" : [15,10,15]
+        },
+        "Körperbeherrschung" : {
+            "skill" : 4,
+            "dice" : [10,10,14]
+        },
+        "Kraftakt" : {
+            "skill" : 7,
+            "dice" : [15,15,15]
+        },
+        "Schwimmen" : {
+            "skill" : 4,
+            "dice" : [10,15,15]
+        },
+        "Selbstbeherrschung" : {
+            "skill" : 4,
+            "dice" : [15,15,15]
+        },
+        "Sinnesschärfe" : {
+            "skill" : 4,
+            "dice" : [13,12,12]
+        },
+        "Verbergen" : {
+            "skill" : 4,
+            "dice" : [15,12,10]
+        },
+        "Willenskraft" : {
+            "skill" : 4,
+            "dice" : [14,12,10]
+        }
+    },
+    "group" : {
+        "usual" : 1,
+        "Rotte" : "1W3+3"
+    },
+    "type" : "Tier, nicht humanoid"
+}

@@ -7914,6 +7914,17 @@ var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropdown = F2(
 					A3($rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownMenu, state, config, items)
 				]));
 	});
+var $elm$html$Html$h6 = _VirtualDom_node('h6');
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$header = function (children) {
+	return $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem(
+		A2(
+			$elm$html$Html$h6,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('dropdown-header')
+				]),
+			children));
+};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled = function (a) {
 	return {$: 'Roled', a: a};
 };
@@ -8109,6 +8120,33 @@ var $author$project$Main$dropdownMenu = function (model) {
 				{
 					items: _List_fromArray(
 						[
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Kulturschaffender')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('goblin'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Goblin')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('oger'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Oger')
+								])),
 							A2(
 							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
 							_List_fromArray(
@@ -8136,11 +8174,71 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$LoadEnemy('tatzelwurm'))
+									$author$project$Main$LoadEnemy('troll'))
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text('Tatzelwurm')
+									$elm$html$Html$text('Troll')
+								])),
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Tier')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('höhlenspinne'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Höhlensspinne')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('gruftassel'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Gruftassel')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('grimwolf'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Grimwolf')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('schwarzbär'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Schwarzbär')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('wildschwein'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Wildschwein')
 								])),
 							A2(
 							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
@@ -8152,6 +8250,54 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$text('Wolfsratte')
+								])),
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
+							_List_fromArray(
+								[
+									$elm$html$Html$text('übernatürliches Wesen')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('krakenmolch'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Krakenmolch')
+								])),
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Drache')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('tatzelwurm'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Tatzelwurm')
+								])),
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Pflanze')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$LoadEnemy('waldschrat'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Waldschrat')
 								]))
 						]),
 					options: _List_Nil,

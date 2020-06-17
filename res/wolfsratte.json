@@ -1,5 +1,95 @@
 {
-    "name" : "Wolfratte",
+    "name" : "Wolfsratte",
+    "size" : {
+        "min" : 0.20,
+        "max" : 0.25,
+        "min-length" : 0.70,
+        "max-length" : 0.90,
+        "category" : "tiny"
+    },
+    "weight" : {
+        "min" : 0.5,
+        "max" : 1.5
+    },
+    "stats" : {
+        "mu" : 10,
+        "kl" : 10,
+        "in" : 14,
+        "ch" : 11,
+        "ff" : 11,
+        "ge" : 13,
+        "ko" : 6,
+        "kk" : 10
+    },
     "health" : 5,
-    "armor" : 0
+    "astral" : 0,
+    "karma" : 0, 
+    "initiative" : "12+1W6",
+    "defense" : 7,
+    "soulstrength" : 1,
+    "toughness" : 2,
+    "speed" : 6,
+    "weapons" : {
+        "bite" : {
+            "at" : 10,
+            "tp" : "1W3(+Krankheit)",
+            "rw" : "short"
+        }
+    },
+    "armor" : 0,
+    "load" : 0,
+    "actions" : 1,
+    "advantages" : [
+        "Dunkelsicht II"
+    ],
+    "disadvantages" : [
+        "Angst vor Feuer II"
+    ],
+    "abilities" : [
+        "Angriff auf ungeschütze Stellen (Biss)"
+    ],
+    "talents" : {
+        "Einschüchtern" : {
+            "skill" : 2,
+            "dice" : [10,14,12]
+        },
+        "Klettern" : {
+            "skill" : 10,
+            "dice" : [10,13,11]
+        },
+        "Körperbeherrschung" : {
+            "skill" : 4,
+            "dice" : [13,13,6]
+        },
+        "Kraftakt" : {
+            "skill" : 2,
+            "dice" : [6,10,10]
+        },
+        "Schwimmen" : {
+            "skill" : 6,
+            "dice" : [13,6,10]
+        },
+        "Selbstbeherrschung" : {
+            "skill" : 4,
+            "dice" : [10,10,6]
+        },
+        "Sinnesschärfe" : {
+            "skill" : 10,
+            "dice" : [10,14,14]
+        },
+        "Verbergen" : {
+            "skill" : 7,
+            "dice" : [10,14,13]
+        },
+        "Willenskraft" : {
+            "skill" : 2,
+            "dice" : [10,14,11]
+        }
+    },
+    "group" : {
+        "usual" : 1,
+        "rattennest" : "2W6+6",
+        "riesenrudel" : "3W20+100"
+    },
+    "type" : "Tier, nicht humanoid"
 }
