@@ -11,8 +11,8 @@ import Bootstrap.Dropdown as Dropdown
 import Bootstrap.Modal as Modal
 
 type alias Model =
-    { enemy : Character
-    , tmpEnemy : Character
+    { enemy : Character -- The enemy displayed on the homepage
+    , tmpEnemy : Character -- Will eventually be useless after refactor, I just have to get a better feel for let and in
     , showString : String
     , myDrop1State : Dropdown.State
     , damage : String
@@ -21,6 +21,7 @@ type alias Model =
 
 type Character
     = Enemy String Int Int
+    -- can be expanded e.g. with a hero type with name, health, armor and a weapon
 
 init : () -> (Model, Cmd Msg)
 init _ = 
@@ -53,9 +54,9 @@ type Msg
     | UpdateTmp Character
     | CharacterDeath
     | MyDrop1Msg Dropdown.State
-    | ChangeDamage String
+    | ChangeDamage String -- Will eventually be useless after refactor, I just have to get a better feel for let and in
     | CloseDeathAlert
-    | DoNothing
+    | DoNothing -- does nothing (yes, this IS necessary)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -63,10 +64,9 @@ update msg model =
         LoadEnemy enemy ->
             ( model
             , Http.get
-                { url = "./res/"++enemy++".json"
+                { url = "./res/"++enemy++".json" -- These are the files for the enemies from the DSA handbook
                 , expect =
-
-                    Http.expectJson EnemyLoaded parseEnemy
+                    Http.expectJson EnemyLoaded parseEnemy -- takes the necessary values from the JSON and writes it in model.enemy
                 }
             )
 
@@ -74,7 +74,7 @@ update msg model =
             ( { model | enemy = newEnemy }, Cmd.none )
 
         EnemyLoaded (Err error) ->
-            case error of
+            case error of -- We basically just dismiss errors, this could be better
                 Http.BadBody errorMsg ->
                     ( { model | showString = "Error:  " ++ errorMsg }, Cmd.none )
 
@@ -100,6 +100,7 @@ update msg model =
                 ( 
                     { model | deathAlertVisibility = Modal.shown 
                     , enemy = Enemy name 0 armor 
+                    -- this (+ the let above) makes sure the health of the displayed enemy is set to 0 after it is killed
                     }
                     , Cmd.none
                 )
@@ -114,7 +115,7 @@ update msg model =
             , Cmd.none
             )
 
-        ChangeDamage newDamage -> 
+        ChangeDamage newDamage -> -- Will eventually be useless after refactor, I just have to get a better feel for let and in
             ( { model | damage = newDamage }
             , Cmd.none
             )
@@ -129,7 +130,7 @@ parseEnemy =
         (Json.Decode.field "health" Json.Decode.int)
         (Json.Decode.field "armor" Json.Decode.int)
 
-displayEnemy : Model -> Html Msg
+displayEnemy : Model -> Html Msg -- show stats of the enemy in a table, will have its glow up later
 displayEnemy model =
     case model.enemy of
         Enemy name health armor ->
@@ -152,7 +153,7 @@ attack model damage =
                         else
                             UpdateEnemy <| Enemy name (health - value + armor) armor
                     else
-                        DoNothing
+                        DoNothing -- see, it IS necessary
         Nothing -> 
             DoNothing
 
@@ -182,6 +183,7 @@ dropdownMenu model =
             , toggleButton =
                 Dropdown.toggle [ Button.primary ] [ text "Gegner" ]
             , items =
+                -- give a name to the LoadEnemy method and it will pull up the corresponding JSON
                 [ Dropdown.header [ text "Kulturschaffender"]
                 , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "goblin" ] [ text "Goblin" ]
                 , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "oger" ] [ text "Oger" ]
@@ -206,6 +208,12 @@ dropdownMenu model =
 
 customEnemy : Model -> Html Msg
 customEnemy model =
+{-
+    This method is super messed up and I really don't want to explain it here.
+    If there's is time somewhere I may do an overhaul, but for now it
+    just works the way it is.
+    It will probably be put in a modal in the future.
+-}
     div []
         [ Html.label [Attr.for "name"] [text "Name"]
         , Html.input [Attr.type_ "text", Attr.id "name", Attr.name "name", Html.Events.onInput 
