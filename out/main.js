@@ -8361,7 +8361,7 @@ var $author$project$Main$footer = A2(
 					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$text('Entwickelt von Laura Spilling und Stefan Kranz')
+							$elm$html$Html$text('Entwickelt von Laura Spilling, Stefan Kranz, Marcus Gagelmann und Alexander Kampf')
 						])),
 					A2(
 					$elm$html$Html$p,

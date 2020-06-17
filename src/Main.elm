@@ -274,7 +274,7 @@ footer : Html Msg
 footer =
     Html.footer [class "footer animate__animated animate__fadeInUp"]
             [ div [class "content has-text-centered"]
-                [ Html.p [] [ text "Entwickelt von Laura Spilling und Stefan Kranz" ]
+                [ Html.p [] [ text "Entwickelt von Laura Spilling, Stefan Kranz, Marcus Gagelmann und Alexander Kampf" ]
                 , Html.p [] [ text "Einführung in das World Wide Web" ]
                 ]
             ]
