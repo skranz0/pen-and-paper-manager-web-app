@@ -218,7 +218,7 @@ customEnemy model =
                     UpdateTmp <| Enemy name health (Maybe.withDefault 0 <| String.toInt a)
             )] []
         , Html.br [] []
-        , Html.button [ Html.Events.onClick <| UpdateEnemy model.tmpEnemy ] [ text "Hinzufügen" ]
+        , Html.button [ Html.Events.onClick <| UpdateEnemy model.tmpEnemy ] [ text "Hinzufuegen" ]
         ]
 
 view : Model -> Html Msg
