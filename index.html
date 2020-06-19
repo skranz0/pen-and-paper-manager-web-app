@@ -2,16 +2,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="node_modules/bulma/css/bulma.css">
-  <link rel="stylesheet" href="node_modules/animate.css/animate.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="src/node_modules/bulma/css/bulma.css">
+  <link rel="stylesheet" href="src/node_modules/animate.css/animate.css">
+  <link rel="stylesheet" href="src/node_modules/bootstrap/dist/css/bootstrap.css" integrity="" crossorigin="anonymous">
   <title>Main</title>
   <script src="out/main.js"></script>
+  <style>
+    .PlayerIcon
+	{ fill: black;
+          stroke: red;
+          stroke-width: 2;
+          fill-opacity:0;
+    	}
+    .MonsterIcon
+	{ fill: black;
+          stroke: red;
+          stroke-width: 2;
+          fill-opacity:0;
+    	}
+    .PlayerIcon:hover {
+        fill: grey-darker;
+        opacity:0.5;
+        fill-opacity:0.5;
+    }
+    .MonsterIcon:hover {
+        fill: grey-darker;
+        opacity:0.5;
+        fill-opacity:0.5;
+    }
+  </style>
 </head>
 
 <body>
   <div id="myapp"></div>
   <script>
+
+var observer = new MutationObserver(function (mutations) {
+function filterSubtree4Svg(node_arr){
+    return node_arr.filter(function (node) {
+              return node.tagName === 'svg';
+            })
+          .concat(
+           node_arr.filter(function (node) {
+              return (node.childNodes && node.childNodes.length);
+            })
+            .reduce(
+              (accumulator, currentValue) => accumulator.concat(
+              filterSubtree4Svg(Array.from(currentValue.childNodes))
+              )
+              , [])
+          );
+}
+  mutations.forEach(function (mutation) {
+    //console.log(mutation);
+    if (mutation.type === 'childList') {
+      filterSubtree4Svg(Array.from(mutation.addedNodes))
+      .forEach(function (svg) {
+          let point, position
+          svg.addEventListener('mousemove', (e) => {
+            point = svg.createSVGPoint()
+            point.x = e.clientX
+            point.y = e.clientY
+            position = point.matrixTransform(svg.getScreenCTM().inverse())
+            let event = new CustomEvent("mousemoveWithCoordinates", { detail: position })
+            svg.dispatchEvent(event)
+          })
+        });
+    }
+  });
+});
+
+observer.observe(document.body, { childList: true, subtree: true });
+
   var app = Elm.Main.init({
     node: document.getElementById('myapp')
   });
