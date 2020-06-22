@@ -5434,7 +5434,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Model$init = function (_v0) {
 	return _Utils_Tuple2(
-		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterList: _List_Nil, damage: '', deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $author$project$Model$initEnemy, maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpdice: '1W6+0'},
+		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterList: _List_Nil, damage: '', deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpdice: '1W6+0'},
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Model$MyDrop1Msg = function (a) {
@@ -6918,6 +6918,454 @@ var $author$project$FightingTool$parseEnemy = A4(
 	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'health', $elm$json$Json$Decode$int),
 	A2($elm$json$Json$Decode$field, 'armor', $elm$json$Json$Decode$int));
+var $elm$core$Elm$JsArray$push = _JsArray_push;
+var $elm$core$Array$bitMask = 4294967295 >>> (32 - $elm$core$Array$shiftStep);
+var $elm$core$Basics$ge = _Utils_ge;
+var $elm$core$Elm$JsArray$singleton = _JsArray_singleton;
+var $elm$core$Elm$JsArray$unsafeGet = _JsArray_unsafeGet;
+var $elm$core$Elm$JsArray$unsafeSet = _JsArray_unsafeSet;
+var $elm$core$Array$insertTailInTree = F4(
+	function (shift, index, tail, tree) {
+		var pos = $elm$core$Array$bitMask & (index >>> shift);
+		if (_Utils_cmp(
+			pos,
+			$elm$core$Elm$JsArray$length(tree)) > -1) {
+			if (shift === 5) {
+				return A2(
+					$elm$core$Elm$JsArray$push,
+					$elm$core$Array$Leaf(tail),
+					tree);
+			} else {
+				var newSub = $elm$core$Array$SubTree(
+					A4($elm$core$Array$insertTailInTree, shift - $elm$core$Array$shiftStep, index, tail, $elm$core$Elm$JsArray$empty));
+				return A2($elm$core$Elm$JsArray$push, newSub, tree);
+			}
+		} else {
+			var value = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (value.$ === 'SubTree') {
+				var subTree = value.a;
+				var newSub = $elm$core$Array$SubTree(
+					A4($elm$core$Array$insertTailInTree, shift - $elm$core$Array$shiftStep, index, tail, subTree));
+				return A3($elm$core$Elm$JsArray$unsafeSet, pos, newSub, tree);
+			} else {
+				var newSub = $elm$core$Array$SubTree(
+					A4(
+						$elm$core$Array$insertTailInTree,
+						shift - $elm$core$Array$shiftStep,
+						index,
+						tail,
+						$elm$core$Elm$JsArray$singleton(value)));
+				return A3($elm$core$Elm$JsArray$unsafeSet, pos, newSub, tree);
+			}
+		}
+	});
+var $elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
+var $elm$core$Array$unsafeReplaceTail = F2(
+	function (newTail, _v0) {
+		var len = _v0.a;
+		var startShift = _v0.b;
+		var tree = _v0.c;
+		var tail = _v0.d;
+		var originalTailLen = $elm$core$Elm$JsArray$length(tail);
+		var newTailLen = $elm$core$Elm$JsArray$length(newTail);
+		var newArrayLen = len + (newTailLen - originalTailLen);
+		if (_Utils_eq(newTailLen, $elm$core$Array$branchFactor)) {
+			var overflow = _Utils_cmp(newArrayLen >>> $elm$core$Array$shiftStep, 1 << startShift) > 0;
+			if (overflow) {
+				var newShift = startShift + $elm$core$Array$shiftStep;
+				var newTree = A4(
+					$elm$core$Array$insertTailInTree,
+					newShift,
+					len,
+					newTail,
+					$elm$core$Elm$JsArray$singleton(
+						$elm$core$Array$SubTree(tree)));
+				return A4($elm$core$Array$Array_elm_builtin, newArrayLen, newShift, newTree, $elm$core$Elm$JsArray$empty);
+			} else {
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					newArrayLen,
+					startShift,
+					A4($elm$core$Array$insertTailInTree, startShift, len, newTail, tree),
+					$elm$core$Elm$JsArray$empty);
+			}
+		} else {
+			return A4($elm$core$Array$Array_elm_builtin, newArrayLen, startShift, tree, newTail);
+		}
+	});
+var $elm$core$Array$push = F2(
+	function (a, array) {
+		var tail = array.d;
+		return A2(
+			$elm$core$Array$unsafeReplaceTail,
+			A2($elm$core$Elm$JsArray$push, a, tail),
+			array);
+	});
+var $elm$core$Elm$JsArray$appendN = _JsArray_appendN;
+var $elm$core$Elm$JsArray$slice = _JsArray_slice;
+var $elm$core$Array$appendHelpBuilder = F2(
+	function (tail, builder) {
+		var tailLen = $elm$core$Elm$JsArray$length(tail);
+		var notAppended = ($elm$core$Array$branchFactor - $elm$core$Elm$JsArray$length(builder.tail)) - tailLen;
+		var appended = A3($elm$core$Elm$JsArray$appendN, $elm$core$Array$branchFactor, builder.tail, tail);
+		return (notAppended < 0) ? {
+			nodeList: A2(
+				$elm$core$List$cons,
+				$elm$core$Array$Leaf(appended),
+				builder.nodeList),
+			nodeListSize: builder.nodeListSize + 1,
+			tail: A3($elm$core$Elm$JsArray$slice, notAppended, tailLen, tail)
+		} : ((!notAppended) ? {
+			nodeList: A2(
+				$elm$core$List$cons,
+				$elm$core$Array$Leaf(appended),
+				builder.nodeList),
+			nodeListSize: builder.nodeListSize + 1,
+			tail: $elm$core$Elm$JsArray$empty
+		} : {nodeList: builder.nodeList, nodeListSize: builder.nodeListSize, tail: appended});
+	});
+var $elm$core$Array$appendHelpTree = F2(
+	function (toAppend, array) {
+		var len = array.a;
+		var tree = array.c;
+		var tail = array.d;
+		var itemsToAppend = $elm$core$Elm$JsArray$length(toAppend);
+		var notAppended = ($elm$core$Array$branchFactor - $elm$core$Elm$JsArray$length(tail)) - itemsToAppend;
+		var appended = A3($elm$core$Elm$JsArray$appendN, $elm$core$Array$branchFactor, tail, toAppend);
+		var newArray = A2($elm$core$Array$unsafeReplaceTail, appended, array);
+		if (notAppended < 0) {
+			var nextTail = A3($elm$core$Elm$JsArray$slice, notAppended, itemsToAppend, toAppend);
+			return A2($elm$core$Array$unsafeReplaceTail, nextTail, newArray);
+		} else {
+			return newArray;
+		}
+	});
+var $elm$core$Elm$JsArray$foldl = _JsArray_foldl;
+var $elm$core$Array$builderFromArray = function (_v0) {
+	var len = _v0.a;
+	var tree = _v0.c;
+	var tail = _v0.d;
+	var helper = F2(
+		function (node, acc) {
+			if (node.$ === 'SubTree') {
+				var subTree = node.a;
+				return A3($elm$core$Elm$JsArray$foldl, helper, acc, subTree);
+			} else {
+				return A2($elm$core$List$cons, node, acc);
+			}
+		});
+	return {
+		nodeList: A3($elm$core$Elm$JsArray$foldl, helper, _List_Nil, tree),
+		nodeListSize: (len / $elm$core$Array$branchFactor) | 0,
+		tail: tail
+	};
+};
+var $elm$core$Array$append = F2(
+	function (a, _v0) {
+		var aTail = a.d;
+		var bLen = _v0.a;
+		var bTree = _v0.c;
+		var bTail = _v0.d;
+		if (_Utils_cmp(bLen, $elm$core$Array$branchFactor * 4) < 1) {
+			var foldHelper = F2(
+				function (node, array) {
+					if (node.$ === 'SubTree') {
+						var tree = node.a;
+						return A3($elm$core$Elm$JsArray$foldl, foldHelper, array, tree);
+					} else {
+						var leaf = node.a;
+						return A2($elm$core$Array$appendHelpTree, leaf, array);
+					}
+				});
+			return A2(
+				$elm$core$Array$appendHelpTree,
+				bTail,
+				A3($elm$core$Elm$JsArray$foldl, foldHelper, a, bTree));
+		} else {
+			var foldHelper = F2(
+				function (node, builder) {
+					if (node.$ === 'SubTree') {
+						var tree = node.a;
+						return A3($elm$core$Elm$JsArray$foldl, foldHelper, builder, tree);
+					} else {
+						var leaf = node.a;
+						return A2($elm$core$Array$appendHelpBuilder, leaf, builder);
+					}
+				});
+			return A2(
+				$elm$core$Array$builderToArray,
+				true,
+				A2(
+					$elm$core$Array$appendHelpBuilder,
+					bTail,
+					A3(
+						$elm$core$Elm$JsArray$foldl,
+						foldHelper,
+						$elm$core$Array$builderFromArray(a),
+						bTree)));
+		}
+	});
+var $elm$core$Array$length = function (_v0) {
+	var len = _v0.a;
+	return len;
+};
+var $elm$core$Array$tailIndex = function (len) {
+	return (len >>> 5) << 5;
+};
+var $elm$core$Array$sliceLeft = F2(
+	function (from, array) {
+		var len = array.a;
+		var tree = array.c;
+		var tail = array.d;
+		if (!from) {
+			return array;
+		} else {
+			if (_Utils_cmp(
+				from,
+				$elm$core$Array$tailIndex(len)) > -1) {
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					len - from,
+					$elm$core$Array$shiftStep,
+					$elm$core$Elm$JsArray$empty,
+					A3(
+						$elm$core$Elm$JsArray$slice,
+						from - $elm$core$Array$tailIndex(len),
+						$elm$core$Elm$JsArray$length(tail),
+						tail));
+			} else {
+				var skipNodes = (from / $elm$core$Array$branchFactor) | 0;
+				var helper = F2(
+					function (node, acc) {
+						if (node.$ === 'SubTree') {
+							var subTree = node.a;
+							return A3($elm$core$Elm$JsArray$foldr, helper, acc, subTree);
+						} else {
+							var leaf = node.a;
+							return A2($elm$core$List$cons, leaf, acc);
+						}
+					});
+				var leafNodes = A3(
+					$elm$core$Elm$JsArray$foldr,
+					helper,
+					_List_fromArray(
+						[tail]),
+					tree);
+				var nodesToInsert = A2($elm$core$List$drop, skipNodes, leafNodes);
+				if (!nodesToInsert.b) {
+					return $elm$core$Array$empty;
+				} else {
+					var head = nodesToInsert.a;
+					var rest = nodesToInsert.b;
+					var firstSlice = from - (skipNodes * $elm$core$Array$branchFactor);
+					var initialBuilder = {
+						nodeList: _List_Nil,
+						nodeListSize: 0,
+						tail: A3(
+							$elm$core$Elm$JsArray$slice,
+							firstSlice,
+							$elm$core$Elm$JsArray$length(head),
+							head)
+					};
+					return A2(
+						$elm$core$Array$builderToArray,
+						true,
+						A3($elm$core$List$foldl, $elm$core$Array$appendHelpBuilder, initialBuilder, rest));
+				}
+			}
+		}
+	});
+var $elm$core$Array$fetchNewTail = F4(
+	function (shift, end, treeEnd, tree) {
+		fetchNewTail:
+		while (true) {
+			var pos = $elm$core$Array$bitMask & (treeEnd >>> shift);
+			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (_v0.$ === 'SubTree') {
+				var sub = _v0.a;
+				var $temp$shift = shift - $elm$core$Array$shiftStep,
+					$temp$end = end,
+					$temp$treeEnd = treeEnd,
+					$temp$tree = sub;
+				shift = $temp$shift;
+				end = $temp$end;
+				treeEnd = $temp$treeEnd;
+				tree = $temp$tree;
+				continue fetchNewTail;
+			} else {
+				var values = _v0.a;
+				return A3($elm$core$Elm$JsArray$slice, 0, $elm$core$Array$bitMask & end, values);
+			}
+		}
+	});
+var $elm$core$Array$hoistTree = F3(
+	function (oldShift, newShift, tree) {
+		hoistTree:
+		while (true) {
+			if ((_Utils_cmp(oldShift, newShift) < 1) || (!$elm$core$Elm$JsArray$length(tree))) {
+				return tree;
+			} else {
+				var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, 0, tree);
+				if (_v0.$ === 'SubTree') {
+					var sub = _v0.a;
+					var $temp$oldShift = oldShift - $elm$core$Array$shiftStep,
+						$temp$newShift = newShift,
+						$temp$tree = sub;
+					oldShift = $temp$oldShift;
+					newShift = $temp$newShift;
+					tree = $temp$tree;
+					continue hoistTree;
+				} else {
+					return tree;
+				}
+			}
+		}
+	});
+var $elm$core$Array$sliceTree = F3(
+	function (shift, endIdx, tree) {
+		var lastPos = $elm$core$Array$bitMask & (endIdx >>> shift);
+		var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, lastPos, tree);
+		if (_v0.$ === 'SubTree') {
+			var sub = _v0.a;
+			var newSub = A3($elm$core$Array$sliceTree, shift - $elm$core$Array$shiftStep, endIdx, sub);
+			return (!$elm$core$Elm$JsArray$length(newSub)) ? A3($elm$core$Elm$JsArray$slice, 0, lastPos, tree) : A3(
+				$elm$core$Elm$JsArray$unsafeSet,
+				lastPos,
+				$elm$core$Array$SubTree(newSub),
+				A3($elm$core$Elm$JsArray$slice, 0, lastPos + 1, tree));
+		} else {
+			return A3($elm$core$Elm$JsArray$slice, 0, lastPos, tree);
+		}
+	});
+var $elm$core$Array$sliceRight = F2(
+	function (end, array) {
+		var len = array.a;
+		var startShift = array.b;
+		var tree = array.c;
+		var tail = array.d;
+		if (_Utils_eq(end, len)) {
+			return array;
+		} else {
+			if (_Utils_cmp(
+				end,
+				$elm$core$Array$tailIndex(len)) > -1) {
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					end,
+					startShift,
+					tree,
+					A3($elm$core$Elm$JsArray$slice, 0, $elm$core$Array$bitMask & end, tail));
+			} else {
+				var endIdx = $elm$core$Array$tailIndex(end);
+				var depth = $elm$core$Basics$floor(
+					A2(
+						$elm$core$Basics$logBase,
+						$elm$core$Array$branchFactor,
+						A2($elm$core$Basics$max, 1, endIdx - 1)));
+				var newShift = A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep);
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					end,
+					newShift,
+					A3(
+						$elm$core$Array$hoistTree,
+						startShift,
+						newShift,
+						A3($elm$core$Array$sliceTree, startShift, endIdx, tree)),
+					A4($elm$core$Array$fetchNewTail, startShift, end, endIdx, tree));
+			}
+		}
+	});
+var $elm$core$Array$translateIndex = F2(
+	function (index, _v0) {
+		var len = _v0.a;
+		var posIndex = (index < 0) ? (len + index) : index;
+		return (posIndex < 0) ? 0 : ((_Utils_cmp(posIndex, len) > 0) ? len : posIndex);
+	});
+var $elm$core$Array$slice = F3(
+	function (from, to, array) {
+		var correctTo = A2($elm$core$Array$translateIndex, to, array);
+		var correctFrom = A2($elm$core$Array$translateIndex, from, array);
+		return (_Utils_cmp(correctFrom, correctTo) > 0) ? $elm$core$Array$empty : A2(
+			$elm$core$Array$sliceLeft,
+			correctFrom,
+			A2($elm$core$Array$sliceRight, correctTo, array));
+	});
+var $elm_community$array_extra$Array$Extra$splitAt = F2(
+	function (index, xs) {
+		var len = $elm$core$Array$length(xs);
+		var _v0 = _Utils_Tuple2(
+			index > 0,
+			_Utils_cmp(index, len) < 0);
+		if (_v0.a) {
+			if (_v0.b) {
+				return _Utils_Tuple2(
+					A3($elm$core$Array$slice, 0, index, xs),
+					A3($elm$core$Array$slice, index, len, xs));
+			} else {
+				return _Utils_Tuple2(xs, $elm$core$Array$empty);
+			}
+		} else {
+			if (_v0.b) {
+				return _Utils_Tuple2($elm$core$Array$empty, xs);
+			} else {
+				return _Utils_Tuple2($elm$core$Array$empty, $elm$core$Array$empty);
+			}
+		}
+	});
+var $elm_community$array_extra$Array$Extra$removeAt = F2(
+	function (index, xs) {
+		var _v0 = A2($elm_community$array_extra$Array$Extra$splitAt, index, xs);
+		var xs0 = _v0.a;
+		var xs1 = _v0.b;
+		var len1 = $elm$core$Array$length(xs1);
+		return (!len1) ? xs0 : A2(
+			$elm$core$Array$append,
+			xs0,
+			A3($elm$core$Array$slice, 1, len1, xs1));
+	});
+var $elm$core$Array$setHelp = F4(
+	function (shift, index, value, tree) {
+		var pos = $elm$core$Array$bitMask & (index >>> shift);
+		var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+		if (_v0.$ === 'SubTree') {
+			var subTree = _v0.a;
+			var newSub = A4($elm$core$Array$setHelp, shift - $elm$core$Array$shiftStep, index, value, subTree);
+			return A3(
+				$elm$core$Elm$JsArray$unsafeSet,
+				pos,
+				$elm$core$Array$SubTree(newSub),
+				tree);
+		} else {
+			var values = _v0.a;
+			var newLeaf = A3($elm$core$Elm$JsArray$unsafeSet, $elm$core$Array$bitMask & index, value, values);
+			return A3(
+				$elm$core$Elm$JsArray$unsafeSet,
+				pos,
+				$elm$core$Array$Leaf(newLeaf),
+				tree);
+		}
+	});
+var $elm$core$Array$set = F3(
+	function (index, value, array) {
+		var len = array.a;
+		var startShift = array.b;
+		var tree = array.c;
+		var tail = array.d;
+		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? array : ((_Utils_cmp(
+			index,
+			$elm$core$Array$tailIndex(len)) > -1) ? A4(
+			$elm$core$Array$Array_elm_builtin,
+			len,
+			startShift,
+			tree,
+			A3($elm$core$Elm$JsArray$unsafeSet, $elm$core$Array$bitMask & index, value, tail)) : A4(
+			$elm$core$Array$Array_elm_builtin,
+			len,
+			startShift,
+			A4($elm$core$Array$setHelp, startShift, index, value, tree),
+			tail));
+	});
 var $elm$core$List$takeReverse = F3(
 	function (n, list, kept) {
 		takeReverse:
@@ -7091,7 +7539,9 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{enemy: newEnemy}),
+							{
+								enemy: A2($elm$core$Array$push, newEnemy, model.enemy)
+							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					var error = msg.a.a;
@@ -7111,11 +7561,14 @@ var $author$project$Main$update = F2(
 					}
 				}
 			case 'UpdateEnemy':
-				var _new = msg.a;
+				var index = msg.a;
+				var _new = msg.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{enemy: _new}),
+						{
+							enemy: A3($elm$core$Array$set, index, _new, model.enemy)
+						}),
 					$elm$core$Platform$Cmd$none);
 			case 'UpdateTmp':
 				var _new = msg.a;
@@ -7124,21 +7577,32 @@ var $author$project$Main$update = F2(
 						model,
 						{tmpEnemy: _new}),
 					$elm$core$Platform$Cmd$none);
+			case 'AddEnemy':
+				var _char = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							enemy: A2($elm$core$Array$push, _char, model.enemy)
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'RemoveEnemy':
+				var index = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							enemy: A2($elm_community$array_extra$Array$Extra$removeAt, index, model.enemy)
+						}),
+					$elm$core$Platform$Cmd$none);
 			case 'CharacterDeath':
-				var _v2 = function () {
-					var _v3 = model.enemy;
-					var n = _v3.a;
-					var a = _v3.c;
-					return _Utils_Tuple2(n, a);
-				}();
-				var name = _v2.a;
-				var armor = _v2.b;
+				var index = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$shown,
-							enemy: A3($author$project$Model$Enemy, name, 0, armor)
+							enemy: A2($elm_community$array_extra$Array$Extra$removeAt, index, model.enemy)
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'CloseDeathAlert':
@@ -7285,26 +7749,10 @@ var $author$project$Model$ChangeTmpDice = function (a) {
 var $author$project$Model$DiceAndSlice = function (a) {
 	return {$: 'DiceAndSlice', a: a};
 };
-var $author$project$Model$CharacterDeath = {$: 'CharacterDeath'};
-var $author$project$Model$DoNothing = {$: 'DoNothing'};
-var $author$project$Model$UpdateEnemy = function (a) {
-	return {$: 'UpdateEnemy', a: a};
-};
-var $author$project$FightingTool$attack = F2(
-	function (model, damage) {
-		if (damage.$ === 'Just') {
-			var value = damage.a;
-			var _v1 = model.enemy;
-			var name = _v1.a;
-			var health = _v1.b;
-			var armor = _v1.c;
-			return (_Utils_cmp(value, armor) > 0) ? ((((health - value) + armor) <= 0) ? $author$project$Model$CharacterDeath : $author$project$Model$UpdateEnemy(
-				A3($author$project$Model$Enemy, name, (health - value) + armor, armor))) : $author$project$Model$DoNothing;
-		} else {
-			return $author$project$Model$DoNothing;
-		}
-	});
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $author$project$Model$AddEnemy = function (a) {
+	return {$: 'AddEnemy', a: a};
+};
 var $author$project$Model$UpdateTmp = function (a) {
 	return {$: 'UpdateTmp', a: a};
 };
@@ -7498,7 +7946,7 @@ var $author$project$FightingTool$customEnemy = function (model) {
 				_List_fromArray(
 					[
 						$elm$html$Html$Events$onClick(
-						$author$project$Model$UpdateEnemy(model.tmpEnemy))
+						$author$project$Model$AddEnemy(model.tmpEnemy))
 					]),
 				_List_fromArray(
 					[
@@ -8204,69 +8652,128 @@ var $author$project$FightingTool$deathAlert = function (model) {
 						$rundis$elm_bootstrap$Bootstrap$Modal$small(
 							$rundis$elm_bootstrap$Bootstrap$Modal$config($author$project$Model$CloseDeathAlert)))))));
 };
-var $elm$html$Html$table = _VirtualDom_node('table');
-var $elm$html$Html$td = _VirtualDom_node('td');
-var $elm$html$Html$th = _VirtualDom_node('th');
-var $elm$html$Html$tr = _VirtualDom_node('tr');
-var $author$project$FightingTool$displayEnemy = function (model) {
-	var _v0 = model.enemy;
-	var name = _v0.a;
-	var health = _v0.b;
-	var armor = _v0.c;
-	return A2(
-		$elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$table,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'margin-top', '20px')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$tr,
+var $author$project$Model$RemoveEnemy = function (a) {
+	return {$: 'RemoveEnemy', a: a};
+};
+var $author$project$Model$CharacterDeath = function (a) {
+	return {$: 'CharacterDeath', a: a};
+};
+var $author$project$Model$DoNothing = {$: 'DoNothing'};
+var $author$project$Model$UpdateEnemy = F2(
+	function (a, b) {
+		return {$: 'UpdateEnemy', a: a, b: b};
+	});
+var $elm$core$Array$getHelp = F3(
+	function (shift, index, tree) {
+		getHelp:
+		while (true) {
+			var pos = $elm$core$Array$bitMask & (index >>> shift);
+			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (_v0.$ === 'SubTree') {
+				var subTree = _v0.a;
+				var $temp$shift = shift - $elm$core$Array$shiftStep,
+					$temp$index = index,
+					$temp$tree = subTree;
+				shift = $temp$shift;
+				index = $temp$index;
+				tree = $temp$tree;
+				continue getHelp;
+			} else {
+				var values = _v0.a;
+				return A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, values);
+			}
+		}
+	});
+var $elm$core$Array$get = F2(
+	function (index, _v0) {
+		var len = _v0.a;
+		var startShift = _v0.b;
+		var tree = _v0.c;
+		var tail = _v0.d;
+		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? $elm$core$Maybe$Nothing : ((_Utils_cmp(
+			index,
+			$elm$core$Array$tailIndex(len)) > -1) ? $elm$core$Maybe$Just(
+			A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, tail)) : $elm$core$Maybe$Just(
+			A3($elm$core$Array$getHelp, startShift, index, tree)));
+	});
+var $author$project$FightingTool$attack = F3(
+	function (model, id, damage) {
+		var _v0 = A2($elm$core$Array$get, id, model.enemy);
+		if (_v0.$ === 'Just') {
+			var _v1 = _v0.a;
+			var name = _v1.a;
+			var health = _v1.b;
+			var armor = _v1.c;
+			return (_Utils_cmp(damage, armor) > 0) ? ((((health - damage) + armor) <= 0) ? $author$project$Model$CharacterDeath(id) : A2(
+				$author$project$Model$UpdateEnemy,
+				id,
+				A3($author$project$Model$Enemy, name, (health - damage) + armor, armor))) : $author$project$Model$DoNothing;
+		} else {
+			return $author$project$Model$DoNothing;
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Danger = {$: 'Danger'};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled = function (a) {
+	return {$: 'Roled', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Button$danger = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Danger));
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Success = {$: 'Success'};
+var $rundis$elm_bootstrap$Bootstrap$Button$success = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Success));
+var $rundis$elm_bootstrap$Bootstrap$Table$Td = function (a) {
+	return {$: 'Td', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$td = F2(
+	function (options, children) {
+		return $rundis$elm_bootstrap$Bootstrap$Table$Td(
+			{children: children, options: options});
+	});
+var $rundis$elm_bootstrap$Bootstrap$Table$Row = function (a) {
+	return {$: 'Row', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$tr = F2(
+	function (options, cells) {
+		return $rundis$elm_bootstrap$Bootstrap$Table$Row(
+			{cells: cells, options: options});
+	});
+var $author$project$FightingTool$displayCharacters = F2(
+	function (model, chars) {
+		return A2(
+			$elm$core$List$indexedMap,
+			F2(
+				function (i, c) {
+					var _v0 = function () {
+						var n = c.a;
+						var h = c.b;
+						var a = c.c;
+						return _Utils_Tuple3(n, h, a);
+					}();
+					var name = _v0.a;
+					var health = _v0.b;
+					var armor = _v0.c;
+					return A2(
+						$rundis$elm_bootstrap$Bootstrap$Table$tr,
 						_List_Nil,
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$th,
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
 								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$text('Name')
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(i))
 									])),
 								A2(
-								$elm$html$Html$th,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('LeP')
-									])),
-								A2(
-								$elm$html$Html$th,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('RS')
-									]))
-							])),
-						A2(
-						$elm$html$Html$tr,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$td,
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
 								_List_Nil,
 								_List_fromArray(
 									[
 										$elm$html$Html$text(name)
 									])),
 								A2(
-								$elm$html$Html$td,
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
 								_List_Nil,
 								_List_fromArray(
 									[
@@ -8274,17 +8781,61 @@ var $author$project$FightingTool$displayEnemy = function (model) {
 										$elm$core$String$fromInt(health))
 									])),
 								A2(
-								$elm$html$Html$td,
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
 								_List_Nil,
 								_List_fromArray(
 									[
 										$elm$html$Html$text(
 										$elm$core$String$fromInt(armor))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Button$success,
+												$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														$elm$html$Html$Events$onClick(
+														A3($author$project$FightingTool$attack, model, i, 5))
+													]))
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Angriff')
+											]))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Button$danger,
+												$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														$elm$html$Html$Events$onClick(
+														$author$project$Model$RemoveEnemy(i))
+													]))
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Löschen')
+											]))
 									]))
-							]))
-					]))
-			]));
-};
+							]));
+				}),
+			$elm$core$Array$toList(chars));
+	});
 var $author$project$Model$LoadEnemy = function (a) {
 	return {$: 'LoadEnemy', a: a};
 };
@@ -8523,9 +9074,6 @@ var $rundis$elm_bootstrap$Bootstrap$Dropdown$header = function (children) {
 					$elm$html$Html$Attributes$class('dropdown-header')
 				]),
 			children));
-};
-var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled = function (a) {
-	return {$: 'Roled', a: a};
 };
 var $rundis$elm_bootstrap$Bootstrap$Button$primary = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary));
@@ -8901,107 +9449,9 @@ var $author$project$FightingTool$dropdownMenu = function (model) {
 				})
 			]));
 };
-var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
-var $author$project$FightingTool$body = function (model) {
-	return A2(
-		$elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				$author$project$FightingTool$dropdownMenu(model),
-				$author$project$FightingTool$displayEnemy(model),
-				A2(
-				$elm$html$Html$input,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$type_('number'),
-						$elm$html$Html$Attributes$name('Damage'),
-						$elm$html$Html$Attributes$placeholder(model.damage),
-						$elm$html$Html$Events$onInput($author$project$Model$ChangeDamage)
-					]),
-				_List_Nil),
-				A2(
-				$elm$html$Html$button,
-				_List_fromArray(
-					[
-						$elm$html$Html$Events$onClick(
-						A2(
-							$author$project$FightingTool$attack,
-							model,
-							$elm$core$String$toInt(model.damage)))
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Schaden')
-					])),
-				A2(
-				$elm$html$Html$input,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$type_('text'),
-						$elm$html$Html$Attributes$name('Dice'),
-						$elm$html$Html$Attributes$placeholder(model.dice),
-						$elm$html$Html$Events$onInput($author$project$Model$ChangeTmpDice)
-					]),
-				_List_Nil),
-				A2(
-				$elm$html$Html$button,
-				_List_fromArray(
-					[
-						$elm$html$Html$Events$onClick(
-						$author$project$Model$DiceAndSlice(model.tmpdice))
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Schaden würfeln')
-					])),
-				$author$project$FightingTool$customEnemy(model),
-				$author$project$FightingTool$deathAlert(model)
-			]));
-};
-var $rundis$elm_bootstrap$Bootstrap$Tab$Config = function (a) {
-	return {$: 'Config', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Tab$config = function (toMsg) {
-	return $rundis$elm_bootstrap$Bootstrap$Tab$Config(
-		{attributes: _List_Nil, isPill: false, items: _List_Nil, layout: $elm$core$Maybe$Nothing, toMsg: toMsg, useHash: false, withAnimation: false});
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Column = function (a) {
-	return {$: 'Column', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$col = F2(
-	function (options, children) {
-		return $rundis$elm_bootstrap$Bootstrap$Grid$Column(
-			{children: children, options: options});
-	});
-var $author$project$Model$AddCharacterIcon = function (a) {
-	return {$: 'AddCharacterIcon', a: a};
-};
-var $author$project$Model$MonsterIcon = F2(
-	function (a, b) {
-		return {$: 'MonsterIcon', a: a, b: b};
-	});
-var $author$project$Model$MouseDraw = function (a) {
-	return {$: 'MouseDraw', a: a};
-};
-var $author$project$Model$PlayerIcon = F2(
-	function (a, b) {
-		return {$: 'PlayerIcon', a: a, b: b};
-	});
-var $rundis$elm_bootstrap$Bootstrap$Table$Bordered = {$: 'Bordered'};
-var $rundis$elm_bootstrap$Bootstrap$Table$bordered = $rundis$elm_bootstrap$Bootstrap$Table$Bordered;
 var $rundis$elm_bootstrap$Bootstrap$Table$Hover = {$: 'Hover'};
 var $rundis$elm_bootstrap$Bootstrap$Table$hover = $rundis$elm_bootstrap$Bootstrap$Table$Hover;
-var $rundis$elm_bootstrap$Bootstrap$Table$Responsive = function (a) {
-	return {$: 'Responsive', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Table$responsive = $rundis$elm_bootstrap$Bootstrap$Table$Responsive($elm$core$Maybe$Nothing);
-var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
-	return {$: 'RowAttr', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Table$rowAttr = function (attr_) {
-	return $rundis$elm_bootstrap$Bootstrap$Table$RowAttr(attr_);
-};
+var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
 var $rundis$elm_bootstrap$Bootstrap$Table$THead = function (a) {
 	return {$: 'THead', a: a};
 };
@@ -9009,14 +9459,6 @@ var $rundis$elm_bootstrap$Bootstrap$Table$thead = F2(
 	function (options, rows) {
 		return $rundis$elm_bootstrap$Bootstrap$Table$THead(
 			{options: options, rows: rows});
-	});
-var $rundis$elm_bootstrap$Bootstrap$Table$Row = function (a) {
-	return {$: 'Row', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Table$tr = F2(
-	function (options, cells) {
-		return $rundis$elm_bootstrap$Bootstrap$Table$Row(
-			{cells: cells, options: options});
 	});
 var $rundis$elm_bootstrap$Bootstrap$Table$simpleThead = function (cells) {
 	return A2(
@@ -9026,17 +9468,6 @@ var $rundis$elm_bootstrap$Bootstrap$Table$simpleThead = function (cells) {
 			[
 				A2($rundis$elm_bootstrap$Bootstrap$Table$tr, _List_Nil, cells)
 			]));
-};
-var $author$project$DungeonMap$stopBubbling = function (msg) {
-	return A2(
-		$elm$html$Html$Events$stopPropagationOn,
-		'click',
-		A2(
-			$elm$json$Json$Decode$map,
-			function (m) {
-				return _Utils_Tuple2(m, true);
-			},
-			$elm$json$Json$Decode$succeed(msg)));
 };
 var $rundis$elm_bootstrap$Bootstrap$Table$Striped = {$: 'Striped'};
 var $rundis$elm_bootstrap$Bootstrap$Table$striped = $rundis$elm_bootstrap$Bootstrap$Table$Striped;
@@ -9083,9 +9514,6 @@ var $rundis$elm_bootstrap$Bootstrap$Table$KeyedRow = function (a) {
 };
 var $rundis$elm_bootstrap$Bootstrap$Table$InversedCell = function (a) {
 	return {$: 'InversedCell', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Table$Td = function (a) {
-	return {$: 'Td', a: a};
 };
 var $rundis$elm_bootstrap$Bootstrap$Table$Th = function (a) {
 	return {$: 'Th', a: a};
@@ -9368,6 +9796,8 @@ var $rundis$elm_bootstrap$Bootstrap$Table$cellAttribute = function (option) {
 var $rundis$elm_bootstrap$Bootstrap$Table$cellAttributes = function (options) {
 	return A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Table$cellAttribute, options);
 };
+var $elm$html$Html$td = _VirtualDom_node('td');
+var $elm$html$Html$th = _VirtualDom_node('th');
 var $rundis$elm_bootstrap$Bootstrap$Table$renderCell = function (cell) {
 	if (cell.$ === 'Td') {
 		var options = cell.a.options;
@@ -9411,6 +9841,7 @@ var $rundis$elm_bootstrap$Bootstrap$Table$rowClass = function (option) {
 var $rundis$elm_bootstrap$Bootstrap$Table$rowAttributes = function (options) {
 	return A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Table$rowClass, options);
 };
+var $elm$html$Html$tr = _VirtualDom_node('tr');
 var $rundis$elm_bootstrap$Bootstrap$Table$renderRow = function (row) {
 	if (row.$ === 'Row') {
 		var options = row.a.options;
@@ -9496,6 +9927,7 @@ var $rundis$elm_bootstrap$Bootstrap$Table$renderTHead = function (_v0) {
 		$rundis$elm_bootstrap$Bootstrap$Table$theadAttributes(options),
 		A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Table$renderRow, rows));
 };
+var $elm$html$Html$table = _VirtualDom_node('table');
 var $rundis$elm_bootstrap$Bootstrap$Table$tableClass = function (option) {
 	switch (option.$) {
 		case 'Inversed':
@@ -9564,16 +9996,152 @@ var $rundis$elm_bootstrap$Bootstrap$Table$tbody = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Table$TBody(
 			{attributes: attributes, rows: rows});
 	});
-var $rundis$elm_bootstrap$Bootstrap$Table$td = F2(
-	function (options, children) {
-		return $rundis$elm_bootstrap$Bootstrap$Table$Td(
-			{children: children, options: options});
-	});
 var $rundis$elm_bootstrap$Bootstrap$Table$th = F2(
 	function (options, children) {
 		return $rundis$elm_bootstrap$Bootstrap$Table$Th(
 			{children: children, options: options});
 	});
+var $author$project$FightingTool$body = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				$author$project$FightingTool$dropdownMenu(model),
+				A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$rundis$elm_bootstrap$Bootstrap$Table$table(
+						{
+							options: _List_fromArray(
+								[$rundis$elm_bootstrap$Bootstrap$Table$striped, $rundis$elm_bootstrap$Bootstrap$Table$hover]),
+							tbody: A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$tbody,
+								_List_Nil,
+								A2($author$project$FightingTool$displayCharacters, model, model.enemy)),
+							thead: $rundis$elm_bootstrap$Bootstrap$Table$simpleThead(
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Table$th,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('ID')
+											])),
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Table$th,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Name')
+											])),
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Table$th,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('LeP')
+											])),
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Table$th,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('RS')
+											]))
+									]))
+						})
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('number'),
+						$elm$html$Html$Attributes$name('Damage'),
+						$elm$html$Html$Attributes$placeholder(model.damage),
+						$elm$html$Html$Events$onInput($author$project$Model$ChangeDamage)
+					]),
+				_List_Nil),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('text'),
+						$elm$html$Html$Attributes$name('Dice'),
+						$elm$html$Html$Attributes$placeholder(model.dice),
+						$elm$html$Html$Events$onInput($author$project$Model$ChangeTmpDice)
+					]),
+				_List_Nil),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick(
+						$author$project$Model$DiceAndSlice(model.tmpdice))
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Schaden würfeln')
+					])),
+				$author$project$FightingTool$customEnemy(model),
+				$author$project$FightingTool$deathAlert(model)
+			]));
+};
+var $rundis$elm_bootstrap$Bootstrap$Tab$Config = function (a) {
+	return {$: 'Config', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Tab$config = function (toMsg) {
+	return $rundis$elm_bootstrap$Bootstrap$Tab$Config(
+		{attributes: _List_Nil, isPill: false, items: _List_Nil, layout: $elm$core$Maybe$Nothing, toMsg: toMsg, useHash: false, withAnimation: false});
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Column = function (a) {
+	return {$: 'Column', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$col = F2(
+	function (options, children) {
+		return $rundis$elm_bootstrap$Bootstrap$Grid$Column(
+			{children: children, options: options});
+	});
+var $author$project$Model$AddCharacterIcon = function (a) {
+	return {$: 'AddCharacterIcon', a: a};
+};
+var $author$project$Model$MonsterIcon = F2(
+	function (a, b) {
+		return {$: 'MonsterIcon', a: a, b: b};
+	});
+var $author$project$Model$MouseDraw = function (a) {
+	return {$: 'MouseDraw', a: a};
+};
+var $author$project$Model$PlayerIcon = F2(
+	function (a, b) {
+		return {$: 'PlayerIcon', a: a, b: b};
+	});
+var $rundis$elm_bootstrap$Bootstrap$Table$Bordered = {$: 'Bordered'};
+var $rundis$elm_bootstrap$Bootstrap$Table$bordered = $rundis$elm_bootstrap$Bootstrap$Table$Bordered;
+var $rundis$elm_bootstrap$Bootstrap$Table$Responsive = function (a) {
+	return {$: 'Responsive', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$responsive = $rundis$elm_bootstrap$Bootstrap$Table$Responsive($elm$core$Maybe$Nothing);
+var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
+	return {$: 'RowAttr', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$rowAttr = function (attr_) {
+	return $rundis$elm_bootstrap$Bootstrap$Table$RowAttr(attr_);
+};
+var $author$project$DungeonMap$stopBubbling = function (msg) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'click',
+		A2(
+			$elm$json$Json$Decode$map,
+			function (m) {
+				return _Utils_Tuple2(m, true);
+			},
+			$elm$json$Json$Decode$succeed(msg)));
+};
 var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 	return A2(
 		$elm$html$Html$div,

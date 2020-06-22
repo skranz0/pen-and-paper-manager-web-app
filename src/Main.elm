@@ -9,6 +9,8 @@ import Bootstrap.Utilities.Spacing as Spacing exposing (mt3)
 import Bootstrap.Modal as Modal
 import Bootstrap.Tab as Tab
 import Bootstrap.Dropdown as Dropdown
+import Array
+import Array.Extra as Array
 
 --our Modules
 import DungeonMap exposing (dungeonMapView)

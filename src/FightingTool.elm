@@ -9,6 +9,9 @@ import Json.Decode
 import Bootstrap.Modal as Modal
 import Bootstrap.Button as Button
 import Bootstrap.Dropdown as Dropdown
+import Bootstrap.Table as Table
+import Array
+import Array.Extra as Array
 import Random
 
 --our Modules
@@ -39,7 +42,6 @@ body model =
             , Attr.placeholder model.damage
             , Html.Events.onInput ChangeDamage
             ] [ ]
-        , Html.button [ Html.Events.onClick <| attack model <| String.toInt model.damage ] [ text "Schaden" ]
         , Html.input 
             [ Attr.type_ "text"
             , Attr.name "Dice" 
