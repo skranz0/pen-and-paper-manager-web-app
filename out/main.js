@@ -5319,14 +5319,14 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$DrawingInactive = {$: 'DrawingInactive'};
+var $author$project$Model$DrawingInactive = {$: 'DrawingInactive'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$Hide = {$: 'Hide'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$hidden = $rundis$elm_bootstrap$Bootstrap$Modal$Hide;
-var $author$project$Main$Enemy = F3(
+var $author$project$Model$Enemy = F3(
 	function (a, b, c) {
 		return {$: 'Enemy', a: a, b: b, c: c};
 	});
-var $author$project$Main$initEnemy = A3($author$project$Main$Enemy, 'none', 0, 0);
+var $author$project$Model$initEnemy = A3($author$project$Model$Enemy, 'none', 0, 0);
 var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$Area = F4(
 	function (top, left, width, height) {
 		return {height: height, left: left, top: top, width: width};
@@ -5349,12 +5349,12 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$initialState = $rundis$elm_bootstrap$Boo
 	{activeTab: $elm$core$Maybe$Nothing, visibility: $rundis$elm_bootstrap$Bootstrap$Tab$Showing});
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Main$init = function (_v0) {
+var $author$project$Model$init = function (_v0) {
 	return _Utils_Tuple2(
-		{addCharacterIcon: $author$project$Main$DrawingInactive, characterList: _List_Nil, damage: '', deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, enemy: $author$project$Main$initEnemy, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Main$initEnemy},
+		{addCharacterIcon: $author$project$Model$DrawingInactive, characterList: _List_Nil, damage: '', deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, enemy: $author$project$Model$initEnemy, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy},
 		$elm$core$Platform$Cmd$none);
 };
-var $author$project$Main$MyDrop1Msg = function (a) {
+var $author$project$Model$MyDrop1Msg = function (a) {
 	return {$: 'MyDrop1Msg', a: a};
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5924,20 +5924,20 @@ var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$batch(
 		_List_fromArray(
 			[
-				A2($rundis$elm_bootstrap$Bootstrap$Dropdown$subscriptions, model.myDrop1State, $author$project$Main$MyDrop1Msg)
+				A2($rundis$elm_bootstrap$Bootstrap$Dropdown$subscriptions, model.myDrop1State, $author$project$Model$MyDrop1Msg)
 			]));
 };
-var $author$project$Main$DrawIcon = function (a) {
+var $author$project$Model$DrawIcon = function (a) {
 	return {$: 'DrawIcon', a: a};
 };
-var $author$project$Main$EnemyLoaded = function (a) {
+var $author$project$Model$EnemyLoaded = function (a) {
 	return {$: 'EnemyLoaded', a: a};
 };
-var $author$project$Main$Monster = F2(
+var $author$project$Model$Monster = F2(
 	function (a, b) {
 		return {$: 'Monster', a: a, b: b};
 	});
-var $author$project$Main$Player = F2(
+var $author$project$Model$Player = F2(
 	function (a, b) {
 		return {$: 'Player', a: a, b: b};
 	});
@@ -6600,9 +6600,9 @@ var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $elm$json$Json$Decode$map3 = _Json_map3;
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$Main$parseEnemy = A4(
+var $author$project$FightingTool$parseEnemy = A4(
 	$elm$json$Json$Decode$map3,
-	$author$project$Main$Enemy,
+	$author$project$Model$Enemy,
 	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'health', $elm$json$Json$Decode$int),
 	A2($elm$json$Json$Decode$field, 'armor', $elm$json$Json$Decode$int));
@@ -6617,7 +6617,7 @@ var $author$project$Main$update = F2(
 					model,
 					$elm$http$Http$get(
 						{
-							expect: A2($elm$http$Http$expectJson, $author$project$Main$EnemyLoaded, $author$project$Main$parseEnemy),
+							expect: A2($elm$http$Http$expectJson, $author$project$Model$EnemyLoaded, $author$project$FightingTool$parseEnemy),
 							url: './res/' + (enemy + '.json')
 						}));
 			case 'EnemyLoaded':
@@ -6673,7 +6673,7 @@ var $author$project$Main$update = F2(
 						model,
 						{
 							deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$shown,
-							enemy: A3($author$project$Main$Enemy, name, 0, armor)
+							enemy: A3($author$project$Model$Enemy, name, 0, armor)
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'CloseDeathAlert':
@@ -6716,10 +6716,10 @@ var $author$project$Main$update = F2(
 							_Utils_update(
 								model,
 								{
-									addCharacterIcon: $author$project$Main$DrawingInactive,
+									addCharacterIcon: $author$project$Model$DrawingInactive,
 									characterList: A2(
 										$elm$core$List$cons,
-										A2($author$project$Main$Player, x, y),
+										A2($author$project$Model$Player, x, y),
 										model.characterList)
 								}),
 							$elm$core$Platform$Cmd$none);
@@ -6730,10 +6730,10 @@ var $author$project$Main$update = F2(
 							_Utils_update(
 								model,
 								{
-									addCharacterIcon: $author$project$Main$DrawingInactive,
+									addCharacterIcon: $author$project$Model$DrawingInactive,
 									characterList: A2(
 										$elm$core$List$cons,
-										A2($author$project$Main$Monster, x, y),
+										A2($author$project$Model$Monster, x, y),
 										model.characterList)
 								}),
 							$elm$core$Platform$Cmd$none);
@@ -6744,24 +6744,24 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								addCharacterIcon: $author$project$Main$DrawIcon(s)
+								addCharacterIcon: $author$project$Model$DrawIcon(s)
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
 		}
 	});
-var $author$project$Main$TabMsg = function (a) {
+var $author$project$Model$TabMsg = function (a) {
 	return {$: 'TabMsg', a: a};
 };
-var $author$project$Main$ChangeDamage = function (a) {
+var $author$project$Model$ChangeDamage = function (a) {
 	return {$: 'ChangeDamage', a: a};
 };
-var $author$project$Main$CharacterDeath = {$: 'CharacterDeath'};
-var $author$project$Main$DoNothing = {$: 'DoNothing'};
-var $author$project$Main$UpdateEnemy = function (a) {
+var $author$project$Model$CharacterDeath = {$: 'CharacterDeath'};
+var $author$project$Model$DoNothing = {$: 'DoNothing'};
+var $author$project$Model$UpdateEnemy = function (a) {
 	return {$: 'UpdateEnemy', a: a};
 };
-var $author$project$Main$attack = F2(
+var $author$project$FightingTool$attack = F2(
 	function (model, damage) {
 		if (damage.$ === 'Just') {
 			var value = damage.a;
@@ -6769,14 +6769,14 @@ var $author$project$Main$attack = F2(
 			var name = _v1.a;
 			var health = _v1.b;
 			var armor = _v1.c;
-			return (_Utils_cmp(value, armor) > 0) ? ((((health - value) + armor) <= 0) ? $author$project$Main$CharacterDeath : $author$project$Main$UpdateEnemy(
-				A3($author$project$Main$Enemy, name, (health - value) + armor, armor))) : $author$project$Main$DoNothing;
+			return (_Utils_cmp(value, armor) > 0) ? ((((health - value) + armor) <= 0) ? $author$project$Model$CharacterDeath : $author$project$Model$UpdateEnemy(
+				A3($author$project$Model$Enemy, name, (health - value) + armor, armor))) : $author$project$Model$DoNothing;
 		} else {
-			return $author$project$Main$DoNothing;
+			return $author$project$Model$DoNothing;
 		}
 	});
 var $elm$html$Html$button = _VirtualDom_node('button');
-var $author$project$Main$UpdateTmp = function (a) {
+var $author$project$Model$UpdateTmp = function (a) {
 	return {$: 'UpdateTmp', a: a};
 };
 var $elm$html$Html$br = _VirtualDom_node('br');
@@ -6854,7 +6854,7 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var $author$project$Main$customEnemy = function (model) {
+var $author$project$FightingTool$customEnemy = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
@@ -6887,8 +6887,8 @@ var $author$project$Main$customEnemy = function (model) {
 							}();
 							var health = _v0.a;
 							var armor = _v0.b;
-							return $author$project$Main$UpdateTmp(
-								A3($author$project$Main$Enemy, n, health, armor));
+							return $author$project$Model$UpdateTmp(
+								A3($author$project$Model$Enemy, n, health, armor));
 						})
 					]),
 				_List_Nil),
@@ -6920,9 +6920,9 @@ var $author$project$Main$customEnemy = function (model) {
 							}();
 							var name = _v2.a;
 							var armor = _v2.b;
-							return $author$project$Main$UpdateTmp(
+							return $author$project$Model$UpdateTmp(
 								A3(
-									$author$project$Main$Enemy,
+									$author$project$Model$Enemy,
 									name,
 									A2(
 										$elm$core$Maybe$withDefault,
@@ -6960,9 +6960,9 @@ var $author$project$Main$customEnemy = function (model) {
 							}();
 							var name = _v4.a;
 							var health = _v4.b;
-							return $author$project$Main$UpdateTmp(
+							return $author$project$Model$UpdateTmp(
 								A3(
-									$author$project$Main$Enemy,
+									$author$project$Model$Enemy,
 									name,
 									health,
 									A2(
@@ -6978,7 +6978,7 @@ var $author$project$Main$customEnemy = function (model) {
 				_List_fromArray(
 					[
 						$elm$html$Html$Events$onClick(
-						$author$project$Main$UpdateEnemy(model.tmpEnemy))
+						$author$project$Model$UpdateEnemy(model.tmpEnemy))
 					]),
 				_List_fromArray(
 					[
@@ -6986,7 +6986,7 @@ var $author$project$Main$customEnemy = function (model) {
 					]))
 			]));
 };
-var $author$project$Main$CloseDeathAlert = {$: 'CloseDeathAlert'};
+var $author$project$Model$CloseDeathAlert = {$: 'CloseDeathAlert'};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
 	return {$: 'Attrs', a: a};
 };
@@ -7636,7 +7636,7 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$view = F2(
 					]),
 				A2($rundis$elm_bootstrap$Bootstrap$Modal$backdrop, visibility, conf)));
 	});
-var $author$project$Main$deathAlert = function (model) {
+var $author$project$FightingTool$deathAlert = function (model) {
 	return A2(
 		$rundis$elm_bootstrap$Bootstrap$Modal$view,
 		model.deathAlertVisibility,
@@ -7653,7 +7653,7 @@ var $author$project$Main$deathAlert = function (model) {
 							$rundis$elm_bootstrap$Bootstrap$Button$attrs(
 							_List_fromArray(
 								[
-									$elm$html$Html$Events$onClick($author$project$Main$CloseDeathAlert)
+									$elm$html$Html$Events$onClick($author$project$Model$CloseDeathAlert)
 								]))
 						]),
 					_List_fromArray(
@@ -7685,13 +7685,13 @@ var $author$project$Main$deathAlert = function (model) {
 						$rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick,
 						true,
 						$rundis$elm_bootstrap$Bootstrap$Modal$small(
-							$rundis$elm_bootstrap$Bootstrap$Modal$config($author$project$Main$CloseDeathAlert)))))));
+							$rundis$elm_bootstrap$Bootstrap$Modal$config($author$project$Model$CloseDeathAlert)))))));
 };
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$html$Html$td = _VirtualDom_node('td');
 var $elm$html$Html$th = _VirtualDom_node('th');
 var $elm$html$Html$tr = _VirtualDom_node('tr');
-var $author$project$Main$displayEnemy = function (model) {
+var $author$project$FightingTool$displayEnemy = function (model) {
 	var _v0 = model.enemy;
 	var name = _v0.a;
 	var health = _v0.b;
@@ -7768,7 +7768,7 @@ var $author$project$Main$displayEnemy = function (model) {
 					]))
 			]));
 };
-var $author$project$Main$LoadEnemy = function (a) {
+var $author$project$Model$LoadEnemy = function (a) {
 	return {$: 'LoadEnemy', a: a};
 };
 var $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem = function (a) {
@@ -8190,7 +8190,7 @@ var $rundis$elm_bootstrap$Bootstrap$Dropdown$toggle = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownToggle(
 			A2($rundis$elm_bootstrap$Bootstrap$Dropdown$togglePrivate, buttonOptions, children));
 	});
-var $author$project$Main$dropdownMenu = function (model) {
+var $author$project$FightingTool$dropdownMenu = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
@@ -8212,7 +8212,7 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$LoadEnemy('goblin'))
+									$author$project$Model$LoadEnemy('goblin'))
 								]),
 							_List_fromArray(
 								[
@@ -8223,7 +8223,7 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$LoadEnemy('oger'))
+									$author$project$Model$LoadEnemy('oger'))
 								]),
 							_List_fromArray(
 								[
@@ -8234,7 +8234,7 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$LoadEnemy('ork'))
+									$author$project$Model$LoadEnemy('ork'))
 								]),
 							_List_fromArray(
 								[
@@ -8245,7 +8245,7 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$LoadEnemy('troll'))
+									$author$project$Model$LoadEnemy('troll'))
 								]),
 							_List_fromArray(
 								[
@@ -8261,7 +8261,7 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$LoadEnemy('höhlenspinne'))
+									$author$project$Model$LoadEnemy('höhlenspinne'))
 								]),
 							_List_fromArray(
 								[
@@ -8272,7 +8272,7 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$LoadEnemy('gruftassel'))
+									$author$project$Model$LoadEnemy('gruftassel'))
 								]),
 							_List_fromArray(
 								[
@@ -8283,7 +8283,7 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$LoadEnemy('grimwolf'))
+									$author$project$Model$LoadEnemy('grimwolf'))
 								]),
 							_List_fromArray(
 								[
@@ -8294,7 +8294,7 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$LoadEnemy('schwarzbär'))
+									$author$project$Model$LoadEnemy('schwarzbär'))
 								]),
 							_List_fromArray(
 								[
@@ -8305,7 +8305,7 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$LoadEnemy('wildschwein'))
+									$author$project$Model$LoadEnemy('wildschwein'))
 								]),
 							_List_fromArray(
 								[
@@ -8316,7 +8316,7 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$LoadEnemy('wolfsratte'))
+									$author$project$Model$LoadEnemy('wolfsratte'))
 								]),
 							_List_fromArray(
 								[
@@ -8332,7 +8332,7 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$LoadEnemy('krakenmolch'))
+									$author$project$Model$LoadEnemy('krakenmolch'))
 								]),
 							_List_fromArray(
 								[
@@ -8348,7 +8348,7 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$LoadEnemy('tatzelwurm'))
+									$author$project$Model$LoadEnemy('tatzelwurm'))
 								]),
 							_List_fromArray(
 								[
@@ -8364,7 +8364,7 @@ var $author$project$Main$dropdownMenu = function (model) {
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$LoadEnemy('waldschrat'))
+									$author$project$Model$LoadEnemy('waldschrat'))
 								]),
 							_List_fromArray(
 								[
@@ -8380,19 +8380,19 @@ var $author$project$Main$dropdownMenu = function (model) {
 							[
 								$elm$html$Html$text('Gegner')
 							])),
-					toggleMsg: $author$project$Main$MyDrop1Msg
+					toggleMsg: $author$project$Model$MyDrop1Msg
 				})
 			]));
 };
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
-var $author$project$Main$body = function (model) {
+var $author$project$FightingTool$body = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
-				$author$project$Main$dropdownMenu(model),
-				$author$project$Main$displayEnemy(model),
+				$author$project$FightingTool$dropdownMenu(model),
+				$author$project$FightingTool$displayEnemy(model),
 				A2(
 				$elm$html$Html$input,
 				_List_fromArray(
@@ -8400,7 +8400,7 @@ var $author$project$Main$body = function (model) {
 						$elm$html$Html$Attributes$type_('number'),
 						$elm$html$Html$Attributes$name('Damage'),
 						$elm$html$Html$Attributes$placeholder('Schaden'),
-						$elm$html$Html$Events$onInput($author$project$Main$ChangeDamage)
+						$elm$html$Html$Events$onInput($author$project$Model$ChangeDamage)
 					]),
 				_List_Nil),
 				A2(
@@ -8409,7 +8409,7 @@ var $author$project$Main$body = function (model) {
 					[
 						$elm$html$Html$Events$onClick(
 						A2(
-							$author$project$Main$attack,
+							$author$project$FightingTool$attack,
 							model,
 							$elm$core$String$toInt(model.damage)))
 					]),
@@ -8417,8 +8417,8 @@ var $author$project$Main$body = function (model) {
 					[
 						$elm$html$Html$text('Schaden')
 					])),
-				$author$project$Main$customEnemy(model),
-				$author$project$Main$deathAlert(model)
+				$author$project$FightingTool$customEnemy(model),
+				$author$project$FightingTool$deathAlert(model)
 			]));
 };
 var $rundis$elm_bootstrap$Bootstrap$Tab$Config = function (a) {
@@ -8428,112 +8428,6 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$config = function (toMsg) {
 	return $rundis$elm_bootstrap$Bootstrap$Tab$Config(
 		{attributes: _List_Nil, isPill: false, items: _List_Nil, layout: $elm$core$Maybe$Nothing, toMsg: toMsg, useHash: false, withAnimation: false});
 };
-var $elm$html$Html$footer = _VirtualDom_node('footer');
-var $author$project$Main$footer = A2(
-	$elm$html$Html$footer,
-	_List_fromArray(
-		[
-			$elm$html$Html$Attributes$class('footer animate__animated animate__fadeInUp')
-		]),
-	_List_fromArray(
-		[
-			A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('content has-text-centered')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$p,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text('Entwickelt von Laura Spilling, Stefan Kranz, Marcus Gagelmann und Alexander Kampf')
-						])),
-					A2(
-					$elm$html$Html$p,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text('Einführung in das World Wide Web')
-						]))
-				]))
-		]));
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$html$Html$h2 = _VirtualDom_node('h2');
-var $elm$html$Html$section = _VirtualDom_node('section');
-var $author$project$Main$header = A2(
-	$elm$html$Html$section,
-	_List_fromArray(
-		[
-			$elm$html$Html$Attributes$class('hero is-primary is-bold animate__animated animate__fadeInDown')
-		]),
-	_List_fromArray(
-		[
-			A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('hero-body')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('container')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h1,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('title')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Pen & Paper Manager')
-								])),
-							A2(
-							$elm$html$Html$h2,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('subtitle')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Für \"Das schwarze Auge\" Version 5')
-								]))
-						]))
-				]))
-		]));
-var $rundis$elm_bootstrap$Bootstrap$Tab$Item = function (a) {
-	return {$: 'Item', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Tab$item = function (rec) {
-	return $rundis$elm_bootstrap$Bootstrap$Tab$Item(
-		{id: rec.id, link: rec.link, pane: rec.pane});
-};
-var $rundis$elm_bootstrap$Bootstrap$Tab$items = F2(
-	function (items_, _v0) {
-		var configRec = _v0.a;
-		return $rundis$elm_bootstrap$Bootstrap$Tab$Config(
-			_Utils_update(
-				configRec,
-				{items: items_}));
-	});
-var $rundis$elm_bootstrap$Bootstrap$Tab$Link = function (a) {
-	return {$: 'Link', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Tab$link = F2(
-	function (attributes, children) {
-		return $rundis$elm_bootstrap$Bootstrap$Tab$Link(
-			{attributes: attributes, children: children});
-	});
 var $rundis$elm_bootstrap$Bootstrap$Grid$Column = function (a) {
 	return {$: 'Column', a: a};
 };
@@ -8542,17 +8436,17 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$col = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Grid$Column(
 			{children: children, options: options});
 	});
-var $author$project$Main$AddCharacterIcon = function (a) {
+var $author$project$Model$AddCharacterIcon = function (a) {
 	return {$: 'AddCharacterIcon', a: a};
 };
-var $author$project$Main$MonsterIcon = F2(
+var $author$project$Model$MonsterIcon = F2(
 	function (a, b) {
 		return {$: 'MonsterIcon', a: a, b: b};
 	});
-var $author$project$Main$MouseDraw = function (a) {
+var $author$project$Model$MouseDraw = function (a) {
 	return {$: 'MouseDraw', a: a};
 };
-var $author$project$Main$PlayerIcon = F2(
+var $author$project$Model$PlayerIcon = F2(
 	function (a, b) {
 		return {$: 'PlayerIcon', a: a, b: b};
 	});
@@ -8595,7 +8489,7 @@ var $rundis$elm_bootstrap$Bootstrap$Table$simpleThead = function (cells) {
 				A2($rundis$elm_bootstrap$Bootstrap$Table$tr, _List_Nil, cells)
 			]));
 };
-var $author$project$Main$stopBubbling = function (msg) {
+var $author$project$DungeonMap$stopBubbling = function (msg) {
 	return A2(
 		$elm$html$Html$Events$stopPropagationOn,
 		'click',
@@ -9151,7 +9045,7 @@ var $rundis$elm_bootstrap$Bootstrap$Table$th = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Table$Th(
 			{children: children, options: options});
 	});
-var $author$project$Main$dungeonMap_MonsterList = function (model) {
+var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -9174,10 +9068,10 @@ var $author$project$Main$dungeonMap_MonsterList = function (model) {
 								_List_fromArray(
 									[
 										$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
-										$author$project$Main$stopBubbling(
-											$author$project$Main$AddCharacterIcon(
-												$author$project$Main$MouseDraw(
-													A2($author$project$Main$MonsterIcon, '0', '0')))))
+										$author$project$DungeonMap$stopBubbling(
+											$author$project$Model$AddCharacterIcon(
+												$author$project$Model$MouseDraw(
+													A2($author$project$Model$MonsterIcon, '0', '0')))))
 									]),
 								_List_fromArray(
 									[
@@ -9208,10 +9102,10 @@ var $author$project$Main$dungeonMap_MonsterList = function (model) {
 								_List_fromArray(
 									[
 										$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
-										$author$project$Main$stopBubbling(
-											$author$project$Main$AddCharacterIcon(
-												$author$project$Main$MouseDraw(
-													A2($author$project$Main$MonsterIcon, '0', '0')))))
+										$author$project$DungeonMap$stopBubbling(
+											$author$project$Model$AddCharacterIcon(
+												$author$project$Model$MouseDraw(
+													A2($author$project$Model$MonsterIcon, '0', '0')))))
 									]),
 								_List_fromArray(
 									[
@@ -9242,10 +9136,10 @@ var $author$project$Main$dungeonMap_MonsterList = function (model) {
 								_List_fromArray(
 									[
 										$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
-										$author$project$Main$stopBubbling(
-											$author$project$Main$AddCharacterIcon(
-												$author$project$Main$MouseDraw(
-													A2($author$project$Main$PlayerIcon, '0', '0')))))
+										$author$project$DungeonMap$stopBubbling(
+											$author$project$Model$AddCharacterIcon(
+												$author$project$Model$MouseDraw(
+													A2($author$project$Model$PlayerIcon, '0', '0')))))
 									]),
 								_List_fromArray(
 									[
@@ -9304,7 +9198,7 @@ var $elm$html$Html$figure = _VirtualDom_node('figure');
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var $elm$svg$Svg$image = $elm$svg$Svg$trustedNode('image');
-var $author$project$Main$MouseClick = function (a) {
+var $author$project$Model$MouseClick = function (a) {
 	return {$: 'MouseClick', a: a};
 };
 var $elm$svg$Svg$Events$onClick = function (msg) {
@@ -9313,13 +9207,13 @@ var $elm$svg$Svg$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
-var $author$project$Main$MousePosition = F2(
+var $author$project$Model$MousePosition = F2(
 	function (x, y) {
 		return {x: x, y: y};
 	});
-var $author$project$Main$mousePosition = A3(
+var $author$project$DungeonMap$mousePosition = A3(
 	$elm$json$Json$Decode$map2,
-	$author$project$Main$MousePosition,
+	$author$project$Model$MousePosition,
 	A2(
 		$elm$json$Json$Decode$at,
 		_List_fromArray(
@@ -9331,29 +9225,29 @@ var $author$project$Main$mousePosition = A3(
 			['detail', 'y']),
 		$elm$json$Json$Decode$float));
 var $elm$svg$Svg$Events$on = $elm$html$Html$Events$on;
-var $author$project$Main$onMouseMove = function (mapMousePositionToMsg) {
+var $author$project$DungeonMap$onMouseMove = function (mapMousePositionToMsg) {
 	return A2(
 		$elm$svg$Svg$Events$on,
 		'mousemoveWithCoordinates',
-		A2($elm$json$Json$Decode$map, mapMousePositionToMsg, $author$project$Main$mousePosition));
+		A2($elm$json$Json$Decode$map, mapMousePositionToMsg, $author$project$DungeonMap$mousePosition));
 };
-var $author$project$Main$positionToCircleCenter = function (position) {
-	return $author$project$Main$AddCharacterIcon(
-		$author$project$Main$MouseDraw(
+var $author$project$DungeonMap$positionToCircleCenter = function (position) {
+	return $author$project$Model$AddCharacterIcon(
+		$author$project$Model$MouseDraw(
 			A2(
-				$author$project$Main$PlayerIcon,
+				$author$project$Model$PlayerIcon,
 				$elm$core$String$fromFloat(position.x),
 				$elm$core$String$fromFloat(position.y))));
 };
-var $author$project$Main$positionToRectangleCorner = function (position) {
-	return $author$project$Main$AddCharacterIcon(
-		$author$project$Main$MouseDraw(
+var $author$project$DungeonMap$positionToRectangleCorner = function (position) {
+	return $author$project$Model$AddCharacterIcon(
+		$author$project$Model$MouseDraw(
 			A2(
-				$author$project$Main$MonsterIcon,
+				$author$project$Model$MonsterIcon,
 				$elm$core$String$fromFloat(position.x),
 				$elm$core$String$fromFloat(position.y))));
 };
-var $author$project$Main$mouseDrawEvents = function (addCharacterIcon) {
+var $author$project$DungeonMap$mouseDrawEvents = function (addCharacterIcon) {
 	if (addCharacterIcon.$ === 'DrawIcon') {
 		var characterIcon = addCharacterIcon.a;
 		if (characterIcon.$ === 'PlayerIcon') {
@@ -9362,9 +9256,9 @@ var $author$project$Main$mouseDrawEvents = function (addCharacterIcon) {
 			return _List_fromArray(
 				[
 					$elm$svg$Svg$Events$onClick(
-					$author$project$Main$AddCharacterIcon(
-						$author$project$Main$MouseClick(characterIcon))),
-					$author$project$Main$onMouseMove($author$project$Main$positionToCircleCenter)
+					$author$project$Model$AddCharacterIcon(
+						$author$project$Model$MouseClick(characterIcon))),
+					$author$project$DungeonMap$onMouseMove($author$project$DungeonMap$positionToCircleCenter)
 				]);
 		} else {
 			var x = characterIcon.a;
@@ -9372,9 +9266,9 @@ var $author$project$Main$mouseDrawEvents = function (addCharacterIcon) {
 			return _List_fromArray(
 				[
 					$elm$svg$Svg$Events$onClick(
-					$author$project$Main$AddCharacterIcon(
-						$author$project$Main$MouseClick(characterIcon))),
-					$author$project$Main$onMouseMove($author$project$Main$positionToRectangleCorner)
+					$author$project$Model$AddCharacterIcon(
+						$author$project$Model$MouseClick(characterIcon))),
+					$author$project$DungeonMap$onMouseMove($author$project$DungeonMap$positionToRectangleCorner)
 				]);
 		}
 	} else {
@@ -9391,7 +9285,7 @@ var $elm$svg$Svg$Attributes$style = _VirtualDom_attribute('style');
 var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
 var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var $author$project$Main$newIconsView = function (addCharacterIcon) {
+var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 	if (addCharacterIcon.$ === 'DrawIcon') {
 		var characterIcon = addCharacterIcon.a;
 		return _List_fromArray(
@@ -9469,7 +9363,7 @@ var $elm$core$List$drop = F2(
 			}
 		}
 	});
-var $author$project$Main$getCoord = function (object) {
+var $author$project$DungeonMap$getCoord = function (object) {
 	if (object.$ === 'Monster') {
 		var x = object.a;
 		var y = object.b;
@@ -9480,7 +9374,7 @@ var $author$project$Main$getCoord = function (object) {
 		return x + (',' + y);
 	}
 };
-var $author$project$Main$getIcon = function (object) {
+var $author$project$DungeonMap$getIcon = function (object) {
 	if (object.$ === 'Monster') {
 		var x = object.a;
 		var y = object.b;
@@ -9492,9 +9386,9 @@ var $author$project$Main$getIcon = function (object) {
 	}
 };
 var $elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
-var $author$project$Main$getAreaParam = F2(
+var $author$project$DungeonMap$getAreaParam = F2(
 	function (i, s) {
-		var _v0 = $author$project$Main$getIcon(s);
+		var _v0 = $author$project$DungeonMap$getIcon(s);
 		switch (_v0) {
 			case 'monster':
 				return A2(
@@ -9511,7 +9405,7 @@ var $author$project$Main$getAreaParam = F2(
 									A2(
 										$elm$core$String$split,
 										',',
-										$author$project$Main$getCoord(s))))),
+										$author$project$DungeonMap$getCoord(s))))),
 							$elm$svg$Svg$Attributes$y(
 							A2(
 								$elm$core$Maybe$withDefault,
@@ -9523,7 +9417,7 @@ var $author$project$Main$getAreaParam = F2(
 										A2(
 											$elm$core$String$split,
 											',',
-											$author$project$Main$getCoord(s)))))),
+											$author$project$DungeonMap$getCoord(s)))))),
 							$elm$svg$Svg$Attributes$width('15'),
 							$elm$svg$Svg$Attributes$height('15'),
 							$elm$svg$Svg$Attributes$class('MonsterIcon')
@@ -9544,7 +9438,7 @@ var $author$project$Main$getAreaParam = F2(
 									A2(
 										$elm$core$String$split,
 										',',
-										$author$project$Main$getCoord(s))))),
+										$author$project$DungeonMap$getCoord(s))))),
 							$elm$svg$Svg$Attributes$cy(
 							A2(
 								$elm$core$Maybe$withDefault,
@@ -9556,7 +9450,7 @@ var $author$project$Main$getAreaParam = F2(
 										A2(
 											$elm$core$String$split,
 											',',
-											$author$project$Main$getCoord(s)))))),
+											$author$project$DungeonMap$getCoord(s)))))),
 							$elm$svg$Svg$Attributes$r('10'),
 							$elm$svg$Svg$Attributes$class('PlayerIcon')
 						]),
@@ -9576,7 +9470,7 @@ var $author$project$Main$getAreaParam = F2(
 									A2(
 										$elm$core$String$split,
 										',',
-										$author$project$Main$getCoord(s))))),
+										$author$project$DungeonMap$getCoord(s))))),
 							$elm$svg$Svg$Attributes$cy(
 							A2(
 								$elm$core$Maybe$withDefault,
@@ -9588,14 +9482,14 @@ var $author$project$Main$getAreaParam = F2(
 										A2(
 											$elm$core$String$split,
 											',',
-											$author$project$Main$getCoord(s)))))),
+											$author$project$DungeonMap$getCoord(s)))))),
 							$elm$svg$Svg$Attributes$r('0')
 						]),
 					_List_Nil);
 		}
 	});
-var $author$project$Main$svgIconList = function (model) {
-	return A2($elm$core$List$indexedMap, $author$project$Main$getAreaParam, model.characterList);
+var $author$project$DungeonMap$svgIconList = function (model) {
+	return A2($elm$core$List$indexedMap, $author$project$DungeonMap$getAreaParam, model.characterList);
 };
 var $elm$svg$Svg$Attributes$title = _VirtualDom_attribute('title');
 var $elm$svg$Svg$Attributes$version = _VirtualDom_attribute('version');
@@ -9607,7 +9501,7 @@ var $elm$svg$Svg$Attributes$xlinkHref = function (value) {
 		'xlink:href',
 		_VirtualDom_noJavaScriptUri(value));
 };
-var $author$project$Main$dungeonMap_Svg = function (model) {
+var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -9633,7 +9527,7 @@ var $author$project$Main$dungeonMap_Svg = function (model) {
 									$elm$svg$Svg$Attributes$viewBox('0 0 800 600'),
 									$elm$svg$Svg$Attributes$version('1.1')
 								]),
-							$author$project$Main$mouseDrawEvents(model.addCharacterIcon)),
+							$author$project$DungeonMap$mouseDrawEvents(model.addCharacterIcon)),
 						_Utils_ap(
 							_List_fromArray(
 								[
@@ -9649,11 +9543,13 @@ var $author$project$Main$dungeonMap_Svg = function (model) {
 									_List_Nil)
 								]),
 							_Utils_ap(
-								$author$project$Main$svgIconList(model),
-								$author$project$Main$newIconsView(model.addCharacterIcon))))
+								$author$project$DungeonMap$svgIconList(model),
+								$author$project$DungeonMap$newIconsView(model.addCharacterIcon))))
 					]))
 			]));
 };
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col = {$: 'Col'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width = F2(
 	function (screenSize, columnCount) {
@@ -10440,6 +10336,7 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$row = F2(
 			$rundis$elm_bootstrap$Bootstrap$Grid$Internal$rowAttributes(options),
 			A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Grid$renderCol, cols));
 	});
+var $elm$html$Html$section = _VirtualDom_node('section');
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col4 = {$: 'Col4'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$ColWidth = function (a) {
 	return {$: 'ColWidth', a: a};
@@ -10450,7 +10347,7 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$width = F2(
 			A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width, size, count));
 	});
 var $rundis$elm_bootstrap$Bootstrap$Grid$Col$xs4 = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$XS, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col4);
-var $author$project$Main$mapView = function (model) {
+var $author$project$DungeonMap$dungeonMapView = function (model) {
 	return A2(
 		$elm$html$Html$section,
 		_List_fromArray(
@@ -10524,7 +10421,7 @@ var $author$project$Main$mapView = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										$author$project$Main$dungeonMap_Svg(model)
+										$author$project$DungeonMap$dungeonMap_Svg(model)
 									])),
 								A2(
 								$rundis$elm_bootstrap$Bootstrap$Grid$col,
@@ -10532,12 +10429,115 @@ var $author$project$Main$mapView = function (model) {
 									[$rundis$elm_bootstrap$Bootstrap$Grid$Col$xs4]),
 								_List_fromArray(
 									[
-										$author$project$Main$dungeonMap_MonsterList(model)
+										$author$project$DungeonMap$dungeonMap_MonsterList(model)
 									]))
 							]))
 					]))
 			]));
 };
+var $elm$html$Html$footer = _VirtualDom_node('footer');
+var $author$project$FightingTool$footer = A2(
+	$elm$html$Html$footer,
+	_List_fromArray(
+		[
+			$elm$html$Html$Attributes$class('footer animate__animated animate__fadeInUp')
+		]),
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('content has-text-centered')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$p,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Entwickelt von Laura Spilling, Stefan Kranz, Marcus Gagelmann und Alexander Kampf')
+						])),
+					A2(
+					$elm$html$Html$p,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Einführung in das World Wide Web')
+						]))
+				]))
+		]));
+var $author$project$FightingTool$header = A2(
+	$elm$html$Html$section,
+	_List_fromArray(
+		[
+			$elm$html$Html$Attributes$class('hero is-primary is-bold animate__animated animate__fadeInDown')
+		]),
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('hero-body')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('container')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$h1,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('title')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Pen & Paper Manager')
+								])),
+							A2(
+							$elm$html$Html$h2,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('subtitle')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Für \"Das schwarze Auge\" Version 5')
+								]))
+						]))
+				]))
+		]));
+var $rundis$elm_bootstrap$Bootstrap$Tab$Item = function (a) {
+	return {$: 'Item', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Tab$item = function (rec) {
+	return $rundis$elm_bootstrap$Bootstrap$Tab$Item(
+		{id: rec.id, link: rec.link, pane: rec.pane});
+};
+var $rundis$elm_bootstrap$Bootstrap$Tab$items = F2(
+	function (items_, _v0) {
+		var configRec = _v0.a;
+		return $rundis$elm_bootstrap$Bootstrap$Tab$Config(
+			_Utils_update(
+				configRec,
+				{items: items_}));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Tab$Link = function (a) {
+	return {$: 'Link', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Tab$link = F2(
+	function (attributes, children) {
+		return $rundis$elm_bootstrap$Bootstrap$Tab$Link(
+			{attributes: attributes, children: children});
+	});
 var $rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$mt3 = $elm$html$Html$Attributes$class('mt-3');
 var $rundis$elm_bootstrap$Bootstrap$Tab$Pane = function (a) {
 	return {$: 'Pane', a: a};
@@ -10832,7 +10832,7 @@ var $author$project$Main$view = function (model) {
 		_List_Nil,
 		_List_fromArray(
 			[
-				$author$project$Main$header,
+				$author$project$FightingTool$header,
 				A2(
 				$rundis$elm_bootstrap$Bootstrap$Tab$view,
 				model.tabState,
@@ -10856,7 +10856,7 @@ var $author$project$Main$view = function (model) {
 									_List_Nil,
 									_List_fromArray(
 										[
-											$author$project$Main$body(model)
+											$author$project$FightingTool$body(model)
 										]))
 							}),
 							$rundis$elm_bootstrap$Bootstrap$Tab$item(
@@ -10875,15 +10875,15 @@ var $author$project$Main$view = function (model) {
 									_List_Nil,
 									_List_fromArray(
 										[
-											$author$project$Main$mapView(model)
+											$author$project$DungeonMap$dungeonMapView(model)
 										]))
 							})
 						]),
-					$rundis$elm_bootstrap$Bootstrap$Tab$config($author$project$Main$TabMsg))),
-				$author$project$Main$footer
+					$rundis$elm_bootstrap$Bootstrap$Tab$config($author$project$Model$TabMsg))),
+				$author$project$FightingTool$footer
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
+	{init: $author$project$Model$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
