@@ -19,7 +19,20 @@ body : Model -> Html Msg
 body model =
     div []
         [ dropdownMenu model
-        , displayEnemy model
+        , div []
+            [ Table.table
+                { options = [ Table.striped, Table.hover ]
+                , thead =  Table.simpleThead
+                    [ Table.th [] [ text "ID" ]
+                    , Table.th [] [ text "Name" ]
+                    , Table.th [] [ text "LeP" ]
+                    , Table.th [] [ text "RS"]
+                    ]
+                , tbody =
+                    Table.tbody []
+                        (displayCharacters model model.enemy )
+                }
+            ]
         , Html.input
             [ Attr.type_ "number"
             , Attr.name "Damage"
@@ -66,32 +79,49 @@ parseEnemy =
         (Json.Decode.field "health" Json.Decode.int)
         (Json.Decode.field "armor" Json.Decode.int)
 
-displayEnemy : Model -> Html Msg -- show stats of the enemy in a table, will have its glow up later
-displayEnemy model =
-    case model.enemy of
-        Enemy name health armor ->
-            div []
-                [ Html.table [Attr.style "margin-top" "20px"]
-                    [ Html.tr [] [ Html.th[][text "Name"], Html.th[][text "LeP"], Html.th[][text "RS"] ]
-                    , Html.tr [] [ Html.td[][text name], Html.td[][text <| String.fromInt health], Html.td[][text <| String.fromInt armor] ]
+displayCharacters : Model -> Array.Array Character -> List (Table.Row Msg) -- show stats of the enemy in a table, will have its glow up later
+displayCharacters model chars =
+    List.indexedMap
+        (\i c ->
+            let
+                (name, health, armor) =
+                    case c of
+                        Enemy n h a ->
+                            (n,h,a)
+            in
+                Table.tr []
+                [ Table.td[][text <| String.fromInt i]
+                , Table.td[][text name]
+                , Table.td[][text <| String.fromInt health]
+                , Table.td[][text <| String.fromInt armor]
+                , Table.td[]
+                    [ Button.button 
+                        [ Button.success
+                        , Button.attrs [onClick <| attack model i 5 ] ] 
+                        [ text "Angriff"]
+                    ]
+                , Table.td[]
+                    [ Button.button 
+                        [ Button.danger
+                        , Button.attrs [onClick <| RemoveEnemy i ] ] 
+                        [ text "Löschen"]
                     ]
                 ]
+        )
+        <| Array.toList chars
 
-attack : Model -> Maybe Int -> Msg
-attack model damage =
-    case damage of
-        Just value ->
-            case model.enemy of
-                Enemy name health armor ->
-                    if value > armor then
-                        if health - value + armor <= 0 then
-                            CharacterDeath
-                        else
-                            UpdateEnemy <| Enemy name (health - value + armor) armor
-                    else
-                        DoNothing -- see, it IS necessary
-        Nothing ->
-            DoNothing
+attack : Model -> Int -> Int -> Msg
+attack model id damage =
+    case Array.get id model.enemy of
+        Just (Enemy name health armor) ->
+            if damage > armor then
+                if health - damage + armor <= 0 then
+                    CharacterDeath id
+                else
+                    UpdateEnemy id <| Enemy name (health - damage + armor) armor
+            else
+                DoNothing -- see, it IS necessary
+        Nothing -> DoNothing
 
 setDice : String -> List String
 setDice set = 
@@ -168,37 +198,39 @@ customEnemy model =
 -}
     div []
         [ Html.label [Attr.for "name"] [text "Name"]
-        , Html.input [Attr.type_ "text", Attr.id "name", Attr.name "name", Html.Events.onInput
-            (\n ->
-                let
+        , Html.input [Attr.type_ "text", Attr.id "name", Attr.name "name", Html.Events.onInput 
+            (\n -> 
+                let 
                     (health, armor) =
                         case model.tmpEnemy of
                             Enemy _ h a -> (h,a)
-                in
+                in 
                     UpdateTmp <| Enemy n health armor
             )] []
         , Html.br [] []
         , Html.label [Attr.for "health"] [text "LeP"]
         , Html.input [Attr.type_ "number", Attr.id "health", Attr.name "health", Html.Events.onInput
-            (\h ->
-                let
+            (\h -> 
+                let 
                     (name, armor) =
                         case model.tmpEnemy of
                             Enemy n _ a -> (n,a)
-                in
+                in 
                     UpdateTmp <| Enemy name (Maybe.withDefault 1 <| String.toInt h) armor
             )] []
         , Html.br [] []
         , Html.label [Attr.for "armor"] [text "RS"]
         , Html.input [Attr.type_ "number", Attr.id "armor", Attr.name "armor", Html.Events.onInput
-            (\a ->
-                let
+            (\a -> 
+                let 
                     (name, health) =
                         case model.tmpEnemy of
                             Enemy n h _ -> (n,h)
-                in
+                in 
                     UpdateTmp <| Enemy name health (Maybe.withDefault 0 <| String.toInt a)
             )] []
         , Html.br [] []
-        , Html.button [ Html.Events.onClick <| UpdateEnemy model.tmpEnemy ] [ text "Hinzufügen" ]
+        , Html.button 
+            [ Html.Events.onClick <| AddEnemy model.tmpEnemy ] 
+            [ text "Hinzufügen" ]
         ]

@@ -6,9 +6,11 @@ import Bootstrap.Tab as Tab
 import Bootstrap.Dropdown as Dropdown
 import Bootstrap.Modal as Modal
 import Http
+import Array
+import Array.Extra as Array
 
 type alias Model =
-    { enemy : Character -- The enemy displayed on the homepage
+    { enemy : Array.Array Character -- The enemy displayed on the homepage
     , tmpEnemy : Character -- Will eventually be useless after refactor, I just have to get a better feel for let and in
     , showString : String
     , myDrop1State : Dropdown.State
@@ -28,7 +30,7 @@ type alias Model =
 init : () -> (Model, Cmd Msg)
 init _ =
     (
-        { enemy = initEnemy
+        { enemy = Array.empty
         , tmpEnemy = initEnemy
         , showString = ""
         , myDrop1State = Dropdown.initialState
@@ -55,9 +57,11 @@ initEnemy =
 type Msg
     = LoadEnemy String -- call this with the name of the enemy to load its values into the enemy object
     | EnemyLoaded (Result Http.Error Character)
-    | UpdateEnemy Character
+    | UpdateEnemy Int Character
     | UpdateTmp Character
-    | CharacterDeath
+    | AddEnemy Character
+    | RemoveEnemy Int
+    | CharacterDeath Int
     | MyDrop1Msg Dropdown.State
     | ChangeDamage String -- Will eventually be useless after refactor, I just have to get a better feel for let and in
     | CloseDeathAlert

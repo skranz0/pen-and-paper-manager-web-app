@@ -28,7 +28,7 @@ update msg model =
             )
 
         EnemyLoaded (Ok newEnemy) ->
-            ( { model | enemy = newEnemy }, Cmd.none )
+            ( { model | enemy = Array.push newEnemy model.enemy }, Cmd.none )
 
         EnemyLoaded (Err error) ->
             case error of -- We basically just dismiss errors, this could be better
@@ -38,8 +38,8 @@ update msg model =
                 _ ->
                     ( { model | showString = "Error:  " }, Cmd.none )
 
-        UpdateEnemy new ->
-            ( { model | enemy = new }
+        UpdateEnemy index new ->
+            ( { model | enemy = Array.set index new model.enemy }
             , Cmd.none
             )
 
@@ -48,19 +48,23 @@ update msg model =
             , Cmd.none
             )
 
-        CharacterDeath ->
-            let
-                (name, armor) =
-                    case model.enemy of
-                        Enemy n _ a -> (n, a)
-            in
-                (
-                    { model | deathAlertVisibility = Modal.shown
-                    , enemy = Enemy name 0 armor
-                    -- this (+ the let above) makes sure the health of the displayed enemy is set to 0 after it is killed
-                    }
-                    , Cmd.none
-                )
+        AddEnemy char ->
+            ( {model | enemy = Array.push char model.enemy }
+            , Cmd.none
+            )
+
+        RemoveEnemy index ->
+            ( { model | enemy = Array.removeAt index model.enemy }
+            , Cmd.none
+            )
+        
+        CharacterDeath index -> 
+            ( 
+                { model | deathAlertVisibility = Modal.shown 
+                , enemy = Array.removeAt index model.enemy
+                }
+                , Cmd.none
+            )
 
         CloseDeathAlert ->
             ( { model | deathAlertVisibility = Modal.hidden }
