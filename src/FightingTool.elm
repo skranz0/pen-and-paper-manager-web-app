@@ -9,9 +9,11 @@ import Json.Decode
 import Bootstrap.Modal as Modal
 import Bootstrap.Button as Button
 import Bootstrap.Dropdown as Dropdown
+import Random
 
 --our Modules
 import Model exposing (..)
+--import Main exposing (update)
 
 body : Model -> Html Msg
 body model =
@@ -21,10 +23,17 @@ body model =
         , Html.input
             [ Attr.type_ "number"
             , Attr.name "Damage"
-            , Attr.placeholder "Schaden"
+            , Attr.placeholder model.damage
             , Html.Events.onInput ChangeDamage
-            ] []
+            ] [ ]
         , Html.button [ Html.Events.onClick <| attack model <| String.toInt model.damage ] [ text "Schaden" ]
+        , Html.input 
+            [ Attr.type_ "text"
+            , Attr.name "Dice" 
+            , Attr.placeholder model.dice 
+            , Html.Events.onInput ChangeTmpDice
+            ]  []
+        , Html.button [ Html.Events.onClick (DiceAndSlice model.tmpdice) ] [ text "Schaden würfeln" ]
         , customEnemy model
         , deathAlert model
         ]
@@ -83,6 +92,22 @@ attack model damage =
                         DoNothing -- see, it IS necessary
         Nothing ->
             DoNothing
+
+setDice : String -> List String
+setDice set = 
+    List.take 1  (String.split "W" set) ++ String.split "+" (Maybe.withDefault "6+0" <| List.head (List.drop 1 (String.split "W" set)))
+
+damageCalc : (List Int) -> Int -> Int
+damageCalc randValues bd =
+    List.sum randValues + bd
+
+generateRandomList : Int -> Int -> Cmd Msg
+generateRandomList rt mf =
+    Random.generate NewRandomList (randomListGenerator rt mf)
+
+randomListGenerator : Int -> Int -> Random.Generator (List Int)
+randomListGenerator rt mf =
+    Random.list rt (Random.int 1 mf)
 
 deathAlert : Model -> Html Msg
 deathAlert model =

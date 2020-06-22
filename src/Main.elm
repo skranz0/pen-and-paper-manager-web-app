@@ -12,7 +12,7 @@ import Bootstrap.Dropdown as Dropdown
 
 --our Modules
 import DungeonMap exposing (dungeonMapView)
-import FightingTool exposing (parseEnemy, footer, body, header)
+import FightingTool exposing (..)
 import Model exposing (..)
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -77,13 +77,37 @@ update msg model =
             , Cmd.none
             )
 
+        ChangeTmpDice newTmpDice ->
+            ( { model | tmpdice = newTmpDice}
+            , Cmd.none
+            )
+
+        DiceAndSlice newDice ->
+            let
+                rt = Maybe.withDefault 0 (String.toInt (Maybe.withDefault "0" (List.head (setDice newDice))))
+                mf = Maybe.withDefault 0 (String.toInt (Maybe.withDefault "6" (List.head <| List.drop 1 (setDice newDice))))
+                bd = Maybe.withDefault 0 (String.toInt (Maybe.withDefault "0" (List.head <| List.drop 2 (setDice newDice))))
+            in
+                ( { model | 
+                    dice = newDice , 
+                    maxFace = mf , 
+                    bonusDamage = bd
+                    }
+                , generateRandomList rt mf
+                )
+
+        NewRandomList intList ->
+            ( { model | 
+                dieFaces = intList ,
+                damage = String.fromInt (damageCalc intList model.bonusDamage) 
+                }
+            , Cmd.none
+            )
+
         TabMsg state ->
             ( { model | tabState = state }
             , Cmd.none
             )
-
-        DoNothing ->
-            (model, Cmd.none)
 
         AddCharacterIcon addCharacterIconMsg ->
             case addCharacterIconMsg of
@@ -98,6 +122,8 @@ update msg model =
                 MouseDraw s ->
                     ( { model | addCharacterIcon = DrawIcon s }, Cmd.none )
 
+        DoNothing ->
+            (model, Cmd.none)
 
 view : Model -> Html Msg
 view model =

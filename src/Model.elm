@@ -13,10 +13,16 @@ type alias Model =
     , showString : String
     , myDrop1State : Dropdown.State
     , damage : String
+    , bonusDamage : Int
+    , dice : String
+    , tmpdice : String
     , deathAlertVisibility : Modal.Visibility
+    , dieFace : Int
+    , maxFace : Int
     , tabState : Tab.State
     , characterList : List DungeonMap_Character
     , addCharacterIcon : AddCharacterIconState
+    , dieFaces : List Int
     }
 
 init : () -> (Model, Cmd Msg)
@@ -27,10 +33,16 @@ init _ =
         , showString = ""
         , myDrop1State = Dropdown.initialState
         , damage = ""
+        , bonusDamage = 0
+        , dice = "1W6+0"
+        , tmpdice = "1W6+0"
         , deathAlertVisibility = Modal.hidden
+        , dieFace = 0
+        , maxFace = 6
         , tabState = Tab.initialState
         , characterList = []
         , addCharacterIcon = DrawingInactive
+        , dieFaces = []
         }
     , Cmd.none
     )
@@ -52,6 +64,9 @@ type Msg
     | DoNothing -- does nothing (yes, this IS necessary)
     | TabMsg Tab.State
     | AddCharacterIcon AddCharacterIconMsg
+    | DiceAndSlice String
+    | NewRandomList (List Int)
+    | ChangeTmpDice String
 
 type Character
     = Enemy String Int Int
@@ -76,3 +91,5 @@ type
 
 type alias MousePosition =
     { x : Float, y : Float }
+
+

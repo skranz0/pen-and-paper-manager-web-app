@@ -4530,7 +4530,90 @@ function _Http_track(router, xhr, tracker)
 			size: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
 		}))));
 	});
-}var $elm$core$Basics$EQ = {$: 'EQ'};
+}
+
+
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
+
+
+
+function _Time_now(millisToPosix)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		callback(_Scheduler_succeed(millisToPosix(Date.now())));
+	});
+}
+
+var _Time_setInterval = F2(function(interval, task)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var id = setInterval(function() { _Scheduler_rawSpawn(task); }, interval);
+		return function() { clearInterval(id); };
+	});
+});
+
+function _Time_here()
+{
+	return _Scheduler_binding(function(callback)
+	{
+		callback(_Scheduler_succeed(
+			A2($elm$time$Time$customZone, -(new Date().getTimezoneOffset()), _List_Nil)
+		));
+	});
+}
+
+
+function _Time_getZoneName()
+{
+	return _Scheduler_binding(function(callback)
+	{
+		try
+		{
+			var name = $elm$time$Time$Name(Intl.DateTimeFormat().resolvedOptions().timeZone);
+		}
+		catch (e)
+		{
+			var name = $elm$time$Time$Offset(new Date().getTimezoneOffset());
+		}
+		callback(_Scheduler_succeed(name));
+	});
+}
+var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
 var $elm$core$List$cons = _List_cons;
@@ -5351,7 +5434,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Model$init = function (_v0) {
 	return _Utils_Tuple2(
-		{addCharacterIcon: $author$project$Model$DrawingInactive, characterList: _List_Nil, damage: '', deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, enemy: $author$project$Model$initEnemy, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy},
+		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterList: _List_Nil, damage: '', deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $author$project$Model$initEnemy, maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpdice: '1W6+0'},
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Model$MyDrop1Msg = function (a) {
@@ -5941,6 +6024,34 @@ var $author$project$Model$Player = F2(
 	function (a, b) {
 		return {$: 'Player', a: a, b: b};
 	});
+var $elm$core$List$sum = function (numbers) {
+	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
+};
+var $author$project$FightingTool$damageCalc = F2(
+	function (randValues, bd) {
+		return $elm$core$List$sum(randValues) + bd;
+	});
+var $elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
 var $elm$http$Http$BadStatus_ = F2(
 	function (a, b) {
@@ -6443,6 +6554,198 @@ var $elm$http$Http$expectJson = F2(
 						A2($elm$json$Json$Decode$decodeString, decoder, string));
 				}));
 	});
+var $author$project$Model$NewRandomList = function (a) {
+	return {$: 'NewRandomList', a: a};
+};
+var $elm$random$Random$Generate = function (a) {
+	return {$: 'Generate', a: a};
+};
+var $elm$random$Random$Seed = F2(
+	function (a, b) {
+		return {$: 'Seed', a: a, b: b};
+	});
+var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var $elm$random$Random$next = function (_v0) {
+	var state0 = _v0.a;
+	var incr = _v0.b;
+	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
+};
+var $elm$random$Random$initialSeed = function (x) {
+	var _v0 = $elm$random$Random$next(
+		A2($elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _v0.a;
+	var incr = _v0.b;
+	var state2 = (state1 + x) >>> 0;
+	return $elm$random$Random$next(
+		A2($elm$random$Random$Seed, state2, incr));
+};
+var $elm$time$Time$Name = function (a) {
+	return {$: 'Name', a: a};
+};
+var $elm$time$Time$Offset = function (a) {
+	return {$: 'Offset', a: a};
+};
+var $elm$time$Time$Zone = F2(
+	function (a, b) {
+		return {$: 'Zone', a: a, b: b};
+	});
+var $elm$time$Time$customZone = $elm$time$Time$Zone;
+var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
+var $elm$time$Time$posixToMillis = function (_v0) {
+	var millis = _v0.a;
+	return millis;
+};
+var $elm$random$Random$init = A2(
+	$elm$core$Task$andThen,
+	function (time) {
+		return $elm$core$Task$succeed(
+			$elm$random$Random$initialSeed(
+				$elm$time$Time$posixToMillis(time)));
+	},
+	$elm$time$Time$now);
+var $elm$random$Random$step = F2(
+	function (_v0, seed) {
+		var generator = _v0.a;
+		return generator(seed);
+	});
+var $elm$random$Random$onEffects = F3(
+	function (router, commands, seed) {
+		if (!commands.b) {
+			return $elm$core$Task$succeed(seed);
+		} else {
+			var generator = commands.a.a;
+			var rest = commands.b;
+			var _v1 = A2($elm$random$Random$step, generator, seed);
+			var value = _v1.a;
+			var newSeed = _v1.b;
+			return A2(
+				$elm$core$Task$andThen,
+				function (_v2) {
+					return A3($elm$random$Random$onEffects, router, rest, newSeed);
+				},
+				A2($elm$core$Platform$sendToApp, router, value));
+		}
+	});
+var $elm$random$Random$onSelfMsg = F3(
+	function (_v0, _v1, seed) {
+		return $elm$core$Task$succeed(seed);
+	});
+var $elm$random$Random$Generator = function (a) {
+	return {$: 'Generator', a: a};
+};
+var $elm$random$Random$map = F2(
+	function (func, _v0) {
+		var genA = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v1 = genA(seed0);
+				var a = _v1.a;
+				var seed1 = _v1.b;
+				return _Utils_Tuple2(
+					func(a),
+					seed1);
+			});
+	});
+var $elm$random$Random$cmdMap = F2(
+	function (func, _v0) {
+		var generator = _v0.a;
+		return $elm$random$Random$Generate(
+			A2($elm$random$Random$map, func, generator));
+	});
+_Platform_effectManagers['Random'] = _Platform_createManager($elm$random$Random$init, $elm$random$Random$onEffects, $elm$random$Random$onSelfMsg, $elm$random$Random$cmdMap);
+var $elm$random$Random$command = _Platform_leaf('Random');
+var $elm$random$Random$generate = F2(
+	function (tagger, generator) {
+		return $elm$random$Random$command(
+			$elm$random$Random$Generate(
+				A2($elm$random$Random$map, tagger, generator)));
+	});
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $elm$core$Bitwise$xor = _Bitwise_xor;
+var $elm$random$Random$peel = function (_v0) {
+	var state = _v0.a;
+	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
+	return ((word >>> 22) ^ word) >>> 0;
+};
+var $elm$random$Random$int = F2(
+	function (a, b) {
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
+				var lo = _v0.a;
+				var hi = _v0.b;
+				var range = (hi - lo) + 1;
+				if (!((range - 1) & range)) {
+					return _Utils_Tuple2(
+						(((range - 1) & $elm$random$Random$peel(seed0)) >>> 0) + lo,
+						$elm$random$Random$next(seed0));
+				} else {
+					var threshhold = (((-range) >>> 0) % range) >>> 0;
+					var accountForBias = function (seed) {
+						accountForBias:
+						while (true) {
+							var x = $elm$random$Random$peel(seed);
+							var seedN = $elm$random$Random$next(seed);
+							if (_Utils_cmp(x, threshhold) < 0) {
+								var $temp$seed = seedN;
+								seed = $temp$seed;
+								continue accountForBias;
+							} else {
+								return _Utils_Tuple2((x % range) + lo, seedN);
+							}
+						}
+					};
+					return accountForBias(seed0);
+				}
+			});
+	});
+var $elm$random$Random$listHelp = F4(
+	function (revList, n, gen, seed) {
+		listHelp:
+		while (true) {
+			if (n < 1) {
+				return _Utils_Tuple2(revList, seed);
+			} else {
+				var _v0 = gen(seed);
+				var value = _v0.a;
+				var newSeed = _v0.b;
+				var $temp$revList = A2($elm$core$List$cons, value, revList),
+					$temp$n = n - 1,
+					$temp$gen = gen,
+					$temp$seed = newSeed;
+				revList = $temp$revList;
+				n = $temp$n;
+				gen = $temp$gen;
+				seed = $temp$seed;
+				continue listHelp;
+			}
+		}
+	});
+var $elm$random$Random$list = F2(
+	function (n, _v0) {
+		var gen = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed) {
+				return A4($elm$random$Random$listHelp, _List_Nil, n, gen, seed);
+			});
+	});
+var $author$project$FightingTool$randomListGenerator = F2(
+	function (rt, mf) {
+		return A2(
+			$elm$random$Random$list,
+			rt,
+			A2($elm$random$Random$int, 1, mf));
+	});
+var $author$project$FightingTool$generateRandomList = F2(
+	function (rt, mf) {
+		return A2(
+			$elm$random$Random$generate,
+			$author$project$Model$NewRandomList,
+			A2($author$project$FightingTool$randomListGenerator, rt, mf));
+	});
 var $elm$http$Http$emptyBody = _Http_emptyBody;
 var $elm$http$Http$Request = function (a) {
 	return {$: 'Request', a: a};
@@ -6596,6 +6899,15 @@ var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
 		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
 };
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $elm$json$Json$Decode$map3 = _Json_map3;
@@ -6606,6 +6918,159 @@ var $author$project$FightingTool$parseEnemy = A4(
 	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'health', $elm$json$Json$Decode$int),
 	A2($elm$json$Json$Decode$field, 'armor', $elm$json$Json$Decode$int));
+var $elm$core$List$takeReverse = F3(
+	function (n, list, kept) {
+		takeReverse:
+		while (true) {
+			if (n <= 0) {
+				return kept;
+			} else {
+				if (!list.b) {
+					return kept;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs,
+						$temp$kept = A2($elm$core$List$cons, x, kept);
+					n = $temp$n;
+					list = $temp$list;
+					kept = $temp$kept;
+					continue takeReverse;
+				}
+			}
+		}
+	});
+var $elm$core$List$takeTailRec = F2(
+	function (n, list) {
+		return $elm$core$List$reverse(
+			A3($elm$core$List$takeReverse, n, list, _List_Nil));
+	});
+var $elm$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (n <= 0) {
+			return _List_Nil;
+		} else {
+			var _v0 = _Utils_Tuple2(n, list);
+			_v0$1:
+			while (true) {
+				_v0$5:
+				while (true) {
+					if (!_v0.b.b) {
+						return list;
+					} else {
+						if (_v0.b.b.b) {
+							switch (_v0.a) {
+								case 1:
+									break _v0$1;
+								case 2:
+									var _v2 = _v0.b;
+									var x = _v2.a;
+									var _v3 = _v2.b;
+									var y = _v3.a;
+									return _List_fromArray(
+										[x, y]);
+								case 3:
+									if (_v0.b.b.b.b) {
+										var _v4 = _v0.b;
+										var x = _v4.a;
+										var _v5 = _v4.b;
+										var y = _v5.a;
+										var _v6 = _v5.b;
+										var z = _v6.a;
+										return _List_fromArray(
+											[x, y, z]);
+									} else {
+										break _v0$5;
+									}
+								default:
+									if (_v0.b.b.b.b && _v0.b.b.b.b.b) {
+										var _v7 = _v0.b;
+										var x = _v7.a;
+										var _v8 = _v7.b;
+										var y = _v8.a;
+										var _v9 = _v8.b;
+										var z = _v9.a;
+										var _v10 = _v9.b;
+										var w = _v10.a;
+										var tl = _v10.b;
+										return (ctr > 1000) ? A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A2($elm$core$List$takeTailRec, n - 4, tl))))) : A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A3($elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
+									} else {
+										break _v0$5;
+									}
+							}
+						} else {
+							if (_v0.a === 1) {
+								break _v0$1;
+							} else {
+								break _v0$5;
+							}
+						}
+					}
+				}
+				return list;
+			}
+			var _v1 = _v0.b;
+			var x = _v1.a;
+			return _List_fromArray(
+				[x]);
+		}
+	});
+var $elm$core$List$take = F2(
+	function (n, list) {
+		return A3($elm$core$List$takeFast, 0, n, list);
+	});
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$FightingTool$setDice = function (set) {
+	return _Utils_ap(
+		A2(
+			$elm$core$List$take,
+			1,
+			A2($elm$core$String$split, 'W', set)),
+		A2(
+			$elm$core$String$split,
+			'+',
+			A2(
+				$elm$core$Maybe$withDefault,
+				'6+0',
+				$elm$core$List$head(
+					A2(
+						$elm$core$List$drop,
+						1,
+						A2($elm$core$String$split, 'W', set))))));
+};
 var $rundis$elm_bootstrap$Bootstrap$Modal$Show = {$: 'Show'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$shown = $rundis$elm_bootstrap$Bootstrap$Modal$Show;
 var $author$project$Main$update = F2(
@@ -6696,6 +7161,64 @@ var $author$project$Main$update = F2(
 						model,
 						{damage: newDamage}),
 					$elm$core$Platform$Cmd$none);
+			case 'ChangeTmpDice':
+				var newTmpDice = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tmpdice: newTmpDice}),
+					$elm$core$Platform$Cmd$none);
+			case 'DiceAndSlice':
+				var newDice = msg.a;
+				var rt = A2(
+					$elm$core$Maybe$withDefault,
+					0,
+					$elm$core$String$toInt(
+						A2(
+							$elm$core$Maybe$withDefault,
+							'0',
+							$elm$core$List$head(
+								$author$project$FightingTool$setDice(newDice)))));
+				var mf = A2(
+					$elm$core$Maybe$withDefault,
+					0,
+					$elm$core$String$toInt(
+						A2(
+							$elm$core$Maybe$withDefault,
+							'6',
+							$elm$core$List$head(
+								A2(
+									$elm$core$List$drop,
+									1,
+									$author$project$FightingTool$setDice(newDice))))));
+				var bd = A2(
+					$elm$core$Maybe$withDefault,
+					0,
+					$elm$core$String$toInt(
+						A2(
+							$elm$core$Maybe$withDefault,
+							'0',
+							$elm$core$List$head(
+								A2(
+									$elm$core$List$drop,
+									2,
+									$author$project$FightingTool$setDice(newDice))))));
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{bonusDamage: bd, dice: newDice, maxFace: mf}),
+					A2($author$project$FightingTool$generateRandomList, rt, mf));
+			case 'NewRandomList':
+				var intList = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							damage: $elm$core$String$fromInt(
+								A2($author$project$FightingTool$damageCalc, intList, model.bonusDamage)),
+							dieFaces: intList
+						}),
+					$elm$core$Platform$Cmd$none);
 			case 'TabMsg':
 				var state = msg.a;
 				return _Utils_Tuple2(
@@ -6703,9 +7226,7 @@ var $author$project$Main$update = F2(
 						model,
 						{tabState: state}),
 					$elm$core$Platform$Cmd$none);
-			case 'DoNothing':
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-			default:
+			case 'AddCharacterIcon':
 				var addCharacterIconMsg = msg.a;
 				if (addCharacterIconMsg.$ === 'MouseClick') {
 					var characterIcon = addCharacterIconMsg.a;
@@ -6748,6 +7269,8 @@ var $author$project$Main$update = F2(
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
+			default:
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Model$TabMsg = function (a) {
@@ -6755,6 +7278,12 @@ var $author$project$Model$TabMsg = function (a) {
 };
 var $author$project$Model$ChangeDamage = function (a) {
 	return {$: 'ChangeDamage', a: a};
+};
+var $author$project$Model$ChangeTmpDice = function (a) {
+	return {$: 'ChangeTmpDice', a: a};
+};
+var $author$project$Model$DiceAndSlice = function (a) {
+	return {$: 'DiceAndSlice', a: a};
 };
 var $author$project$Model$CharacterDeath = {$: 'CharacterDeath'};
 var $author$project$Model$DoNothing = {$: 'DoNothing'};
@@ -6845,15 +7374,6 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var $author$project$FightingTool$customEnemy = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -7503,9 +8023,6 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$modalAttributes = function (options) {
 				$elm$core$Maybe$withDefault,
 				_List_Nil,
 				A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Modal$modalClass, options.modalSize))));
-};
-var $elm$core$Basics$negate = function (n) {
-	return -n;
 };
 var $rundis$elm_bootstrap$Bootstrap$Modal$renderBody = function (maybeBody) {
 	if (maybeBody.$ === 'Just') {
@@ -8399,7 +8916,7 @@ var $author$project$FightingTool$body = function (model) {
 					[
 						$elm$html$Html$Attributes$type_('number'),
 						$elm$html$Html$Attributes$name('Damage'),
-						$elm$html$Html$Attributes$placeholder('Schaden'),
+						$elm$html$Html$Attributes$placeholder(model.damage),
 						$elm$html$Html$Events$onInput($author$project$Model$ChangeDamage)
 					]),
 				_List_Nil),
@@ -8416,6 +8933,27 @@ var $author$project$FightingTool$body = function (model) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text('Schaden')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('text'),
+						$elm$html$Html$Attributes$name('Dice'),
+						$elm$html$Html$Attributes$placeholder(model.dice),
+						$elm$html$Html$Events$onInput($author$project$Model$ChangeTmpDice)
+					]),
+				_List_Nil),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick(
+						$author$project$Model$DiceAndSlice(model.tmpdice))
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Schaden würfeln')
 					])),
 				$author$project$FightingTool$customEnemy(model),
 				$author$project$FightingTool$deathAlert(model)
@@ -8676,15 +9214,6 @@ var $rundis$elm_bootstrap$Bootstrap$Table$maybeMapInversedTHead = F2(
 					rows: A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Table$mapInversedRow, thead_.rows)
 				}) : thead_);
 	});
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
 var $rundis$elm_bootstrap$Bootstrap$Table$maybeWrapResponsive = F2(
 	function (options, table_) {
 		var responsiveClass = $elm$html$Html$Attributes$class(
@@ -9342,27 +9871,6 @@ var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 };
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
-var $elm$core$List$drop = F2(
-	function (n, list) {
-		drop:
-		while (true) {
-			if (n <= 0) {
-				return list;
-			} else {
-				if (!list.b) {
-					return list;
-				} else {
-					var x = list.a;
-					var xs = list.b;
-					var $temp$n = n - 1,
-						$temp$list = xs;
-					n = $temp$n;
-					list = $temp$list;
-					continue drop;
-				}
-			}
-		}
-	});
 var $author$project$DungeonMap$getCoord = function (object) {
 	if (object.$ === 'Monster') {
 		var x = object.a;
