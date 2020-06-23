@@ -7702,10 +7702,12 @@ var $author$project$Main$update = F2(
 								model,
 								{
 									addCharacterIcon: $author$project$Model$DrawingInactive,
-									characterList: A2(
-										$elm$core$List$cons,
-										A2($author$project$Model$Player, x, y),
-										model.characterList)
+									characterList: _Utils_ap(
+										model.characterList,
+										_List_fromArray(
+											[
+												A2($author$project$Model$Player, x, y)
+											]))
 								}),
 							$elm$core$Platform$Cmd$none);
 					} else {
@@ -7716,10 +7718,12 @@ var $author$project$Main$update = F2(
 								model,
 								{
 									addCharacterIcon: $author$project$Model$DrawingInactive,
-									characterList: A2(
-										$elm$core$List$cons,
-										A2($author$project$Model$Monster, x, y),
-										model.characterList)
+									characterList: _Utils_ap(
+										model.characterList,
+										_List_fromArray(
+											[
+												A2($author$project$Model$Monster, x, y)
+											]))
 								}),
 							$elm$core$Platform$Cmd$none);
 					}
