@@ -7702,10 +7702,12 @@ var $author$project$Main$update = F2(
 								model,
 								{
 									addCharacterIcon: $author$project$Model$DrawingInactive,
-									characterList: A2(
-										$elm$core$List$cons,
-										A2($author$project$Model$Player, x, y),
-										model.characterList)
+									characterList: _Utils_ap(
+										model.characterList,
+										_List_fromArray(
+											[
+												A2($author$project$Model$Player, x, y)
+											]))
 								}),
 							$elm$core$Platform$Cmd$none);
 					} else {
@@ -7716,10 +7718,12 @@ var $author$project$Main$update = F2(
 								model,
 								{
 									addCharacterIcon: $author$project$Model$DrawingInactive,
-									characterList: A2(
-										$elm$core$List$cons,
-										A2($author$project$Model$Monster, x, y),
-										model.characterList)
+									characterList: _Utils_ap(
+										model.characterList,
+										_List_fromArray(
+											[
+												A2($author$project$Model$Monster, x, y)
+											]))
 								}),
 							$elm$core$Platform$Cmd$none);
 					}
@@ -10439,6 +10443,7 @@ var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 };
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
+var $elm$svg$Svg$Attributes$dominantBaseline = _VirtualDom_attribute('dominant-baseline');
 var $author$project$DungeonMap$getCoord = function (object) {
 	if (object.$ === 'Monster') {
 		var x = object.a;
@@ -10462,110 +10467,192 @@ var $author$project$DungeonMap$getIcon = function (object) {
 	}
 };
 var $elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
+var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$svg$Svg$Attributes$textAnchor = _VirtualDom_attribute('text-anchor');
+var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
 var $author$project$DungeonMap$getAreaParam = F2(
 	function (i, s) {
 		var _v0 = $author$project$DungeonMap$getIcon(s);
 		switch (_v0) {
 			case 'monster':
-				return A2(
-					$elm$svg$Svg$rect,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$id(
-							$elm$core$String$fromInt(i)),
-							$elm$svg$Svg$Attributes$x(
-							A2(
-								$elm$core$Maybe$withDefault,
-								'0',
-								$elm$core$List$head(
-									A2(
-										$elm$core$String$split,
-										',',
-										$author$project$DungeonMap$getCoord(s))))),
-							$elm$svg$Svg$Attributes$y(
-							A2(
-								$elm$core$Maybe$withDefault,
-								'0',
-								$elm$core$List$head(
-									A2(
-										$elm$core$List$drop,
-										1,
+				return _List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$rect,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$id(
+								$elm$core$String$fromInt(i)),
+								$elm$svg$Svg$Attributes$x(
+								A2(
+									$elm$core$Maybe$withDefault,
+									'0',
+									$elm$core$List$head(
 										A2(
 											$elm$core$String$split,
 											',',
-											$author$project$DungeonMap$getCoord(s)))))),
-							$elm$svg$Svg$Attributes$width('15'),
-							$elm$svg$Svg$Attributes$height('15'),
-							$elm$svg$Svg$Attributes$class('MonsterIcon')
-						]),
-					_List_Nil);
+											$author$project$DungeonMap$getCoord(s))))),
+								$elm$svg$Svg$Attributes$y(
+								A2(
+									$elm$core$Maybe$withDefault,
+									'0',
+									$elm$core$List$head(
+										A2(
+											$elm$core$List$drop,
+											1,
+											A2(
+												$elm$core$String$split,
+												',',
+												$author$project$DungeonMap$getCoord(s)))))),
+								$elm$svg$Svg$Attributes$width('15'),
+								$elm$svg$Svg$Attributes$height('15'),
+								$elm$svg$Svg$Attributes$class('MonsterIcon')
+							]),
+						_List_Nil),
+						A2(
+						$elm$svg$Svg$text_,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$textAnchor('middle'),
+								$elm$svg$Svg$Attributes$x(
+								A2(
+									$elm$core$Maybe$withDefault,
+									'0',
+									$elm$core$List$head(
+										A2(
+											$elm$core$String$split,
+											',',
+											$author$project$DungeonMap$getCoord(s))))),
+								$elm$svg$Svg$Attributes$y(
+								A2(
+									$elm$core$Maybe$withDefault,
+									'0',
+									$elm$core$List$head(
+										A2(
+											$elm$core$List$drop,
+											1,
+											A2(
+												$elm$core$String$split,
+												',',
+												$author$project$DungeonMap$getCoord(s)))))),
+								$elm$svg$Svg$Attributes$dominantBaseline('middle')
+							]),
+						_List_fromArray(
+							[
+								$elm$svg$Svg$text(
+								$elm$core$String$fromInt(i))
+							]))
+					]);
 			case 'player':
-				return A2(
-					$elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$id(
-							$elm$core$String$fromInt(i)),
-							$elm$svg$Svg$Attributes$cx(
-							A2(
-								$elm$core$Maybe$withDefault,
-								'0',
-								$elm$core$List$head(
-									A2(
-										$elm$core$String$split,
-										',',
-										$author$project$DungeonMap$getCoord(s))))),
-							$elm$svg$Svg$Attributes$cy(
-							A2(
-								$elm$core$Maybe$withDefault,
-								'0',
-								$elm$core$List$head(
-									A2(
-										$elm$core$List$drop,
-										1,
+				return _List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$circle,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$id(
+								$elm$core$String$fromInt(i)),
+								$elm$svg$Svg$Attributes$cx(
+								A2(
+									$elm$core$Maybe$withDefault,
+									'0',
+									$elm$core$List$head(
 										A2(
 											$elm$core$String$split,
 											',',
-											$author$project$DungeonMap$getCoord(s)))))),
-							$elm$svg$Svg$Attributes$r('10'),
-							$elm$svg$Svg$Attributes$class('PlayerIcon')
-						]),
-					_List_Nil);
+											$author$project$DungeonMap$getCoord(s))))),
+								$elm$svg$Svg$Attributes$cy(
+								A2(
+									$elm$core$Maybe$withDefault,
+									'0',
+									$elm$core$List$head(
+										A2(
+											$elm$core$List$drop,
+											1,
+											A2(
+												$elm$core$String$split,
+												',',
+												$author$project$DungeonMap$getCoord(s)))))),
+								$elm$svg$Svg$Attributes$r('10'),
+								$elm$svg$Svg$Attributes$class('PlayerIcon')
+							]),
+						_List_Nil),
+						A2(
+						$elm$svg$Svg$text_,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$textAnchor('middle'),
+								$elm$svg$Svg$Attributes$x(
+								A2(
+									$elm$core$Maybe$withDefault,
+									'0',
+									$elm$core$List$head(
+										A2(
+											$elm$core$String$split,
+											',',
+											$author$project$DungeonMap$getCoord(s))))),
+								$elm$svg$Svg$Attributes$y(
+								A2(
+									$elm$core$Maybe$withDefault,
+									'0',
+									$elm$core$List$head(
+										A2(
+											$elm$core$List$drop,
+											1,
+											A2(
+												$elm$core$String$split,
+												',',
+												$author$project$DungeonMap$getCoord(s)))))),
+								$elm$svg$Svg$Attributes$dominantBaseline('middle')
+							]),
+						_List_fromArray(
+							[
+								$elm$svg$Svg$text(
+								$elm$core$String$fromInt(i))
+							]))
+					]);
 			default:
-				return A2(
-					$elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$id(
-							$elm$core$String$fromInt(i)),
-							$elm$svg$Svg$Attributes$cx(
-							A2(
-								$elm$core$Maybe$withDefault,
-								'0',
-								$elm$core$List$head(
-									A2(
-										$elm$core$String$split,
-										',',
-										$author$project$DungeonMap$getCoord(s))))),
-							$elm$svg$Svg$Attributes$cy(
-							A2(
-								$elm$core$Maybe$withDefault,
-								'0',
-								$elm$core$List$head(
-									A2(
-										$elm$core$List$drop,
-										1,
+				return _List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$circle,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$id(
+								$elm$core$String$fromInt(i)),
+								$elm$svg$Svg$Attributes$cx(
+								A2(
+									$elm$core$Maybe$withDefault,
+									'0',
+									$elm$core$List$head(
 										A2(
 											$elm$core$String$split,
 											',',
-											$author$project$DungeonMap$getCoord(s)))))),
-							$elm$svg$Svg$Attributes$r('0')
-						]),
-					_List_Nil);
+											$author$project$DungeonMap$getCoord(s))))),
+								$elm$svg$Svg$Attributes$cy(
+								A2(
+									$elm$core$Maybe$withDefault,
+									'0',
+									$elm$core$List$head(
+										A2(
+											$elm$core$List$drop,
+											1,
+											A2(
+												$elm$core$String$split,
+												',',
+												$author$project$DungeonMap$getCoord(s)))))),
+								$elm$svg$Svg$Attributes$r('0')
+							]),
+						_List_Nil)
+					]);
 		}
 	});
 var $author$project$DungeonMap$svgIconList = function (model) {
-	return A2($elm$core$List$indexedMap, $author$project$DungeonMap$getAreaParam, model.characterList);
+	return A3(
+		$elm$core$List$foldl,
+		$elm$core$Basics$append,
+		_List_Nil,
+		A2($elm$core$List$indexedMap, $author$project$DungeonMap$getAreaParam, model.characterList));
 };
 var $elm$svg$Svg$Attributes$title = _VirtualDom_attribute('title');
 var $elm$svg$Svg$Attributes$version = _VirtualDom_attribute('version');
@@ -10613,7 +10700,7 @@ var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 										[
 											$elm$svg$Svg$Attributes$width('800'),
 											$elm$svg$Svg$Attributes$height('600'),
-											$elm$svg$Svg$Attributes$title('Informatikgebäude'),
+											$elm$svg$Svg$Attributes$title('DungeonMap'),
 											$elm$svg$Svg$Attributes$xlinkHref('src/dungeons/library_of_ice_lily.png')
 										]),
 									_List_Nil)
@@ -10624,8 +10711,6 @@ var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 					]))
 			]));
 };
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col = {$: 'Col'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width = F2(
 	function (screenSize, columnCount) {
@@ -11436,53 +11521,6 @@ var $author$project$DungeonMap$dungeonMapView = function (model) {
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('hero is-dark is-bold')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('hero-body')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('container ')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$h1,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('title')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Dungeon-Map-Tool')
-											])),
-										A2(
-										$elm$html$Html$h2,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('subtitle')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Manage your Dungeon with ease!')
-											]))
-									]))
-							]))
-					])),
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
 						$elm$html$Html$Attributes$class('section')
 					]),
 				_List_fromArray(
@@ -11544,6 +11582,8 @@ var $author$project$FightingTool$footer = A2(
 						]))
 				]))
 		]));
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $author$project$FightingTool$header = A2(
 	$elm$html$Html$section,
 	_List_fromArray(
