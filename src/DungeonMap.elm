@@ -2,8 +2,8 @@
 module DungeonMap exposing (..)
 
 --elm Packages
-import Html exposing (Html, div, h1, h2)
-import Html.Attributes as Attr exposing (class)
+import Html exposing (Html, div)
+import Html.Attributes exposing (class)
 import Html.Events
 import Svg
 import Svg.Attributes as SvgAtt
@@ -22,10 +22,10 @@ dungeonMapView model =
             [ div [ class "section" ]
                   [ Grid.row []
                              [ Grid.col []
-                                        [ (dungeonMap_Svg model)
+                                        [ dungeonMap_Svg model
                                         ]
                              , Grid.col [ Col.xs4 ]
-                                        [ (dungeonMap_MonsterList model)
+                                        [ dungeonMap_MonsterList model
                                         ]
                              ]
                   ]
@@ -43,17 +43,17 @@ dungeonMap_MonsterList model =
                       , tbody =
                           Table.tbody []
                           --some filler characters for now
-                              [ Table.tr [ (Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon "0" "0"))))) ]
+                              [ Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon "0" "0")))) ]
                                   [ Table.td [] [ Html.text "1" ]
                                   , Table.td [] [ Html.text "Ork" ]
                                   , Table.td [] [ Html.text "35" ]
                                   ]
-                              , Table.tr [ (Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon "0" "0"))))) ]
+                              , Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon "0" "0")))) ]
                                   [ Table.td [] [ Html.text "2" ]
                                   , Table.td [] [ Html.text "Skelett" ]
                                   , Table.td [] [ Html.text "10" ]
                                   ]
-                              , Table.tr [ (Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon "0" "0"))))) ]
+                              , Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon "0" "0")))) ]
                                   [ Table.td [] [ Html.text "3" ]
                                   , Table.td [] [ Html.text "Player 1" ]
                                   , Table.td [] [ Html.text "22" ]
@@ -90,8 +90,8 @@ svgIconList model =
 getAreaParam : Int -> DungeonMap_Character -> List (Svg.Svg Msg)
 getAreaParam i s =
     let 
-      xCor = (Maybe.withDefault "0" (List.head (String.split "," (getCoord s))))
-      yCor = (Maybe.withDefault "0" (List.head (List.drop 1 (String.split "," (getCoord s)))))
+      xCor = Maybe.withDefault "0" (List.head (String.split "," (getCoord s)))
+      yCor = Maybe.withDefault "0" (List.head (List.drop 1 (String.split "," (getCoord s))))
     in
     case getIcon s of
         "monster" ->
@@ -105,8 +105,8 @@ getAreaParam i s =
                 ]
                 []
             , Svg.text_ [ SvgAtt.textAnchor "middle"
-                        , SvgAtt.x (String.fromFloat ((Maybe.withDefault 0 (String.toFloat xCor)) + 7.5))
-                        , SvgAtt.y (String.fromFloat ((Maybe.withDefault 0 (String.toFloat yCor)) + 8.75))
+                        , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat xCor) + 7.5))
+                        , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat yCor) + 8.75))
                         , SvgAtt.dominantBaseline "middle"
                         ]
                         [ Svg.text (String.fromInt i) ]
@@ -123,7 +123,7 @@ getAreaParam i s =
                 []
             , Svg.text_ [ SvgAtt.textAnchor "middle"
                         , SvgAtt.x xCor
-                        , SvgAtt.y (String.fromFloat ((Maybe.withDefault 0 (String.toFloat yCor)) + 0.75))
+                        , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat yCor) + 0.75))
                         , SvgAtt.dominantBaseline "middle"
                         ]
                         [ Svg.text (String.fromInt i) ]

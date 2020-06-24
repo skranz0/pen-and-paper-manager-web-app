@@ -94,6 +94,8 @@ type
     | MonsterIcon String String
 
 type alias MousePosition =
-    { x : Float, y : Float }
+    { x : Float
+    , y : Float
+    }
 
 

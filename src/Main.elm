@@ -149,7 +149,7 @@ view model =
                     , link = Tab.link [ Spacing.mt3 ] [ text "Map" ]
                     , pane =
                         Tab.pane []
-                            [ (dungeonMapView model) ] -- Map
+                            [ dungeonMapView model ] -- Map
                     }
                 ]
             |> Tab.view model.tabState
