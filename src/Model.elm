@@ -74,7 +74,9 @@ type Msg
 
 type Character
     = Enemy String Int Int
-    -- can be expanded e.g. with a hero type with name, health, armor and a weapon
+    --      name   LeP RS
+    | Hero String Int
+    --     name   RS
 
 type AddCharacterIconState
     = DrawingInactive

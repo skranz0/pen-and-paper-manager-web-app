@@ -16,7 +16,7 @@ import Random
 
 --our Modules
 import Model exposing (..)
---import Main exposing (update)
+import Model exposing (..)
 
 body : Model -> Html Msg
 body model =
@@ -90,25 +90,45 @@ displayCharacters model chars =
                     case c of
                         Enemy n h a ->
                             (n,h,a)
+                        Hero n a ->
+                            (n,0,a)
             in
-                Table.tr []
-                [ Table.td[][text <| String.fromInt i]
-                , Table.td[][text name]
-                , Table.td[][text <| String.fromInt health]
-                , Table.td[][text <| String.fromInt armor]
-                , Table.td[]
-                    [ Button.button 
-                        [ Button.success
-                        , Button.attrs [onClick <| attack model i 5 ] ] 
-                        [ text "Angriff"]
-                    ]
-                , Table.td[]
-                    [ Button.button 
-                        [ Button.danger
-                        , Button.attrs [onClick <| RemoveEnemy i ] ] 
-                        [ text "Löschen"]
-                    ]
-                ]
+                case c of
+                    Enemy _ _ _ ->
+                        Table.tr []
+                        [ Table.td[][text <| String.fromInt i]
+                        , Table.td[][text name]
+                        , Table.td[][text <| String.fromInt health]
+                        , Table.td[][text <| String.fromInt armor]
+                        , Table.td[]
+                            [ Button.button 
+                                [ Button.success
+                                , Button.attrs [onClick <| attack model i 5 ] ] 
+                                [ text "Angriff"]
+                            ]
+                        , Table.td[]
+                            [ Button.button 
+                                [ Button.danger
+                                , Button.attrs [onClick <| RemoveEnemy i ] ] 
+                                [ text "Löschen"]
+                            ]
+                        ]
+                    Hero _ _ ->
+                        Table.tr []
+                        [ Table.td[][text <| String.fromInt i]
+                        , Table.td[][text name]
+                        , Table.td[][text <| String.fromInt health]
+                        , Table.td[][text <| String.fromInt armor]
+                        , Table.td[]
+                            [ 
+                            ]
+                        , Table.td[]
+                            [ Button.button 
+                                [ Button.danger
+                                , Button.attrs [onClick <| RemoveEnemy i ] ] 
+                                [ text "Löschen"]
+                            ]
+                        ]
         )
         <| Array.toList chars
 
@@ -123,6 +143,7 @@ attack model id damage =
                     UpdateEnemy id <| Enemy name (health - damage + armor) armor
             else
                 DoNothing -- see, it IS necessary
+        Just (Hero _ _) -> DoNothing
         Nothing -> DoNothing
 
 setDice : String -> List String
@@ -206,6 +227,7 @@ customEnemy model =
                     (health, armor) =
                         case model.tmpEnemy of
                             Enemy _ h a -> (h,a)
+                            _ -> (0,0)
                 in 
                     UpdateTmp <| Enemy n health armor
             )] []
@@ -217,6 +239,7 @@ customEnemy model =
                     (name, armor) =
                         case model.tmpEnemy of
                             Enemy n _ a -> (n,a)
+                            _ -> ("",0)
                 in 
                     UpdateTmp <| Enemy name (Maybe.withDefault 1 <| String.toInt h) armor
             )] []
@@ -228,6 +251,7 @@ customEnemy model =
                     (name, health) =
                         case model.tmpEnemy of
                             Enemy n h _ -> (n,h)
+                            _ -> ("",0)
                 in 
                     UpdateTmp <| Enemy name health (Maybe.withDefault 0 <| String.toInt a)
             )] []
