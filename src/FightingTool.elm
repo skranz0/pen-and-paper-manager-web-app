@@ -2,7 +2,7 @@
 module FightingTool exposing (..)
 
 --elm Packages
-import Html exposing (Html, div, text, h1, h2)
+import Html exposing (Html, div, text, h1, h2, p)
 import Html.Attributes as Attr exposing (class)
 import Html.Events exposing (onClick)
 import Json.Decode
@@ -21,8 +21,7 @@ import Model exposing (..)
 body : Model -> Html Msg
 body model =
     div []
-        [ dropdownMenu model
-        , div []
+        [ div []
             [ Table.table
                 { options = [ Table.striped, Table.hover ]
                 , thead =  Table.simpleThead
@@ -36,21 +35,17 @@ body model =
                         (displayCharacters model model.enemy )
                 }
             ]
-        , Html.input
-            [ Attr.type_ "number"
-            , Attr.name "Damage"
-            , Attr.placeholder model.damage
-            , Html.Events.onInput ChangeDamage
-            ] [ ]
-        , Html.input 
-            [ Attr.type_ "text"
-            , Attr.name "Dice" 
-            , Attr.placeholder model.dice 
-            , Html.Events.onInput ChangeTmpDice
-            ]  []
-        , Html.button [ Html.Events.onClick (DiceAndSlice model.tmpdice) ] [ text "Schaden würfeln" ]
-        , customEnemy model
+        , viewCustomEnemyModal model
         , deathAlert model
+        , viewAttackModal model
+        , Button.button
+            [ Button.outlineSuccess
+            , Button.attrs [ onClick (ShowModal AttackModal) ] ]
+            [ text "Angriff"]
+        , Button.button
+            [ Button.outlineSuccess
+            , Button.attrs [ onClick (ShowModal CustomEnemy) ] ]
+            [ text "Gegner"]
         ]
 
 
@@ -73,6 +68,89 @@ footer =
                 , Html.p [] [ text "Einführung in das World Wide Web" ]
                 ]
             ]
+
+viewAttackModal : Model -> Html Msg
+viewAttackModal model = 
+    div []
+        [ Modal.config (CloseModal AttackModal)
+            |> Modal.small
+            |> Modal.hideOnBackdropClick True
+            |> Modal.h3 [] [ text "Angriff" ]
+            |> Modal.body [] 
+                [ Html.input 
+                    [ Attr.type_ "text"
+                    , Attr.name "Dice" 
+                    , Attr.placeholder model.dice 
+                    , Html.Events.onInput ChangeTmpDice
+                    ]  []
+                , Html.button [ Html.Events.onClick (DiceAndSlice model.tmpdice) ] [ text "Schaden würfeln" ]
+                , Html.input
+                    [ Attr.type_ "number"
+                    , Attr.name "Damage"
+                    , Attr.placeholder model.damage
+                    , Html.Events.onInput ChangeDamage
+                    ] [ ]
+                ]
+            |> Modal.footer [] []
+            |> Modal.view model.showAttackModal
+        ]
+
+viewCustomEnemyModal : Model -> Html Msg
+viewCustomEnemyModal model =
+{-
+    This method is super messed up and I really don't want to explain it here.
+    If there's is time somewhere I may do an overhaul, but for now it
+    just works the way it is.
+    It will probably be put in a modal in the future.
+-}
+    Modal.config (CloseModal CustomEnemy)
+        |> Modal.small
+        |> Modal.hideOnBackdropClick True
+        |> Modal.h3 [] [ text "Gewonnen ☠" ]
+        |> Modal.body [] [ 
+            div []
+                [ dropdownMenu model
+                , Html.label [Attr.for "name"] [text "Name"]
+                , Html.input [Attr.type_ "text", Attr.id "name", Attr.name "name", Html.Events.onInput 
+                    (\n -> 
+                        let 
+                            (health, armor) =
+                                case model.tmpEnemy of
+                                    Enemy _ h a -> (h,a)
+                        in 
+                            UpdateTmp <| Enemy n health armor
+                    )] []
+                , Html.br [] []
+                , Html.label [Attr.for "health"] [text "LeP"]
+                , Html.input [Attr.type_ "number", Attr.id "health", Attr.name "health", Html.Events.onInput
+                    (\h -> 
+                        let 
+                            (name, armor) =
+                                case model.tmpEnemy of
+                                    Enemy n _ a -> (n,a)
+                        in 
+                            UpdateTmp <| Enemy name (Maybe.withDefault 1 <| String.toInt h) armor
+                    )] []
+                , Html.br [] []
+                , Html.label [Attr.for "armor"] [text "RS"]
+                , Html.input [Attr.type_ "number", Attr.id "armor", Attr.name "armor", Html.Events.onInput
+                    (\a -> 
+                        let 
+                            (name, health) =
+                                case model.tmpEnemy of
+                                    Enemy n h _ -> (n,h)
+                        in 
+                            UpdateTmp <| Enemy name health (Maybe.withDefault 0 <| String.toInt a)
+                    )] []
+                , Html.br [] []
+                , Html.button 
+                    [ Html.Events.onClick <| AddEnemy model.tmpEnemy ] 
+                    [ text "Hinzufügen" ]
+                ]
+            ]
+        |> Modal.footer [] []
+        |> Modal.view model.showCustomEnemy
+    
 
 parseEnemy : Json.Decode.Decoder Character
 parseEnemy =
@@ -143,19 +221,13 @@ randomListGenerator rt mf =
 
 deathAlert : Model -> Html Msg
 deathAlert model =
-    Modal.config CloseDeathAlert
+    Modal.config (CloseModal DeathAlert)
         |> Modal.small
         |> Modal.hideOnBackdropClick True
         |> Modal.h3 [] [ text "Gewonnen ☠" ]
         |> Modal.body [] [ Html.p [] [ text "Das Monster ist besiegt!"] ]
-        |> Modal.footer []
-            [ Button.button
-                [ Button.outlinePrimary
-                , Button.attrs [ onClick CloseDeathAlert ]
-                ]
-                [ text "Schließen" ]
-            ]
-        |> Modal.view model.deathAlertVisibility
+        |> Modal.footer [] []
+        |> Modal.view model.showDeathAlert
 
 dropdownMenu : Model -> Html Msg
 dropdownMenu model =
@@ -188,51 +260,4 @@ dropdownMenu model =
                 , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "waldschrat" ] [ text "Waldschrat" ]
                 ]
             }
-        ]
-
-customEnemy : Model -> Html Msg
-customEnemy model =
-{-
-    This method is super messed up and I really don't want to explain it here.
-    If there's is time somewhere I may do an overhaul, but for now it
-    just works the way it is.
-    It will probably be put in a modal in the future.
--}
-    div []
-        [ Html.label [Attr.for "name"] [text "Name"]
-        , Html.input [Attr.type_ "text", Attr.id "name", Attr.name "name", Html.Events.onInput 
-            (\n -> 
-                let 
-                    (health, armor) =
-                        case model.tmpEnemy of
-                            Enemy _ h a -> (h,a)
-                in 
-                    UpdateTmp <| Enemy n health armor
-            )] []
-        , Html.br [] []
-        , Html.label [Attr.for "health"] [text "LeP"]
-        , Html.input [Attr.type_ "number", Attr.id "health", Attr.name "health", Html.Events.onInput
-            (\h -> 
-                let 
-                    (name, armor) =
-                        case model.tmpEnemy of
-                            Enemy n _ a -> (n,a)
-                in 
-                    UpdateTmp <| Enemy name (Maybe.withDefault 1 <| String.toInt h) armor
-            )] []
-        , Html.br [] []
-        , Html.label [Attr.for "armor"] [text "RS"]
-        , Html.input [Attr.type_ "number", Attr.id "armor", Attr.name "armor", Html.Events.onInput
-            (\a -> 
-                let 
-                    (name, health) =
-                        case model.tmpEnemy of
-                            Enemy n h _ -> (n,h)
-                in 
-                    UpdateTmp <| Enemy name health (Maybe.withDefault 0 <| String.toInt a)
-            )] []
-        , Html.br [] []
-        , Html.button 
-            [ Html.Events.onClick <| AddEnemy model.tmpEnemy ] 
-            [ text "Hinzufügen" ]
         ]

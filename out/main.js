@@ -5434,7 +5434,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Model$init = function (_v0) {
 	return _Utils_Tuple2(
-		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterList: _List_Nil, damage: '', deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpdice: '1W6+0'},
+		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterList: _List_Nil, damage: '', dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpdice: '1W6+0'},
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Model$MyDrop1Msg = function (a) {
@@ -7601,15 +7601,9 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$shown,
-							enemy: A2($elm_community$array_extra$Array$Extra$removeAt, index, model.enemy)
+							enemy: A2($elm_community$array_extra$Array$Extra$removeAt, index, model.enemy),
+							showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$shown
 						}),
-					$elm$core$Platform$Cmd$none);
-			case 'CloseDeathAlert':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{deathAlertVisibility: $rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
 					$elm$core$Platform$Cmd$none);
 			case 'MyDrop1Msg':
 				var state = msg.a;
@@ -7733,6 +7727,50 @@ var $author$project$Main$update = F2(
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
+			case 'CloseModal':
+				var modalType = msg.a;
+				switch (modalType.$) {
+					case 'AttackModal':
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
+							$elm$core$Platform$Cmd$none);
+					case 'DeathAlert':
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
+							$elm$core$Platform$Cmd$none);
+					default:
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
+							$elm$core$Platform$Cmd$none);
+				}
+			case 'ShowModal':
+				var modalType = msg.a;
+				switch (modalType.$) {
+					case 'AttackModal':
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$shown}),
+							$elm$core$Platform$Cmd$none);
+					case 'DeathAlert':
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$shown}),
+							$elm$core$Platform$Cmd$none);
+					default:
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$shown}),
+							$elm$core$Platform$Cmd$none);
+				}
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
@@ -7740,245 +7778,18 @@ var $author$project$Main$update = F2(
 var $author$project$Model$TabMsg = function (a) {
 	return {$: 'TabMsg', a: a};
 };
-var $author$project$Model$ChangeDamage = function (a) {
-	return {$: 'ChangeDamage', a: a};
+var $author$project$Model$AttackModal = {$: 'AttackModal'};
+var $author$project$Model$CustomEnemy = {$: 'CustomEnemy'};
+var $author$project$Model$ShowModal = function (a) {
+	return {$: 'ShowModal', a: a};
 };
-var $author$project$Model$ChangeTmpDice = function (a) {
-	return {$: 'ChangeTmpDice', a: a};
-};
-var $author$project$Model$DiceAndSlice = function (a) {
-	return {$: 'DiceAndSlice', a: a};
-};
-var $elm$html$Html$button = _VirtualDom_node('button');
-var $author$project$Model$AddEnemy = function (a) {
-	return {$: 'AddEnemy', a: a};
-};
-var $author$project$Model$UpdateTmp = function (a) {
-	return {$: 'UpdateTmp', a: a};
-};
-var $elm$html$Html$br = _VirtualDom_node('br');
-var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
-	});
-var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
-var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
-var $elm$html$Html$input = _VirtualDom_node('input');
-var $elm$html$Html$label = _VirtualDom_node('label');
-var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var $elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var $elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
-};
-var $elm$html$Html$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
-};
-var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
-};
-var $elm$html$Html$Events$stopPropagationOn = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
-var $elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
-	});
-var $elm$html$Html$Events$targetValue = A2(
-	$elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	$elm$json$Json$Decode$string);
-var $elm$html$Html$Events$onInput = function (tagger) {
-	return A2(
-		$elm$html$Html$Events$stopPropagationOn,
-		'input',
-		A2(
-			$elm$json$Json$Decode$map,
-			$elm$html$Html$Events$alwaysStop,
-			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
-};
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
-var $author$project$FightingTool$customEnemy = function (model) {
-	return A2(
-		$elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$label,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$for('name')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Name')
-					])),
-				A2(
-				$elm$html$Html$input,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$type_('text'),
-						$elm$html$Html$Attributes$id('name'),
-						$elm$html$Html$Attributes$name('name'),
-						$elm$html$Html$Events$onInput(
-						function (n) {
-							var _v0 = function () {
-								var _v1 = model.tmpEnemy;
-								var h = _v1.b;
-								var a = _v1.c;
-								return _Utils_Tuple2(h, a);
-							}();
-							var health = _v0.a;
-							var armor = _v0.b;
-							return $author$project$Model$UpdateTmp(
-								A3($author$project$Model$Enemy, n, health, armor));
-						})
-					]),
-				_List_Nil),
-				A2($elm$html$Html$br, _List_Nil, _List_Nil),
-				A2(
-				$elm$html$Html$label,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$for('health')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('LeP')
-					])),
-				A2(
-				$elm$html$Html$input,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$type_('number'),
-						$elm$html$Html$Attributes$id('health'),
-						$elm$html$Html$Attributes$name('health'),
-						$elm$html$Html$Events$onInput(
-						function (h) {
-							var _v2 = function () {
-								var _v3 = model.tmpEnemy;
-								var n = _v3.a;
-								var a = _v3.c;
-								return _Utils_Tuple2(n, a);
-							}();
-							var name = _v2.a;
-							var armor = _v2.b;
-							return $author$project$Model$UpdateTmp(
-								A3(
-									$author$project$Model$Enemy,
-									name,
-									A2(
-										$elm$core$Maybe$withDefault,
-										1,
-										$elm$core$String$toInt(h)),
-									armor));
-						})
-					]),
-				_List_Nil),
-				A2($elm$html$Html$br, _List_Nil, _List_Nil),
-				A2(
-				$elm$html$Html$label,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$for('armor')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('RS')
-					])),
-				A2(
-				$elm$html$Html$input,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$type_('number'),
-						$elm$html$Html$Attributes$id('armor'),
-						$elm$html$Html$Attributes$name('armor'),
-						$elm$html$Html$Events$onInput(
-						function (a) {
-							var _v4 = function () {
-								var _v5 = model.tmpEnemy;
-								var n = _v5.a;
-								var h = _v5.b;
-								return _Utils_Tuple2(n, h);
-							}();
-							var name = _v4.a;
-							var health = _v4.b;
-							return $author$project$Model$UpdateTmp(
-								A3(
-									$author$project$Model$Enemy,
-									name,
-									health,
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$elm$core$String$toInt(a))));
-						})
-					]),
-				_List_Nil),
-				A2($elm$html$Html$br, _List_Nil, _List_Nil),
-				A2(
-				$elm$html$Html$button,
-				_List_fromArray(
-					[
-						$elm$html$Html$Events$onClick(
-						$author$project$Model$AddEnemy(model.tmpEnemy))
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Hinzufügen')
-					]))
-			]));
-};
-var $author$project$Model$CloseDeathAlert = {$: 'CloseDeathAlert'};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
 	return {$: 'Attrs', a: a};
 };
 var $rundis$elm_bootstrap$Bootstrap$Button$attrs = function (attrs_) {
 	return $rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs(attrs_);
 };
-var $rundis$elm_bootstrap$Bootstrap$Modal$Body = function (a) {
-	return {$: 'Body', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Modal$Config = function (a) {
-	return {$: 'Config', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Modal$body = F3(
-	function (attributes, children, _v0) {
-		var conf = _v0.a;
-		return $rundis$elm_bootstrap$Bootstrap$Modal$Config(
-			_Utils_update(
-				conf,
-				{
-					body: $elm$core$Maybe$Just(
-						$rundis$elm_bootstrap$Bootstrap$Modal$Body(
-							{attributes: attributes, children: children}))
-				}));
-	});
+var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$core$Maybe$andThen = F2(
 	function (callback, maybeValue) {
 		if (maybeValue.$ === 'Just') {
@@ -8022,6 +7833,14 @@ var $rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier = F2(
 						attributes: _Utils_ap(options.attributes, attrs)
 					});
 		}
+	});
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$core$List$filter = F2(
@@ -8154,6 +7973,28 @@ var $rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 			$rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(options),
 			children);
 	});
+var $author$project$Model$CloseModal = function (a) {
+	return {$: 'CloseModal', a: a};
+};
+var $author$project$Model$DeathAlert = {$: 'DeathAlert'};
+var $rundis$elm_bootstrap$Bootstrap$Modal$Body = function (a) {
+	return {$: 'Body', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Modal$Config = function (a) {
+	return {$: 'Config', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Modal$body = F3(
+	function (attributes, children, _v0) {
+		var conf = _v0.a;
+		return $rundis$elm_bootstrap$Bootstrap$Modal$Config(
+			_Utils_update(
+				conf,
+				{
+					body: $elm$core$Maybe$Just(
+						$rundis$elm_bootstrap$Bootstrap$Modal$Body(
+							{attributes: attributes, children: children}))
+				}));
+	});
 var $rundis$elm_bootstrap$Bootstrap$Modal$config = function (closeMsg) {
 	return $rundis$elm_bootstrap$Bootstrap$Modal$Config(
 		{
@@ -8226,15 +8067,6 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick = F2(
 						{hideOnBackdropClick: hide})
 				}));
 	});
-var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring = function (a) {
-	return {$: 'Coloring', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined = function (a) {
-	return {$: 'Outlined', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary = {$: 'Primary'};
-var $rundis$elm_bootstrap$Bootstrap$Button$outlinePrimary = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
-	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined($rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary));
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $rundis$elm_bootstrap$Bootstrap$General$Internal$SM = {$: 'SM'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$small = function (_v0) {
@@ -8251,6 +8083,8 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$small = function (_v0) {
 					})
 			}));
 };
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$virtual_dom$VirtualDom$attribute = F2(
 	function (key, value) {
 		return A2(
@@ -8259,6 +8093,7 @@ var $elm$virtual_dom$VirtualDom$attribute = F2(
 			_VirtualDom_noJavaScriptOrHtmlUri(value));
 	});
 var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
+var $elm$html$Html$div = _VirtualDom_node('div');
 var $rundis$elm_bootstrap$Bootstrap$Modal$StartClose = {$: 'StartClose'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$getCloseMsg = function (config_) {
 	var _v0 = config_.withAnimation;
@@ -8289,6 +8124,23 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$isFade = function (conf) {
 				return true;
 			},
 			conf.withAnimation));
+};
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
 };
 var $rundis$elm_bootstrap$Bootstrap$Modal$backdrop = F2(
 	function (visibility, conf) {
@@ -8356,6 +8208,10 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$backdrop = F2(
 			]);
 	});
 var $elm$json$Json$Decode$andThen = _Json_andThen;
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
 var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$className = A2(
 	$elm$json$Json$Decode$at,
 	_List_fromArray(
@@ -8604,28 +8460,11 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$view = F2(
 var $author$project$FightingTool$deathAlert = function (model) {
 	return A2(
 		$rundis$elm_bootstrap$Bootstrap$Modal$view,
-		model.deathAlertVisibility,
+		model.showDeathAlert,
 		A3(
 			$rundis$elm_bootstrap$Bootstrap$Modal$footer,
 			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					$rundis$elm_bootstrap$Bootstrap$Button$button,
-					_List_fromArray(
-						[
-							$rundis$elm_bootstrap$Bootstrap$Button$outlinePrimary,
-							$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick($author$project$Model$CloseDeathAlert)
-								]))
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text('Schließen')
-						]))
-				]),
+			_List_Nil,
 			A3(
 				$rundis$elm_bootstrap$Bootstrap$Modal$body,
 				_List_Nil,
@@ -8650,7 +8489,8 @@ var $author$project$FightingTool$deathAlert = function (model) {
 						$rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick,
 						true,
 						$rundis$elm_bootstrap$Bootstrap$Modal$small(
-							$rundis$elm_bootstrap$Bootstrap$Modal$config($author$project$Model$CloseDeathAlert)))))));
+							$rundis$elm_bootstrap$Bootstrap$Modal$config(
+								$author$project$Model$CloseModal($author$project$Model$DeathAlert))))))));
 };
 var $author$project$Model$RemoveEnemy = function (a) {
 	return {$: 'RemoveEnemy', a: a};
@@ -8712,6 +8552,9 @@ var $author$project$FightingTool$attack = F3(
 			return $author$project$Model$DoNothing;
 		}
 	});
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring = function (a) {
+	return {$: 'Coloring', a: a};
+};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Danger = {$: 'Danger'};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled = function (a) {
 	return {$: 'Roled', a: a};
@@ -8836,622 +8679,13 @@ var $author$project$FightingTool$displayCharacters = F2(
 				}),
 			$elm$core$Array$toList(chars));
 	});
-var $author$project$Model$LoadEnemy = function (a) {
-	return {$: 'LoadEnemy', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem = function (a) {
-	return {$: 'DropdownItem', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem = F2(
-	function (attributes, children) {
-		return $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem(
-			A2(
-				$elm$html$Html$button,
-				_Utils_ap(
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$type_('button'),
-							$elm$html$Html$Attributes$class('dropdown-item')
-						]),
-					attributes),
-				children));
-	});
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropDir = function (maybeDir) {
-	var toAttrs = function (dir) {
-		return _List_fromArray(
-			[
-				$elm$html$Html$Attributes$class(
-				'drop' + function () {
-					if (dir.$ === 'Dropleft') {
-						return 'left';
-					} else {
-						return 'right';
-					}
-				}())
-			]);
-	};
-	return A2(
-		$elm$core$Maybe$withDefault,
-		_List_Nil,
-		A2($elm$core$Maybe$map, toAttrs, maybeDir));
-};
-var $elm$core$Basics$neq = _Utils_notEqual;
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownAttributes = F2(
-	function (status, config) {
-		return _Utils_ap(
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$classList(
-					_List_fromArray(
-						[
-							_Utils_Tuple2('btn-group', true),
-							_Utils_Tuple2(
-							'show',
-							!_Utils_eq(status, $rundis$elm_bootstrap$Bootstrap$Dropdown$Closed)),
-							_Utils_Tuple2('dropup', config.isDropUp)
-						]))
-				]),
-			_Utils_ap(
-				$rundis$elm_bootstrap$Bootstrap$Dropdown$dropDir(config.dropDirection),
-				config.attributes));
-	});
-var $elm$core$String$fromFloat = _String_fromNumber;
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$menuStyles = F2(
-	function (_v0, config) {
-		var status = _v0.a.status;
-		var toggleSize = _v0.a.toggleSize;
-		var menuSize = _v0.a.menuSize;
-		var px = function (n) {
-			return $elm$core$String$fromFloat(n) + 'px';
-		};
-		var translate = F3(
-			function (x, y, z) {
-				return 'translate3d(' + (px(x) + (',' + (px(y) + (',' + (px(z) + ')')))));
-			});
-		var _default = _List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'top', '0'),
-				A2($elm$html$Html$Attributes$style, 'left', '0')
-			]);
-		var _v1 = _Utils_Tuple2(config.isDropUp, config.dropDirection);
-		_v1$0:
-		while (true) {
-			if (_v1.b.$ === 'Just') {
-				if (_v1.b.a.$ === 'Dropright') {
-					if (_v1.a) {
-						break _v1$0;
-					} else {
-						var _v2 = _v1.b.a;
-						return _default;
-					}
-				} else {
-					if (_v1.a) {
-						break _v1$0;
-					} else {
-						var _v3 = _v1.b.a;
-						return _Utils_ap(
-							_default,
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$Attributes$style,
-									'transform',
-									A3(translate, (-toggleSize.width) - menuSize.width, 0, 0))
-								]));
-					}
-				}
-			} else {
-				if (_v1.a) {
-					break _v1$0;
-				} else {
-					return _Utils_ap(
-						_default,
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$Attributes$style,
-								'transform',
-								A3(translate, -toggleSize.width, toggleSize.height, 0))
-							]));
-				}
-			}
-		}
-		return _Utils_ap(
-			_default,
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$Attributes$style,
-					'transform',
-					A3(translate, -toggleSize.width, -menuSize.height, 0))
-				]));
-	});
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownMenu = F3(
-	function (state, config, items) {
-		var status = state.a.status;
-		var menuSize = state.a.menuSize;
-		var wrapperStyles = _Utils_eq(status, $rundis$elm_bootstrap$Bootstrap$Dropdown$Closed) ? _List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'height', '0'),
-				A2($elm$html$Html$Attributes$style, 'overflow', 'hidden'),
-				A2($elm$html$Html$Attributes$style, 'position', 'relative')
-			]) : _List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'position', 'relative')
-			]);
-		return A2(
-			$elm$html$Html$div,
-			wrapperStyles,
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$div,
-					_Utils_ap(
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$classList(
-								_List_fromArray(
-									[
-										_Utils_Tuple2('dropdown-menu', true),
-										_Utils_Tuple2('dropdown-menu-right', config.hasMenuRight),
-										_Utils_Tuple2(
-										'show',
-										!_Utils_eq(status, $rundis$elm_bootstrap$Bootstrap$Dropdown$Closed))
-									]))
-							]),
-						_Utils_ap(
-							A2($rundis$elm_bootstrap$Bootstrap$Dropdown$menuStyles, state, config),
-							config.menuAttrs)),
-					A2(
-						$elm$core$List$map,
-						function (_v0) {
-							var x = _v0.a;
-							return x;
-						},
-						items))
-				]));
-	});
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$applyModifier = F2(
-	function (option, options) {
-		switch (option.$) {
-			case 'AlignMenuRight':
-				return _Utils_update(
-					options,
-					{hasMenuRight: true});
-			case 'Dropup':
-				return _Utils_update(
-					options,
-					{isDropUp: true});
-			case 'Attrs':
-				var attrs_ = option.a;
-				return _Utils_update(
-					options,
-					{attributes: attrs_});
-			case 'DropToDir':
-				var dir = option.a;
-				return _Utils_update(
-					options,
-					{
-						dropDirection: $elm$core$Maybe$Just(dir)
-					});
-			default:
-				var attrs_ = option.a;
-				return _Utils_update(
-					options,
-					{menuAttrs: attrs_});
-		}
-	});
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$defaultOptions = {attributes: _List_Nil, dropDirection: $elm$core$Maybe$Nothing, hasMenuRight: false, isDropUp: false, menuAttrs: _List_Nil};
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$toConfig = function (options) {
-	return A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Dropdown$applyModifier, $rundis$elm_bootstrap$Bootstrap$Dropdown$defaultOptions, options);
-};
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropdown = F2(
-	function (state, _v0) {
-		var status = state.a.status;
-		var toggleMsg = _v0.toggleMsg;
-		var toggleButton = _v0.toggleButton;
-		var items = _v0.items;
-		var options = _v0.options;
-		var config = $rundis$elm_bootstrap$Bootstrap$Dropdown$toConfig(options);
-		var _v1 = toggleButton;
-		var buttonFn = _v1.a;
-		return A2(
-			$elm$html$Html$div,
-			A2($rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownAttributes, status, config),
-			_List_fromArray(
-				[
-					A2(buttonFn, toggleMsg, state),
-					A3($rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownMenu, state, config, items)
-				]));
-	});
-var $elm$html$Html$h6 = _VirtualDom_node('h6');
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$header = function (children) {
-	return $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem(
-		A2(
-			$elm$html$Html$h6,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('dropdown-header')
-				]),
-			children));
-};
-var $rundis$elm_bootstrap$Bootstrap$Button$primary = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
-	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary));
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownToggle = function (a) {
-	return {$: 'DropdownToggle', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$Open = {$: 'Open'};
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$nextStatus = function (status) {
-	switch (status.$) {
-		case 'Open':
-			return $rundis$elm_bootstrap$Bootstrap$Dropdown$Closed;
-		case 'ListenClicks':
-			return $rundis$elm_bootstrap$Bootstrap$Dropdown$Closed;
-		default:
-			return $rundis$elm_bootstrap$Bootstrap$Dropdown$Open;
-	}
-};
-var $elm$json$Json$Decode$float = _Json_decodeFloat;
-var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetHeight = A2($elm$json$Json$Decode$field, 'offsetHeight', $elm$json$Json$Decode$float);
-var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetWidth = A2($elm$json$Json$Decode$field, 'offsetWidth', $elm$json$Json$Decode$float);
-var $elm$json$Json$Decode$map4 = _Json_map4;
-var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetLeft = A2($elm$json$Json$Decode$field, 'offsetLeft', $elm$json$Json$Decode$float);
-var $elm$json$Json$Decode$null = _Json_decodeNull;
-var $elm$json$Json$Decode$oneOf = _Json_oneOf;
-var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetParent = F2(
-	function (x, decoder) {
-		return $elm$json$Json$Decode$oneOf(
-			_List_fromArray(
-				[
-					A2(
-					$elm$json$Json$Decode$field,
-					'offsetParent',
-					$elm$json$Json$Decode$null(x)),
-					A2($elm$json$Json$Decode$field, 'offsetParent', decoder)
-				]));
-	});
-var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetTop = A2($elm$json$Json$Decode$field, 'offsetTop', $elm$json$Json$Decode$float);
-var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$scrollLeft = A2($elm$json$Json$Decode$field, 'scrollLeft', $elm$json$Json$Decode$float);
-var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$scrollTop = A2($elm$json$Json$Decode$field, 'scrollTop', $elm$json$Json$Decode$float);
-var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$position = F2(
-	function (x, y) {
-		return A2(
-			$elm$json$Json$Decode$andThen,
-			function (_v0) {
-				var x_ = _v0.a;
-				var y_ = _v0.b;
-				return A2(
-					$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetParent,
-					_Utils_Tuple2(x_, y_),
-					A2($rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$position, x_, y_));
-			},
-			A5(
-				$elm$json$Json$Decode$map4,
-				F4(
-					function (scrollLeft_, scrollTop_, offsetLeft_, offsetTop_) {
-						return _Utils_Tuple2((x + offsetLeft_) - scrollLeft_, (y + offsetTop_) - scrollTop_);
-					}),
-				$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$scrollLeft,
-				$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$scrollTop,
-				$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetLeft,
-				$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetTop));
-	});
-var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$boundingArea = A4(
-	$elm$json$Json$Decode$map3,
-	F3(
-		function (_v0, width, height) {
-			var x = _v0.a;
-			var y = _v0.b;
-			return {height: height, left: x, top: y, width: width};
-		}),
-	A2($rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$position, 0, 0),
-	$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetWidth,
-	$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetHeight);
-var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$childNode = function (idx) {
-	return $elm$json$Json$Decode$at(
-		_List_fromArray(
-			[
-				'childNodes',
-				$elm$core$String$fromInt(idx)
-			]));
-};
-var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$nextSibling = function (decoder) {
-	return A2($elm$json$Json$Decode$field, 'nextSibling', decoder);
-};
-var $elm$core$Tuple$pair = F2(
-	function (a, b) {
-		return _Utils_Tuple2(a, b);
-	});
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$isToggle = A2(
-	$elm$json$Json$Decode$andThen,
-	function (_class) {
-		return A2($elm$core$String$contains, 'dropdown-toggle', _class) ? $elm$json$Json$Decode$succeed(true) : $elm$json$Json$Decode$succeed(false);
-	},
-	$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$className);
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$toggler = F2(
-	function (path, decoder) {
-		return $elm$json$Json$Decode$oneOf(
-			_List_fromArray(
-				[
-					A2(
-					$elm$json$Json$Decode$andThen,
-					function (res) {
-						return res ? A2($elm$json$Json$Decode$at, path, decoder) : $elm$json$Json$Decode$fail('');
-					},
-					A2($elm$json$Json$Decode$at, path, $rundis$elm_bootstrap$Bootstrap$Dropdown$isToggle)),
-					A2(
-					$elm$json$Json$Decode$andThen,
-					function (_v0) {
-						return A2(
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$toggler,
-							_Utils_ap(
-								path,
-								_List_fromArray(
-									['parentElement'])),
-							decoder);
-					},
-					A2(
-						$elm$json$Json$Decode$at,
-						_Utils_ap(
-							path,
-							_List_fromArray(
-								['parentElement'])),
-						$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$className)),
-					$elm$json$Json$Decode$fail('No toggler found')
-				]));
-	});
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$sizeDecoder = A3(
-	$elm$json$Json$Decode$map2,
-	$elm$core$Tuple$pair,
-	A2(
-		$rundis$elm_bootstrap$Bootstrap$Dropdown$toggler,
-		_List_fromArray(
-			['target']),
-		$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$boundingArea),
-	A2(
-		$rundis$elm_bootstrap$Bootstrap$Dropdown$toggler,
-		_List_fromArray(
-			['target']),
-		$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$nextSibling(
-			A2($rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$childNode, 0, $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$boundingArea))));
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$clickHandler = F2(
-	function (toMsg, state) {
-		var status = state.a.status;
-		return A2(
-			$elm$json$Json$Decode$andThen,
-			function (_v0) {
-				var b = _v0.a;
-				var m = _v0.b;
-				return $elm$json$Json$Decode$succeed(
-					toMsg(
-						$rundis$elm_bootstrap$Bootstrap$Dropdown$State(
-							{
-								menuSize: m,
-								status: $rundis$elm_bootstrap$Bootstrap$Dropdown$nextStatus(status),
-								toggleSize: b
-							})));
-			},
-			$rundis$elm_bootstrap$Bootstrap$Dropdown$sizeDecoder);
-	});
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$togglePrivate = F4(
-	function (buttonOptions, children, toggleMsg, state) {
-		return A2(
-			$elm$html$Html$button,
-			_Utils_ap(
-				$rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(buttonOptions),
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('dropdown-toggle'),
-						$elm$html$Html$Attributes$type_('button'),
-						A2(
-						$elm$html$Html$Events$on,
-						'click',
-						A2($rundis$elm_bootstrap$Bootstrap$Dropdown$clickHandler, toggleMsg, state))
-					])),
-			children);
-	});
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$toggle = F2(
-	function (buttonOptions, children) {
-		return $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownToggle(
-			A2($rundis$elm_bootstrap$Bootstrap$Dropdown$togglePrivate, buttonOptions, children));
-	});
-var $author$project$FightingTool$dropdownMenu = function (model) {
-	return A2(
-		$elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$rundis$elm_bootstrap$Bootstrap$Dropdown$dropdown,
-				model.myDrop1State,
-				{
-					items: _List_fromArray(
-						[
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Kulturschaffender')
-								])),
-							A2(
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Model$LoadEnemy('goblin'))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Goblin')
-								])),
-							A2(
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Model$LoadEnemy('oger'))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Oger')
-								])),
-							A2(
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Model$LoadEnemy('ork'))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Ork')
-								])),
-							A2(
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Model$LoadEnemy('troll'))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Troll')
-								])),
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Tier')
-								])),
-							A2(
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Model$LoadEnemy('höhlenspinne'))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Höhlensspinne')
-								])),
-							A2(
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Model$LoadEnemy('gruftassel'))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Gruftassel')
-								])),
-							A2(
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Model$LoadEnemy('grimwolf'))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Grimwolf')
-								])),
-							A2(
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Model$LoadEnemy('schwarzbär'))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Schwarzbär')
-								])),
-							A2(
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Model$LoadEnemy('wildschwein'))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Wildschwein')
-								])),
-							A2(
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Model$LoadEnemy('wolfsratte'))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Wolfsratte')
-								])),
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
-							_List_fromArray(
-								[
-									$elm$html$Html$text('übernatürliches Wesen')
-								])),
-							A2(
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Model$LoadEnemy('krakenmolch'))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Krakenmolch')
-								])),
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Drache')
-								])),
-							A2(
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Model$LoadEnemy('tatzelwurm'))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Tatzelwurm')
-								])),
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Pflanze')
-								])),
-							A2(
-							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Model$LoadEnemy('waldschrat'))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Waldschrat')
-								]))
-						]),
-					options: _List_Nil,
-					toggleButton: A2(
-						$rundis$elm_bootstrap$Bootstrap$Dropdown$toggle,
-						_List_fromArray(
-							[$rundis$elm_bootstrap$Bootstrap$Button$primary]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Gegner')
-							])),
-					toggleMsg: $author$project$Model$MyDrop1Msg
-				})
-			]));
-};
 var $rundis$elm_bootstrap$Bootstrap$Table$Hover = {$: 'Hover'};
 var $rundis$elm_bootstrap$Bootstrap$Table$hover = $rundis$elm_bootstrap$Bootstrap$Table$Hover;
-var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined = function (a) {
+	return {$: 'Outlined', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Button$outlineSuccess = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined($rundis$elm_bootstrap$Bootstrap$Internal$Button$Success));
 var $rundis$elm_bootstrap$Bootstrap$Table$THead = function (a) {
 	return {$: 'THead', a: a};
 };
@@ -10001,13 +9235,900 @@ var $rundis$elm_bootstrap$Bootstrap$Table$th = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Table$Th(
 			{children: children, options: options});
 	});
+var $author$project$Model$ChangeDamage = function (a) {
+	return {$: 'ChangeDamage', a: a};
+};
+var $author$project$Model$ChangeTmpDice = function (a) {
+	return {$: 'ChangeTmpDice', a: a};
+};
+var $author$project$Model$DiceAndSlice = function (a) {
+	return {$: 'DiceAndSlice', a: a};
+};
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
+var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $author$project$FightingTool$viewAttackModal = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$rundis$elm_bootstrap$Bootstrap$Modal$view,
+				model.showAttackModal,
+				A3(
+					$rundis$elm_bootstrap$Bootstrap$Modal$footer,
+					_List_Nil,
+					_List_Nil,
+					A3(
+						$rundis$elm_bootstrap$Bootstrap$Modal$body,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$input,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$type_('text'),
+										$elm$html$Html$Attributes$name('Dice'),
+										$elm$html$Html$Attributes$placeholder(model.dice),
+										$elm$html$Html$Events$onInput($author$project$Model$ChangeTmpDice)
+									]),
+								_List_Nil),
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick(
+										$author$project$Model$DiceAndSlice(model.tmpdice))
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Schaden würfeln')
+									])),
+								A2(
+								$elm$html$Html$input,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$type_('number'),
+										$elm$html$Html$Attributes$name('Damage'),
+										$elm$html$Html$Attributes$placeholder(model.damage),
+										$elm$html$Html$Events$onInput($author$project$Model$ChangeDamage)
+									]),
+								_List_Nil)
+							]),
+						A3(
+							$rundis$elm_bootstrap$Bootstrap$Modal$h3,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Angriff')
+								]),
+							A2(
+								$rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick,
+								true,
+								$rundis$elm_bootstrap$Bootstrap$Modal$small(
+									$rundis$elm_bootstrap$Bootstrap$Modal$config(
+										$author$project$Model$CloseModal($author$project$Model$AttackModal))))))))
+			]));
+};
+var $author$project$Model$AddEnemy = function (a) {
+	return {$: 'AddEnemy', a: a};
+};
+var $author$project$Model$UpdateTmp = function (a) {
+	return {$: 'UpdateTmp', a: a};
+};
+var $elm$html$Html$br = _VirtualDom_node('br');
+var $author$project$Model$LoadEnemy = function (a) {
+	return {$: 'LoadEnemy', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem = function (a) {
+	return {$: 'DropdownItem', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem = F2(
+	function (attributes, children) {
+		return $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem(
+			A2(
+				$elm$html$Html$button,
+				_Utils_ap(
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('button'),
+							$elm$html$Html$Attributes$class('dropdown-item')
+						]),
+					attributes),
+				children));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropDir = function (maybeDir) {
+	var toAttrs = function (dir) {
+		return _List_fromArray(
+			[
+				$elm$html$Html$Attributes$class(
+				'drop' + function () {
+					if (dir.$ === 'Dropleft') {
+						return 'left';
+					} else {
+						return 'right';
+					}
+				}())
+			]);
+	};
+	return A2(
+		$elm$core$Maybe$withDefault,
+		_List_Nil,
+		A2($elm$core$Maybe$map, toAttrs, maybeDir));
+};
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownAttributes = F2(
+	function (status, config) {
+		return _Utils_ap(
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$classList(
+					_List_fromArray(
+						[
+							_Utils_Tuple2('btn-group', true),
+							_Utils_Tuple2(
+							'show',
+							!_Utils_eq(status, $rundis$elm_bootstrap$Bootstrap$Dropdown$Closed)),
+							_Utils_Tuple2('dropup', config.isDropUp)
+						]))
+				]),
+			_Utils_ap(
+				$rundis$elm_bootstrap$Bootstrap$Dropdown$dropDir(config.dropDirection),
+				config.attributes));
+	});
+var $elm$core$String$fromFloat = _String_fromNumber;
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$menuStyles = F2(
+	function (_v0, config) {
+		var status = _v0.a.status;
+		var toggleSize = _v0.a.toggleSize;
+		var menuSize = _v0.a.menuSize;
+		var px = function (n) {
+			return $elm$core$String$fromFloat(n) + 'px';
+		};
+		var translate = F3(
+			function (x, y, z) {
+				return 'translate3d(' + (px(x) + (',' + (px(y) + (',' + (px(z) + ')')))));
+			});
+		var _default = _List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'top', '0'),
+				A2($elm$html$Html$Attributes$style, 'left', '0')
+			]);
+		var _v1 = _Utils_Tuple2(config.isDropUp, config.dropDirection);
+		_v1$0:
+		while (true) {
+			if (_v1.b.$ === 'Just') {
+				if (_v1.b.a.$ === 'Dropright') {
+					if (_v1.a) {
+						break _v1$0;
+					} else {
+						var _v2 = _v1.b.a;
+						return _default;
+					}
+				} else {
+					if (_v1.a) {
+						break _v1$0;
+					} else {
+						var _v3 = _v1.b.a;
+						return _Utils_ap(
+							_default,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$Attributes$style,
+									'transform',
+									A3(translate, (-toggleSize.width) - menuSize.width, 0, 0))
+								]));
+					}
+				}
+			} else {
+				if (_v1.a) {
+					break _v1$0;
+				} else {
+					return _Utils_ap(
+						_default,
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$Attributes$style,
+								'transform',
+								A3(translate, -toggleSize.width, toggleSize.height, 0))
+							]));
+				}
+			}
+		}
+		return _Utils_ap(
+			_default,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$Attributes$style,
+					'transform',
+					A3(translate, -toggleSize.width, -menuSize.height, 0))
+				]));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownMenu = F3(
+	function (state, config, items) {
+		var status = state.a.status;
+		var menuSize = state.a.menuSize;
+		var wrapperStyles = _Utils_eq(status, $rundis$elm_bootstrap$Bootstrap$Dropdown$Closed) ? _List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'height', '0'),
+				A2($elm$html$Html$Attributes$style, 'overflow', 'hidden'),
+				A2($elm$html$Html$Attributes$style, 'position', 'relative')
+			]) : _List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'position', 'relative')
+			]);
+		return A2(
+			$elm$html$Html$div,
+			wrapperStyles,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_Utils_ap(
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$classList(
+								_List_fromArray(
+									[
+										_Utils_Tuple2('dropdown-menu', true),
+										_Utils_Tuple2('dropdown-menu-right', config.hasMenuRight),
+										_Utils_Tuple2(
+										'show',
+										!_Utils_eq(status, $rundis$elm_bootstrap$Bootstrap$Dropdown$Closed))
+									]))
+							]),
+						_Utils_ap(
+							A2($rundis$elm_bootstrap$Bootstrap$Dropdown$menuStyles, state, config),
+							config.menuAttrs)),
+					A2(
+						$elm$core$List$map,
+						function (_v0) {
+							var x = _v0.a;
+							return x;
+						},
+						items))
+				]));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$applyModifier = F2(
+	function (option, options) {
+		switch (option.$) {
+			case 'AlignMenuRight':
+				return _Utils_update(
+					options,
+					{hasMenuRight: true});
+			case 'Dropup':
+				return _Utils_update(
+					options,
+					{isDropUp: true});
+			case 'Attrs':
+				var attrs_ = option.a;
+				return _Utils_update(
+					options,
+					{attributes: attrs_});
+			case 'DropToDir':
+				var dir = option.a;
+				return _Utils_update(
+					options,
+					{
+						dropDirection: $elm$core$Maybe$Just(dir)
+					});
+			default:
+				var attrs_ = option.a;
+				return _Utils_update(
+					options,
+					{menuAttrs: attrs_});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$defaultOptions = {attributes: _List_Nil, dropDirection: $elm$core$Maybe$Nothing, hasMenuRight: false, isDropUp: false, menuAttrs: _List_Nil};
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$toConfig = function (options) {
+	return A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Dropdown$applyModifier, $rundis$elm_bootstrap$Bootstrap$Dropdown$defaultOptions, options);
+};
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropdown = F2(
+	function (state, _v0) {
+		var status = state.a.status;
+		var toggleMsg = _v0.toggleMsg;
+		var toggleButton = _v0.toggleButton;
+		var items = _v0.items;
+		var options = _v0.options;
+		var config = $rundis$elm_bootstrap$Bootstrap$Dropdown$toConfig(options);
+		var _v1 = toggleButton;
+		var buttonFn = _v1.a;
+		return A2(
+			$elm$html$Html$div,
+			A2($rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownAttributes, status, config),
+			_List_fromArray(
+				[
+					A2(buttonFn, toggleMsg, state),
+					A3($rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownMenu, state, config, items)
+				]));
+	});
+var $elm$html$Html$h6 = _VirtualDom_node('h6');
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$header = function (children) {
+	return $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem(
+		A2(
+			$elm$html$Html$h6,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('dropdown-header')
+				]),
+			children));
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary = {$: 'Primary'};
+var $rundis$elm_bootstrap$Bootstrap$Button$primary = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary));
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownToggle = function (a) {
+	return {$: 'DropdownToggle', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$Open = {$: 'Open'};
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$nextStatus = function (status) {
+	switch (status.$) {
+		case 'Open':
+			return $rundis$elm_bootstrap$Bootstrap$Dropdown$Closed;
+		case 'ListenClicks':
+			return $rundis$elm_bootstrap$Bootstrap$Dropdown$Closed;
+		default:
+			return $rundis$elm_bootstrap$Bootstrap$Dropdown$Open;
+	}
+};
+var $elm$json$Json$Decode$float = _Json_decodeFloat;
+var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetHeight = A2($elm$json$Json$Decode$field, 'offsetHeight', $elm$json$Json$Decode$float);
+var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetWidth = A2($elm$json$Json$Decode$field, 'offsetWidth', $elm$json$Json$Decode$float);
+var $elm$json$Json$Decode$map4 = _Json_map4;
+var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetLeft = A2($elm$json$Json$Decode$field, 'offsetLeft', $elm$json$Json$Decode$float);
+var $elm$json$Json$Decode$null = _Json_decodeNull;
+var $elm$json$Json$Decode$oneOf = _Json_oneOf;
+var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetParent = F2(
+	function (x, decoder) {
+		return $elm$json$Json$Decode$oneOf(
+			_List_fromArray(
+				[
+					A2(
+					$elm$json$Json$Decode$field,
+					'offsetParent',
+					$elm$json$Json$Decode$null(x)),
+					A2($elm$json$Json$Decode$field, 'offsetParent', decoder)
+				]));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetTop = A2($elm$json$Json$Decode$field, 'offsetTop', $elm$json$Json$Decode$float);
+var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$scrollLeft = A2($elm$json$Json$Decode$field, 'scrollLeft', $elm$json$Json$Decode$float);
+var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$scrollTop = A2($elm$json$Json$Decode$field, 'scrollTop', $elm$json$Json$Decode$float);
+var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$position = F2(
+	function (x, y) {
+		return A2(
+			$elm$json$Json$Decode$andThen,
+			function (_v0) {
+				var x_ = _v0.a;
+				var y_ = _v0.b;
+				return A2(
+					$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetParent,
+					_Utils_Tuple2(x_, y_),
+					A2($rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$position, x_, y_));
+			},
+			A5(
+				$elm$json$Json$Decode$map4,
+				F4(
+					function (scrollLeft_, scrollTop_, offsetLeft_, offsetTop_) {
+						return _Utils_Tuple2((x + offsetLeft_) - scrollLeft_, (y + offsetTop_) - scrollTop_);
+					}),
+				$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$scrollLeft,
+				$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$scrollTop,
+				$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetLeft,
+				$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetTop));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$boundingArea = A4(
+	$elm$json$Json$Decode$map3,
+	F3(
+		function (_v0, width, height) {
+			var x = _v0.a;
+			var y = _v0.b;
+			return {height: height, left: x, top: y, width: width};
+		}),
+	A2($rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$position, 0, 0),
+	$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetWidth,
+	$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetHeight);
+var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$childNode = function (idx) {
+	return $elm$json$Json$Decode$at(
+		_List_fromArray(
+			[
+				'childNodes',
+				$elm$core$String$fromInt(idx)
+			]));
+};
+var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$nextSibling = function (decoder) {
+	return A2($elm$json$Json$Decode$field, 'nextSibling', decoder);
+};
+var $elm$core$Tuple$pair = F2(
+	function (a, b) {
+		return _Utils_Tuple2(a, b);
+	});
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$isToggle = A2(
+	$elm$json$Json$Decode$andThen,
+	function (_class) {
+		return A2($elm$core$String$contains, 'dropdown-toggle', _class) ? $elm$json$Json$Decode$succeed(true) : $elm$json$Json$Decode$succeed(false);
+	},
+	$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$className);
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$toggler = F2(
+	function (path, decoder) {
+		return $elm$json$Json$Decode$oneOf(
+			_List_fromArray(
+				[
+					A2(
+					$elm$json$Json$Decode$andThen,
+					function (res) {
+						return res ? A2($elm$json$Json$Decode$at, path, decoder) : $elm$json$Json$Decode$fail('');
+					},
+					A2($elm$json$Json$Decode$at, path, $rundis$elm_bootstrap$Bootstrap$Dropdown$isToggle)),
+					A2(
+					$elm$json$Json$Decode$andThen,
+					function (_v0) {
+						return A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$toggler,
+							_Utils_ap(
+								path,
+								_List_fromArray(
+									['parentElement'])),
+							decoder);
+					},
+					A2(
+						$elm$json$Json$Decode$at,
+						_Utils_ap(
+							path,
+							_List_fromArray(
+								['parentElement'])),
+						$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$className)),
+					$elm$json$Json$Decode$fail('No toggler found')
+				]));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$sizeDecoder = A3(
+	$elm$json$Json$Decode$map2,
+	$elm$core$Tuple$pair,
+	A2(
+		$rundis$elm_bootstrap$Bootstrap$Dropdown$toggler,
+		_List_fromArray(
+			['target']),
+		$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$boundingArea),
+	A2(
+		$rundis$elm_bootstrap$Bootstrap$Dropdown$toggler,
+		_List_fromArray(
+			['target']),
+		$rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$nextSibling(
+			A2($rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$childNode, 0, $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$boundingArea))));
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$clickHandler = F2(
+	function (toMsg, state) {
+		var status = state.a.status;
+		return A2(
+			$elm$json$Json$Decode$andThen,
+			function (_v0) {
+				var b = _v0.a;
+				var m = _v0.b;
+				return $elm$json$Json$Decode$succeed(
+					toMsg(
+						$rundis$elm_bootstrap$Bootstrap$Dropdown$State(
+							{
+								menuSize: m,
+								status: $rundis$elm_bootstrap$Bootstrap$Dropdown$nextStatus(status),
+								toggleSize: b
+							})));
+			},
+			$rundis$elm_bootstrap$Bootstrap$Dropdown$sizeDecoder);
+	});
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$togglePrivate = F4(
+	function (buttonOptions, children, toggleMsg, state) {
+		return A2(
+			$elm$html$Html$button,
+			_Utils_ap(
+				$rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(buttonOptions),
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('dropdown-toggle'),
+						$elm$html$Html$Attributes$type_('button'),
+						A2(
+						$elm$html$Html$Events$on,
+						'click',
+						A2($rundis$elm_bootstrap$Bootstrap$Dropdown$clickHandler, toggleMsg, state))
+					])),
+			children);
+	});
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$toggle = F2(
+	function (buttonOptions, children) {
+		return $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownToggle(
+			A2($rundis$elm_bootstrap$Bootstrap$Dropdown$togglePrivate, buttonOptions, children));
+	});
+var $author$project$FightingTool$dropdownMenu = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$rundis$elm_bootstrap$Bootstrap$Dropdown$dropdown,
+				model.myDrop1State,
+				{
+					items: _List_fromArray(
+						[
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Kulturschaffender')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$LoadEnemy('goblin'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Goblin')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$LoadEnemy('oger'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Oger')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$LoadEnemy('ork'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Ork')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$LoadEnemy('troll'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Troll')
+								])),
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Tier')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$LoadEnemy('höhlenspinne'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Höhlensspinne')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$LoadEnemy('gruftassel'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Gruftassel')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$LoadEnemy('grimwolf'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Grimwolf')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$LoadEnemy('schwarzbär'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Schwarzbär')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$LoadEnemy('wildschwein'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Wildschwein')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$LoadEnemy('wolfsratte'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Wolfsratte')
+								])),
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
+							_List_fromArray(
+								[
+									$elm$html$Html$text('übernatürliches Wesen')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$LoadEnemy('krakenmolch'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Krakenmolch')
+								])),
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Drache')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$LoadEnemy('tatzelwurm'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Tatzelwurm')
+								])),
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$header(
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Pflanze')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$LoadEnemy('waldschrat'))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Waldschrat')
+								]))
+						]),
+					options: _List_Nil,
+					toggleButton: A2(
+						$rundis$elm_bootstrap$Bootstrap$Dropdown$toggle,
+						_List_fromArray(
+							[$rundis$elm_bootstrap$Bootstrap$Button$primary]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Gegner')
+							])),
+					toggleMsg: $author$project$Model$MyDrop1Msg
+				})
+			]));
+};
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$html$Html$label = _VirtualDom_node('label');
+var $author$project$FightingTool$viewCustomEnemyModal = function (model) {
+	return A2(
+		$rundis$elm_bootstrap$Bootstrap$Modal$view,
+		model.showCustomEnemy,
+		A3(
+			$rundis$elm_bootstrap$Bootstrap$Modal$footer,
+			_List_Nil,
+			_List_Nil,
+			A3(
+				$rundis$elm_bootstrap$Bootstrap$Modal$body,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$author$project$FightingTool$dropdownMenu(model),
+								A2(
+								$elm$html$Html$label,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$for('name')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Name')
+									])),
+								A2(
+								$elm$html$Html$input,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$type_('text'),
+										$elm$html$Html$Attributes$id('name'),
+										$elm$html$Html$Attributes$name('name'),
+										$elm$html$Html$Events$onInput(
+										function (n) {
+											var _v0 = function () {
+												var _v1 = model.tmpEnemy;
+												var h = _v1.b;
+												var a = _v1.c;
+												return _Utils_Tuple2(h, a);
+											}();
+											var health = _v0.a;
+											var armor = _v0.b;
+											return $author$project$Model$UpdateTmp(
+												A3($author$project$Model$Enemy, n, health, armor));
+										})
+									]),
+								_List_Nil),
+								A2($elm$html$Html$br, _List_Nil, _List_Nil),
+								A2(
+								$elm$html$Html$label,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$for('health')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('LeP')
+									])),
+								A2(
+								$elm$html$Html$input,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$type_('number'),
+										$elm$html$Html$Attributes$id('health'),
+										$elm$html$Html$Attributes$name('health'),
+										$elm$html$Html$Events$onInput(
+										function (h) {
+											var _v2 = function () {
+												var _v3 = model.tmpEnemy;
+												var n = _v3.a;
+												var a = _v3.c;
+												return _Utils_Tuple2(n, a);
+											}();
+											var name = _v2.a;
+											var armor = _v2.b;
+											return $author$project$Model$UpdateTmp(
+												A3(
+													$author$project$Model$Enemy,
+													name,
+													A2(
+														$elm$core$Maybe$withDefault,
+														1,
+														$elm$core$String$toInt(h)),
+													armor));
+										})
+									]),
+								_List_Nil),
+								A2($elm$html$Html$br, _List_Nil, _List_Nil),
+								A2(
+								$elm$html$Html$label,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$for('armor')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('RS')
+									])),
+								A2(
+								$elm$html$Html$input,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$type_('number'),
+										$elm$html$Html$Attributes$id('armor'),
+										$elm$html$Html$Attributes$name('armor'),
+										$elm$html$Html$Events$onInput(
+										function (a) {
+											var _v4 = function () {
+												var _v5 = model.tmpEnemy;
+												var n = _v5.a;
+												var h = _v5.b;
+												return _Utils_Tuple2(n, h);
+											}();
+											var name = _v4.a;
+											var health = _v4.b;
+											return $author$project$Model$UpdateTmp(
+												A3(
+													$author$project$Model$Enemy,
+													name,
+													health,
+													A2(
+														$elm$core$Maybe$withDefault,
+														0,
+														$elm$core$String$toInt(a))));
+										})
+									]),
+								_List_Nil),
+								A2($elm$html$Html$br, _List_Nil, _List_Nil),
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick(
+										$author$project$Model$AddEnemy(model.tmpEnemy))
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Hinzufügen')
+									]))
+							]))
+					]),
+				A3(
+					$rundis$elm_bootstrap$Bootstrap$Modal$h3,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Gewonnen ☠')
+						]),
+					A2(
+						$rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick,
+						true,
+						$rundis$elm_bootstrap$Bootstrap$Modal$small(
+							$rundis$elm_bootstrap$Bootstrap$Modal$config(
+								$author$project$Model$CloseModal($author$project$Model$CustomEnemy))))))));
+};
 var $author$project$FightingTool$body = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
-				$author$project$FightingTool$dropdownMenu(model),
 				A2(
 				$elm$html$Html$div,
 				_List_Nil,
@@ -10055,39 +10176,41 @@ var $author$project$FightingTool$body = function (model) {
 									]))
 						})
 					])),
+				$author$project$FightingTool$viewCustomEnemyModal(model),
+				$author$project$FightingTool$deathAlert(model),
+				$author$project$FightingTool$viewAttackModal(model),
 				A2(
-				$elm$html$Html$input,
+				$rundis$elm_bootstrap$Bootstrap$Button$button,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$type_('number'),
-						$elm$html$Html$Attributes$name('Damage'),
-						$elm$html$Html$Attributes$placeholder(model.damage),
-						$elm$html$Html$Events$onInput($author$project$Model$ChangeDamage)
-					]),
-				_List_Nil),
-				A2(
-				$elm$html$Html$input,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$type_('text'),
-						$elm$html$Html$Attributes$name('Dice'),
-						$elm$html$Html$Attributes$placeholder(model.dice),
-						$elm$html$Html$Events$onInput($author$project$Model$ChangeTmpDice)
-					]),
-				_List_Nil),
-				A2(
-				$elm$html$Html$button,
-				_List_fromArray(
-					[
-						$elm$html$Html$Events$onClick(
-						$author$project$Model$DiceAndSlice(model.tmpdice))
+						$rundis$elm_bootstrap$Bootstrap$Button$outlineSuccess,
+						$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick(
+								$author$project$Model$ShowModal($author$project$Model$AttackModal))
+							]))
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Schaden würfeln')
+						$elm$html$Html$text('Angriff')
 					])),
-				$author$project$FightingTool$customEnemy(model),
-				$author$project$FightingTool$deathAlert(model)
+				A2(
+				$rundis$elm_bootstrap$Bootstrap$Button$button,
+				_List_fromArray(
+					[
+						$rundis$elm_bootstrap$Bootstrap$Button$outlineSuccess,
+						$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick(
+								$author$project$Model$ShowModal($author$project$Model$CustomEnemy))
+							]))
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Gegner')
+					]))
 			]));
 };
 var $rundis$elm_bootstrap$Bootstrap$Tab$Config = function (a) {

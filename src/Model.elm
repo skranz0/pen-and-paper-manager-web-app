@@ -18,13 +18,15 @@ type alias Model =
     , bonusDamage : Int
     , dice : String
     , tmpdice : String
-    , deathAlertVisibility : Modal.Visibility
     , dieFace : Int
     , maxFace : Int
     , tabState : Tab.State
     , characterList : List DungeonMap_Character
     , addCharacterIcon : AddCharacterIconState
     , dieFaces : List Int
+    , showAttackModal : Modal.Visibility
+    , showDeathAlert : Modal.Visibility
+    , showCustomEnemy : Modal.Visibility
     }
 
 init : () -> (Model, Cmd Msg)
@@ -38,13 +40,15 @@ init _ =
         , bonusDamage = 0
         , dice = "1W6+0"
         , tmpdice = "1W6+0"
-        , deathAlertVisibility = Modal.hidden
         , dieFace = 0
         , maxFace = 6
         , tabState = Tab.initialState
         , characterList = []
         , addCharacterIcon = DrawingInactive
         , dieFaces = []
+        , showAttackModal = Modal.hidden 
+        , showDeathAlert = Modal.hidden
+        , showCustomEnemy = Modal.hidden
         }
     , Cmd.none
     )
@@ -64,13 +68,19 @@ type Msg
     | CharacterDeath Int
     | MyDrop1Msg Dropdown.State
     | ChangeDamage String -- Will eventually be useless after refactor, I just have to get a better feel for let and in
-    | CloseDeathAlert
     | DoNothing -- does nothing (yes, this IS necessary)
     | TabMsg Tab.State
     | AddCharacterIcon AddCharacterIconMsg
     | DiceAndSlice String
     | NewRandomList (List Int)
     | ChangeTmpDice String
+    | CloseModal ModalType
+    | ShowModal ModalType
+
+type ModalType
+    = AttackModal
+    | DeathAlert
+    | CustomEnemy
 
 type Character
     = Enemy String Int Int

@@ -16,6 +16,7 @@ import Array.Extra as Array
 import DungeonMap exposing (dungeonMapView)
 import FightingTool exposing (..)
 import Model exposing (..)
+import Model exposing (ModalType(..))
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -62,15 +63,10 @@ update msg model =
         
         CharacterDeath index -> 
             ( 
-                { model | deathAlertVisibility = Modal.shown 
+                { model | showDeathAlert = Modal.shown 
                 , enemy = Array.removeAt index model.enemy
                 }
                 , Cmd.none
-            )
-
-        CloseDeathAlert ->
-            ( { model | deathAlertVisibility = Modal.hidden }
-            , Cmd.none
             )
 
         MyDrop1Msg state ->
@@ -128,6 +124,28 @@ update msg model =
                 MouseDraw s ->
                     ( { model | addCharacterIcon = DrawIcon s }, Cmd.none )
 
+        CloseModal modalType->
+            case modalType of
+                AttackModal -> 
+                    ( { model | showAttackModal = Modal.hidden } , Cmd.none )
+                
+                DeathAlert ->
+                    ( { model | showDeathAlert = Modal.hidden } , Cmd.none )
+
+                CustomEnemy ->
+                    ( { model | showCustomEnemy = Modal.hidden } , Cmd.none )
+
+        ShowModal modalType->
+            case modalType of
+                AttackModal -> 
+                    ( { model | showAttackModal = Modal.shown } , Cmd.none )
+                
+                DeathAlert ->
+                    ( { model | showDeathAlert = Modal.shown } , Cmd.none )
+                    
+                CustomEnemy ->
+                    ( { model | showCustomEnemy = Modal.shown } , Cmd.none )
+
         DoNothing ->
             (model, Cmd.none)
 
@@ -149,7 +167,7 @@ view model =
                     , link = Tab.link [ Spacing.mt3 ] [ text "Map" ]
                     , pane =
                         Tab.pane []
-                            [ (dungeonMapView model) ] -- Map
+                            [ dungeonMapView model ] -- Map
                     }
                 ]
             |> Tab.view model.tabState
