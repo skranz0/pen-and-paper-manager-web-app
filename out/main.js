@@ -5439,7 +5439,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Model$init = function (_v0) {
 	return _Utils_Tuple2(
-		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterId: 0, characterList: _List_Nil, damage: 0, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpHero: $author$project$Model$initHero, tmpdice: '1W6+0'},
+		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterId: 0, characterList: _List_Nil, damage: 0, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, enemyHero: '', maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpHero: $author$project$Model$initHero, tmpdice: '1W6+0'},
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Model$MyDrop1Msg = function (a) {
@@ -7804,6 +7804,13 @@ var $author$project$Main$update = F2(
 						model,
 						{characterId: id, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$shown}),
 					$elm$core$Platform$Cmd$none);
+			case 'SwitchEnemyHero':
+				var string = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{enemyHero: string}),
+					$elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
@@ -9350,7 +9357,7 @@ var $author$project$FightingTool$attack = F3(
 				return (_Utils_cmp(damage, armor) > 0) ? ((((health - damage) + armor) <= 0) ? $author$project$Model$CharacterDeath(id) : A2(
 					$author$project$Model$UpdateEnemy,
 					id,
-					A3($author$project$Model$Enemy, name, (health - damage) + armor, armor))) : $author$project$Model$DoNothing;
+					A3($author$project$Model$Enemy, name, (health - damage) + armor, armor))) : $author$project$Model$CloseModal($author$project$Model$AttackModal);
 			} else {
 				var _v2 = _v0.a;
 				return $author$project$Model$DoNothing;
@@ -9468,7 +9475,85 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 									$author$project$Model$CloseModal($author$project$Model$AttackModal)))))))
 			]));
 };
+var $author$project$Model$SwitchEnemyHero = function (a) {
+	return {$: 'SwitchEnemyHero', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$Config = function (a) {
+	return {$: 'Config', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$mapOptions = F2(
+	function (mapper, _v0) {
+		var conf = _v0.a;
+		var options = conf.options;
+		return $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$Config(
+			_Utils_update(
+				conf,
+				{
+					options: mapper(options)
+				}));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$asGroup = $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$mapOptions(
+	function (opts) {
+		return _Utils_update(
+			opts,
+			{isGroup: true});
+	});
 var $elm$html$Html$br = _VirtualDom_node('br');
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$Checked = function (a) {
+	return {$: 'Checked', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$checked = function (isCheck) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Radio$Checked(isCheck);
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$mapConfig = F2(
+	function (mapper, _v0) {
+		var configRec = _v0.a;
+		return $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$Config(
+			mapper(configRec));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$children = function (children_) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$mapConfig(
+		function (conf) {
+			return _Utils_update(
+				conf,
+				{children: children_});
+		});
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$config = $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$Config(
+	{
+		children: _List_Nil,
+		legend: $elm$core$Maybe$Nothing,
+		options: {attributes: _List_Nil, disabled: false, isGroup: false}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$Radio = function (a) {
+	return {$: 'Radio', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$createAdvanced = F2(
+	function (options, label_) {
+		return $rundis$elm_bootstrap$Bootstrap$Form$Radio$Radio(
+			{label: label_, options: options});
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$Label = function (a) {
+	return {$: 'Label', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$label = F2(
+	function (attributes, children) {
+		return $rundis$elm_bootstrap$Bootstrap$Form$Radio$Label(
+			{attributes: attributes, children: children});
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$create = F2(
+	function (options, label_) {
+		return A2(
+			$rundis$elm_bootstrap$Bootstrap$Form$Radio$createAdvanced,
+			options,
+			A2(
+				$rundis$elm_bootstrap$Bootstrap$Form$Radio$label,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text(label_)
+					])));
+	});
 var $author$project$Model$AddEnemy = function (a) {
 	return {$: 'AddEnemy', a: a};
 };
@@ -9610,11 +9695,16 @@ var $author$project$FightingTool$customEnemy = function (model) {
 				_List_Nil),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
-				$elm$html$Html$button,
+				$rundis$elm_bootstrap$Bootstrap$Button$button,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick(
-						$author$project$Model$AddEnemy(model.tmpEnemy))
+						$rundis$elm_bootstrap$Bootstrap$Button$success,
+						$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick(
+								$author$project$Model$AddEnemy(model.tmpEnemy))
+							]))
 					]),
 				_List_fromArray(
 					[
@@ -9703,11 +9793,16 @@ var $author$project$FightingTool$customHero = function (model) {
 				_List_Nil),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
-				$elm$html$Html$button,
+				$rundis$elm_bootstrap$Bootstrap$Button$button,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick(
-						$author$project$Model$AddEnemy(model.tmpHero))
+						$rundis$elm_bootstrap$Bootstrap$Button$success,
+						$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick(
+								$author$project$Model$AddEnemy(model.tmpHero))
+							]))
 					]),
 				_List_fromArray(
 					[
@@ -10335,7 +10430,255 @@ var $author$project$FightingTool$dropdownMenu = function (model) {
 				})
 			]));
 };
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$Id = function (a) {
+	return {$: 'Id', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$id = function (theId) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Radio$Id(theId);
+};
+var $elm$html$Html$legend = _VirtualDom_node('legend');
+var $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$legend = F2(
+	function (attributes, children_) {
+		return $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$mapConfig(
+			function (conf) {
+				return _Utils_update(
+					conf,
+					{
+						legend: $elm$core$Maybe$Just(
+							A2($elm$html$Html$legend, attributes, children_))
+					});
+			});
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$OnClick = function (a) {
+	return {$: 'OnClick', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$onClick = function (toMsg) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Radio$OnClick(toMsg);
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$addOption = F2(
+	function (opt, _v0) {
+		var radio_ = _v0.a;
+		var options = radio_.options;
+		return $rundis$elm_bootstrap$Bootstrap$Form$Radio$Radio(
+			_Utils_update(
+				radio_,
+				{
+					options: A2($elm$core$List$cons, opt, options)
+				}));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$Name = function (a) {
+	return {$: 'Name', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$name = function (name_) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Radio$Name(name_);
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$applyModifier = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'Id':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						id: $elm$core$Maybe$Just(val)
+					});
+			case 'Checked':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{checked: val});
+			case 'Name':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						name: $elm$core$Maybe$Just(val)
+					});
+			case 'Inline':
+				return _Utils_update(
+					options,
+					{inline: true});
+			case 'OnClick':
+				var toMsg = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						onClick: $elm$core$Maybe$Just(toMsg)
+					});
+			case 'Custom':
+				return _Utils_update(
+					options,
+					{custom: true});
+			case 'Disabled':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{disabled: val});
+			case 'Validation':
+				var validation = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						validation: $elm$core$Maybe$Just(validation)
+					});
+			default:
+				var attrs_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$defaultOptions = {attributes: _List_Nil, checked: false, custom: false, disabled: false, id: $elm$core$Maybe$Nothing, inline: false, name: $elm$core$Maybe$Nothing, onClick: $elm$core$Maybe$Nothing, validation: $elm$core$Maybe$Nothing};
+var $elm$html$Html$Attributes$checked = $elm$html$Html$Attributes$boolProperty('checked');
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$toAttributes = function (options) {
+	return _Utils_ap(
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$classList(
+				_List_fromArray(
+					[
+						_Utils_Tuple2('form-check-input', !options.custom),
+						_Utils_Tuple2('custom-control-input', options.custom)
+					])),
+				$elm$html$Html$Attributes$type_('radio'),
+				$elm$html$Html$Attributes$disabled(options.disabled),
+				$elm$html$Html$Attributes$checked(options.checked)
+			]),
+		_Utils_ap(
+			A2(
+				$elm$core$List$filterMap,
+				$elm$core$Basics$identity,
+				_List_fromArray(
+					[
+						A2($elm$core$Maybe$map, $elm$html$Html$Events$onClick, options.onClick),
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$name, options.name),
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$id, options.id)
+					])),
+			options.attributes));
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$view = function (_v0) {
+	var radio_ = _v0.a;
+	var opts = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Form$Radio$applyModifier, $rundis$elm_bootstrap$Bootstrap$Form$Radio$defaultOptions, radio_.options);
+	var _v1 = radio_.label;
+	var label_ = _v1.a;
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$classList(
+				_List_fromArray(
+					[
+						_Utils_Tuple2('form-check', !opts.custom),
+						_Utils_Tuple2('form-check-inline', (!opts.custom) && opts.inline),
+						_Utils_Tuple2('custom-control', opts.custom),
+						_Utils_Tuple2('custom-radio', opts.custom),
+						_Utils_Tuple2('custom-control-inline', opts.inline && opts.custom)
+					]))
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$input,
+				$rundis$elm_bootstrap$Bootstrap$Form$Radio$toAttributes(opts),
+				_List_Nil),
+				A2(
+				$elm$html$Html$label,
+				_Utils_ap(
+					label_.attributes,
+					_Utils_ap(
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$classList(
+								_List_fromArray(
+									[
+										_Utils_Tuple2('form-check-label', !opts.custom),
+										_Utils_Tuple2('custom-control-label', opts.custom)
+									]))
+							]),
+						function () {
+							var _v2 = opts.id;
+							if (_v2.$ === 'Just') {
+								var v = _v2.a;
+								return _List_fromArray(
+									[
+										$elm$html$Html$Attributes$for(v)
+									]);
+							} else {
+								return _List_Nil;
+							}
+						}())),
+				label_.children)
+			]));
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$radioList = F2(
+	function (groupName, radios) {
+		return A2(
+			$elm$core$List$map,
+			A2(
+				$elm$core$Basics$composeL,
+				$rundis$elm_bootstrap$Bootstrap$Form$Radio$view,
+				$rundis$elm_bootstrap$Bootstrap$Form$Radio$addOption(
+					$rundis$elm_bootstrap$Bootstrap$Form$Radio$name(groupName))),
+			radios);
+	});
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$html$Html$fieldset = _VirtualDom_node('fieldset');
+var $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$view = function (_v0) {
+	var rec = _v0.a;
+	var options = rec.options;
+	return A2(
+		$elm$html$Html$fieldset,
+		_Utils_ap(
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$classList(
+					_List_fromArray(
+						[
+							_Utils_Tuple2('form-group', options.isGroup)
+						])),
+					$elm$html$Html$Attributes$disabled(options.disabled)
+				]),
+			options.attributes),
+		function (xs) {
+			return A2($elm$core$List$append, xs, rec.children);
+		}(
+			A2(
+				$elm$core$Maybe$withDefault,
+				_List_Nil,
+				A2(
+					$elm$core$Maybe$map,
+					function (e) {
+						return _List_fromArray(
+							[e]);
+					},
+					rec.legend))));
+};
 var $author$project$FightingTool$viewCustomEnemyModal = function (model) {
+	var herobool = function () {
+		var _v1 = model.enemyHero;
+		if (_v1 === 'Hero') {
+			return true;
+		} else {
+			return false;
+		}
+	}();
+	var enemybool = function () {
+		var _v0 = model.enemyHero;
+		if (_v0 === 'Enemy') {
+			return true;
+		} else {
+			return false;
+		}
+	}();
 	return A2(
 		$rundis$elm_bootstrap$Bootstrap$Modal$view,
 		model.showCustomEnemy,
@@ -10355,9 +10698,44 @@ var $author$project$FightingTool$viewCustomEnemyModal = function (model) {
 							[
 								$author$project$FightingTool$dropdownMenu(model),
 								A2($elm$html$Html$br, _List_Nil, _List_Nil),
-								$author$project$FightingTool$customEnemy(model),
-								A2($elm$html$Html$br, _List_Nil, _List_Nil),
-								$author$project$FightingTool$customHero(model)
+								$rundis$elm_bootstrap$Bootstrap$Form$Fieldset$view(
+								A2(
+									$rundis$elm_bootstrap$Bootstrap$Form$Fieldset$children,
+									A2(
+										$rundis$elm_bootstrap$Bootstrap$Form$Radio$radioList,
+										'EnemyHero',
+										_List_fromArray(
+											[
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Form$Radio$create,
+												_List_fromArray(
+													[
+														$rundis$elm_bootstrap$Bootstrap$Form$Radio$id('enemy'),
+														$rundis$elm_bootstrap$Bootstrap$Form$Radio$onClick(
+														$author$project$Model$SwitchEnemyHero('Enemy')),
+														$rundis$elm_bootstrap$Bootstrap$Form$Radio$checked(enemybool)
+													]),
+												'Gegner'),
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Form$Radio$create,
+												_List_fromArray(
+													[
+														$rundis$elm_bootstrap$Bootstrap$Form$Radio$id('hero'),
+														$rundis$elm_bootstrap$Bootstrap$Form$Radio$onClick(
+														$author$project$Model$SwitchEnemyHero('Hero')),
+														$rundis$elm_bootstrap$Bootstrap$Form$Radio$checked(herobool)
+													]),
+												'Held')
+											])),
+									A3(
+										$rundis$elm_bootstrap$Bootstrap$Form$Fieldset$legend,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Benutzerdefiniert: ')
+											]),
+										$rundis$elm_bootstrap$Bootstrap$Form$Fieldset$asGroup($rundis$elm_bootstrap$Bootstrap$Form$Fieldset$config)))),
+								(model.enemyHero === 'Hero') ? $author$project$FightingTool$customHero(model) : ((model.enemyHero === 'Enemy') ? $author$project$FightingTool$customEnemy(model) : A2($elm$html$Html$p, _List_Nil, _List_Nil))
 							]))
 					]),
 				A3(
