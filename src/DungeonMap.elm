@@ -2,8 +2,8 @@
 module DungeonMap exposing (..)
 
 --elm Packages
-import Html exposing (Html, div, h1, h2)
-import Html.Attributes as Attr exposing (class)
+import Html exposing (Html, div)
+import Html.Attributes exposing (class)
 import Html.Events
 import Svg
 import Svg.Attributes as SvgAtt
@@ -12,6 +12,8 @@ import Json.Decode
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Table as Table
+import Array exposing (Array)
+
 
 --our Modules
 import Model exposing (..)
@@ -22,10 +24,10 @@ dungeonMapView model =
             [ div [ class "section" ]
                   [ Grid.row []
                              [ Grid.col []
-                                        [ (dungeonMap_Svg model)
+                                        [ dungeonMap_Svg model
                                         ]
                              , Grid.col [ Col.xs4 ]
-                                        [ (dungeonMap_MonsterList model)
+                                        [ dungeonMap_MonsterList model
                                         ]
                              ]
                   ]
@@ -38,29 +40,33 @@ dungeonMap_MonsterList model =
                       , thead =  Table.simpleThead
                           [ Table.th [] [ Html.text "ID" ]
                           , Table.th [] [ Html.text "Name" ]
-                          , Table.th [] [ Html.text "HP" ]
+                          , Table.th [] [ Html.text "LeP" ]
                           ]
                       , tbody =
                           Table.tbody []
-                          --some filler characters for now
-                              [ Table.tr [ (Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon "0" "0"))))) ]
-                                  [ Table.td [] [ Html.text "1" ]
-                                  , Table.td [] [ Html.text "Ork" ]
-                                  , Table.td [] [ Html.text "35" ]
-                                  ]
-                              , Table.tr [ (Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon "0" "0"))))) ]
-                                  [ Table.td [] [ Html.text "2" ]
-                                  , Table.td [] [ Html.text "Skelett" ]
-                                  , Table.td [] [ Html.text "10" ]
-                                  ]
-                              , Table.tr [ (Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon "0" "0"))))) ]
-                                  [ Table.td [] [ Html.text "3" ]
-                                  , Table.td [] [ Html.text "Player 1" ]
-                                  , Table.td [] [ Html.text "22" ]
-                                  ]
-                              ]
+                            characters2rows model.enemy
                       }
         ]
+
+characters2rows : Array.Array Character -> List (Table.Row Msg)
+characters2rows chars =
+    List.indexedMap
+        (\i c ->
+            case c of
+                Enemy name health _ ->
+                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon "0" "0")))) ]
+                        [ Table.td [] [Html.text <| String.fromInt (i+1)]
+                        , Table.td [] [Html.text name]
+                        , Table.td [] [Html.text <| String.fromInt health]
+                        ]
+
+                Hero name health ->
+                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon "0" "0")))) ]
+                        [ Table.td [] [Html.text <| String.fromInt (i+1)]
+                        , Table.td [] [Html.text name]
+                        , Table.td [] [Html.text <| String.fromInt health]
+                        ]
+        )
 
 
 
@@ -90,8 +96,8 @@ svgIconList model =
 getAreaParam : Int -> DungeonMap_Character -> List (Svg.Svg Msg)
 getAreaParam i s =
     let 
-      xCor = (Maybe.withDefault "0" (List.head (String.split "," (getCoord s))))
-      yCor = (Maybe.withDefault "0" (List.head (List.drop 1 (String.split "," (getCoord s)))))
+      xCor = Maybe.withDefault "0" (List.head (String.split "," (getCoord s)))
+      yCor = Maybe.withDefault "0" (List.head (List.drop 1 (String.split "," (getCoord s))))
     in
     case getIcon s of
         "monster" ->
@@ -105,8 +111,8 @@ getAreaParam i s =
                 ]
                 []
             , Svg.text_ [ SvgAtt.textAnchor "middle"
-                        , SvgAtt.x (String.fromFloat ((Maybe.withDefault 0 (String.toFloat xCor)) + 7.5))
-                        , SvgAtt.y (String.fromFloat ((Maybe.withDefault 0 (String.toFloat yCor)) + 8.75))
+                        , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat xCor) + 7.5))
+                        , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat yCor) + 8.75))
                         , SvgAtt.dominantBaseline "middle"
                         ]
                         [ Svg.text (String.fromInt i) ]
@@ -123,7 +129,7 @@ getAreaParam i s =
                 []
             , Svg.text_ [ SvgAtt.textAnchor "middle"
                         , SvgAtt.x xCor
-                        , SvgAtt.y (String.fromFloat ((Maybe.withDefault 0 (String.toFloat yCor)) + 0.75))
+                        , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat yCor) + 0.75))
                         , SvgAtt.dominantBaseline "middle"
                         ]
                         [ Svg.text (String.fromInt i) ]
