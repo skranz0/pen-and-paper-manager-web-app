@@ -44,7 +44,7 @@ dungeonMap_MonsterList model =
                           ]
                       , tbody =
                           Table.tbody []
-                            characters2rows model.enemy
+                            <| characters2rows model.enemy
                       }
         ]
 
@@ -67,6 +67,7 @@ characters2rows chars =
                         , Table.td [] [Html.text <| String.fromInt health]
                         ]
         )
+        <| Array.toList chars
 
 
 

@@ -10303,6 +10303,8 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$col = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Grid$Column(
 			{children: children, options: options});
 	});
+var $rundis$elm_bootstrap$Bootstrap$Table$Bordered = {$: 'Bordered'};
+var $rundis$elm_bootstrap$Bootstrap$Table$bordered = $rundis$elm_bootstrap$Bootstrap$Table$Bordered;
 var $author$project$Model$AddCharacterIcon = function (a) {
 	return {$: 'AddCharacterIcon', a: a};
 };
@@ -10317,12 +10319,6 @@ var $author$project$Model$PlayerIcon = F2(
 	function (a, b) {
 		return {$: 'PlayerIcon', a: a, b: b};
 	});
-var $rundis$elm_bootstrap$Bootstrap$Table$Bordered = {$: 'Bordered'};
-var $rundis$elm_bootstrap$Bootstrap$Table$bordered = $rundis$elm_bootstrap$Bootstrap$Table$Bordered;
-var $rundis$elm_bootstrap$Bootstrap$Table$Responsive = function (a) {
-	return {$: 'Responsive', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Table$responsive = $rundis$elm_bootstrap$Bootstrap$Table$Responsive($elm$core$Maybe$Nothing);
 var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
 	return {$: 'RowAttr', a: a};
 };
@@ -10340,6 +10336,97 @@ var $author$project$DungeonMap$stopBubbling = function (msg) {
 			},
 			$elm$json$Json$Decode$succeed(msg)));
 };
+var $author$project$DungeonMap$characters2rows = function (chars) {
+	return A2(
+		$elm$core$List$indexedMap,
+		F2(
+			function (i, c) {
+				if (c.$ === 'Enemy') {
+					var name = c.a;
+					var health = c.b;
+					return A2(
+						$rundis$elm_bootstrap$Bootstrap$Table$tr,
+						_List_fromArray(
+							[
+								$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
+								$author$project$DungeonMap$stopBubbling(
+									$author$project$Model$AddCharacterIcon(
+										$author$project$Model$MouseDraw(
+											A2($author$project$Model$MonsterIcon, '0', '0')))))
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(i + 1))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(name)
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(health))
+									]))
+							]));
+				} else {
+					var name = c.a;
+					var health = c.b;
+					return A2(
+						$rundis$elm_bootstrap$Bootstrap$Table$tr,
+						_List_fromArray(
+							[
+								$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
+								$author$project$DungeonMap$stopBubbling(
+									$author$project$Model$AddCharacterIcon(
+										$author$project$Model$MouseDraw(
+											A2($author$project$Model$PlayerIcon, '0', '0')))))
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(i + 1))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(name)
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(health))
+									]))
+							]));
+				}
+			}),
+		$elm$core$Array$toList(chars));
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$Responsive = function (a) {
+	return {$: 'Responsive', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$responsive = $rundis$elm_bootstrap$Bootstrap$Table$Responsive($elm$core$Maybe$Nothing);
 var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -10356,111 +10443,7 @@ var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 					tbody: A2(
 						$rundis$elm_bootstrap$Bootstrap$Table$tbody,
 						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Table$tr,
-								_List_fromArray(
-									[
-										$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
-										$author$project$DungeonMap$stopBubbling(
-											$author$project$Model$AddCharacterIcon(
-												$author$project$Model$MouseDraw(
-													A2($author$project$Model$MonsterIcon, '0', '0')))))
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('1')
-											])),
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Ork')
-											])),
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('35')
-											]))
-									])),
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Table$tr,
-								_List_fromArray(
-									[
-										$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
-										$author$project$DungeonMap$stopBubbling(
-											$author$project$Model$AddCharacterIcon(
-												$author$project$Model$MouseDraw(
-													A2($author$project$Model$MonsterIcon, '0', '0')))))
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('2')
-											])),
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Skelett')
-											])),
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('10')
-											]))
-									])),
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Table$tr,
-								_List_fromArray(
-									[
-										$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
-										$author$project$DungeonMap$stopBubbling(
-											$author$project$Model$AddCharacterIcon(
-												$author$project$Model$MouseDraw(
-													A2($author$project$Model$PlayerIcon, '0', '0')))))
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('3')
-											])),
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Player 1')
-											])),
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('22')
-											]))
-									]))
-							])),
+						$author$project$DungeonMap$characters2rows(model.enemy)),
 					thead: $rundis$elm_bootstrap$Bootstrap$Table$simpleThead(
 						_List_fromArray(
 							[
@@ -10483,7 +10466,7 @@ var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$text('HP')
+										$elm$html$Html$text('LeP')
 									]))
 							]))
 				})
