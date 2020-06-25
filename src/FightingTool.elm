@@ -16,7 +16,7 @@ import Random
 
 --our Modules
 import Model exposing (..)
---import Main exposing (update)
+import Model exposing (..)
 
 body : Model -> Html Msg
 body model =
@@ -28,8 +28,8 @@ body model =
                 , thead =  Table.simpleThead
                     [ Table.th [] [ text "ID" ]
                     , Table.th [] [ text "Name" ]
-                    , Table.th [] [ text "LeP" ]
-                    , Table.th [] [ text "RS"]
+                    , Table.th [] [ text "RS" ]
+                    , Table.th [] [ text "LeP"]
                     ]
                 , tbody =
                     Table.tbody []
@@ -50,6 +50,8 @@ body model =
             ]  []
         , Html.button [ Html.Events.onClick (DiceAndSlice model.tmpdice) ] [ text "Schaden würfeln" ]
         , customEnemy model
+        , Html.hr [] []
+        , customHero model
         , deathAlert model
         ]
 
@@ -90,25 +92,45 @@ displayCharacters model chars =
                     case c of
                         Enemy n h a ->
                             (n,h,a)
+                        Hero n a ->
+                            (n,0,a)
             in
-                Table.tr []
-                [ Table.td[][text <| String.fromInt (i+1)]
-                , Table.td[][text name]
-                , Table.td[][text <| String.fromInt health]
-                , Table.td[][text <| String.fromInt armor]
-                , Table.td[]
-                    [ Button.button 
-                        [ Button.success
-                        , Button.attrs [onClick <| attack model i 5 ] ] 
-                        [ text "Angriff"]
-                    ]
-                , Table.td[]
-                    [ Button.button 
-                        [ Button.danger
-                        , Button.attrs [onClick <| RemoveEnemy i ] ] 
-                        [ text "Löschen"]
-                    ]
-                ]
+                case c of
+                    Enemy _ _ _ ->
+                        Table.tr []
+                        [ Table.td[][text <| String.fromInt i]
+                        , Table.td[][text name]
+                        , Table.td[][text <| String.fromInt armor]
+                        , Table.td[][text <| String.fromInt health]
+                        , Table.td[]
+                            [ Button.button 
+                                [ Button.success
+                                , Button.attrs [onClick <| attack model i 5 ] ] 
+                                [ text "Angriff"]
+                            ]
+                        , Table.td[]
+                            [ Button.button 
+                                [ Button.danger
+                                , Button.attrs [onClick <| RemoveEnemy i ] ] 
+                                [ text "Löschen"]
+                            ]
+                        ]
+                    Hero _ _ ->
+                        Table.tr []
+                        [ Table.td[][text <| String.fromInt i]
+                        , Table.td[][text name]
+                        , Table.td[][text <| String.fromInt armor]
+                        , Table.td[][text <| ""]
+                        , Table.td[]
+                            [ 
+                            ]
+                        , Table.td[]
+                            [ Button.button 
+                                [ Button.danger
+                                , Button.attrs [onClick <| RemoveEnemy i ] ] 
+                                [ text "Löschen"]
+                            ]
+                        ]
         )
         <| Array.toList chars
 
@@ -123,6 +145,7 @@ attack model id damage =
                     UpdateEnemy id <| Enemy name (health - damage + armor) armor
             else
                 DoNothing -- see, it IS necessary
+        Just (Hero _ _) -> DoNothing
         Nothing -> DoNothing
 
 setDice : String -> List String
@@ -206,6 +229,7 @@ customEnemy model =
                     (health, armor) =
                         case model.tmpEnemy of
                             Enemy _ h a -> (h,a)
+                            _ -> (0,0)
                 in 
                     UpdateTmp <| Enemy n health armor
             )] []
@@ -217,6 +241,7 @@ customEnemy model =
                     (name, armor) =
                         case model.tmpEnemy of
                             Enemy n _ a -> (n,a)
+                            _ -> ("",0)
                 in 
                     UpdateTmp <| Enemy name (Maybe.withDefault 1 <| String.toInt h) armor
             )] []
@@ -228,11 +253,44 @@ customEnemy model =
                     (name, health) =
                         case model.tmpEnemy of
                             Enemy n h _ -> (n,h)
+                            _ -> ("",0)
                 in 
                     UpdateTmp <| Enemy name health (Maybe.withDefault 0 <| String.toInt a)
             )] []
         , Html.br [] []
         , Html.button 
             [ Html.Events.onClick <| AddEnemy model.tmpEnemy ] 
+            [ text "Hinzufügen" ]
+        ]
+
+customHero : Model -> Html Msg
+customHero model =
+    div []
+        [ Html.label [Attr.for "name"] [text "Name"]
+        , Html.input [Attr.type_ "text", Attr.id "name", Attr.name "name", Html.Events.onInput 
+            (\n -> 
+                let 
+                    armor =
+                        case model.tmpHero of
+                            Hero _ a -> a
+                            _ -> 0
+                in 
+                    UpdateTmp <| Hero n armor
+            )] []
+        , Html.br [] []
+        , Html.label [Attr.for "armor"] [text "RS"]
+        , Html.input [Attr.type_ "number", Attr.id "armor", Attr.name "armor", Html.Events.onInput
+            (\a -> 
+                let 
+                    name =
+                        case model.tmpHero of
+                            Hero n _ -> n
+                            _ -> ""
+                in 
+                    UpdateTmp <| Hero name (Maybe.withDefault 0 <| String.toInt a)
+            )] []
+        , Html.br [] []
+        , Html.button 
+            [ Html.Events.onClick <| AddEnemy model.tmpHero ] 
             [ text "Hinzufügen" ]
         ]

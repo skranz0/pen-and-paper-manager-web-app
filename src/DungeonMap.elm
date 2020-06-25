@@ -12,6 +12,8 @@ import Json.Decode
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Table as Table
+import Array exposing (Array)
+
 
 --our Modules
 import Model exposing (..)
@@ -38,29 +40,34 @@ dungeonMap_MonsterList model =
                       , thead =  Table.simpleThead
                           [ Table.th [] [ Html.text "ID" ]
                           , Table.th [] [ Html.text "Name" ]
-                          , Table.th [] [ Html.text "HP" ]
+                          , Table.th [] [ Html.text "LeP" ]
                           ]
                       , tbody =
                           Table.tbody []
-                          --some filler characters for now
-                              [ Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon "0" "0")))) ]
-                                  [ Table.td [] [ Html.text "1" ]
-                                  , Table.td [] [ Html.text "Ork" ]
-                                  , Table.td [] [ Html.text "35" ]
-                                  ]
-                              , Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon "0" "0")))) ]
-                                  [ Table.td [] [ Html.text "2" ]
-                                  , Table.td [] [ Html.text "Skelett" ]
-                                  , Table.td [] [ Html.text "10" ]
-                                  ]
-                              , Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon "0" "0")))) ]
-                                  [ Table.td [] [ Html.text "3" ]
-                                  , Table.td [] [ Html.text "Player 1" ]
-                                  , Table.td [] [ Html.text "22" ]
-                                  ]
-                              ]
+                            <| characters2rows model.enemy
                       }
         ]
+
+characters2rows : Array.Array Character -> List (Table.Row Msg)
+characters2rows chars =
+    List.indexedMap
+        (\i c ->
+            case c of
+                Enemy name health _ ->
+                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon "0" "0")))) ]
+                        [ Table.td [] [Html.text <| String.fromInt (i+1)]
+                        , Table.td [] [Html.text name]
+                        , Table.td [] [Html.text <| String.fromInt health]
+                        ]
+
+                Hero name health ->
+                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon "0" "0")))) ]
+                        [ Table.td [] [Html.text <| String.fromInt (i+1)]
+                        , Table.td [] [Html.text name]
+                        , Table.td [] [Html.text <| String.fromInt health]
+                        ]
+        )
+        <| Array.toList chars
 
 
 
