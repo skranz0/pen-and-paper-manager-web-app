@@ -46,9 +46,15 @@ update msg model =
             )
 
         UpdateTmp new ->
-            ( { model | tmpEnemy = new }
-            , Cmd.none
-            )
+            case new of
+                Enemy _ _ _ ->
+                    ( { model | tmpEnemy = new }
+                    , Cmd.none
+                    )
+                Hero _ _ ->
+                    ( { model | tmpHero = new }
+                    , Cmd.none
+                    )
 
         AddEnemy char ->
             ( {model | enemy = Array.push char model.enemy }

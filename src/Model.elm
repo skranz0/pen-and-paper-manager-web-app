@@ -12,6 +12,7 @@ import Array.Extra as Array
 type alias Model =
     { enemy : Array.Array Character -- The enemy displayed on the homepage
     , tmpEnemy : Character -- Will eventually be useless after refactor, I just have to get a better feel for let and in
+    , tmpHero : Character
     , showString : String
     , myDrop1State : Dropdown.State
     , damage : String
@@ -32,6 +33,7 @@ init _ =
     (
         { enemy = Array.empty
         , tmpEnemy = initEnemy
+        , tmpHero = initHero
         , showString = ""
         , myDrop1State = Dropdown.initialState
         , damage = ""
@@ -52,6 +54,9 @@ init _ =
 initEnemy : Character
 initEnemy =
     Enemy "none" 0 0
+initHero : Character
+initHero =
+    Hero "none" 0
 
 
 type Msg

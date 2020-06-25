@@ -28,8 +28,8 @@ body model =
                 , thead =  Table.simpleThead
                     [ Table.th [] [ text "ID" ]
                     , Table.th [] [ text "Name" ]
-                    , Table.th [] [ text "LeP" ]
-                    , Table.th [] [ text "RS"]
+                    , Table.th [] [ text "RS" ]
+                    , Table.th [] [ text "LeP"]
                     ]
                 , tbody =
                     Table.tbody []
@@ -50,6 +50,8 @@ body model =
             ]  []
         , Html.button [ Html.Events.onClick (DiceAndSlice model.tmpdice) ] [ text "Schaden würfeln" ]
         , customEnemy model
+        , Html.hr [] []
+        , customHero model
         , deathAlert model
         ]
 
@@ -98,8 +100,8 @@ displayCharacters model chars =
                         Table.tr []
                         [ Table.td[][text <| String.fromInt i]
                         , Table.td[][text name]
-                        , Table.td[][text <| String.fromInt health]
                         , Table.td[][text <| String.fromInt armor]
+                        , Table.td[][text <| String.fromInt health]
                         , Table.td[]
                             [ Button.button 
                                 [ Button.success
@@ -117,8 +119,8 @@ displayCharacters model chars =
                         Table.tr []
                         [ Table.td[][text <| String.fromInt i]
                         , Table.td[][text name]
-                        , Table.td[][text <| String.fromInt health]
                         , Table.td[][text <| String.fromInt armor]
+                        , Table.td[][text <| ""]
                         , Table.td[]
                             [ 
                             ]
@@ -258,5 +260,37 @@ customEnemy model =
         , Html.br [] []
         , Html.button 
             [ Html.Events.onClick <| AddEnemy model.tmpEnemy ] 
+            [ text "Hinzufügen" ]
+        ]
+
+customHero : Model -> Html Msg
+customHero model =
+    div []
+        [ Html.label [Attr.for "name"] [text "Name"]
+        , Html.input [Attr.type_ "text", Attr.id "name", Attr.name "name", Html.Events.onInput 
+            (\n -> 
+                let 
+                    armor =
+                        case model.tmpHero of
+                            Hero _ a -> a
+                            _ -> 0
+                in 
+                    UpdateTmp <| Hero n armor
+            )] []
+        , Html.br [] []
+        , Html.label [Attr.for "armor"] [text "RS"]
+        , Html.input [Attr.type_ "number", Attr.id "armor", Attr.name "armor", Html.Events.onInput
+            (\a -> 
+                let 
+                    name =
+                        case model.tmpHero of
+                            Hero n _ -> n
+                            _ -> ""
+                in 
+                    UpdateTmp <| Hero name (Maybe.withDefault 0 <| String.toInt a)
+            )] []
+        , Html.br [] []
+        , Html.button 
+            [ Html.Events.onClick <| AddEnemy model.tmpHero ] 
             [ text "Hinzufügen" ]
         ]
