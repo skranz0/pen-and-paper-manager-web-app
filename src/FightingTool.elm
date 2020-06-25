@@ -10,6 +10,8 @@ import Bootstrap.Modal as Modal
 import Bootstrap.Button as Button
 import Bootstrap.Dropdown as Dropdown
 import Bootstrap.Table as Table
+import Bootstrap.Form.Radio as Radio
+import Bootstrap.Form.Fieldset as Fieldset
 import Array
 import Array.Extra as Array
 import Random
@@ -112,20 +114,52 @@ viewCustomEnemyModal model =
     just works the way it is.
     It will probably be put in a modal in the future.
 -}
-    Modal.config (CloseModal CustomEnemy)
-        |> Modal.hideOnBackdropClick True
-        |> Modal.h3 [] [ text "Gewonnen ☠" ]
-        |> Modal.body [] [ 
-            div []
-                [ dropdownMenu model
-                , Html.br [] []
-                , customEnemy model
-                , Html.br [] []
-                , customHero model
-                ]
-        ]    
-        |> Modal.footer [] []
-        |> Modal.view model.showCustomEnemy
+    let
+        enemybool =  
+            case model.enemyHero of
+               "Enemy" ->  True
+               _ -> False
+        herobool = 
+            case model.enemyHero of
+               "Hero" ->  True
+               _ -> False
+
+
+    in 
+        Modal.config (CloseModal CustomEnemy)
+            |> Modal.hideOnBackdropClick True
+            |> Modal.h3 [] [ text "Gewonnen ☠" ]
+            |> Modal.body [] [ 
+                div []
+                    [ dropdownMenu model
+                    , Html.br [] []
+                    , Fieldset.config
+                        |> Fieldset.asGroup
+                        |> Fieldset.legend [] [ text "Benutzerdefiniert: " ]
+                        |> Fieldset.children
+                            ( Radio.radioList "EnemyHero"
+                                [ Radio.create
+                                    [ Radio.id "enemy" 
+                                    , Radio.onClick <| SwitchEnemyHero "Enemy"
+                                    , Radio.checked enemybool
+                                    ] "Gegner"
+                                , Radio.create 
+                                    [ Radio.id "hero" 
+                                    , Radio.onClick <| SwitchEnemyHero "Hero"
+                                    , Radio.checked herobool
+                                    ] "Held"
+                                ]
+                            )
+                        |> Fieldset.view
+                    , if model.enemyHero == "Hero" 
+                        then customHero model
+                        else if model.enemyHero == "Enemy" 
+                            then customEnemy model
+                            else p [][]
+                    ] 
+            ]    
+            |> Modal.footer [] []
+            |> Modal.view model.showCustomEnemy
     
 
 parseEnemy : Json.Decode.Decoder Character
@@ -196,7 +230,7 @@ attack model id damage =
                 else
                     UpdateEnemy id <| Enemy name (health - damage + armor) armor
             else
-                DoNothing -- see, it IS necessary
+                CloseModal AttackModal -- see, it IS necessary
         Just (Hero _ _) -> DoNothing
         Nothing -> DoNothing
 
@@ -304,9 +338,10 @@ customEnemy model =
                     UpdateTmp <| Enemy name health (Maybe.withDefault 0 <| String.toInt a)
             )] []
         , Html.br [] []
-        , Html.button 
-            [ Html.Events.onClick <| AddEnemy model.tmpEnemy ] 
-            [ text "Hinzufügen" ]
+        , Button.button 
+            [ Button.success
+            , Button.attrs [ onClick <| AddEnemy model.tmpEnemy  ] 
+            ] [ text "Hinzufügen"]
         ] 
 
 customHero : Model -> Html Msg
@@ -336,7 +371,8 @@ customHero model =
                     UpdateTmp <| Hero name (Maybe.withDefault 0 <| String.toInt a)
             )] []
         , Html.br [] []
-        , Html.button 
-            [ Html.Events.onClick <| AddEnemy model.tmpHero ] 
-            [ text "Hinzufügen" ]
+        , Button.button 
+            [ Button.success
+            , Button.attrs [ onClick <| AddEnemy model.tmpHero  ] 
+            ] [ text "Hinzufügen"]
         ]

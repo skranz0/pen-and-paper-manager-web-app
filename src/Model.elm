@@ -29,6 +29,7 @@ type alias Model =
     , showDeathAlert : Modal.Visibility
     , showCustomEnemy : Modal.Visibility
     , characterId : Int
+    , enemyHero : String
     }
 
 init : () -> (Model, Cmd Msg)
@@ -53,6 +54,7 @@ init _ =
         , showDeathAlert = Modal.hidden
         , showCustomEnemy = Modal.hidden
         , characterId = 0
+        , enemyHero = ""
         }
     , Cmd.none
     )
@@ -84,6 +86,7 @@ type Msg
     | CloseModal ModalType
     | ShowModal ModalType
     | ShowAttackModal Int
+    | SwitchEnemyHero String
 
 type ModalType
     = AttackModal

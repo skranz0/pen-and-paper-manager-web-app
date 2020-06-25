@@ -157,6 +157,9 @@ update msg model =
         ShowAttackModal id->
             ( { model | showAttackModal = Modal.shown , characterId = id} , Cmd.none )
 
+        SwitchEnemyHero string -> 
+                    ( {model | enemyHero = string } , Cmd.none )
+
         DoNothing ->
             (model, Cmd.none)
 
