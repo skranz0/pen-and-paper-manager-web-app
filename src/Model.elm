@@ -12,6 +12,7 @@ import Array.Extra as Array
 type alias Model =
     { enemy : Array.Array Character -- The enemy displayed on the homepage
     , tmpEnemy : Character -- Will eventually be useless after refactor, I just have to get a better feel for let and in
+    , tmpHero : Character
     , showString : String
     , myDrop1State : Dropdown.State
     , damage : Int
@@ -35,6 +36,7 @@ init _ =
     (
         { enemy = Array.empty
         , tmpEnemy = initEnemy
+        , tmpHero = initHero
         , showString = ""
         , myDrop1State = Dropdown.initialState
         , damage = 0
@@ -58,6 +60,9 @@ init _ =
 initEnemy : Character
 initEnemy =
     Enemy "none" 0 0
+initHero : Character
+initHero =
+    Hero "none" 0
 
 
 type Msg
@@ -87,7 +92,9 @@ type ModalType
 
 type Character
     = Enemy String Int Int
-    -- can be expanded e.g. with a hero type with name, health, armor and a weapon
+    --      name   LeP RS
+    | Hero String Int
+    --     name   RS
 
 type AddCharacterIconState
     = DrawingInactive
@@ -107,6 +114,8 @@ type
     | MonsterIcon String String
 
 type alias MousePosition =
-    { x : Float, y : Float }
+    { x : Float
+    , y : Float
+    }
 
 

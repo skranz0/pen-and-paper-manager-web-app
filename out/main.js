@@ -5410,6 +5410,11 @@ var $author$project$Model$Enemy = F3(
 		return {$: 'Enemy', a: a, b: b, c: c};
 	});
 var $author$project$Model$initEnemy = A3($author$project$Model$Enemy, 'none', 0, 0);
+var $author$project$Model$Hero = F2(
+	function (a, b) {
+		return {$: 'Hero', a: a, b: b};
+	});
+var $author$project$Model$initHero = A2($author$project$Model$Hero, 'none', 0);
 var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$Area = F4(
 	function (top, left, width, height) {
 		return {height: height, left: left, top: top, width: width};
@@ -5434,7 +5439,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Model$init = function (_v0) {
 	return _Utils_Tuple2(
-		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterId: 0, characterList: _List_Nil, damage: 0, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpdice: '1W6+0'},
+		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterId: 0, characterList: _List_Nil, damage: 0, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpHero: $author$project$Model$initHero, tmpdice: '1W6+0'},
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Model$MyDrop1Msg = function (a) {
@@ -7575,11 +7580,19 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'UpdateTmp':
 				var _new = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{tmpEnemy: _new}),
-					$elm$core$Platform$Cmd$none);
+				if (_new.$ === 'Enemy') {
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{tmpEnemy: _new}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{tmpHero: _new}),
+						$elm$core$Platform$Cmd$none);
+				}
 			case 'AddEnemy':
 				var _char = msg.a;
 				return _Utils_Tuple2(
@@ -7705,10 +7718,12 @@ var $author$project$Main$update = F2(
 								model,
 								{
 									addCharacterIcon: $author$project$Model$DrawingInactive,
-									characterList: A2(
-										$elm$core$List$cons,
-										A2($author$project$Model$Player, x, y),
-										model.characterList)
+									characterList: _Utils_ap(
+										model.characterList,
+										_List_fromArray(
+											[
+												A2($author$project$Model$Player, x, y)
+											]))
 								}),
 							$elm$core$Platform$Cmd$none);
 					} else {
@@ -7719,10 +7734,12 @@ var $author$project$Main$update = F2(
 								model,
 								{
 									addCharacterIcon: $author$project$Model$DrawingInactive,
-									characterList: A2(
-										$elm$core$List$cons,
-										A2($author$project$Model$Monster, x, y),
-										model.characterList)
+									characterList: _Utils_ap(
+										model.characterList,
+										_List_fromArray(
+											[
+												A2($author$project$Model$Monster, x, y)
+											]))
 								}),
 							$elm$core$Platform$Cmd$none);
 					}
@@ -8562,95 +8579,163 @@ var $author$project$FightingTool$displayCharacters = F2(
 			F2(
 				function (i, c) {
 					var _v0 = function () {
-						var n = c.a;
-						var h = c.b;
-						var a = c.c;
-						return _Utils_Tuple3(n, h, a);
+						if (c.$ === 'Enemy') {
+							var n = c.a;
+							var h = c.b;
+							var a = c.c;
+							return _Utils_Tuple3(n, h, a);
+						} else {
+							var n = c.a;
+							var a = c.b;
+							return _Utils_Tuple3(n, 0, a);
+						}
 					}();
 					var name = _v0.a;
 					var health = _v0.b;
 					var armor = _v0.c;
-					return A2(
-						$rundis$elm_bootstrap$Bootstrap$Table$tr,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Table$td,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text(
-										$elm$core$String$fromInt(i))
-									])),
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Table$td,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text(name)
-									])),
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Table$td,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text(
-										$elm$core$String$fromInt(health))
-									])),
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Table$td,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text(
-										$elm$core$String$fromInt(armor))
-									])),
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Table$td,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Button$button,
-										_List_fromArray(
-											[
-												$rundis$elm_bootstrap$Bootstrap$Button$success,
-												$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-												_List_fromArray(
-													[
-														$elm$html$Html$Events$onClick(
-														$author$project$Model$ShowAttackModal(i))
-													]))
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Angriff')
-											]))
-									])),
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Table$td,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Button$button,
-										_List_fromArray(
-											[
-												$rundis$elm_bootstrap$Bootstrap$Button$danger,
-												$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-												_List_fromArray(
-													[
-														$elm$html$Html$Events$onClick(
-														$author$project$Model$RemoveEnemy(i))
-													]))
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Löschen')
-											]))
-									]))
-							]));
+					if (c.$ === 'Enemy') {
+						return A2(
+							$rundis$elm_bootstrap$Bootstrap$Table$tr,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$elm$core$String$fromInt(i))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(name)
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$elm$core$String$fromInt(armor))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$elm$core$String$fromInt(health))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$rundis$elm_bootstrap$Bootstrap$Button$button,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Button$success,
+													$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+													_List_fromArray(
+														[
+															$elm$html$Html$Events$onClick(
+															$author$project$Model$ShowAttackModal(i))
+														]))
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$text('Angriff')
+												]))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$rundis$elm_bootstrap$Bootstrap$Button$button,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Button$danger,
+													$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+													_List_fromArray(
+														[
+															$elm$html$Html$Events$onClick(
+															$author$project$Model$RemoveEnemy(i))
+														]))
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$text('Löschen')
+												]))
+										]))
+								]));
+					} else {
+						return A2(
+							$rundis$elm_bootstrap$Bootstrap$Table$tr,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$elm$core$String$fromInt(i))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(name)
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$elm$core$String$fromInt(armor))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text('')
+										])),
+									A2($rundis$elm_bootstrap$Bootstrap$Table$td, _List_Nil, _List_Nil),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$rundis$elm_bootstrap$Bootstrap$Button$button,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Button$danger,
+													$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+													_List_fromArray(
+														[
+															$elm$html$Html$Events$onClick(
+															$author$project$Model$RemoveEnemy(i))
+														]))
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$text('Löschen')
+												]))
+										]))
+								]));
+					}
 				}),
 			$elm$core$Array$toList(chars));
 	});
@@ -9257,14 +9342,19 @@ var $author$project$FightingTool$attack = F3(
 	function (model, id, damage) {
 		var _v0 = A2($elm$core$Array$get, id, model.enemy);
 		if (_v0.$ === 'Just') {
-			var _v1 = _v0.a;
-			var name = _v1.a;
-			var health = _v1.b;
-			var armor = _v1.c;
-			return (_Utils_cmp(damage, armor) > 0) ? ((((health - damage) + armor) <= 0) ? $author$project$Model$CharacterDeath(id) : A2(
-				$author$project$Model$UpdateEnemy,
-				id,
-				A3($author$project$Model$Enemy, name, (health - damage) + armor, armor))) : $author$project$Model$CloseModal($author$project$Model$AttackModal);
+			if (_v0.a.$ === 'Enemy') {
+				var _v1 = _v0.a;
+				var name = _v1.a;
+				var health = _v1.b;
+				var armor = _v1.c;
+				return (_Utils_cmp(damage, armor) > 0) ? ((((health - damage) + armor) <= 0) ? $author$project$Model$CharacterDeath(id) : A2(
+					$author$project$Model$UpdateEnemy,
+					id,
+					A3($author$project$Model$Enemy, name, (health - damage) + armor, armor))) : $author$project$Model$DoNothing;
+			} else {
+				var _v2 = _v0.a;
+				return $author$project$Model$DoNothing;
+			}
 		} else {
 			return $author$project$Model$DoNothing;
 		}
@@ -9378,13 +9468,253 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 									$author$project$Model$CloseModal($author$project$Model$AttackModal)))))))
 			]));
 };
+var $elm$html$Html$br = _VirtualDom_node('br');
 var $author$project$Model$AddEnemy = function (a) {
 	return {$: 'AddEnemy', a: a};
 };
 var $author$project$Model$UpdateTmp = function (a) {
 	return {$: 'UpdateTmp', a: a};
 };
-var $elm$html$Html$br = _VirtualDom_node('br');
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$html$Html$label = _VirtualDom_node('label');
+var $author$project$FightingTool$customEnemy = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('name')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Name')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('text'),
+						$elm$html$Html$Attributes$id('name'),
+						$elm$html$Html$Attributes$name('name'),
+						$elm$html$Html$Events$onInput(
+						function (n) {
+							var _v0 = function () {
+								var _v1 = model.tmpEnemy;
+								if (_v1.$ === 'Enemy') {
+									var h = _v1.b;
+									var a = _v1.c;
+									return _Utils_Tuple2(h, a);
+								} else {
+									return _Utils_Tuple2(0, 0);
+								}
+							}();
+							var health = _v0.a;
+							var armor = _v0.b;
+							return $author$project$Model$UpdateTmp(
+								A3($author$project$Model$Enemy, n, health, armor));
+						})
+					]),
+				_List_Nil),
+				A2($elm$html$Html$br, _List_Nil, _List_Nil),
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('health')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('LeP')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('number'),
+						$elm$html$Html$Attributes$id('health'),
+						$elm$html$Html$Attributes$name('health'),
+						$elm$html$Html$Events$onInput(
+						function (h) {
+							var _v2 = function () {
+								var _v3 = model.tmpEnemy;
+								if (_v3.$ === 'Enemy') {
+									var n = _v3.a;
+									var a = _v3.c;
+									return _Utils_Tuple2(n, a);
+								} else {
+									return _Utils_Tuple2('', 0);
+								}
+							}();
+							var name = _v2.a;
+							var armor = _v2.b;
+							return $author$project$Model$UpdateTmp(
+								A3(
+									$author$project$Model$Enemy,
+									name,
+									A2(
+										$elm$core$Maybe$withDefault,
+										1,
+										$elm$core$String$toInt(h)),
+									armor));
+						})
+					]),
+				_List_Nil),
+				A2($elm$html$Html$br, _List_Nil, _List_Nil),
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('armor')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('RS')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('number'),
+						$elm$html$Html$Attributes$id('armor'),
+						$elm$html$Html$Attributes$name('armor'),
+						$elm$html$Html$Events$onInput(
+						function (a) {
+							var _v4 = function () {
+								var _v5 = model.tmpEnemy;
+								if (_v5.$ === 'Enemy') {
+									var n = _v5.a;
+									var h = _v5.b;
+									return _Utils_Tuple2(n, h);
+								} else {
+									return _Utils_Tuple2('', 0);
+								}
+							}();
+							var name = _v4.a;
+							var health = _v4.b;
+							return $author$project$Model$UpdateTmp(
+								A3(
+									$author$project$Model$Enemy,
+									name,
+									health,
+									A2(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toInt(a))));
+						})
+					]),
+				_List_Nil),
+				A2($elm$html$Html$br, _List_Nil, _List_Nil),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick(
+						$author$project$Model$AddEnemy(model.tmpEnemy))
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Hinzufügen')
+					]))
+			]));
+};
+var $author$project$FightingTool$customHero = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('name')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Name')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('text'),
+						$elm$html$Html$Attributes$id('name'),
+						$elm$html$Html$Attributes$name('name'),
+						$elm$html$Html$Events$onInput(
+						function (n) {
+							var armor = function () {
+								var _v0 = model.tmpHero;
+								if (_v0.$ === 'Hero') {
+									var a = _v0.b;
+									return a;
+								} else {
+									return 0;
+								}
+							}();
+							return $author$project$Model$UpdateTmp(
+								A2($author$project$Model$Hero, n, armor));
+						})
+					]),
+				_List_Nil),
+				A2($elm$html$Html$br, _List_Nil, _List_Nil),
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('armor')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('RS')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('number'),
+						$elm$html$Html$Attributes$id('armor'),
+						$elm$html$Html$Attributes$name('armor'),
+						$elm$html$Html$Events$onInput(
+						function (a) {
+							var name = function () {
+								var _v1 = model.tmpHero;
+								if (_v1.$ === 'Hero') {
+									var n = _v1.a;
+									return n;
+								} else {
+									return '';
+								}
+							}();
+							return $author$project$Model$UpdateTmp(
+								A2(
+									$author$project$Model$Hero,
+									name,
+									A2(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toInt(a))));
+						})
+					]),
+				_List_Nil),
+				A2($elm$html$Html$br, _List_Nil, _List_Nil),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick(
+						$author$project$Model$AddEnemy(model.tmpHero))
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Hinzufügen')
+					]))
+			]));
+};
 var $author$project$Model$LoadEnemy = function (a) {
 	return {$: 'LoadEnemy', a: a};
 };
@@ -10005,9 +10335,6 @@ var $author$project$FightingTool$dropdownMenu = function (model) {
 				})
 			]));
 };
-var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
-var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
-var $elm$html$Html$label = _VirtualDom_node('label');
 var $author$project$FightingTool$viewCustomEnemyModal = function (model) {
 	return A2(
 		$rundis$elm_bootstrap$Bootstrap$Modal$view,
@@ -10028,130 +10355,9 @@ var $author$project$FightingTool$viewCustomEnemyModal = function (model) {
 							[
 								$author$project$FightingTool$dropdownMenu(model),
 								A2($elm$html$Html$br, _List_Nil, _List_Nil),
-								A2(
-								$elm$html$Html$label,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$for('name')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Name')
-									])),
-								A2(
-								$elm$html$Html$input,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$type_('text'),
-										$elm$html$Html$Attributes$id('name'),
-										$elm$html$Html$Attributes$name('name'),
-										$elm$html$Html$Events$onInput(
-										function (n) {
-											var _v0 = function () {
-												var _v1 = model.tmpEnemy;
-												var h = _v1.b;
-												var a = _v1.c;
-												return _Utils_Tuple2(h, a);
-											}();
-											var health = _v0.a;
-											var armor = _v0.b;
-											return $author$project$Model$UpdateTmp(
-												A3($author$project$Model$Enemy, n, health, armor));
-										})
-									]),
-								_List_Nil),
+								$author$project$FightingTool$customEnemy(model),
 								A2($elm$html$Html$br, _List_Nil, _List_Nil),
-								A2(
-								$elm$html$Html$label,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$for('health')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('LeP')
-									])),
-								A2(
-								$elm$html$Html$input,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$type_('number'),
-										$elm$html$Html$Attributes$id('health'),
-										$elm$html$Html$Attributes$name('health'),
-										$elm$html$Html$Events$onInput(
-										function (h) {
-											var _v2 = function () {
-												var _v3 = model.tmpEnemy;
-												var n = _v3.a;
-												var a = _v3.c;
-												return _Utils_Tuple2(n, a);
-											}();
-											var name = _v2.a;
-											var armor = _v2.b;
-											return $author$project$Model$UpdateTmp(
-												A3(
-													$author$project$Model$Enemy,
-													name,
-													A2(
-														$elm$core$Maybe$withDefault,
-														1,
-														$elm$core$String$toInt(h)),
-													armor));
-										})
-									]),
-								_List_Nil),
-								A2($elm$html$Html$br, _List_Nil, _List_Nil),
-								A2(
-								$elm$html$Html$label,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$for('armor')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('RS')
-									])),
-								A2(
-								$elm$html$Html$input,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$type_('number'),
-										$elm$html$Html$Attributes$id('armor'),
-										$elm$html$Html$Attributes$name('armor'),
-										$elm$html$Html$Events$onInput(
-										function (a) {
-											var _v4 = function () {
-												var _v5 = model.tmpEnemy;
-												var n = _v5.a;
-												var h = _v5.b;
-												return _Utils_Tuple2(n, h);
-											}();
-											var name = _v4.a;
-											var health = _v4.b;
-											return $author$project$Model$UpdateTmp(
-												A3(
-													$author$project$Model$Enemy,
-													name,
-													health,
-													A2(
-														$elm$core$Maybe$withDefault,
-														0,
-														$elm$core$String$toInt(a))));
-										})
-									]),
-								_List_Nil),
-								A2($elm$html$Html$br, _List_Nil, _List_Nil),
-								A2(
-								$elm$html$Html$button,
-								_List_fromArray(
-									[
-										$elm$html$Html$Events$onClick(
-										$author$project$Model$AddEnemy(model.tmpEnemy))
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Hinzufügen')
-									]))
+								$author$project$FightingTool$customHero(model)
 							]))
 					]),
 				A3(
@@ -10245,14 +10451,14 @@ var $author$project$FightingTool$body = function (model) {
 										_List_Nil,
 										_List_fromArray(
 											[
-												$elm$html$Html$text('LeP')
+												$elm$html$Html$text('RS')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
 										_List_Nil,
 										_List_fromArray(
 											[
-												$elm$html$Html$text('RS')
+												$elm$html$Html$text('LeP')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
@@ -10291,6 +10497,8 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$col = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Grid$Column(
 			{children: children, options: options});
 	});
+var $rundis$elm_bootstrap$Bootstrap$Table$Bordered = {$: 'Bordered'};
+var $rundis$elm_bootstrap$Bootstrap$Table$bordered = $rundis$elm_bootstrap$Bootstrap$Table$Bordered;
 var $author$project$Model$AddCharacterIcon = function (a) {
 	return {$: 'AddCharacterIcon', a: a};
 };
@@ -10305,12 +10513,6 @@ var $author$project$Model$PlayerIcon = F2(
 	function (a, b) {
 		return {$: 'PlayerIcon', a: a, b: b};
 	});
-var $rundis$elm_bootstrap$Bootstrap$Table$Bordered = {$: 'Bordered'};
-var $rundis$elm_bootstrap$Bootstrap$Table$bordered = $rundis$elm_bootstrap$Bootstrap$Table$Bordered;
-var $rundis$elm_bootstrap$Bootstrap$Table$Responsive = function (a) {
-	return {$: 'Responsive', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Table$responsive = $rundis$elm_bootstrap$Bootstrap$Table$Responsive($elm$core$Maybe$Nothing);
 var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
 	return {$: 'RowAttr', a: a};
 };
@@ -10328,6 +10530,97 @@ var $author$project$DungeonMap$stopBubbling = function (msg) {
 			},
 			$elm$json$Json$Decode$succeed(msg)));
 };
+var $author$project$DungeonMap$characters2rows = function (chars) {
+	return A2(
+		$elm$core$List$indexedMap,
+		F2(
+			function (i, c) {
+				if (c.$ === 'Enemy') {
+					var name = c.a;
+					var health = c.b;
+					return A2(
+						$rundis$elm_bootstrap$Bootstrap$Table$tr,
+						_List_fromArray(
+							[
+								$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
+								$author$project$DungeonMap$stopBubbling(
+									$author$project$Model$AddCharacterIcon(
+										$author$project$Model$MouseDraw(
+											A2($author$project$Model$MonsterIcon, '0', '0')))))
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(i + 1))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(name)
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(health))
+									]))
+							]));
+				} else {
+					var name = c.a;
+					var health = c.b;
+					return A2(
+						$rundis$elm_bootstrap$Bootstrap$Table$tr,
+						_List_fromArray(
+							[
+								$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
+								$author$project$DungeonMap$stopBubbling(
+									$author$project$Model$AddCharacterIcon(
+										$author$project$Model$MouseDraw(
+											A2($author$project$Model$PlayerIcon, '0', '0')))))
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(i + 1))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(name)
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(health))
+									]))
+							]));
+				}
+			}),
+		$elm$core$Array$toList(chars));
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$Responsive = function (a) {
+	return {$: 'Responsive', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$responsive = $rundis$elm_bootstrap$Bootstrap$Table$Responsive($elm$core$Maybe$Nothing);
 var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -10344,111 +10637,7 @@ var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 					tbody: A2(
 						$rundis$elm_bootstrap$Bootstrap$Table$tbody,
 						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Table$tr,
-								_List_fromArray(
-									[
-										$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
-										$author$project$DungeonMap$stopBubbling(
-											$author$project$Model$AddCharacterIcon(
-												$author$project$Model$MouseDraw(
-													A2($author$project$Model$MonsterIcon, '0', '0')))))
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('1')
-											])),
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Ork')
-											])),
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('35')
-											]))
-									])),
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Table$tr,
-								_List_fromArray(
-									[
-										$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
-										$author$project$DungeonMap$stopBubbling(
-											$author$project$Model$AddCharacterIcon(
-												$author$project$Model$MouseDraw(
-													A2($author$project$Model$MonsterIcon, '0', '0')))))
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('2')
-											])),
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Skelett')
-											])),
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('10')
-											]))
-									])),
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Table$tr,
-								_List_fromArray(
-									[
-										$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
-										$author$project$DungeonMap$stopBubbling(
-											$author$project$Model$AddCharacterIcon(
-												$author$project$Model$MouseDraw(
-													A2($author$project$Model$PlayerIcon, '0', '0')))))
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('3')
-											])),
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Player 1')
-											])),
-										A2(
-										$rundis$elm_bootstrap$Bootstrap$Table$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('22')
-											]))
-									]))
-							])),
+						$author$project$DungeonMap$characters2rows(model.enemy)),
 					thead: $rundis$elm_bootstrap$Bootstrap$Table$simpleThead(
 						_List_fromArray(
 							[
@@ -10471,7 +10660,7 @@ var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$text('HP')
+										$elm$html$Html$text('LeP')
 									]))
 							]))
 				})
@@ -10625,6 +10814,7 @@ var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 };
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
+var $elm$svg$Svg$Attributes$dominantBaseline = _VirtualDom_attribute('dominant-baseline');
 var $author$project$DungeonMap$getCoord = function (object) {
 	if (object.$ === 'Monster') {
 		var x = object.a;
@@ -10648,110 +10838,132 @@ var $author$project$DungeonMap$getIcon = function (object) {
 	}
 };
 var $elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
+var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$svg$Svg$Attributes$textAnchor = _VirtualDom_attribute('text-anchor');
+var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
+var $elm$core$String$toFloat = _String_toFloat;
 var $author$project$DungeonMap$getAreaParam = F2(
 	function (i, s) {
+		var yCor = A2(
+			$elm$core$Maybe$withDefault,
+			'0',
+			$elm$core$List$head(
+				A2(
+					$elm$core$List$drop,
+					1,
+					A2(
+						$elm$core$String$split,
+						',',
+						$author$project$DungeonMap$getCoord(s)))));
+		var xCor = A2(
+			$elm$core$Maybe$withDefault,
+			'0',
+			$elm$core$List$head(
+				A2(
+					$elm$core$String$split,
+					',',
+					$author$project$DungeonMap$getCoord(s))));
 		var _v0 = $author$project$DungeonMap$getIcon(s);
 		switch (_v0) {
 			case 'monster':
-				return A2(
-					$elm$svg$Svg$rect,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$id(
-							$elm$core$String$fromInt(i)),
-							$elm$svg$Svg$Attributes$x(
-							A2(
-								$elm$core$Maybe$withDefault,
-								'0',
-								$elm$core$List$head(
+				return _List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$rect,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$id(
+								$elm$core$String$fromInt(i)),
+								$elm$svg$Svg$Attributes$x(xCor),
+								$elm$svg$Svg$Attributes$y(yCor),
+								$elm$svg$Svg$Attributes$width('15'),
+								$elm$svg$Svg$Attributes$height('15'),
+								$elm$svg$Svg$Attributes$class('MonsterIcon')
+							]),
+						_List_Nil),
+						A2(
+						$elm$svg$Svg$text_,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$textAnchor('middle'),
+								$elm$svg$Svg$Attributes$x(
+								$elm$core$String$fromFloat(
 									A2(
-										$elm$core$String$split,
-										',',
-										$author$project$DungeonMap$getCoord(s))))),
-							$elm$svg$Svg$Attributes$y(
-							A2(
-								$elm$core$Maybe$withDefault,
-								'0',
-								$elm$core$List$head(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toFloat(xCor)) + 7.5)),
+								$elm$svg$Svg$Attributes$y(
+								$elm$core$String$fromFloat(
 									A2(
-										$elm$core$List$drop,
-										1,
-										A2(
-											$elm$core$String$split,
-											',',
-											$author$project$DungeonMap$getCoord(s)))))),
-							$elm$svg$Svg$Attributes$width('15'),
-							$elm$svg$Svg$Attributes$height('15'),
-							$elm$svg$Svg$Attributes$class('MonsterIcon')
-						]),
-					_List_Nil);
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toFloat(yCor)) + 8.75)),
+								$elm$svg$Svg$Attributes$dominantBaseline('middle')
+							]),
+						_List_fromArray(
+							[
+								$elm$svg$Svg$text(
+								$elm$core$String$fromInt(i))
+							]))
+					]);
 			case 'player':
-				return A2(
-					$elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$id(
-							$elm$core$String$fromInt(i)),
-							$elm$svg$Svg$Attributes$cx(
-							A2(
-								$elm$core$Maybe$withDefault,
-								'0',
-								$elm$core$List$head(
+				return _List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$circle,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$id(
+								$elm$core$String$fromInt(i)),
+								$elm$svg$Svg$Attributes$cx(xCor),
+								$elm$svg$Svg$Attributes$cy(yCor),
+								$elm$svg$Svg$Attributes$r('10'),
+								$elm$svg$Svg$Attributes$class('PlayerIcon')
+							]),
+						_List_Nil),
+						A2(
+						$elm$svg$Svg$text_,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$textAnchor('middle'),
+								$elm$svg$Svg$Attributes$x(xCor),
+								$elm$svg$Svg$Attributes$y(
+								$elm$core$String$fromFloat(
 									A2(
-										$elm$core$String$split,
-										',',
-										$author$project$DungeonMap$getCoord(s))))),
-							$elm$svg$Svg$Attributes$cy(
-							A2(
-								$elm$core$Maybe$withDefault,
-								'0',
-								$elm$core$List$head(
-									A2(
-										$elm$core$List$drop,
-										1,
-										A2(
-											$elm$core$String$split,
-											',',
-											$author$project$DungeonMap$getCoord(s)))))),
-							$elm$svg$Svg$Attributes$r('10'),
-							$elm$svg$Svg$Attributes$class('PlayerIcon')
-						]),
-					_List_Nil);
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toFloat(yCor)) + 0.75)),
+								$elm$svg$Svg$Attributes$dominantBaseline('middle')
+							]),
+						_List_fromArray(
+							[
+								$elm$svg$Svg$text(
+								$elm$core$String$fromInt(i))
+							]))
+					]);
 			default:
-				return A2(
-					$elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$id(
-							$elm$core$String$fromInt(i)),
-							$elm$svg$Svg$Attributes$cx(
-							A2(
-								$elm$core$Maybe$withDefault,
-								'0',
-								$elm$core$List$head(
-									A2(
-										$elm$core$String$split,
-										',',
-										$author$project$DungeonMap$getCoord(s))))),
-							$elm$svg$Svg$Attributes$cy(
-							A2(
-								$elm$core$Maybe$withDefault,
-								'0',
-								$elm$core$List$head(
-									A2(
-										$elm$core$List$drop,
-										1,
-										A2(
-											$elm$core$String$split,
-											',',
-											$author$project$DungeonMap$getCoord(s)))))),
-							$elm$svg$Svg$Attributes$r('0')
-						]),
-					_List_Nil);
+				return _List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$circle,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$id(
+								$elm$core$String$fromInt(i)),
+								$elm$svg$Svg$Attributes$cx(xCor),
+								$elm$svg$Svg$Attributes$cy(yCor),
+								$elm$svg$Svg$Attributes$r('0')
+							]),
+						_List_Nil)
+					]);
 		}
 	});
 var $author$project$DungeonMap$svgIconList = function (model) {
-	return A2($elm$core$List$indexedMap, $author$project$DungeonMap$getAreaParam, model.characterList);
+	return A3(
+		$elm$core$List$foldl,
+		$elm$core$Basics$append,
+		_List_Nil,
+		A2($elm$core$List$indexedMap, $author$project$DungeonMap$getAreaParam, model.characterList));
 };
 var $elm$svg$Svg$Attributes$title = _VirtualDom_attribute('title');
 var $elm$svg$Svg$Attributes$version = _VirtualDom_attribute('version');
@@ -10799,7 +11011,7 @@ var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 										[
 											$elm$svg$Svg$Attributes$width('800'),
 											$elm$svg$Svg$Attributes$height('600'),
-											$elm$svg$Svg$Attributes$title('Informatikgebäude'),
+											$elm$svg$Svg$Attributes$title('DungeonMap'),
 											$elm$svg$Svg$Attributes$xlinkHref('src/dungeons/library_of_ice_lily.png')
 										]),
 									_List_Nil)
@@ -10810,8 +11022,6 @@ var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 					]))
 			]));
 };
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col = {$: 'Col'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width = F2(
 	function (screenSize, columnCount) {
@@ -11622,53 +11832,6 @@ var $author$project$DungeonMap$dungeonMapView = function (model) {
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('hero is-dark is-bold')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('hero-body')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('container ')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$h1,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('title')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Dungeon-Map-Tool')
-											])),
-										A2(
-										$elm$html$Html$h2,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('subtitle')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Manage your Dungeon with ease!')
-											]))
-									]))
-							]))
-					])),
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
 						$elm$html$Html$Attributes$class('section')
 					]),
 				_List_fromArray(
@@ -11730,6 +11893,8 @@ var $author$project$FightingTool$footer = A2(
 						]))
 				]))
 		]));
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $author$project$FightingTool$header = A2(
 	$elm$html$Html$section,
 	_List_fromArray(

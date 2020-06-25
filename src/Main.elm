@@ -48,9 +48,15 @@ update msg model =
             )
 
         UpdateTmp new ->
-            ( { model | tmpEnemy = new }
-            , Cmd.none
-            )
+            case new of
+                Enemy _ _ _ ->
+                    ( { model | tmpEnemy = new }
+                    , Cmd.none
+                    )
+                Hero _ _ ->
+                    ( { model | tmpHero = new }
+                    , Cmd.none
+                    )
 
         AddEnemy char ->
             ( {model | enemy = Array.push char model.enemy , showCustomEnemy = Modal.hidden}
@@ -92,16 +98,16 @@ update msg model =
                 mf = Maybe.withDefault 0 (String.toInt (Maybe.withDefault "6" (List.head <| List.drop 1 (setDice newDice))))
                 bd = Maybe.withDefault 0 (String.toInt (Maybe.withDefault "0" (List.head <| List.drop 2 (setDice newDice))))
             in
-                ( { model | 
-                    dice = newDice , 
-                    maxFace = mf , 
+                ( { model |
+                    dice = newDice ,
+                    maxFace = mf ,
                     bonusDamage = bd
                     }
                 , generateRandomList rt mf
                 )
 
         NewRandomList intList ->
-            ( { model | 
+            ( { model |
                 dieFaces = intList ,
                 damage = damageCalc intList model.bonusDamage
                 }
@@ -118,10 +124,10 @@ update msg model =
                 MouseClick characterIcon ->
                     case characterIcon of
                         PlayerIcon x y ->
-                            ( { model | characterList = Player x y :: model.characterList, addCharacterIcon = DrawingInactive }, Cmd.none )
+                            ( { model | characterList = model.characterList ++ [Player x y], addCharacterIcon = DrawingInactive }, Cmd.none )
 
                         MonsterIcon x y ->
-                            ( { model | characterList = Monster x y :: model.characterList, addCharacterIcon = DrawingInactive }, Cmd.none )
+                            ( { model | characterList = model.characterList ++ [Monster x y], addCharacterIcon = DrawingInactive }, Cmd.none )
 
                 MouseDraw s ->
                     ( { model | addCharacterIcon = DrawIcon s }, Cmd.none )
