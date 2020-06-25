@@ -92,7 +92,7 @@ displayCharacters model chars =
                             (n,h,a)
             in
                 Table.tr []
-                [ Table.td[][text <| String.fromInt i]
+                [ Table.td[][text <| String.fromInt (i+1)]
                 , Table.td[][text name]
                 , Table.td[][text <| String.fromInt health]
                 , Table.td[][text <| String.fromInt armor]

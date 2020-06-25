@@ -8767,7 +8767,7 @@ var $author$project$FightingTool$displayCharacters = F2(
 								_List_fromArray(
 									[
 										$elm$html$Html$text(
-										$elm$core$String$fromInt(i))
+										$elm$core$String$fromInt(i + 1))
 									])),
 								A2(
 								$rundis$elm_bootstrap$Bootstrap$Table$td,
