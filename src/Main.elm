@@ -17,6 +17,7 @@ import DungeonMap exposing (dungeonMapView)
 import FightingTool exposing (..)
 import Model exposing (..)
 import Model exposing (ModalType(..))
+import Model exposing (Msg(..))
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -42,7 +43,7 @@ update msg model =
                     ( { model | showString = "Error:  " }, Cmd.none )
 
         UpdateEnemy index new ->
-            ( { model | enemy = Array.set index new model.enemy }
+            ( { model | enemy = Array.set index new model.enemy, showAttackModal = Modal.hidden }
             , Cmd.none
             )
 
@@ -65,6 +66,7 @@ update msg model =
             ( 
                 { model | showDeathAlert = Modal.shown 
                 , enemy = Array.removeAt index model.enemy
+                , showAttackModal = Modal.hidden
                 }
                 , Cmd.none
             )
@@ -75,7 +77,7 @@ update msg model =
             )
 
         ChangeDamage newDamage -> -- Will eventually be useless after refactor, I just have to get a better feel for let and in
-            ( { model | damage = newDamage }
+            ( { model | damage = Maybe.withDefault 0 (String.toInt newDamage ) }
             , Cmd.none
             )
 
@@ -101,7 +103,7 @@ update msg model =
         NewRandomList intList ->
             ( { model | 
                 dieFaces = intList ,
-                damage = String.fromInt (damageCalc intList model.bonusDamage) 
+                damage = damageCalc intList model.bonusDamage
                 }
             , Cmd.none
             )
@@ -145,6 +147,9 @@ update msg model =
                     
                 CustomEnemy ->
                     ( { model | showCustomEnemy = Modal.shown } , Cmd.none )
+        
+        ShowAttackModal id->
+            ( { model | showAttackModal = Modal.shown , characterId = id} , Cmd.none )
 
         DoNothing ->
             (model, Cmd.none)

@@ -14,7 +14,7 @@ type alias Model =
     , tmpEnemy : Character -- Will eventually be useless after refactor, I just have to get a better feel for let and in
     , showString : String
     , myDrop1State : Dropdown.State
-    , damage : String
+    , damage : Int
     , bonusDamage : Int
     , dice : String
     , tmpdice : String
@@ -27,6 +27,7 @@ type alias Model =
     , showAttackModal : Modal.Visibility
     , showDeathAlert : Modal.Visibility
     , showCustomEnemy : Modal.Visibility
+    , characterId : Int
     }
 
 init : () -> (Model, Cmd Msg)
@@ -36,7 +37,7 @@ init _ =
         , tmpEnemy = initEnemy
         , showString = ""
         , myDrop1State = Dropdown.initialState
-        , damage = ""
+        , damage = 0
         , bonusDamage = 0
         , dice = "1W6+0"
         , tmpdice = "1W6+0"
@@ -49,6 +50,7 @@ init _ =
         , showAttackModal = Modal.hidden 
         , showDeathAlert = Modal.hidden
         , showCustomEnemy = Modal.hidden
+        , characterId = 0
         }
     , Cmd.none
     )
@@ -67,7 +69,7 @@ type Msg
     | RemoveEnemy Int
     | CharacterDeath Int
     | MyDrop1Msg Dropdown.State
-    | ChangeDamage String -- Will eventually be useless after refactor, I just have to get a better feel for let and in
+    | ChangeDamage String-- Will eventually be useless after refactor, I just have to get a better feel for let and in
     | DoNothing -- does nothing (yes, this IS necessary)
     | TabMsg Tab.State
     | AddCharacterIcon AddCharacterIconMsg
@@ -76,6 +78,7 @@ type Msg
     | ChangeTmpDice String
     | CloseModal ModalType
     | ShowModal ModalType
+    | ShowAttackModal Int
 
 type ModalType
     = AttackModal

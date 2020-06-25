@@ -5434,7 +5434,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Model$init = function (_v0) {
 	return _Utils_Tuple2(
-		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterList: _List_Nil, damage: '', dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpdice: '1W6+0'},
+		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterId: 0, characterList: _List_Nil, damage: 0, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpdice: '1W6+0'},
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Model$MyDrop1Msg = function (a) {
@@ -7567,7 +7567,8 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							enemy: A3($elm$core$Array$set, index, _new, model.enemy)
+							enemy: A3($elm$core$Array$set, index, _new, model.enemy),
+							showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'UpdateTmp':
@@ -7602,6 +7603,7 @@ var $author$project$Main$update = F2(
 						model,
 						{
 							enemy: A2($elm_community$array_extra$Array$Extra$removeAt, index, model.enemy),
+							showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden,
 							showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$shown
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -7617,7 +7619,12 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{damage: newDamage}),
+						{
+							damage: A2(
+								$elm$core$Maybe$withDefault,
+								0,
+								$elm$core$String$toInt(newDamage))
+						}),
 					$elm$core$Platform$Cmd$none);
 			case 'ChangeTmpDice':
 				var newTmpDice = msg.a;
@@ -7672,8 +7679,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							damage: $elm$core$String$fromInt(
-								A2($author$project$FightingTool$damageCalc, intList, model.bonusDamage)),
+							damage: A2($author$project$FightingTool$damageCalc, intList, model.bonusDamage),
 							dieFaces: intList
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -7771,6 +7777,13 @@ var $author$project$Main$update = F2(
 								{showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$shown}),
 							$elm$core$Platform$Cmd$none);
 				}
+			case 'ShowAttackModal':
+				var id = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{characterId: id, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$shown}),
+					$elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
@@ -7778,7 +7791,6 @@ var $author$project$Main$update = F2(
 var $author$project$Model$TabMsg = function (a) {
 	return {$: 'TabMsg', a: a};
 };
-var $author$project$Model$AttackModal = {$: 'AttackModal'};
 var $author$project$Model$CustomEnemy = {$: 'CustomEnemy'};
 var $author$project$Model$ShowModal = function (a) {
 	return {$: 'ShowModal', a: a};
@@ -8495,63 +8507,9 @@ var $author$project$FightingTool$deathAlert = function (model) {
 var $author$project$Model$RemoveEnemy = function (a) {
 	return {$: 'RemoveEnemy', a: a};
 };
-var $author$project$Model$CharacterDeath = function (a) {
-	return {$: 'CharacterDeath', a: a};
+var $author$project$Model$ShowAttackModal = function (a) {
+	return {$: 'ShowAttackModal', a: a};
 };
-var $author$project$Model$DoNothing = {$: 'DoNothing'};
-var $author$project$Model$UpdateEnemy = F2(
-	function (a, b) {
-		return {$: 'UpdateEnemy', a: a, b: b};
-	});
-var $elm$core$Array$getHelp = F3(
-	function (shift, index, tree) {
-		getHelp:
-		while (true) {
-			var pos = $elm$core$Array$bitMask & (index >>> shift);
-			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
-			if (_v0.$ === 'SubTree') {
-				var subTree = _v0.a;
-				var $temp$shift = shift - $elm$core$Array$shiftStep,
-					$temp$index = index,
-					$temp$tree = subTree;
-				shift = $temp$shift;
-				index = $temp$index;
-				tree = $temp$tree;
-				continue getHelp;
-			} else {
-				var values = _v0.a;
-				return A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, values);
-			}
-		}
-	});
-var $elm$core$Array$get = F2(
-	function (index, _v0) {
-		var len = _v0.a;
-		var startShift = _v0.b;
-		var tree = _v0.c;
-		var tail = _v0.d;
-		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? $elm$core$Maybe$Nothing : ((_Utils_cmp(
-			index,
-			$elm$core$Array$tailIndex(len)) > -1) ? $elm$core$Maybe$Just(
-			A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, tail)) : $elm$core$Maybe$Just(
-			A3($elm$core$Array$getHelp, startShift, index, tree)));
-	});
-var $author$project$FightingTool$attack = F3(
-	function (model, id, damage) {
-		var _v0 = A2($elm$core$Array$get, id, model.enemy);
-		if (_v0.$ === 'Just') {
-			var _v1 = _v0.a;
-			var name = _v1.a;
-			var health = _v1.b;
-			var armor = _v1.c;
-			return (_Utils_cmp(damage, armor) > 0) ? ((((health - damage) + armor) <= 0) ? $author$project$Model$CharacterDeath(id) : A2(
-				$author$project$Model$UpdateEnemy,
-				id,
-				A3($author$project$Model$Enemy, name, (health - damage) + armor, armor))) : $author$project$Model$DoNothing;
-		} else {
-			return $author$project$Model$DoNothing;
-		}
-	});
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring = function (a) {
 	return {$: 'Coloring', a: a};
 };
@@ -8645,7 +8603,7 @@ var $author$project$FightingTool$displayCharacters = F2(
 												_List_fromArray(
 													[
 														$elm$html$Html$Events$onClick(
-														A3($author$project$FightingTool$attack, model, i, 5))
+														$author$project$Model$ShowAttackModal(i))
 													]))
 											]),
 										_List_fromArray(
@@ -9235,6 +9193,7 @@ var $rundis$elm_bootstrap$Bootstrap$Table$th = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Table$Th(
 			{children: children, options: options});
 	});
+var $author$project$Model$AttackModal = {$: 'AttackModal'};
 var $author$project$Model$ChangeDamage = function (a) {
 	return {$: 'ChangeDamage', a: a};
 };
@@ -9244,7 +9203,79 @@ var $author$project$Model$ChangeTmpDice = function (a) {
 var $author$project$Model$DiceAndSlice = function (a) {
 	return {$: 'DiceAndSlice', a: a};
 };
+var $author$project$Model$CharacterDeath = function (a) {
+	return {$: 'CharacterDeath', a: a};
+};
+var $author$project$Model$DoNothing = {$: 'DoNothing'};
+var $author$project$Model$UpdateEnemy = F2(
+	function (a, b) {
+		return {$: 'UpdateEnemy', a: a, b: b};
+	});
+var $elm$core$Array$getHelp = F3(
+	function (shift, index, tree) {
+		getHelp:
+		while (true) {
+			var pos = $elm$core$Array$bitMask & (index >>> shift);
+			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (_v0.$ === 'SubTree') {
+				var subTree = _v0.a;
+				var $temp$shift = shift - $elm$core$Array$shiftStep,
+					$temp$index = index,
+					$temp$tree = subTree;
+				shift = $temp$shift;
+				index = $temp$index;
+				tree = $temp$tree;
+				continue getHelp;
+			} else {
+				var values = _v0.a;
+				return A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, values);
+			}
+		}
+	});
+var $elm$core$Array$get = F2(
+	function (index, _v0) {
+		var len = _v0.a;
+		var startShift = _v0.b;
+		var tree = _v0.c;
+		var tail = _v0.d;
+		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? $elm$core$Maybe$Nothing : ((_Utils_cmp(
+			index,
+			$elm$core$Array$tailIndex(len)) > -1) ? $elm$core$Maybe$Just(
+			A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, tail)) : $elm$core$Maybe$Just(
+			A3($elm$core$Array$getHelp, startShift, index, tree)));
+	});
+var $author$project$FightingTool$attack = F3(
+	function (model, id, damage) {
+		var _v0 = A2($elm$core$Array$get, id, model.enemy);
+		if (_v0.$ === 'Just') {
+			var _v1 = _v0.a;
+			var name = _v1.a;
+			var health = _v1.b;
+			var armor = _v1.c;
+			return (_Utils_cmp(damage, armor) > 0) ? ((((health - damage) + armor) <= 0) ? $author$project$Model$CharacterDeath(id) : A2(
+				$author$project$Model$UpdateEnemy,
+				id,
+				A3($author$project$Model$Enemy, name, (health - damage) + armor, armor))) : $author$project$Model$CloseModal($author$project$Model$AttackModal);
+		} else {
+			return $author$project$Model$DoNothing;
+		}
+	});
 var $elm$html$Html$input = _VirtualDom_node('input');
+var $rundis$elm_bootstrap$Bootstrap$General$Internal$LG = {$: 'LG'};
+var $rundis$elm_bootstrap$Bootstrap$Modal$large = function (_v0) {
+	var conf = _v0.a;
+	var options = conf.options;
+	return $rundis$elm_bootstrap$Bootstrap$Modal$Config(
+		_Utils_update(
+			conf,
+			{
+				options: _Utils_update(
+					options,
+					{
+						modalSize: $elm$core$Maybe$Just($rundis$elm_bootstrap$Bootstrap$General$Internal$LG)
+					})
+			}));
+};
 var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
@@ -9287,7 +9318,20 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 				A3(
 					$rundis$elm_bootstrap$Bootstrap$Modal$footer,
 					_List_Nil,
-					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									A3($author$project$FightingTool$attack, model, model.characterId, model.damage))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Schaden zufügen')
+								]))
+						]),
 					A3(
 						$rundis$elm_bootstrap$Bootstrap$Modal$body,
 						_List_Nil,
@@ -9320,7 +9364,8 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 									[
 										$elm$html$Html$Attributes$type_('number'),
 										$elm$html$Html$Attributes$name('Damage'),
-										$elm$html$Html$Attributes$placeholder(model.damage),
+										$elm$html$Html$Attributes$placeholder(
+										$elm$core$String$fromInt(model.damage)),
 										$elm$html$Html$Events$onInput($author$project$Model$ChangeDamage)
 									]),
 								_List_Nil)
@@ -9335,7 +9380,7 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 							A2(
 								$rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick,
 								true,
-								$rundis$elm_bootstrap$Bootstrap$Modal$small(
+								$rundis$elm_bootstrap$Bootstrap$Modal$large(
 									$rundis$elm_bootstrap$Bootstrap$Modal$config(
 										$author$project$Model$CloseModal($author$project$Model$AttackModal))))))))
 			]));
@@ -10179,22 +10224,6 @@ var $author$project$FightingTool$body = function (model) {
 				$author$project$FightingTool$viewCustomEnemyModal(model),
 				$author$project$FightingTool$deathAlert(model),
 				$author$project$FightingTool$viewAttackModal(model),
-				A2(
-				$rundis$elm_bootstrap$Bootstrap$Button$button,
-				_List_fromArray(
-					[
-						$rundis$elm_bootstrap$Bootstrap$Button$outlineSuccess,
-						$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick(
-								$author$project$Model$ShowModal($author$project$Model$AttackModal))
-							]))
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Angriff')
-					])),
 				A2(
 				$rundis$elm_bootstrap$Bootstrap$Button$button,
 				_List_fromArray(

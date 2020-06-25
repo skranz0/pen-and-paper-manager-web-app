@@ -17,6 +17,8 @@ import Random
 --our Modules
 import Model exposing (..)
 --import Main exposing (update)
+import Model exposing (Msg(..))
+import Model exposing (ModalType(..))
 
 body : Model -> Html Msg
 body model =
@@ -38,10 +40,6 @@ body model =
         , viewCustomEnemyModal model
         , deathAlert model
         , viewAttackModal model
-        , Button.button
-            [ Button.outlineSuccess
-            , Button.attrs [ onClick (ShowModal AttackModal) ] ]
-            [ text "Angriff"]
         , Button.button
             [ Button.outlineSuccess
             , Button.attrs [ onClick (ShowModal CustomEnemy) ] ]
@@ -73,7 +71,7 @@ viewAttackModal : Model -> Html Msg
 viewAttackModal model = 
     div []
         [ Modal.config (CloseModal AttackModal)
-            |> Modal.small
+            |> Modal.large
             |> Modal.hideOnBackdropClick True
             |> Modal.h3 [] [ text "Angriff" ]
             |> Modal.body [] 
@@ -83,15 +81,17 @@ viewAttackModal model =
                     , Attr.placeholder model.dice 
                     , Html.Events.onInput ChangeTmpDice
                     ]  []
-                , Html.button [ Html.Events.onClick (DiceAndSlice model.tmpdice) ] [ text "Schaden würfeln" ]
+                , Html.button [ onClick (DiceAndSlice model.tmpdice) ] [ text "Schaden würfeln" ]
                 , Html.input
                     [ Attr.type_ "number"
                     , Attr.name "Damage"
-                    , Attr.placeholder model.damage
+                    , Attr.placeholder <| String.fromInt model.damage
                     , Html.Events.onInput ChangeDamage
                     ] [ ]
                 ]
-            |> Modal.footer [] []
+            |> Modal.footer [] 
+                [ Html.button [ onClick <| attack model model.characterId model.damage] [ text "Schaden zufügen" ]
+                ]
             |> Modal.view model.showAttackModal
         ]
 
@@ -177,7 +177,7 @@ displayCharacters model chars =
                 , Table.td[]
                     [ Button.button 
                         [ Button.success
-                        , Button.attrs [onClick <| attack model i 5 ] ] 
+                        , Button.attrs [onClick <| ShowAttackModal i ] ] 
                         [ text "Angriff"]
                     ]
                 , Table.td[]
@@ -200,7 +200,7 @@ attack model id damage =
                 else
                     UpdateEnemy id <| Enemy name (health - damage + armor) armor
             else
-                DoNothing -- see, it IS necessary
+                CloseModal AttackModal -- see, it IS necessary
         Nothing -> DoNothing
 
 setDice : String -> List String
