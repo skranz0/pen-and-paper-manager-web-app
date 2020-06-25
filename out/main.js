@@ -7527,7 +7527,9 @@ var $author$project$Main$update = F2(
 			case 'LoadEnemy':
 				var enemy = msg.a;
 				return _Utils_Tuple2(
-					model,
+					_Utils_update(
+						model,
+						{showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
 					$elm$http$Http$get(
 						{
 							expect: A2($elm$http$Http$expectJson, $author$project$Model$EnemyLoaded, $author$project$FightingTool$parseEnemy),
@@ -7584,7 +7586,8 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							enemy: A2($elm$core$Array$push, _char, model.enemy)
+							enemy: A2($elm$core$Array$push, _char, model.enemy),
+							showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'RemoveEnemy':
@@ -7801,6 +7804,8 @@ var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
 var $rundis$elm_bootstrap$Bootstrap$Button$attrs = function (attrs_) {
 	return $rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs(attrs_);
 };
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Block = {$: 'Block'};
+var $rundis$elm_bootstrap$Bootstrap$Button$block = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Block;
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$core$Maybe$andThen = F2(
 	function (callback, maybeValue) {
@@ -7985,6 +7990,18 @@ var $rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 			$rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(options),
 			children);
 	});
+var $rundis$elm_bootstrap$Bootstrap$Table$CellAttr = function (a) {
+	return {$: 'CellAttr', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$cellAttr = function (attr_) {
+	return $rundis$elm_bootstrap$Bootstrap$Table$CellAttr(attr_);
+};
+var $elm$html$Html$Attributes$colspan = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'colspan',
+		$elm$core$String$fromInt(n));
+};
 var $author$project$Model$CloseModal = function (a) {
 	return {$: 'CloseModal', a: a};
 };
@@ -8639,11 +8656,9 @@ var $author$project$FightingTool$displayCharacters = F2(
 	});
 var $rundis$elm_bootstrap$Bootstrap$Table$Hover = {$: 'Hover'};
 var $rundis$elm_bootstrap$Bootstrap$Table$hover = $rundis$elm_bootstrap$Bootstrap$Table$Hover;
-var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined = function (a) {
-	return {$: 'Outlined', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Button$outlineSuccess = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
-	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined($rundis$elm_bootstrap$Bootstrap$Internal$Button$Success));
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Light = {$: 'Light'};
+var $rundis$elm_bootstrap$Bootstrap$Button$light = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Light));
 var $rundis$elm_bootstrap$Bootstrap$Table$THead = function (a) {
 	return {$: 'THead', a: a};
 };
@@ -8868,12 +8883,6 @@ var $rundis$elm_bootstrap$Bootstrap$Table$maybeWrapResponsive = F2(
 				[table_])) : table_;
 	});
 var $elm$core$Basics$not = _Basics_not;
-var $rundis$elm_bootstrap$Bootstrap$Table$CellAttr = function (a) {
-	return {$: 'CellAttr', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Table$cellAttr = function (attr_) {
-	return $rundis$elm_bootstrap$Bootstrap$Table$CellAttr(attr_);
-};
 var $elm$html$Html$Attributes$scope = $elm$html$Html$Attributes$stringProperty('scope');
 var $rundis$elm_bootstrap$Bootstrap$Table$addScopeIfTh = function (cell) {
 	if (cell.$ === 'Th') {
@@ -9261,21 +9270,6 @@ var $author$project$FightingTool$attack = F3(
 		}
 	});
 var $elm$html$Html$input = _VirtualDom_node('input');
-var $rundis$elm_bootstrap$Bootstrap$General$Internal$LG = {$: 'LG'};
-var $rundis$elm_bootstrap$Bootstrap$Modal$large = function (_v0) {
-	var conf = _v0.a;
-	var options = conf.options;
-	return $rundis$elm_bootstrap$Bootstrap$Modal$Config(
-		_Utils_update(
-			conf,
-			{
-				options: _Utils_update(
-					options,
-					{
-						modalSize: $elm$core$Maybe$Just($rundis$elm_bootstrap$Bootstrap$General$Internal$LG)
-					})
-			}));
-};
 var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
@@ -9380,9 +9374,8 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 							A2(
 								$rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick,
 								true,
-								$rundis$elm_bootstrap$Bootstrap$Modal$large(
-									$rundis$elm_bootstrap$Bootstrap$Modal$config(
-										$author$project$Model$CloseModal($author$project$Model$AttackModal))))))))
+								$rundis$elm_bootstrap$Bootstrap$Modal$config(
+									$author$project$Model$CloseModal($author$project$Model$AttackModal)))))))
 			]));
 };
 var $author$project$Model$AddEnemy = function (a) {
@@ -9412,6 +9405,11 @@ var $rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem = F2(
 					attributes),
 				children));
 	});
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$DropToDir = function (a) {
+	return {$: 'DropToDir', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$Dropright = {$: 'Dropright'};
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropRight = $rundis$elm_bootstrap$Bootstrap$Dropdown$DropToDir($rundis$elm_bootstrap$Bootstrap$Dropdown$Dropright);
 var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropDir = function (maybeDir) {
 	var toAttrs = function (dir) {
 		return _List_fromArray(
@@ -9993,7 +9991,8 @@ var $author$project$FightingTool$dropdownMenu = function (model) {
 									$elm$html$Html$text('Waldschrat')
 								]))
 						]),
-					options: _List_Nil,
+					options: _List_fromArray(
+						[$rundis$elm_bootstrap$Bootstrap$Dropdown$dropRight]),
 					toggleButton: A2(
 						$rundis$elm_bootstrap$Bootstrap$Dropdown$toggle,
 						_List_fromArray(
@@ -10028,6 +10027,7 @@ var $author$project$FightingTool$viewCustomEnemyModal = function (model) {
 						_List_fromArray(
 							[
 								$author$project$FightingTool$dropdownMenu(model),
+								A2($elm$html$Html$br, _List_Nil, _List_Nil),
 								A2(
 								$elm$html$Html$label,
 								_List_fromArray(
@@ -10164,9 +10164,8 @@ var $author$project$FightingTool$viewCustomEnemyModal = function (model) {
 					A2(
 						$rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick,
 						true,
-						$rundis$elm_bootstrap$Bootstrap$Modal$small(
-							$rundis$elm_bootstrap$Bootstrap$Modal$config(
-								$author$project$Model$CloseModal($author$project$Model$CustomEnemy))))))));
+						$rundis$elm_bootstrap$Bootstrap$Modal$config(
+							$author$project$Model$CloseModal($author$project$Model$CustomEnemy)))))));
 };
 var $author$project$FightingTool$body = function (model) {
 	return A2(
@@ -10186,7 +10185,44 @@ var $author$project$FightingTool$body = function (model) {
 							tbody: A2(
 								$rundis$elm_bootstrap$Bootstrap$Table$tbody,
 								_List_Nil,
-								A2($author$project$FightingTool$displayCharacters, model, model.enemy)),
+								_Utils_ap(
+									A2($author$project$FightingTool$displayCharacters, model, model.enemy),
+									_List_fromArray(
+										[
+											A2(
+											$rundis$elm_bootstrap$Bootstrap$Table$tr,
+											_List_Nil,
+											_List_fromArray(
+												[
+													A2(
+													$rundis$elm_bootstrap$Bootstrap$Table$td,
+													_List_fromArray(
+														[
+															$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+															$elm$html$Html$Attributes$colspan(10))
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$rundis$elm_bootstrap$Bootstrap$Button$button,
+															_List_fromArray(
+																[
+																	$rundis$elm_bootstrap$Bootstrap$Button$light,
+																	$rundis$elm_bootstrap$Bootstrap$Button$block,
+																	$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Events$onClick(
+																			$author$project$Model$ShowModal($author$project$Model$CustomEnemy))
+																		]))
+																]),
+															_List_fromArray(
+																[
+																	$elm$html$Html$text('+')
+																]))
+														]))
+												]))
+										]))),
 							thead: $rundis$elm_bootstrap$Bootstrap$Table$simpleThead(
 								_List_fromArray(
 									[
@@ -10217,29 +10253,27 @@ var $author$project$FightingTool$body = function (model) {
 										_List_fromArray(
 											[
 												$elm$html$Html$text('RS')
+											])),
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Table$th,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text(' ')
+											])),
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Table$th,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text(' ')
 											]))
 									]))
 						})
 					])),
 				$author$project$FightingTool$viewCustomEnemyModal(model),
 				$author$project$FightingTool$deathAlert(model),
-				$author$project$FightingTool$viewAttackModal(model),
-				A2(
-				$rundis$elm_bootstrap$Bootstrap$Button$button,
-				_List_fromArray(
-					[
-						$rundis$elm_bootstrap$Bootstrap$Button$outlineSuccess,
-						$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick(
-								$author$project$Model$ShowModal($author$project$Model$CustomEnemy))
-							]))
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Gegner')
-					]))
+				$author$project$FightingTool$viewAttackModal(model)
 			]));
 };
 var $rundis$elm_bootstrap$Bootstrap$Tab$Config = function (a) {

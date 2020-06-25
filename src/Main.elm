@@ -23,7 +23,7 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         LoadEnemy enemy ->
-            ( model
+            ( {model | showCustomEnemy = Modal.hidden }
             , Http.get
                 { url = "./res/"++enemy++".json" -- These are the files for the enemies from the DSA handbook
                 , expect =
@@ -53,7 +53,7 @@ update msg model =
             )
 
         AddEnemy char ->
-            ( {model | enemy = Array.push char model.enemy }
+            ( {model | enemy = Array.push char model.enemy , showCustomEnemy = Modal.hidden}
             , Cmd.none
             )
 

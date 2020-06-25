@@ -31,21 +31,30 @@ body model =
                     , Table.th [] [ text "Name" ]
                     , Table.th [] [ text "LeP" ]
                     , Table.th [] [ text "RS"]
+                    , Table.th [] [ text " "]
+                    , Table.th [] [ text " "]
                     ]
                 , tbody =
                     Table.tbody []
-                        (displayCharacters model model.enemy )
+                        (displayCharacters model model.enemy ++ 
+                        [Table.tr [] 
+                            [ Table.td[Table.cellAttr <| Attr.colspan 10] -- naja um sicher zu gehen
+                                [ Button.button 
+                                    [ Button.light
+                                    , Button.block
+                                    , Button.attrs [onClick <| ShowModal CustomEnemy ] 
+                                    ]
+                                    [ text "+"]
+                                ] 
+                            ] 
+                        ]  
+                        ) 
                 }
             ]
         , viewCustomEnemyModal model
         , deathAlert model
         , viewAttackModal model
-        , Button.button
-            [ Button.outlineSuccess
-            , Button.attrs [ onClick (ShowModal CustomEnemy) ] ]
-            [ text "Gegner"]
         ]
-
 
 header : Html Msg
 header =
@@ -71,7 +80,6 @@ viewAttackModal : Model -> Html Msg
 viewAttackModal model = 
     div []
         [ Modal.config (CloseModal AttackModal)
-            |> Modal.large
             |> Modal.hideOnBackdropClick True
             |> Modal.h3 [] [ text "Angriff" ]
             |> Modal.body [] 
@@ -104,12 +112,12 @@ viewCustomEnemyModal model =
     It will probably be put in a modal in the future.
 -}
     Modal.config (CloseModal CustomEnemy)
-        |> Modal.small
         |> Modal.hideOnBackdropClick True
         |> Modal.h3 [] [ text "Gewonnen ☠" ]
         |> Modal.body [] [ 
             div []
                 [ dropdownMenu model
+                , Html.br [] []
                 , Html.label [Attr.for "name"] [text "Name"]
                 , Html.input [Attr.type_ "text", Attr.id "name", Attr.name "name", Html.Events.onInput 
                     (\n -> 
@@ -234,7 +242,7 @@ dropdownMenu model =
     div []
         [ Dropdown.dropdown
             model.myDrop1State
-            { options = [ ]
+            { options = [ Dropdown.dropRight ]
             , toggleMsg = MyDrop1Msg
             , toggleButton =
                 Dropdown.toggle [ Button.primary ] [ text "Gegner" ]
