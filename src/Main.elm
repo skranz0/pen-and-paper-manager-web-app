@@ -16,12 +16,14 @@ import Array.Extra as Array
 import DungeonMap exposing (dungeonMapView)
 import FightingTool exposing (..)
 import Model exposing (..)
+import Model exposing (ModalType(..))
+import Model exposing (Msg(..))
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         LoadEnemy enemy ->
-            ( model
+            ( {model | showCustomEnemy = Modal.hidden }
             , Http.get
                 { url = "./res/"++enemy++".json" -- These are the files for the enemies from the DSA handbook
                 , expect =
@@ -41,7 +43,7 @@ update msg model =
                     ( { model | showString = "Error:  " }, Cmd.none )
 
         UpdateEnemy index new ->
-            ( { model | enemy = Array.set index new model.enemy }
+            ( { model | enemy = Array.set index new model.enemy, showAttackModal = Modal.hidden }
             , Cmd.none
             )
 
@@ -57,7 +59,7 @@ update msg model =
                     )
 
         AddEnemy char ->
-            ( {model | enemy = Array.push char model.enemy }
+            ( {model | enemy = Array.push char model.enemy , showCustomEnemy = Modal.hidden}
             , Cmd.none
             )
 
@@ -65,18 +67,14 @@ update msg model =
             ( { model | enemy = Array.removeAt index model.enemy }
             , Cmd.none
             )
-
-        CharacterDeath index ->
-            (
-                { model | deathAlertVisibility = Modal.shown
+        
+        CharacterDeath index -> 
+            ( 
+                { model | showDeathAlert = Modal.shown 
                 , enemy = Array.removeAt index model.enemy
+                , showAttackModal = Modal.hidden
                 }
                 , Cmd.none
-            )
-
-        CloseDeathAlert ->
-            ( { model | deathAlertVisibility = Modal.hidden }
-            , Cmd.none
             )
 
         MyDrop1Msg state ->
@@ -85,7 +83,7 @@ update msg model =
             )
 
         ChangeDamage newDamage -> -- Will eventually be useless after refactor, I just have to get a better feel for let and in
-            ( { model | damage = newDamage }
+            ( { model | damage = Maybe.withDefault 0 (String.toInt newDamage ) }
             , Cmd.none
             )
 
@@ -111,7 +109,7 @@ update msg model =
         NewRandomList intList ->
             ( { model |
                 dieFaces = intList ,
-                damage = String.fromInt (damageCalc intList model.bonusDamage)
+                damage = damageCalc intList model.bonusDamage
                 }
             , Cmd.none
             )
@@ -133,6 +131,31 @@ update msg model =
 
                 MouseDraw s ->
                     ( { model | addCharacterIcon = DrawIcon s }, Cmd.none )
+
+        CloseModal modalType->
+            case modalType of
+                AttackModal -> 
+                    ( { model | showAttackModal = Modal.hidden } , Cmd.none )
+                
+                DeathAlert ->
+                    ( { model | showDeathAlert = Modal.hidden } , Cmd.none )
+
+                CustomEnemy ->
+                    ( { model | showCustomEnemy = Modal.hidden } , Cmd.none )
+
+        ShowModal modalType->
+            case modalType of
+                AttackModal -> 
+                    ( { model | showAttackModal = Modal.shown } , Cmd.none )
+                
+                DeathAlert ->
+                    ( { model | showDeathAlert = Modal.shown } , Cmd.none )
+                    
+                CustomEnemy ->
+                    ( { model | showCustomEnemy = Modal.shown } , Cmd.none )
+        
+        ShowAttackModal id->
+            ( { model | showAttackModal = Modal.shown , characterId = id} , Cmd.none )
 
         DoNothing ->
             (model, Cmd.none)

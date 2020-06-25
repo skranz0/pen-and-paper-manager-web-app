@@ -2,7 +2,7 @@
 module FightingTool exposing (..)
 
 --elm Packages
-import Html exposing (Html, div, text, h1, h2)
+import Html exposing (Html, div, text, h1, h2, p)
 import Html.Attributes as Attr exposing (class)
 import Html.Events exposing (onClick)
 import Json.Decode
@@ -16,13 +16,15 @@ import Random
 
 --our Modules
 import Model exposing (..)
-import Model exposing (..)
+--import Main exposing (update)
+import Model exposing (Msg(..))
+import Model exposing (ModalType(..))
+import Html.Events exposing (onClick)
 
 body : Model -> Html Msg
 body model =
     div []
-        [ dropdownMenu model
-        , div []
+        [ div []
             [ Table.table
                 { options = [ Table.striped, Table.hover ]
                 , thead =  Table.simpleThead
@@ -30,31 +32,30 @@ body model =
                     , Table.th [] [ text "Name" ]
                     , Table.th [] [ text "RS" ]
                     , Table.th [] [ text "LeP"]
+                    , Table.th [] [ text " "]
+                    , Table.th [] [ text " "]
                     ]
                 , tbody =
                     Table.tbody []
-                        (displayCharacters model model.enemy )
+                        (displayCharacters model model.enemy ++ 
+                        [Table.tr [] 
+                            [ Table.td[Table.cellAttr <| Attr.colspan 10] -- naja um sicher zu gehen
+                                [ Button.button 
+                                    [ Button.light
+                                    , Button.block
+                                    , Button.attrs [onClick <| ShowModal CustomEnemy ] 
+                                    ]
+                                    [ text "+"]
+                                ] 
+                            ] 
+                        ]  
+                        ) 
                 }
             ]
-        , Html.input
-            [ Attr.type_ "number"
-            , Attr.name "Damage"
-            , Attr.placeholder model.damage
-            , Html.Events.onInput ChangeDamage
-            ] [ ]
-        , Html.input 
-            [ Attr.type_ "text"
-            , Attr.name "Dice" 
-            , Attr.placeholder model.dice 
-            , Html.Events.onInput ChangeTmpDice
-            ]  []
-        , Html.button [ Html.Events.onClick (DiceAndSlice model.tmpdice) ] [ text "Schaden würfeln" ]
-        , customEnemy model
-        , Html.hr [] []
-        , customHero model
+        , viewCustomEnemyModal model
         , deathAlert model
+        , viewAttackModal model
         ]
-
 
 header : Html Msg
 header =
@@ -75,6 +76,57 @@ footer =
                 , Html.p [] [ text "Einführung in das World Wide Web" ]
                 ]
             ]
+
+viewAttackModal : Model -> Html Msg
+viewAttackModal model = 
+    div []
+        [ Modal.config (CloseModal AttackModal)
+            |> Modal.hideOnBackdropClick True
+            |> Modal.h3 [] [ text "Angriff" ]
+            |> Modal.body [] 
+                [ Html.input 
+                    [ Attr.type_ "text"
+                    , Attr.name "Dice" 
+                    , Attr.placeholder model.dice 
+                    , Html.Events.onInput ChangeTmpDice
+                    ]  []
+                , Html.button [ onClick (DiceAndSlice model.tmpdice) ] [ text "Schaden würfeln" ]
+                , Html.input
+                    [ Attr.type_ "number"
+                    , Attr.name "Damage"
+                    , Attr.placeholder <| String.fromInt model.damage
+                    , Html.Events.onInput ChangeDamage
+                    ] [ ]
+                ]
+            |> Modal.footer [] 
+                [ Html.button [ onClick <| attack model model.characterId model.damage] [ text "Schaden zufügen" ]
+                ]
+            |> Modal.view model.showAttackModal
+        ]
+
+viewCustomEnemyModal : Model -> Html Msg
+viewCustomEnemyModal model =
+{-
+    This method is super messed up and I really don't want to explain it here.
+    If there's is time somewhere I may do an overhaul, but for now it
+    just works the way it is.
+    It will probably be put in a modal in the future.
+-}
+    Modal.config (CloseModal CustomEnemy)
+        |> Modal.hideOnBackdropClick True
+        |> Modal.h3 [] [ text "Gewonnen ☠" ]
+        |> Modal.body [] [ 
+            div []
+                [ dropdownMenu model
+                , Html.br [] []
+                , customEnemy model
+                , Html.br [] []
+                , customHero model
+                ]
+        ]    
+        |> Modal.footer [] []
+        |> Modal.view model.showCustomEnemy
+    
 
 parseEnemy : Json.Decode.Decoder Character
 parseEnemy =
@@ -105,7 +157,7 @@ displayCharacters model chars =
                         , Table.td[]
                             [ Button.button 
                                 [ Button.success
-                                , Button.attrs [onClick <| attack model i 5 ] ] 
+                                , Button.attrs [onClick <| ShowAttackModal i]]
                                 [ text "Angriff"]
                             ]
                         , Table.td[]
@@ -166,26 +218,20 @@ randomListGenerator rt mf =
 
 deathAlert : Model -> Html Msg
 deathAlert model =
-    Modal.config CloseDeathAlert
+    Modal.config (CloseModal DeathAlert)
         |> Modal.small
         |> Modal.hideOnBackdropClick True
         |> Modal.h3 [] [ text "Gewonnen ☠" ]
         |> Modal.body [] [ Html.p [] [ text "Das Monster ist besiegt!"] ]
-        |> Modal.footer []
-            [ Button.button
-                [ Button.outlinePrimary
-                , Button.attrs [ onClick CloseDeathAlert ]
-                ]
-                [ text "Schließen" ]
-            ]
-        |> Modal.view model.deathAlertVisibility
+        |> Modal.footer [] []
+        |> Modal.view model.showDeathAlert
 
 dropdownMenu : Model -> Html Msg
 dropdownMenu model =
     div []
         [ Dropdown.dropdown
             model.myDrop1State
-            { options = [ ]
+            { options = [ Dropdown.dropRight ]
             , toggleMsg = MyDrop1Msg
             , toggleButton =
                 Dropdown.toggle [ Button.primary ] [ text "Gegner" ]
@@ -261,7 +307,7 @@ customEnemy model =
         , Html.button 
             [ Html.Events.onClick <| AddEnemy model.tmpEnemy ] 
             [ text "Hinzufügen" ]
-        ]
+        ] 
 
 customHero : Model -> Html Msg
 customHero model =
