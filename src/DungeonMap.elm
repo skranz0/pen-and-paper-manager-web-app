@@ -53,7 +53,7 @@ characters2rows chars =
     List.indexedMap
         (\i c ->
             case c of
-                Enemy name health _ ->
+                Enemy name health _ _ ->
                     Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon "0" "0")))) ]
                         [ Table.td [] [Html.text <| String.fromInt (i+1)]
                         , Table.td [] [Html.text name]
