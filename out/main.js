@@ -10743,7 +10743,7 @@ var $author$project$FightingTool$viewCustomEnemyModal = function (model) {
 					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$text('Gewonnen ☠')
+							$elm$html$Html$text('Charakter hinzufügen')
 						]),
 					A2(
 						$rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick,

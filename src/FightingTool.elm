@@ -128,7 +128,7 @@ viewCustomEnemyModal model =
     in 
         Modal.config (CloseModal CustomEnemy)
             |> Modal.hideOnBackdropClick True
-            |> Modal.h3 [] [ text "Gewonnen ☠" ]
+            |> Modal.h3 [] [ text "Charakter hinzufügen" ]
             |> Modal.body [] [ 
                 div []
                     [ dropdownMenu model
