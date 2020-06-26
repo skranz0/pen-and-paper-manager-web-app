@@ -99,6 +99,12 @@ type Character
     | Hero String Int
     --     name   RS
 
+type Status
+    = Pain
+    | Poison
+    | Burn
+    | Drunk
+
 type AddCharacterIconState
     = DrawingInactive
     | DrawIcon CharacterIcon
