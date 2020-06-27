@@ -7818,6 +7818,10 @@ var $author$project$Main$update = F2(
 var $author$project$Model$TabMsg = function (a) {
 	return {$: 'TabMsg', a: a};
 };
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $author$project$About$aboutView = function (model) {
+	return A2($elm$html$Html$div, _List_Nil, _List_Nil);
+};
 var $author$project$Model$CustomEnemy = {$: 'CustomEnemy'};
 var $author$project$Model$ShowModal = function (a) {
 	return {$: 'ShowModal', a: a};
@@ -8146,7 +8150,6 @@ var $elm$virtual_dom$VirtualDom$attribute = F2(
 			_VirtualDom_noJavaScriptOrHtmlUri(value));
 	});
 var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
-var $elm$html$Html$div = _VirtualDom_node('div');
 var $rundis$elm_bootstrap$Bootstrap$Modal$StartClose = {$: 'StartClose'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$getCloseMsg = function (config_) {
 	var _v0 = config_.withAnimation;
@@ -12647,7 +12650,7 @@ var $author$project$Main$view = function (model) {
 						[
 							$rundis$elm_bootstrap$Bootstrap$Tab$item(
 							{
-								id: 'tabItem1',
+								id: 'tabOverview',
 								link: A2(
 									$rundis$elm_bootstrap$Bootstrap$Tab$link,
 									_List_fromArray(
@@ -12666,7 +12669,7 @@ var $author$project$Main$view = function (model) {
 							}),
 							$rundis$elm_bootstrap$Bootstrap$Tab$item(
 							{
-								id: 'tabItem2',
+								id: 'tabMap',
 								link: A2(
 									$rundis$elm_bootstrap$Bootstrap$Tab$link,
 									_List_fromArray(
@@ -12681,6 +12684,25 @@ var $author$project$Main$view = function (model) {
 									_List_fromArray(
 										[
 											$author$project$DungeonMap$dungeonMapView(model)
+										]))
+							}),
+							$rundis$elm_bootstrap$Bootstrap$Tab$item(
+							{
+								id: 'tabAbout',
+								link: A2(
+									$rundis$elm_bootstrap$Bootstrap$Tab$link,
+									_List_fromArray(
+										[$rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$mt3]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Regeln')
+										])),
+								pane: A2(
+									$rundis$elm_bootstrap$Bootstrap$Tab$pane,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$author$project$About$aboutView(model)
 										]))
 							})
 						]),
