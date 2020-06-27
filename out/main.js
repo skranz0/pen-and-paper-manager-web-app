@@ -8612,7 +8612,7 @@ var $author$project$FightingTool$displayCharacters = F2(
 									_List_fromArray(
 										[
 											$elm$html$Html$text(
-											$elm$core$String$fromInt(i))
+											$elm$core$String$fromInt(i + 1))
 										])),
 									A2(
 									$rundis$elm_bootstrap$Bootstrap$Table$td,
@@ -8694,7 +8694,7 @@ var $author$project$FightingTool$displayCharacters = F2(
 									_List_fromArray(
 										[
 											$elm$html$Html$text(
-											$elm$core$String$fromInt(i))
+											$elm$core$String$fromInt(i + 1))
 										])),
 									A2(
 									$rundis$elm_bootstrap$Bootstrap$Table$td,
@@ -9366,8 +9366,101 @@ var $author$project$FightingTool$attack = F3(
 			return $author$project$Model$DoNothing;
 		}
 	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Number = {$: 'Number'};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Input = function (a) {
+	return {$: 'Input', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Type = function (a) {
+	return {$: 'Type', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$create = F2(
+	function (tipe, options) {
+		return $rundis$elm_bootstrap$Bootstrap$Form$Input$Input(
+			{
+				options: A2(
+					$elm$core$List$cons,
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$Type(tipe),
+					options)
+			});
+	});
 var $elm$html$Html$input = _VirtualDom_node('input');
-var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$applyModifier = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'Size':
+				var size_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						size: $elm$core$Maybe$Just(size_)
+					});
+			case 'Id':
+				var id_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						id: $elm$core$Maybe$Just(id_)
+					});
+			case 'Type':
+				var tipe = modifier.a;
+				return _Utils_update(
+					options,
+					{tipe: tipe});
+			case 'Disabled':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{disabled: val});
+			case 'Value':
+				var value_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						value: $elm$core$Maybe$Just(value_)
+					});
+			case 'Placeholder':
+				var value_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						placeholder: $elm$core$Maybe$Just(value_)
+					});
+			case 'OnInput':
+				var onInput_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						onInput: $elm$core$Maybe$Just(onInput_)
+					});
+			case 'Validation':
+				var validation_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						validation: $elm$core$Maybe$Just(validation_)
+					});
+			case 'Readonly':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{readonly: val});
+			case 'PlainText':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{plainText: val});
+			default:
+				var attrs_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Text = {$: 'Text'};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$defaultOptions = {attributes: _List_Nil, disabled: false, id: $elm$core$Maybe$Nothing, onInput: $elm$core$Maybe$Nothing, placeholder: $elm$core$Maybe$Nothing, plainText: false, readonly: false, size: $elm$core$Maybe$Nothing, tipe: $rundis$elm_bootstrap$Bootstrap$Form$Input$Text, validation: $elm$core$Maybe$Nothing, value: $elm$core$Maybe$Nothing};
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
@@ -9396,8 +9489,135 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $elm$html$Html$Attributes$readonly = $elm$html$Html$Attributes$boolProperty('readOnly');
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$sizeAttribute = function (size) {
+	return A2(
+		$elm$core$Maybe$map,
+		function (s) {
+			return $elm$html$Html$Attributes$class('form-control-' + s);
+		},
+		$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(size));
+};
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$typeAttribute = function (inputType) {
+	return $elm$html$Html$Attributes$type_(
+		function () {
+			switch (inputType.$) {
+				case 'Text':
+					return 'text';
+				case 'Password':
+					return 'password';
+				case 'DatetimeLocal':
+					return 'datetime-local';
+				case 'Date':
+					return 'date';
+				case 'Month':
+					return 'month';
+				case 'Time':
+					return 'time';
+				case 'Week':
+					return 'week';
+				case 'Number':
+					return 'number';
+				case 'Email':
+					return 'email';
+				case 'Url':
+					return 'url';
+				case 'Search':
+					return 'search';
+				case 'Tel':
+					return 'tel';
+				default:
+					return 'color';
+			}
+		}());
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$FormInternal$validationToString = function (validation) {
+	if (validation.$ === 'Success') {
+		return 'is-valid';
+	} else {
+		return 'is-invalid';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$validationAttribute = function (validation) {
+	return $elm$html$Html$Attributes$class(
+		$rundis$elm_bootstrap$Bootstrap$Form$FormInternal$validationToString(validation));
+};
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$toAttributes = function (modifiers) {
+	var options = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Form$Input$applyModifier, $rundis$elm_bootstrap$Bootstrap$Form$Input$defaultOptions, modifiers);
+	return _Utils_ap(
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class(
+				options.plainText ? 'form-control-plaintext' : 'form-control'),
+				$elm$html$Html$Attributes$disabled(options.disabled),
+				$elm$html$Html$Attributes$readonly(options.readonly || options.plainText),
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$typeAttribute(options.tipe)
+			]),
+		_Utils_ap(
+			A2(
+				$elm$core$List$filterMap,
+				$elm$core$Basics$identity,
+				_List_fromArray(
+					[
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$id, options.id),
+						A2($elm$core$Maybe$andThen, $rundis$elm_bootstrap$Bootstrap$Form$Input$sizeAttribute, options.size),
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$value, options.value),
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$placeholder, options.placeholder),
+						A2($elm$core$Maybe$map, $elm$html$Html$Events$onInput, options.onInput),
+						A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Form$Input$validationAttribute, options.validation)
+					])),
+			options.attributes));
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$view = function (_v0) {
+	var options = _v0.a.options;
+	return A2(
+		$elm$html$Html$input,
+		$rundis$elm_bootstrap$Bootstrap$Form$Input$toAttributes(options),
+		_List_Nil);
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$input = F2(
+	function (tipe, options) {
+		return $rundis$elm_bootstrap$Bootstrap$Form$Input$view(
+			A2($rundis$elm_bootstrap$Bootstrap$Form$Input$create, tipe, options));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$number = $rundis$elm_bootstrap$Bootstrap$Form$Input$input($rundis$elm_bootstrap$Bootstrap$Form$Input$Number);
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$OnInput = function (a) {
+	return {$: 'OnInput', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$onInput = function (toMsg) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Input$OnInput(toMsg);
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Dark = {$: 'Dark'};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined = function (a) {
+	return {$: 'Outlined', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Button$outlineDark = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined($rundis$elm_bootstrap$Bootstrap$Internal$Button$Dark));
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Placeholder = function (a) {
+	return {$: 'Placeholder', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder = function (value_) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Input$Placeholder(value_);
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$text = $rundis$elm_bootstrap$Bootstrap$Form$Input$input($rundis$elm_bootstrap$Bootstrap$Form$Input$Text);
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Value = function (a) {
+	return {$: 'Value', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$value = function (value_) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Input$Value(value_);
+};
 var $author$project$FightingTool$viewAttackModal = function (model) {
+	var insideInput = function () {
+		var _v0 = model.damage;
+		if (!_v0) {
+			return $rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder('Schaden');
+		} else {
+			return $rundis$elm_bootstrap$Bootstrap$Form$Input$value(
+				$elm$core$String$fromInt(model.damage));
+		}
+	}();
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
@@ -9412,11 +9632,16 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 					_List_fromArray(
 						[
 							A2(
-							$elm$html$Html$button,
+							$rundis$elm_bootstrap$Bootstrap$Button$button,
 							_List_fromArray(
 								[
-									$elm$html$Html$Events$onClick(
-									A3($author$project$FightingTool$attack, model, model.characterId, model.damage))
+									$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+									_List_fromArray(
+										[
+											$elm$html$Html$Events$onClick(
+											A3($author$project$FightingTool$attack, model, model.characterId, model.damage))
+										])),
+									$rundis$elm_bootstrap$Bootstrap$Button$success
 								]),
 							_List_fromArray(
 								[
@@ -9428,38 +9653,35 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								A2(
-								$elm$html$Html$input,
+								$rundis$elm_bootstrap$Bootstrap$Form$Input$text(
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$type_('text'),
-										$elm$html$Html$Attributes$name('Dice'),
-										$elm$html$Html$Attributes$placeholder(model.dice),
-										$elm$html$Html$Events$onInput($author$project$Model$ChangeTmpDice)
-									]),
-								_List_Nil),
+										$rundis$elm_bootstrap$Bootstrap$Form$Input$value(model.dice),
+										$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder('1W6+0'),
+										$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput($author$project$Model$ChangeTmpDice)
+									])),
 								A2(
-								$elm$html$Html$button,
+								$rundis$elm_bootstrap$Bootstrap$Button$button,
 								_List_fromArray(
 									[
-										$elm$html$Html$Events$onClick(
-										$author$project$Model$DiceAndSlice(model.tmpdice))
+										$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick(
+												$author$project$Model$DiceAndSlice(model.tmpdice))
+											])),
+										$rundis$elm_bootstrap$Bootstrap$Button$outlineDark
 									]),
 								_List_fromArray(
 									[
 										$elm$html$Html$text('Schaden würfeln')
 									])),
-								A2(
-								$elm$html$Html$input,
+								$rundis$elm_bootstrap$Bootstrap$Form$Input$number(
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$type_('number'),
-										$elm$html$Html$Attributes$name('Damage'),
-										$elm$html$Html$Attributes$placeholder(
-										$elm$core$String$fromInt(model.damage)),
-										$elm$html$Html$Events$onInput($author$project$Model$ChangeDamage)
-									]),
-								_List_Nil)
+										insideInput,
+										$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput($author$project$Model$ChangeDamage)
+									]))
 							]),
 						A3(
 							$rundis$elm_bootstrap$Bootstrap$Modal$h3,
@@ -9560,9 +9782,17 @@ var $author$project$Model$AddEnemy = function (a) {
 var $author$project$Model$UpdateTmp = function (a) {
 	return {$: 'UpdateTmp', a: a};
 };
-var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
-var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$label = _VirtualDom_node('label');
+var $rundis$elm_bootstrap$Bootstrap$Form$label = F2(
+	function (attributes, children) {
+		return A2(
+			$elm$html$Html$label,
+			A2(
+				$elm$core$List$cons,
+				$elm$html$Html$Attributes$class('form-control-label'),
+				attributes),
+			children);
+	});
 var $author$project$FightingTool$customEnemy = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -9570,23 +9800,16 @@ var $author$project$FightingTool$customEnemy = function (model) {
 		_List_fromArray(
 			[
 				A2(
-				$elm$html$Html$label,
+				$rundis$elm_bootstrap$Bootstrap$Form$label,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$for('name')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Name')
+						$elm$html$Html$text('Name:')
 					])),
-				A2(
-				$elm$html$Html$input,
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$text(
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$type_('text'),
-						$elm$html$Html$Attributes$id('name'),
-						$elm$html$Html$Attributes$name('name'),
-						$elm$html$Html$Events$onInput(
+						$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(
 						function (n) {
 							var _v0 = function () {
 								var _v1 = model.tmpEnemy;
@@ -9603,27 +9826,19 @@ var $author$project$FightingTool$customEnemy = function (model) {
 							return $author$project$Model$UpdateTmp(
 								A3($author$project$Model$Enemy, n, health, armor));
 						})
-					]),
-				_List_Nil),
+					])),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
-				$elm$html$Html$label,
+				$rundis$elm_bootstrap$Bootstrap$Form$label,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$for('health')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('LeP')
+						$elm$html$Html$text('LeP:')
 					])),
-				A2(
-				$elm$html$Html$input,
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$number(
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$type_('number'),
-						$elm$html$Html$Attributes$id('health'),
-						$elm$html$Html$Attributes$name('health'),
-						$elm$html$Html$Events$onInput(
+						$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(
 						function (h) {
 							var _v2 = function () {
 								var _v3 = model.tmpEnemy;
@@ -9647,27 +9862,19 @@ var $author$project$FightingTool$customEnemy = function (model) {
 										$elm$core$String$toInt(h)),
 									armor));
 						})
-					]),
-				_List_Nil),
+					])),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
-				$elm$html$Html$label,
+				$rundis$elm_bootstrap$Bootstrap$Form$label,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$for('armor')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('RS')
+						$elm$html$Html$text('RS:')
 					])),
-				A2(
-				$elm$html$Html$input,
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$number(
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$type_('number'),
-						$elm$html$Html$Attributes$id('armor'),
-						$elm$html$Html$Attributes$name('armor'),
-						$elm$html$Html$Events$onInput(
+						$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(
 						function (a) {
 							var _v4 = function () {
 								var _v5 = model.tmpEnemy;
@@ -9691,8 +9898,7 @@ var $author$project$FightingTool$customEnemy = function (model) {
 										0,
 										$elm$core$String$toInt(a))));
 						})
-					]),
-				_List_Nil),
+					])),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
 				$rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -9719,23 +9925,16 @@ var $author$project$FightingTool$customHero = function (model) {
 		_List_fromArray(
 			[
 				A2(
-				$elm$html$Html$label,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$for('name')
-					]),
+				$rundis$elm_bootstrap$Bootstrap$Form$label,
+				_List_Nil,
 				_List_fromArray(
 					[
 						$elm$html$Html$text('Name')
 					])),
-				A2(
-				$elm$html$Html$input,
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$text(
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$type_('text'),
-						$elm$html$Html$Attributes$id('name'),
-						$elm$html$Html$Attributes$name('name'),
-						$elm$html$Html$Events$onInput(
+						$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(
 						function (n) {
 							var armor = function () {
 								var _v0 = model.tmpHero;
@@ -9749,27 +9948,19 @@ var $author$project$FightingTool$customHero = function (model) {
 							return $author$project$Model$UpdateTmp(
 								A2($author$project$Model$Hero, n, armor));
 						})
-					]),
-				_List_Nil),
+					])),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
-				$elm$html$Html$label,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$for('armor')
-					]),
+				$rundis$elm_bootstrap$Bootstrap$Form$label,
+				_List_Nil,
 				_List_fromArray(
 					[
 						$elm$html$Html$text('RS')
 					])),
-				A2(
-				$elm$html$Html$input,
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$number(
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$type_('number'),
-						$elm$html$Html$Attributes$id('armor'),
-						$elm$html$Html$Attributes$name('armor'),
-						$elm$html$Html$Events$onInput(
+						$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(
 						function (a) {
 							var name = function () {
 								var _v1 = model.tmpHero;
@@ -9789,8 +9980,7 @@ var $author$project$FightingTool$customHero = function (model) {
 										0,
 										$elm$core$String$toInt(a))));
 						})
-					]),
-				_List_Nil),
+					])),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
 				$rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -10531,7 +10721,9 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Radio$applyModifier = F2(
 		}
 	});
 var $rundis$elm_bootstrap$Bootstrap$Form$Radio$defaultOptions = {attributes: _List_Nil, checked: false, custom: false, disabled: false, id: $elm$core$Maybe$Nothing, inline: false, name: $elm$core$Maybe$Nothing, onClick: $elm$core$Maybe$Nothing, validation: $elm$core$Maybe$Nothing};
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$Attributes$checked = $elm$html$Html$Attributes$boolProperty('checked');
+var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $rundis$elm_bootstrap$Bootstrap$Form$Radio$toAttributes = function (options) {
 	return _Utils_ap(
 		_List_fromArray(
