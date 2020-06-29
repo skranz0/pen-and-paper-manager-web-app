@@ -331,7 +331,7 @@ customEnemy model =
     let 
         (ddName, ddHealth, ddArmor) =
             case model.tmpEnemy of
-                Enemy n h a ->              
+                Enemy n h _ a _ ->              
                     case n of
                         "none" -> (Input.placeholder "", Input.placeholder "", Input.placeholder "")
                         _ -> (Input.value n, Input.value <| String.fromInt h, Input.value <| String.fromInt a)
@@ -343,22 +343,22 @@ customEnemy model =
             , Input.text [Input.onInput 
                 (\n -> 
                     let 
-                    {health, maxHealth, armor, status} =
-                        case model.tmpEnemy of
-                            Enemy _ h m a s ->
-                                { health = h
-                                , maxHealth = m
-                                , armor = a
-                                , status = s
-                                }
-                            _ -> 
-                                { health = 0
-                                , maxHealth = 0
-                                , armor = 0
-                                , status = []
-                                }
-                in 
-                    UpdateTmp <| Enemy n health maxHealth armor status
+                        {health, maxHealth, armor, status} =
+                            case model.tmpEnemy of
+                                Enemy _ h m a s ->
+                                    { health = h
+                                    , maxHealth = m
+                                    , armor = a
+                                    , status = s
+                                    }
+                                _ -> 
+                                    { health = 0
+                                    , maxHealth = 0
+                                    , armor = 0
+                                    , status = []
+                                    }
+                        in 
+                            UpdateTmp <| Enemy n health maxHealth armor status
                 )
                 , ddName
                 ]       
@@ -367,12 +367,12 @@ customEnemy model =
             , Input.number [Input.onInput
                 (\h -> 
                     let 
-                    (name, armor, status) =
-                        case model.tmpEnemy of
-                            Enemy n _ _ a s -> (n,a,s)
-                            _ -> ("",0,[])
-                in 
-                    UpdateTmp <| Enemy name (Maybe.withDefault 1 <| String.toInt h) (Maybe.withDefault 1 <| String.toInt h) armor status
+                        (name, armor, status) =
+                            case model.tmpEnemy of
+                                Enemy n _ _ a s -> (n,a,s)
+                                _ -> ("",0,[])
+                    in 
+                        UpdateTmp <| Enemy name (Maybe.withDefault 1 <| String.toInt h) (Maybe.withDefault 1 <| String.toInt h) armor status
                 )
                 , ddHealth
                 ]
@@ -381,22 +381,22 @@ customEnemy model =
             , Input.number [Input.onInput
                 (\a -> 
                     let 
-                    {name, health, maxHealth, status} =
-                        case model.tmpEnemy of
-                            Enemy n h m _ s -> 
-                                { name = n
-                                , health = h
-                                , maxHealth = m
-                                , status = s
-                                }
-                            _ -> 
-                                { name = ""
-                                , health = 0
-                                , maxHealth = 0
-                                , status = []
-                                }
-                in 
-                    UpdateTmp <| Enemy name health maxHealth (Maybe.withDefault 0 <| String.toInt a) status
+                        {name, health, maxHealth, status} =
+                            case model.tmpEnemy of
+                                Enemy n h m _ s -> 
+                                    { name = n
+                                    , health = h
+                                    , maxHealth = m
+                                    , status = s
+                                    }
+                                _ -> 
+                                    { name = ""
+                                    , health = 0
+                                    , maxHealth = 0
+                                    , status = []
+                                    }
+                    in 
+                        UpdateTmp <| Enemy name health maxHealth (Maybe.withDefault 0 <| String.toInt a) status
                 )
                 , ddArmor
                 ]
