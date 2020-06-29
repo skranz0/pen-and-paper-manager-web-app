@@ -38,19 +38,19 @@ body model =
                     ]
                 , tbody =
                     Table.tbody []
-                        (displayCharacters model model.enemy ++ 
-                        [Table.tr [] 
+                        (displayCharacters model model.enemy ++
+                        [Table.tr []
                             [ Table.td[Table.cellAttr <| Attr.colspan 10] -- naja um sicher zu gehen
-                                [ Button.button 
+                                [ Button.button
                                     [ Button.light
                                     , Button.block
-                                    , Button.attrs [onClick <| ShowModal CustomEnemy ] 
+                                    , Button.attrs [onClick <| ShowModal CustomEnemy ]
                                     ]
                                     [ text "+"]
-                                ] 
-                            ] 
-                        ]  
-                        ) 
+                                ]
+                            ]
+                        ]
+                        )
                 }
             ]
         , viewCustomEnemyModal model
@@ -79,39 +79,39 @@ footer =
             ]
 
 viewAttackModal : Model -> Html Msg
-viewAttackModal model = 
+viewAttackModal model =
     let
-        insideInput = 
+        insideInput =
             case model.damage of
                 0 -> Input.placeholder "Schaden"
                 _ -> Input.value <| String.fromInt model.damage
     in
-        
+
     div []
         [ Modal.config (CloseModal AttackModal)
             |> Modal.hideOnBackdropClick True
             |> Modal.h3 [] [ text "Angriff" ]
-            |> Modal.body [] 
+            |> Modal.body []
                 [ Input.text
                     [ Input.value model.dice
                     , Input.placeholder "1W6+0"
                     , Input.onInput ChangeTmpDice
-                    ] 
-                , Button.button 
+                    ]
+                , Button.button
                     [ Button.attrs [onClick (DiceAndSlice model.tmpdice) ]
                     , Button.outlineDark
                     ]
                     [ text "Schaden würfeln" ]
                 , Input.number
-                    [ insideInput 
+                    [ insideInput
                     , Input.onInput ChangeDamage
                     ]
                 ]
-            |> Modal.footer [] 
-                [ Button.button 
+            |> Modal.footer []
+                [ Button.button
                     [ Button.attrs [onClick <| attack model model.characterId model.damage]
                     , Button.success
-                    ] 
+                    ]
                     [ text "Schaden zufügen" ]
                 ]
             |> Modal.view model.showAttackModal
@@ -126,21 +126,21 @@ viewCustomEnemyModal model =
     It will probably be put in a modal in the future.
 -}
     let
-        enemybool =  
+        enemybool =
             case model.enemyHero of
                "Enemy" ->  True
                _ -> False
-        herobool = 
+        herobool =
             case model.enemyHero of
                "Hero" ->  True
                _ -> False
 
 
-    in 
+    in
         Modal.config (CloseModal CustomEnemy)
             |> Modal.hideOnBackdropClick True
             |> Modal.h3 [] [ text "Charakter hinzufügen" ]
-            |> Modal.body [] [ 
+            |> Modal.body [] [
                 div []
                     [ dropdownMenu model
                     , Html.br [] []
@@ -150,28 +150,28 @@ viewCustomEnemyModal model =
                         |> Fieldset.children
                             ( Radio.radioList "EnemyHero"
                                 [ Radio.create
-                                    [ Radio.id "enemy" 
+                                    [ Radio.id "enemy"
                                     , Radio.onClick <| SwitchEnemyHero "Enemy"
                                     , Radio.checked enemybool
                                     ] "Gegner"
-                                , Radio.create 
-                                    [ Radio.id "hero" 
+                                , Radio.create
+                                    [ Radio.id "hero"
                                     , Radio.onClick <| SwitchEnemyHero "Hero"
                                     , Radio.checked herobool
                                     ] "Held"
                                 ]
                             )
                         |> Fieldset.view
-                    , if model.enemyHero == "Hero" 
+                    , if model.enemyHero == "Hero"
                         then customHero model
-                        else if model.enemyHero == "Enemy" 
+                        else if model.enemyHero == "Enemy"
                             then customEnemy model
                             else p [][]
-                    ] 
-            ]    
+                    ]
+            ]
             |> Modal.footer [] []
             |> Modal.view model.showCustomEnemy
-    
+
 
 parseEnemy : Json.Decode.Decoder Character
 parseEnemy =
@@ -200,15 +200,15 @@ displayCharacters model chars =
                         , Table.td[][text <| String.fromInt armor]
                         , Table.td[][text <| String.fromInt health]
                         , Table.td[]
-                            [ Button.button 
+                            [ Button.button
                                 [ Button.success
                                 , Button.attrs [onClick <| ShowAttackModal i]]
                                 [ text "Angriff"]
                             ]
                         , Table.td[]
-                            [ Button.button 
+                            [ Button.button
                                 [ Button.danger
-                                , Button.attrs [onClick <| RemoveEnemy i ] ] 
+                                , Button.attrs [onClick <| RemoveEnemy i ] ]
                                 [ text "Löschen"]
                             ]
                         ]
@@ -219,12 +219,12 @@ displayCharacters model chars =
                         , Table.td[][text <| String.fromInt armor]
                         , Table.td[][text <| ""]
                         , Table.td[]
-                            [ 
+                            [
                             ]
                         , Table.td[]
-                            [ Button.button 
+                            [ Button.button
                                 [ Button.danger
-                                , Button.attrs [onClick <| RemoveEnemy i ] ] 
+                                , Button.attrs [onClick <| RemoveEnemy i ] ]
                                 [ text "Löschen"]
                             ]
                         ]
@@ -246,7 +246,7 @@ attack model id damage =
         Nothing -> DoNothing
 
 setDice : String -> List String
-setDice set = 
+setDice set =
     List.take 1  (String.split "W" set) ++ String.split "+" (Maybe.withDefault "6+0" <| List.head (List.drop 1 (String.split "W" set)))
 
 damageCalc : (List Int) -> Int -> Int
@@ -312,40 +312,40 @@ customEnemy model =
     just works the way it is.
     It will probably be put in a modal in the future.
 -}
-    let 
+    let
         (ddName, ddHealth, ddArmor) =
             case model.tmpEnemy of
-                Enemy n h a ->              
+                Enemy n h a ->
                     case n of
                         "none" -> (Input.placeholder "", Input.placeholder "", Input.placeholder "")
                         _ -> (Input.value n, Input.value <| String.fromInt h, Input.value <| String.fromInt a)
-                Hero _ _ -> (Input.placeholder "", Input.placeholder "", Input.placeholder "") 
-        
-    in  
+                Hero _ _ -> (Input.placeholder "", Input.placeholder "", Input.placeholder "")
+
+    in
         div []
             [ Form.label [] [text "Name:"]
-            , Input.text [Input.onInput 
-                (\n -> 
-                    let 
+            , Input.text [Input.onInput
+                (\n ->
+                    let
                         (health, armor) =
                             case model.tmpEnemy of
                                 Enemy _ h a -> (h,a)
                                 _ -> (0,0)
-                    in 
+                    in
                         UpdateTmp <| Enemy n health armor
                 )
                 , ddName
-                ]       
+                ]
             , Html.br [] []
             , Form.label [] [text "LeP:"]
             , Input.number [Input.onInput
-                (\h -> 
-                    let 
+                (\h ->
+                    let
                         (name, armor) =
                             case model.tmpEnemy of
                                 Enemy n _ a -> (n,a)
                                 _ -> ("",0)
-                    in 
+                    in
                         UpdateTmp <| Enemy name (Maybe.withDefault 1 <| String.toInt h) armor
                 )
                 , ddHealth
@@ -353,53 +353,53 @@ customEnemy model =
             , Html.br [] []
             , Form.label [] [text "RS:"]
             , Input.number [Input.onInput
-                (\a -> 
-                    let 
+                (\a ->
+                    let
                         (name, health) =
                             case model.tmpEnemy of
                                 Enemy n h _ -> (n,h)
                                 _ -> ("",0)
-                    in 
+                    in
                         UpdateTmp <| Enemy name health (Maybe.withDefault 0 <| String.toInt a)
                 )
                 , ddArmor
                 ]
             , Html.br [] []
-            , Button.button 
+            , Button.button
                 [ Button.success
-                , Button.attrs [ onClick <| AddEnemy model.tmpEnemy  ] 
+                , Button.attrs [ onClick <| AddEnemy model.tmpEnemy  ]
                 ] [ text "Hinzufügen"]
-            ] 
+            ]
 
 customHero : Model -> Html Msg
 customHero model =
     div []
         [ Form.label [] [text "Name"]
-        , Input.text [Input.onInput 
-            (\n -> 
-                let 
+        , Input.text [Input.onInput
+            (\n ->
+                let
                     armor =
                         case model.tmpHero of
                             Hero _ a -> a
                             _ -> 0
-                in 
+                in
                     UpdateTmp <| Hero n armor
             )]
         , Html.br [] []
         , Form.label [] [text "RS"]
         , Input.number [Input.onInput
-            (\a -> 
-                let 
+            (\a ->
+                let
                     name =
                         case model.tmpHero of
                             Hero n _ -> n
                             _ -> ""
-                in 
+                in
                     UpdateTmp <| Hero name (Maybe.withDefault 0 <| String.toInt a)
             )]
         , Html.br [] []
-        , Button.button 
+        , Button.button
             [ Button.success
-            , Button.attrs [ onClick <| AddEnemy model.tmpHero  ] 
+            , Button.attrs [ onClick <| AddEnemy model.tmpHero  ]
             ] [ text "Hinzufügen"]
         ]

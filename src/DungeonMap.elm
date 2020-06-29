@@ -2,9 +2,9 @@
 module DungeonMap exposing (..)
 
 --elm Packages
-import Html exposing (Html, div)
-import Html.Attributes exposing (class)
-import Html.Events
+import Html exposing (Html, div, text)
+import Html.Attributes exposing (class, style)
+import Html.Events exposing (onClick)
 import Svg
 import Svg.Attributes as SvgAtt
 import Svg.Events
@@ -12,7 +12,9 @@ import Json.Decode
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Table as Table
+import Bootstrap.Button as Button
 import Array exposing (Array)
+import File
 
 
 --our Modules
@@ -73,18 +75,25 @@ characters2rows chars =
 
 dungeonMap_Svg : Model -> Html Msg
 dungeonMap_Svg model =
-    div [ class "container" ]
-          [ Html.figure [ class "image" ]
-                   [ Svg.svg
-                        ([ SvgAtt.width "100%", SvgAtt.viewBox "0 0 800 600", SvgAtt.version "1.1" ]
-                            ++ mouseDrawEvents model.addCharacterIcon
-                        )
-                        ([ Svg.image [ SvgAtt.width "800", SvgAtt.height "600", SvgAtt.title "DungeonMap", SvgAtt.xlinkHref "src/dungeons/library_of_ice_lily.png" ] [] ]
-                            ++ svgIconList model
-                            ++ newIconsView model.addCharacterIcon
-                        )
-                   ]
-          ]
+    div [ class "container"
+        , style "border" (if model.hover then "6px dashed purple" else "6px dashed #ccc")
+        , hijackOn "dragenter" (Json.Decode.succeed DragEnter)
+        , hijackOn "dragover" (Json.Decode.succeed DragEnter)
+        , hijackOn "dragleave" (Json.Decode.succeed DragLeave)
+        , hijackOn "drop" dropDecoder
+        ]
+        [ Button.button [ Button.onClick Pick ] [ text "Upload Map" ]
+        , Html.figure [ class "image" ]
+           [ Svg.svg
+                ([ SvgAtt.width "100%", SvgAtt.viewBox "0 0 800 600", SvgAtt.version "1.1" ]
+                    ++ mouseDrawEvents model.addCharacterIcon
+                )
+                ([ Svg.image [ SvgAtt.width "800", SvgAtt.height "600", SvgAtt.title "DungeonMap", SvgAtt.xlinkHref (Maybe.withDefault "" (List.head model.previews)) ] [] ]
+                    ++ svgIconList model
+                    ++ newIconsView model.addCharacterIcon
+                )
+           ]
+        ]
 
 stopBubbling : msg -> Svg.Attribute msg
 stopBubbling msg =
@@ -249,3 +258,17 @@ newIconsView addCharacterIcon =
 
         _ ->
             []
+
+dropDecoder : Json.Decode.Decoder Msg
+dropDecoder =
+  Json.Decode.at ["dataTransfer","files"] (Json.Decode.oneOrMore GotFiles File.decoder)
+
+
+hijackOn : String -> Json.Decode.Decoder msg -> Html.Attribute msg
+hijackOn event decoder =
+  Html.Events.preventDefaultOn event (Json.Decode.map hijack decoder)
+
+
+hijack : msg -> (msg, Bool)
+hijack msg =
+  (msg, True)
