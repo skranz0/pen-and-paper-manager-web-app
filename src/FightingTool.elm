@@ -10,8 +10,10 @@ import Bootstrap.Modal as Modal
 import Bootstrap.Button as Button
 import Bootstrap.Dropdown as Dropdown
 import Bootstrap.Table as Table
+import Bootstrap.Form as Form
 import Bootstrap.Form.Radio as Radio
 import Bootstrap.Form.Fieldset as Fieldset
+import Bootstrap.Form.Input as Input
 import Array
 import Array.Extra as Array
 import Random
@@ -19,9 +21,6 @@ import Random
 --our Modules
 import Model exposing (..)
 --import Main exposing (update)
-import Model exposing (Msg(..))
-import Model exposing (ModalType(..))
-import Html.Events exposing (onClick)
 
 body : Model -> Html Msg
 body model =
@@ -81,27 +80,39 @@ footer =
 
 viewAttackModal : Model -> Html Msg
 viewAttackModal model = 
+    let
+        insideInput = 
+            case model.damage of
+                0 -> Input.placeholder "Schaden"
+                _ -> Input.value <| String.fromInt model.damage
+    in
+        
     div []
         [ Modal.config (CloseModal AttackModal)
             |> Modal.hideOnBackdropClick True
             |> Modal.h3 [] [ text "Angriff" ]
             |> Modal.body [] 
-                [ Html.input 
-                    [ Attr.type_ "text"
-                    , Attr.name "Dice" 
-                    , Attr.placeholder model.dice 
-                    , Html.Events.onInput ChangeTmpDice
-                    ]  []
-                , Html.button [ onClick (DiceAndSlice model.tmpdice) ] [ text "Schaden würfeln" ]
-                , Html.input
-                    [ Attr.type_ "number"
-                    , Attr.name "Damage"
-                    , Attr.placeholder <| String.fromInt model.damage
-                    , Html.Events.onInput ChangeDamage
-                    ] [ ]
+                [ Input.text
+                    [ Input.value model.dice
+                    , Input.placeholder "1W6+0"
+                    , Input.onInput ChangeTmpDice
+                    ] 
+                , Button.button 
+                    [ Button.attrs [onClick (DiceAndSlice model.tmpdice) ]
+                    , Button.outlineDark
+                    ]
+                    [ text "Schaden würfeln" ]
+                , Input.number
+                    [ insideInput 
+                    , Input.onInput ChangeDamage
+                    ]
                 ]
             |> Modal.footer [] 
-                [ Html.button [ onClick <| attack model model.characterId model.damage] [ text "Schaden zufügen" ]
+                [ Button.button 
+                    [ Button.attrs [onClick <| attack model model.characterId model.damage]
+                    , Button.success
+                    ] 
+                    [ text "Schaden zufügen" ]
                 ]
             |> Modal.view model.showAttackModal
         ]
@@ -184,7 +195,7 @@ displayCharacters model chars =
                 case c of
                     Enemy _ _ _ ->
                         Table.tr []
-                        [ Table.td[][text <| String.fromInt i]
+                        [ Table.td[][text <| String.fromInt (i+1)]
                         , Table.td[][text name]
                         , Table.td[][text <| String.fromInt armor]
                         , Table.td[][text <| String.fromInt health]
@@ -203,7 +214,7 @@ displayCharacters model chars =
                         ]
                     Hero _ _ ->
                         Table.tr []
-                        [ Table.td[][text <| String.fromInt i]
+                        [ Table.td[][text <| String.fromInt (i+1) ]
                         , Table.td[][text name]
                         , Table.td[][text <| String.fromInt armor]
                         , Table.td[][text <| ""]
@@ -302,8 +313,8 @@ customEnemy model =
     It will probably be put in a modal in the future.
 -}
     div []
-        [ Html.label [Attr.for "name"] [text "Name"]
-        , Html.input [Attr.type_ "text", Attr.id "name", Attr.name "name", Html.Events.onInput 
+        [ Form.label [] [text "Name:"]
+        , Input.text [Input.onInput 
             (\n -> 
                 let 
                     (health, armor) =
@@ -312,10 +323,11 @@ customEnemy model =
                             _ -> (0,0)
                 in 
                     UpdateTmp <| Enemy n health armor
-            )] []
+            )
+            ] 
         , Html.br [] []
-        , Html.label [Attr.for "health"] [text "LeP"]
-        , Html.input [Attr.type_ "number", Attr.id "health", Attr.name "health", Html.Events.onInput
+        , Form.label [] [text "LeP:"]
+        , Input.number [Input.onInput
             (\h -> 
                 let 
                     (name, armor) =
@@ -324,10 +336,10 @@ customEnemy model =
                             _ -> ("",0)
                 in 
                     UpdateTmp <| Enemy name (Maybe.withDefault 1 <| String.toInt h) armor
-            )] []
+            )]
         , Html.br [] []
-        , Html.label [Attr.for "armor"] [text "RS"]
-        , Html.input [Attr.type_ "number", Attr.id "armor", Attr.name "armor", Html.Events.onInput
+        , Form.label [] [text "RS:"]
+        , Input.number [Input.onInput
             (\a -> 
                 let 
                     (name, health) =
@@ -336,7 +348,7 @@ customEnemy model =
                             _ -> ("",0)
                 in 
                     UpdateTmp <| Enemy name health (Maybe.withDefault 0 <| String.toInt a)
-            )] []
+            )]
         , Html.br [] []
         , Button.button 
             [ Button.success
@@ -347,8 +359,8 @@ customEnemy model =
 customHero : Model -> Html Msg
 customHero model =
     div []
-        [ Html.label [Attr.for "name"] [text "Name"]
-        , Html.input [Attr.type_ "text", Attr.id "name", Attr.name "name", Html.Events.onInput 
+        [ Form.label [] [text "Name"]
+        , Input.text [Input.onInput 
             (\n -> 
                 let 
                     armor =
@@ -357,10 +369,10 @@ customHero model =
                             _ -> 0
                 in 
                     UpdateTmp <| Hero n armor
-            )] []
+            )]
         , Html.br [] []
-        , Html.label [Attr.for "armor"] [text "RS"]
-        , Html.input [Attr.type_ "number", Attr.id "armor", Attr.name "armor", Html.Events.onInput
+        , Form.label [] [text "RS"]
+        , Input.number [Input.onInput
             (\a -> 
                 let 
                     name =
@@ -369,7 +381,7 @@ customHero model =
                             _ -> ""
                 in 
                     UpdateTmp <| Hero name (Maybe.withDefault 0 <| String.toInt a)
-            )] []
+            )]
         , Html.br [] []
         , Button.button 
             [ Button.success
