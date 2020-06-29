@@ -5405,11 +5405,11 @@ var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Model$DrawingInactive = {$: 'DrawingInactive'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$Hide = {$: 'Hide'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$hidden = $rundis$elm_bootstrap$Bootstrap$Modal$Hide;
-var $author$project$Model$Enemy = F4(
-	function (a, b, c, d) {
-		return {$: 'Enemy', a: a, b: b, c: c, d: d};
+var $author$project$Model$Enemy = F5(
+	function (a, b, c, d, e) {
+		return {$: 'Enemy', a: a, b: b, c: c, d: d, e: e};
 	});
-var $author$project$Model$initEnemy = A4($author$project$Model$Enemy, 'none', 0, 0, 0);
+var $author$project$Model$initEnemy = A5($author$project$Model$Enemy, 'none', 0, 0, 0, _List_Nil);
 var $author$project$Model$Hero = F2(
 	function (a, b) {
 		return {$: 'Hero', a: a, b: b};
@@ -6915,15 +6915,17 @@ var $elm$core$List$head = function (list) {
 };
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$int = _Json_decodeInt;
-var $elm$json$Json$Decode$map4 = _Json_map4;
+var $elm$json$Json$Decode$list = _Json_decodeList;
+var $elm$json$Json$Decode$map5 = _Json_map5;
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$FightingTool$parseEnemy = A5(
-	$elm$json$Json$Decode$map4,
+var $author$project$FightingTool$parseEnemy = A6(
+	$elm$json$Json$Decode$map5,
 	$author$project$Model$Enemy,
 	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'health', $elm$json$Json$Decode$int),
 	A2($elm$json$Json$Decode$field, 'health', $elm$json$Json$Decode$int),
-	A2($elm$json$Json$Decode$field, 'armor', $elm$json$Json$Decode$int));
+	A2($elm$json$Json$Decode$field, 'armor', $elm$json$Json$Decode$int),
+	$elm$json$Json$Decode$list($elm$json$Json$Decode$string));
 var $elm$core$Elm$JsArray$push = _JsArray_push;
 var $elm$core$Array$bitMask = 4294967295 >>> (32 - $elm$core$Array$shiftStep);
 var $elm$core$Basics$ge = _Utils_ge;
@@ -8590,16 +8592,18 @@ var $author$project$FightingTool$displayCharacters = function (chars) {
 						var n = c.a;
 						var h = c.b;
 						var a = c.d;
-						return _Utils_Tuple3(n, h, a);
+						var s = c.e;
+						return {armor: a, health: h, name: n, status: s};
 					} else {
 						var n = c.a;
 						var a = c.b;
-						return _Utils_Tuple3(n, 0, a);
+						return {armor: a, health: 0, name: n, status: _List_Nil};
 					}
 				}();
-				var name = _v0.a;
-				var health = _v0.b;
-				var armor = _v0.c;
+				var name = _v0.name;
+				var health = _v0.health;
+				var armor = _v0.armor;
+				var status = _v0.status;
 				if (c.$ === 'Enemy') {
 					return A2(
 						$rundis$elm_bootstrap$Bootstrap$Table$tr,
@@ -8620,6 +8624,14 @@ var $author$project$FightingTool$displayCharacters = function (chars) {
 								_List_fromArray(
 									[
 										$elm$html$Html$text(name)
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										A3($elm$core$List$foldl, $elm$core$Basics$append, '', status))
 									])),
 								A2(
 								$rundis$elm_bootstrap$Bootstrap$Table$td,
@@ -9355,19 +9367,38 @@ var $author$project$FightingTool$attack = F3(
 				var health = _v1.b;
 				var maxHealth = _v1.c;
 				var armor = _v1.d;
+				var status = _v1.e;
 				return (_Utils_cmp(damage, armor) > 0) ? ((((health - damage) + armor) <= 0) ? $author$project$Model$CharacterDeath(id) : ((_Utils_cmp(health - damage, 0.25 * maxHealth) < 1) ? A2(
 					$author$project$Model$UpdateEnemy,
 					id,
-					A4($author$project$Model$Enemy, name + ' Schmerz III', (health - damage) + armor, maxHealth, armor)) : ((_Utils_cmp(health - damage, 0.5 * maxHealth) < 1) ? A2(
+					A5(
+						$author$project$Model$Enemy,
+						name,
+						(health - damage) + armor,
+						maxHealth,
+						armor,
+						A2($elm$core$List$cons, 'I', status))) : ((_Utils_cmp(health - damage, 0.5 * maxHealth) < 1) ? A2(
 					$author$project$Model$UpdateEnemy,
 					id,
-					A4($author$project$Model$Enemy, name + ' Schmerz II', (health - damage) + armor, maxHealth, armor)) : ((_Utils_cmp(health - damage, 0.75 * maxHealth) < 1) ? A2(
+					A5(
+						$author$project$Model$Enemy,
+						name,
+						(health - damage) + armor,
+						maxHealth,
+						armor,
+						A2($elm$core$List$cons, 'I', status))) : ((_Utils_cmp(health - damage, 0.75 * maxHealth) < 1) ? A2(
 					$author$project$Model$UpdateEnemy,
 					id,
-					A4($author$project$Model$Enemy, name + ' Schmerz I', (health - damage) + armor, maxHealth, armor)) : A2(
+					A5(
+						$author$project$Model$Enemy,
+						name,
+						(health - damage) + armor,
+						maxHealth,
+						armor,
+						A2($elm$core$List$cons, 'Schmerz I', status))) : A2(
 					$author$project$Model$UpdateEnemy,
 					id,
-					A4($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor)))))) : $author$project$Model$CloseModal($author$project$Model$AttackModal);
+					A5($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor, status)))))) : $author$project$Model$CloseModal($author$project$Model$AttackModal);
 			} else {
 				var _v2 = _v0.a;
 				return $author$project$Model$DoNothing;
@@ -9604,16 +9635,18 @@ var $author$project$FightingTool$customEnemy = function (model) {
 									var h = _v1.b;
 									var m = _v1.c;
 									var a = _v1.d;
-									return _Utils_Tuple3(h, m, a);
+									var s = _v1.e;
+									return {armor: a, health: h, maxHealth: m, status: s};
 								} else {
-									return _Utils_Tuple3(0, 0, 0);
+									return {armor: 0, health: 0, maxHealth: 0, status: _List_Nil};
 								}
 							}();
-							var health = _v0.a;
-							var maxHealth = _v0.b;
-							var armor = _v0.c;
+							var health = _v0.health;
+							var maxHealth = _v0.maxHealth;
+							var armor = _v0.armor;
+							var status = _v0.status;
 							return $author$project$Model$UpdateTmp(
-								A4($author$project$Model$Enemy, n, health, maxHealth, armor));
+								A5($author$project$Model$Enemy, n, health, maxHealth, armor, status));
 						})
 					]),
 				_List_Nil),
@@ -9642,15 +9675,17 @@ var $author$project$FightingTool$customEnemy = function (model) {
 								if (_v3.$ === 'Enemy') {
 									var n = _v3.a;
 									var a = _v3.d;
-									return _Utils_Tuple2(n, a);
+									var s = _v3.e;
+									return _Utils_Tuple3(n, a, s);
 								} else {
-									return _Utils_Tuple2('', 0);
+									return _Utils_Tuple3('', 0, _List_Nil);
 								}
 							}();
 							var name = _v2.a;
 							var armor = _v2.b;
+							var status = _v2.c;
 							return $author$project$Model$UpdateTmp(
-								A4(
+								A5(
 									$author$project$Model$Enemy,
 									name,
 									A2(
@@ -9661,7 +9696,8 @@ var $author$project$FightingTool$customEnemy = function (model) {
 										$elm$core$Maybe$withDefault,
 										1,
 										$elm$core$String$toInt(h)),
-									armor));
+									armor,
+									status));
 						})
 					]),
 				_List_Nil),
@@ -9691,16 +9727,18 @@ var $author$project$FightingTool$customEnemy = function (model) {
 									var n = _v5.a;
 									var h = _v5.b;
 									var m = _v5.c;
-									return _Utils_Tuple3(n, h, m);
+									var s = _v5.e;
+									return {health: h, maxHealth: m, name: n, status: s};
 								} else {
-									return _Utils_Tuple3('', 0, 0);
+									return {health: 0, maxHealth: 0, name: '', status: _List_Nil};
 								}
 							}();
-							var name = _v4.a;
-							var health = _v4.b;
-							var maxHealth = _v4.c;
+							var name = _v4.name;
+							var health = _v4.health;
+							var maxHealth = _v4.maxHealth;
+							var status = _v4.status;
 							return $author$project$Model$UpdateTmp(
-								A4(
+								A5(
 									$author$project$Model$Enemy,
 									name,
 									health,
@@ -9708,7 +9746,8 @@ var $author$project$FightingTool$customEnemy = function (model) {
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toInt(a))));
+										$elm$core$String$toInt(a)),
+									status));
 						})
 					]),
 				_List_Nil),
@@ -10094,6 +10133,7 @@ var $elm$json$Json$Decode$map3 = _Json_map3;
 var $elm$json$Json$Decode$float = _Json_decodeFloat;
 var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetHeight = A2($elm$json$Json$Decode$field, 'offsetHeight', $elm$json$Json$Decode$float);
 var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetWidth = A2($elm$json$Json$Decode$field, 'offsetWidth', $elm$json$Json$Decode$float);
+var $elm$json$Json$Decode$map4 = _Json_map4;
 var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetLeft = A2($elm$json$Json$Decode$field, 'offsetLeft', $elm$json$Json$Decode$float);
 var $elm$json$Json$Decode$null = _Json_decodeNull;
 var $elm$json$Json$Decode$oneOf = _Json_oneOf;

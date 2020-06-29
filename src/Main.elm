@@ -49,7 +49,7 @@ update msg model =
 
         UpdateTmp new ->
             case new of
-                Enemy _ _ _ _ ->
+                Enemy _ _ _ _ _ ->
                     ( { model | tmpEnemy = new }
                     , Cmd.none
                     )

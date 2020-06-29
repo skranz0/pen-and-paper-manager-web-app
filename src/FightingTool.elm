@@ -164,29 +164,38 @@ viewCustomEnemyModal model =
 
 parseEnemy : Json.Decode.Decoder Character
 parseEnemy =
-    Json.Decode.map4 Enemy
+    Json.Decode.map5 Enemy
         (Json.Decode.field "name" Json.Decode.string)
         (Json.Decode.field "health" Json.Decode.int) -- health and maxHealth have the same value on creation
         (Json.Decode.field "health" Json.Decode.int) 
         (Json.Decode.field "armor" Json.Decode.int)
-
+        (Json.Decode.list <| Json.Decode.string)
 displayCharacters : Array.Array Character -> List (Table.Row Msg) -- show stats of the enemy in a table, will have its glow up later
 displayCharacters chars =
     List.indexedMap
         (\i c ->
             let
-                (name, health, armor) =
+                {name, health, armor, status} =
                     case c of
-                        Enemy n h _ a ->
-                            (n,h,a)
+                        Enemy n h _ a s ->
+                            { name = n
+                            , health = h
+                            , armor = a
+                            , status = s
+                            }
                         Hero n a ->
-                            (n,0,a)
+                            { name = n
+                            , health = 0
+                            , armor = a
+                            , status = []
+                            }
             in
                 case c of
-                    Enemy _ _ _ _ ->
+                    Enemy _ _ _ _ _ ->
                         Table.tr []
                         [ Table.td[][text <| String.fromInt i]
                         , Table.td[][text name]
+                        , Table.td[][text <| List.foldl (++) "" status]
                         , Table.td[][text <| String.fromInt armor]
                         , Table.td[][text <| String.fromInt health]
                         , Table.td[]
@@ -224,18 +233,18 @@ displayCharacters chars =
 attack : Model -> Int -> Int -> Msg
 attack model id damage =
     case Array.get id model.enemy of
-        Just (Enemy name health maxHealth armor) ->
+        Just (Enemy name health maxHealth armor status) ->
             if damage > armor then
                 if health - damage + armor <= 0 then
                     CharacterDeath id
                 else
                     if (toFloat <| health - damage) <= 0.25 * toFloat maxHealth then
-                        UpdateEnemy id <| Enemy (name++" Schmerz III") (health - damage + armor) maxHealth armor
+                        UpdateEnemy id <| Enemy name (health - damage + armor) maxHealth armor ("I"::status)
                     else if (toFloat <| health - damage) <= 0.5 * toFloat maxHealth then
-                        UpdateEnemy id <| Enemy (name++" Schmerz II") (health - damage + armor) maxHealth armor
+                        UpdateEnemy id <| Enemy name (health - damage + armor) maxHealth armor ("I"::status)
                     else if (toFloat <| health - damage) <= 0.75 * toFloat maxHealth then
-                        UpdateEnemy id <| Enemy (name++" Schmerz I") (health - damage + armor) maxHealth armor
-                    else UpdateEnemy id <| Enemy name (health - damage + armor) maxHealth armor 
+                        UpdateEnemy id <| Enemy name (health - damage + armor) maxHealth armor ("Schmerz I"::status)
+                    else UpdateEnemy id <| Enemy name (health - damage + armor) maxHealth armor status
             else
                 CloseModal AttackModal -- see, it IS necessary
         Just (Hero _ _) -> DoNothing
@@ -313,36 +322,56 @@ customEnemy model =
         , Html.input [Attr.type_ "text", Attr.id "name", Attr.name "name", Html.Events.onInput 
             (\n -> 
                 let 
-                    (health, maxHealth, armor) =
+                    {health, maxHealth, armor, status} =
                         case model.tmpEnemy of
-                            Enemy _ h m a -> (h,m,a)
-                            _ -> (0,0,0)
+                            Enemy _ h m a s ->
+                                { health = h
+                                , maxHealth = m
+                                , armor = a
+                                , status = s
+                                }
+                            _ -> 
+                                { health = 0
+                                , maxHealth = 0
+                                , armor = 0
+                                , status = []
+                                }
                 in 
-                    UpdateTmp <| Enemy n health maxHealth armor
+                    UpdateTmp <| Enemy n health maxHealth armor status
             )] []
         , Html.br [] []
         , Html.label [Attr.for "health"] [text "LeP"]
         , Html.input [Attr.type_ "number", Attr.id "health", Attr.name "health", Html.Events.onInput
             (\h -> 
                 let 
-                    (name, armor) =
+                    (name, armor, status) =
                         case model.tmpEnemy of
-                            Enemy n _ _ a -> (n,a)
-                            _ -> ("",0)
+                            Enemy n _ _ a s -> (n,a,s)
+                            _ -> ("",0,[])
                 in 
-                    UpdateTmp <| Enemy name (Maybe.withDefault 1 <| String.toInt h) (Maybe.withDefault 1 <| String.toInt h) armor
+                    UpdateTmp <| Enemy name (Maybe.withDefault 1 <| String.toInt h) (Maybe.withDefault 1 <| String.toInt h) armor status
             )] []
         , Html.br [] []
         , Html.label [Attr.for "armor"] [text "RS"]
         , Html.input [Attr.type_ "number", Attr.id "armor", Attr.name "armor", Html.Events.onInput
             (\a -> 
                 let 
-                    (name, health, maxHealth) =
+                    {name, health, maxHealth, status} =
                         case model.tmpEnemy of
-                            Enemy n h m _ -> (n,h,m)
-                            _ -> ("",0,0)
+                            Enemy n h m _ s -> 
+                                { name = n
+                                , health = h
+                                , maxHealth = m
+                                , status = s
+                                }
+                            _ -> 
+                                { name = ""
+                                , health = 0
+                                , maxHealth = 0
+                                , status = []
+                                }
                 in 
-                    UpdateTmp <| Enemy name health maxHealth (Maybe.withDefault 0 <| String.toInt a)
+                    UpdateTmp <| Enemy name health maxHealth (Maybe.withDefault 0 <| String.toInt a) status
             )] []
         , Html.br [] []
         , Button.button 
