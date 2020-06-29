@@ -312,49 +312,64 @@ customEnemy model =
     just works the way it is.
     It will probably be put in a modal in the future.
 -}
-    div []
-        [ Form.label [] [text "Name:"]
-        , Input.text [Input.onInput 
-            (\n -> 
-                let 
-                    (health, armor) =
-                        case model.tmpEnemy of
-                            Enemy _ h a -> (h,a)
-                            _ -> (0,0)
-                in 
-                    UpdateTmp <| Enemy n health armor
-            )
+    let 
+        (ddName, ddHealth, ddArmor) =
+            case model.tmpEnemy of
+                Enemy n h a ->              
+                    case n of
+                        "none" -> (Input.placeholder "", Input.placeholder "", Input.placeholder "")
+                        _ -> (Input.value n, Input.value <| String.fromInt h, Input.value <| String.fromInt a)
+                Hero _ _ -> (Input.placeholder "", Input.placeholder "", Input.placeholder "") 
+        
+    in  
+        div []
+            [ Form.label [] [text "Name:"]
+            , Input.text [Input.onInput 
+                (\n -> 
+                    let 
+                        (health, armor) =
+                            case model.tmpEnemy of
+                                Enemy _ h a -> (h,a)
+                                _ -> (0,0)
+                    in 
+                        UpdateTmp <| Enemy n health armor
+                )
+                , ddName
+                ]       
+            , Html.br [] []
+            , Form.label [] [text "LeP:"]
+            , Input.number [Input.onInput
+                (\h -> 
+                    let 
+                        (name, armor) =
+                            case model.tmpEnemy of
+                                Enemy n _ a -> (n,a)
+                                _ -> ("",0)
+                    in 
+                        UpdateTmp <| Enemy name (Maybe.withDefault 1 <| String.toInt h) armor
+                )
+                , ddHealth
+                ]
+            , Html.br [] []
+            , Form.label [] [text "RS:"]
+            , Input.number [Input.onInput
+                (\a -> 
+                    let 
+                        (name, health) =
+                            case model.tmpEnemy of
+                                Enemy n h _ -> (n,h)
+                                _ -> ("",0)
+                    in 
+                        UpdateTmp <| Enemy name health (Maybe.withDefault 0 <| String.toInt a)
+                )
+                , ddArmor
+                ]
+            , Html.br [] []
+            , Button.button 
+                [ Button.success
+                , Button.attrs [ onClick <| AddEnemy model.tmpEnemy  ] 
+                ] [ text "Hinzufügen"]
             ] 
-        , Html.br [] []
-        , Form.label [] [text "LeP:"]
-        , Input.number [Input.onInput
-            (\h -> 
-                let 
-                    (name, armor) =
-                        case model.tmpEnemy of
-                            Enemy n _ a -> (n,a)
-                            _ -> ("",0)
-                in 
-                    UpdateTmp <| Enemy name (Maybe.withDefault 1 <| String.toInt h) armor
-            )]
-        , Html.br [] []
-        , Form.label [] [text "RS:"]
-        , Input.number [Input.onInput
-            (\a -> 
-                let 
-                    (name, health) =
-                        case model.tmpEnemy of
-                            Enemy n h _ -> (n,h)
-                            _ -> ("",0)
-                in 
-                    UpdateTmp <| Enemy name health (Maybe.withDefault 0 <| String.toInt a)
-            )]
-        , Html.br [] []
-        , Button.button 
-            [ Button.success
-            , Button.attrs [ onClick <| AddEnemy model.tmpEnemy  ] 
-            ] [ text "Hinzufügen"]
-        ] 
 
 customHero : Model -> Html Msg
 customHero model =

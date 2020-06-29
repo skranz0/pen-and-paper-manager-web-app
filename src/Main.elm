@@ -21,7 +21,7 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         LoadEnemy enemy ->
-            ( {model | showCustomEnemy = Modal.hidden }
+            ( model
             , Http.get
                 { url = "./res/"++enemy++".json" -- These are the files for the enemies from the DSA handbook
                 , expect =
@@ -30,7 +30,7 @@ update msg model =
             )
 
         EnemyLoaded (Ok newEnemy) ->
-            ( { model | enemy = Array.push newEnemy model.enemy }, Cmd.none )
+            ( { model | tmpEnemy = newEnemy}, Cmd.none )
 
         EnemyLoaded (Err error) ->
             case error of -- We basically just dismiss errors, this could be better

@@ -54,7 +54,7 @@ init _ =
         , showDeathAlert = Modal.hidden
         , showCustomEnemy = Modal.hidden
         , characterId = 0
-        , enemyHero = ""
+        , enemyHero = "Enemy"
         }
     , Cmd.none
     )

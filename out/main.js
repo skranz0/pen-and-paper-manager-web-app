@@ -5439,7 +5439,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Model$init = function (_v0) {
 	return _Utils_Tuple2(
-		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterId: 0, characterList: _List_Nil, damage: 0, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, enemyHero: '', maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpHero: $author$project$Model$initHero, tmpdice: '1W6+0'},
+		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterId: 0, characterList: _List_Nil, damage: 0, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, enemyHero: 'Enemy', maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpHero: $author$project$Model$initHero, tmpdice: '1W6+0'},
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Model$MyDrop1Msg = function (a) {
@@ -7532,9 +7532,7 @@ var $author$project$Main$update = F2(
 			case 'LoadEnemy':
 				var enemy = msg.a;
 				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
+					model,
 					$elm$http$Http$get(
 						{
 							expect: A2($elm$http$Http$expectJson, $author$project$Model$EnemyLoaded, $author$project$FightingTool$parseEnemy),
@@ -7546,9 +7544,7 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{
-								enemy: A2($elm$core$Array$push, newEnemy, model.enemy)
-							}),
+							{tmpEnemy: newEnemy}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					var error = msg.a.a;
@@ -9824,6 +9820,35 @@ var $rundis$elm_bootstrap$Bootstrap$Form$label = F2(
 			children);
 	});
 var $author$project$FightingTool$customEnemy = function (model) {
+	var _v0 = function () {
+		var _v1 = model.tmpEnemy;
+		if (_v1.$ === 'Enemy') {
+			var n = _v1.a;
+			var h = _v1.b;
+			var a = _v1.c;
+			if (n === 'none') {
+				return _Utils_Tuple3(
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(''),
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(''),
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(''));
+			} else {
+				return _Utils_Tuple3(
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$value(n),
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$value(
+						$elm$core$String$fromInt(h)),
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$value(
+						$elm$core$String$fromInt(a)));
+			}
+		} else {
+			return _Utils_Tuple3(
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(''),
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(''),
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(''));
+		}
+	}();
+	var ddName = _v0.a;
+	var ddHealth = _v0.b;
+	var ddArmor = _v0.c;
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
@@ -9841,21 +9866,22 @@ var $author$project$FightingTool$customEnemy = function (model) {
 					[
 						$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(
 						function (n) {
-							var _v0 = function () {
-								var _v1 = model.tmpEnemy;
-								if (_v1.$ === 'Enemy') {
-									var h = _v1.b;
-									var a = _v1.c;
+							var _v3 = function () {
+								var _v4 = model.tmpEnemy;
+								if (_v4.$ === 'Enemy') {
+									var h = _v4.b;
+									var a = _v4.c;
 									return _Utils_Tuple2(h, a);
 								} else {
 									return _Utils_Tuple2(0, 0);
 								}
 							}();
-							var health = _v0.a;
-							var armor = _v0.b;
+							var health = _v3.a;
+							var armor = _v3.b;
 							return $author$project$Model$UpdateTmp(
 								A3($author$project$Model$Enemy, n, health, armor));
-						})
+						}),
+						ddName
 					])),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
@@ -9870,18 +9896,18 @@ var $author$project$FightingTool$customEnemy = function (model) {
 					[
 						$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(
 						function (h) {
-							var _v2 = function () {
-								var _v3 = model.tmpEnemy;
-								if (_v3.$ === 'Enemy') {
-									var n = _v3.a;
-									var a = _v3.c;
+							var _v5 = function () {
+								var _v6 = model.tmpEnemy;
+								if (_v6.$ === 'Enemy') {
+									var n = _v6.a;
+									var a = _v6.c;
 									return _Utils_Tuple2(n, a);
 								} else {
 									return _Utils_Tuple2('', 0);
 								}
 							}();
-							var name = _v2.a;
-							var armor = _v2.b;
+							var name = _v5.a;
+							var armor = _v5.b;
 							return $author$project$Model$UpdateTmp(
 								A3(
 									$author$project$Model$Enemy,
@@ -9891,7 +9917,8 @@ var $author$project$FightingTool$customEnemy = function (model) {
 										1,
 										$elm$core$String$toInt(h)),
 									armor));
-						})
+						}),
+						ddHealth
 					])),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
@@ -9906,18 +9933,18 @@ var $author$project$FightingTool$customEnemy = function (model) {
 					[
 						$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(
 						function (a) {
-							var _v4 = function () {
-								var _v5 = model.tmpEnemy;
-								if (_v5.$ === 'Enemy') {
-									var n = _v5.a;
-									var h = _v5.b;
+							var _v7 = function () {
+								var _v8 = model.tmpEnemy;
+								if (_v8.$ === 'Enemy') {
+									var n = _v8.a;
+									var h = _v8.b;
 									return _Utils_Tuple2(n, h);
 								} else {
 									return _Utils_Tuple2('', 0);
 								}
 							}();
-							var name = _v4.a;
-							var health = _v4.b;
+							var name = _v7.a;
+							var health = _v7.b;
 							return $author$project$Model$UpdateTmp(
 								A3(
 									$author$project$Model$Enemy,
@@ -9927,7 +9954,8 @@ var $author$project$FightingTool$customEnemy = function (model) {
 										$elm$core$Maybe$withDefault,
 										0,
 										$elm$core$String$toInt(a))));
-						})
+						}),
+						ddArmor
 					])),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
