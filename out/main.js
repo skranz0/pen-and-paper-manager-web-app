@@ -12499,10 +12499,7 @@ var $author$project$FightingTool$footer = A2(
 		[
 			A2(
 			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('content has-text-centered')
-				]),
+			_List_Nil,
 			_List_fromArray(
 				[
 					A2(
@@ -12522,11 +12519,12 @@ var $author$project$FightingTool$footer = A2(
 				]))
 		]));
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
+var $elm$html$Html$header = _VirtualDom_node('header');
 var $author$project$FightingTool$header = A2(
-	$elm$html$Html$section,
+	$elm$html$Html$header,
 	_List_fromArray(
 		[
-			$elm$html$Html$Attributes$class('hero is-primary is-bold animate__animated animate__fadeInDown')
+			$elm$html$Html$Attributes$class('header is-bold animate__animated animate__fadeInDown')
 		]),
 	_List_fromArray(
 		[
@@ -12534,15 +12532,45 @@ var $author$project$FightingTool$header = A2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('hero-body')
+					$elm$html$Html$Attributes$class('grid-container')
 				]),
 			_List_fromArray(
 				[
 					A2(
+					$elm$html$Html$figure,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('image animate__animated animate__rollIn')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$svg$Svg$svg,
+							_List_fromArray(
+								[
+									$elm$svg$Svg$Attributes$width('100%'),
+									A2($elm$html$Html$Attributes$style, 'margin-top', '-18%'),
+									A2($elm$html$Html$Attributes$style, 'margin-left', '10%')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$svg$Svg$image,
+									_List_fromArray(
+										[
+											$elm$svg$Svg$Attributes$width('100%'),
+											$elm$svg$Svg$Attributes$height('100%'),
+											$elm$svg$Svg$Attributes$title('Logo'),
+											$elm$svg$Svg$Attributes$xlinkHref('res/P&P Manager Logo 512x512px noBG.png')
+										]),
+									_List_Nil)
+								]))
+						])),
+					A2(
 					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('container')
+							$elm$html$Html$Attributes$class('item1')
 						]),
 					_List_fromArray(
 						[
@@ -12550,7 +12578,9 @@ var $author$project$FightingTool$header = A2(
 							$elm$html$Html$h1,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('title')
+									$elm$html$Html$Attributes$class('title'),
+									A2($elm$html$Html$Attributes$style, 'margin-left', '2%'),
+									A2($elm$html$Html$Attributes$style, 'margin-top', '4px')
 								]),
 							_List_fromArray(
 								[
@@ -12560,7 +12590,8 @@ var $author$project$FightingTool$header = A2(
 							$elm$html$Html$h2,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('subtitle')
+									$elm$html$Html$Attributes$class('subtitle'),
+									A2($elm$html$Html$Attributes$style, 'margin-left', '2%')
 								]),
 							_List_fromArray(
 								[
@@ -12883,7 +12914,10 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$view = F2(
 var $author$project$Main$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
-		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('body')
+			]),
 		_List_fromArray(
 			[
 				$author$project$FightingTool$header,
