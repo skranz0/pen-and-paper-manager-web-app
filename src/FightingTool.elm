@@ -29,19 +29,19 @@ body model =
     div []
         [ div []
             [ Table.table
-                { options = [ Table.striped, Table.hover ]
+                { options = [Table.hover ]
                 , thead =  Table.simpleThead
-                    [ Table.th [] [ text "ID" ]
-                    , Table.th [] [ text "Name" ]
-                    , Table.th [] [ text "RS" ]
-                    , Table.th [] [ text "LeP"]
-                    , Table.th [] [ text " "]
-                    , Table.th [] [ text " "]
+                    [ Table.th [Table.cellAttr <| class "th"] [ text "ID" ]
+                    , Table.th [Table.cellAttr <| class "th"] [ text "Name" ]
+                    , Table.th [Table.cellAttr <| class "th"] [ text "RS" ]
+                    , Table.th [Table.cellAttr <| class "th"] [ text "LeP"]
+                    , Table.th [Table.cellAttr <| class "th"] [ text " "]
+                    , Table.th [Table.cellAttr <| class "th"] [ text " "]
                     ]
                 , tbody =
                     Table.tbody []
                         (displayCharacters model model.enemy ++ 
-                        [Table.tr [] 
+                        [Table.tr [Table.rowAttr <| class "tr"] 
                             [ Table.td[Table.cellAttr <| Attr.colspan 10] -- naja um sicher zu gehen
                                 [ Button.button 
                                     [ Button.light
@@ -207,9 +207,9 @@ displayCharacters model chars =
                         , Table.td[][text <| String.fromInt armor]
                         , Table.td[][text <| String.fromInt health]
                         , Table.td[]
-                            [ Button.button 
-                                [ Button.success
-                                , Button.attrs [onClick <| ShowAttackModal i]]
+                            [ Html.button 
+                                [ class "metalButton"
+                                , onClick <| ShowAttackModal i]
                                 [ text "Angriff"]
                             ]
                         , Table.td[]

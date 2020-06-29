@@ -16,7 +16,8 @@
 }
 
 .body {
-    background-color: #efd8c3;
+    background-color: #faf2eb;
+    max-width: 100%;
 }
 
 .grid-container {
@@ -32,6 +33,32 @@
     border-width: 5px;
     height: 75%;
     width: 120%;
+}
+
+.th {
+    background-color: #e4be9b
+}
+
+.tr {
+    background-color: #faf2eb;
+}
+
+tr:nth-child(even) {background-color: white;}
+
+.metalButton {
+    background-image: repeating-linear-gradient(to right bottom, #acacac , #bfbfbf , #acacac 40% );
+    border-radius: 8px;
+    padding: 8px 28px;
+    color: white;
+    align-self: flex-end;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: 2px 2px 5px #404040;
+    font-size: 1rem;
+  }
+
+.metalButton:hover{
+    background-image: repeating-linear-gradient(to right bottom, #acacac , #bfbfbf 10%, #acacac 40% );
 }
 
 .PlayerIcon {

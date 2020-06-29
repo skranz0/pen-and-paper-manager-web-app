@@ -8586,9 +8586,6 @@ var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled = function (a) {
 };
 var $rundis$elm_bootstrap$Bootstrap$Button$danger = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Danger));
-var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Success = {$: 'Success'};
-var $rundis$elm_bootstrap$Bootstrap$Button$success = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
-	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Success));
 var $rundis$elm_bootstrap$Bootstrap$Table$Td = function (a) {
 	return {$: 'Td', a: a};
 };
@@ -8669,16 +8666,12 @@ var $author$project$FightingTool$displayCharacters = F2(
 									_List_fromArray(
 										[
 											A2(
-											$rundis$elm_bootstrap$Bootstrap$Button$button,
+											$elm$html$Html$button,
 											_List_fromArray(
 												[
-													$rundis$elm_bootstrap$Bootstrap$Button$success,
-													$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-													_List_fromArray(
-														[
-															$elm$html$Html$Events$onClick(
-															$author$project$Model$ShowAttackModal(i))
-														]))
+													$elm$html$Html$Attributes$class('metalButton'),
+													$elm$html$Html$Events$onClick(
+													$author$project$Model$ShowAttackModal(i))
 												]),
 											_List_fromArray(
 												[
@@ -8777,6 +8770,12 @@ var $rundis$elm_bootstrap$Bootstrap$Table$hover = $rundis$elm_bootstrap$Bootstra
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Light = {$: 'Light'};
 var $rundis$elm_bootstrap$Bootstrap$Button$light = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Light));
+var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
+	return {$: 'RowAttr', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$rowAttr = function (attr_) {
+	return $rundis$elm_bootstrap$Bootstrap$Table$RowAttr(attr_);
+};
 var $rundis$elm_bootstrap$Bootstrap$Table$THead = function (a) {
 	return {$: 'THead', a: a};
 };
@@ -8794,8 +8793,6 @@ var $rundis$elm_bootstrap$Bootstrap$Table$simpleThead = function (cells) {
 				A2($rundis$elm_bootstrap$Bootstrap$Table$tr, _List_Nil, cells)
 			]));
 };
-var $rundis$elm_bootstrap$Bootstrap$Table$Striped = {$: 'Striped'};
-var $rundis$elm_bootstrap$Bootstrap$Table$striped = $rundis$elm_bootstrap$Bootstrap$Table$Striped;
 var $rundis$elm_bootstrap$Bootstrap$Table$Inversed = {$: 'Inversed'};
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
@@ -9627,6 +9624,9 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Input$Placeholder = function (a) {
 var $rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder = function (value_) {
 	return $rundis$elm_bootstrap$Bootstrap$Form$Input$Placeholder(value_);
 };
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Success = {$: 'Success'};
+var $rundis$elm_bootstrap$Bootstrap$Button$success = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Success));
 var $rundis$elm_bootstrap$Bootstrap$Form$Input$text = $rundis$elm_bootstrap$Bootstrap$Form$Input$input($rundis$elm_bootstrap$Bootstrap$Form$Input$Text);
 var $rundis$elm_bootstrap$Bootstrap$Form$Input$Value = function (a) {
 	return {$: 'Value', a: a};
@@ -11015,7 +11015,7 @@ var $author$project$FightingTool$body = function (model) {
 						$rundis$elm_bootstrap$Bootstrap$Table$table(
 						{
 							options: _List_fromArray(
-								[$rundis$elm_bootstrap$Bootstrap$Table$striped, $rundis$elm_bootstrap$Bootstrap$Table$hover]),
+								[$rundis$elm_bootstrap$Bootstrap$Table$hover]),
 							tbody: A2(
 								$rundis$elm_bootstrap$Bootstrap$Table$tbody,
 								_List_Nil,
@@ -11025,7 +11025,11 @@ var $author$project$FightingTool$body = function (model) {
 										[
 											A2(
 											$rundis$elm_bootstrap$Bootstrap$Table$tr,
-											_List_Nil,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
+													$elm$html$Html$Attributes$class('tr'))
+												]),
 											_List_fromArray(
 												[
 													A2(
@@ -11062,42 +11066,66 @@ var $author$project$FightingTool$body = function (model) {
 									[
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+												$elm$html$Html$Attributes$class('th'))
+											]),
 										_List_fromArray(
 											[
 												$elm$html$Html$text('ID')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+												$elm$html$Html$Attributes$class('th'))
+											]),
 										_List_fromArray(
 											[
 												$elm$html$Html$text('Name')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+												$elm$html$Html$Attributes$class('th'))
+											]),
 										_List_fromArray(
 											[
 												$elm$html$Html$text('RS')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+												$elm$html$Html$Attributes$class('th'))
+											]),
 										_List_fromArray(
 											[
 												$elm$html$Html$text('LeP')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+												$elm$html$Html$Attributes$class('th'))
+											]),
 										_List_fromArray(
 											[
 												$elm$html$Html$text(' ')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+												$elm$html$Html$Attributes$class('th'))
+											]),
 										_List_fromArray(
 											[
 												$elm$html$Html$text(' ')
@@ -11141,12 +11169,6 @@ var $author$project$Model$PlayerIcon = F2(
 	function (a, b) {
 		return {$: 'PlayerIcon', a: a, b: b};
 	});
-var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
-	return {$: 'RowAttr', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Table$rowAttr = function (attr_) {
-	return $rundis$elm_bootstrap$Bootstrap$Table$RowAttr(attr_);
-};
 var $author$project$DungeonMap$stopBubbling = function (msg) {
 	return A2(
 		$elm$html$Html$Events$stopPropagationOn,
@@ -11249,6 +11271,8 @@ var $rundis$elm_bootstrap$Bootstrap$Table$Responsive = function (a) {
 	return {$: 'Responsive', a: a};
 };
 var $rundis$elm_bootstrap$Bootstrap$Table$responsive = $rundis$elm_bootstrap$Bootstrap$Table$Responsive($elm$core$Maybe$Nothing);
+var $rundis$elm_bootstrap$Bootstrap$Table$Striped = {$: 'Striped'};
+var $rundis$elm_bootstrap$Bootstrap$Table$striped = $rundis$elm_bootstrap$Bootstrap$Table$Striped;
 var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 	return A2(
 		$elm$html$Html$div,
