@@ -54,14 +54,14 @@ characters2rows chars =
         (\i c ->
             case c of
                 Enemy name health _ ->
-                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon "0" "0")))) ]
+                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon (i+1) "0" "0")))) ]
                         [ Table.td [] [Html.text <| String.fromInt (i+1)]
                         , Table.td [] [Html.text name]
                         , Table.td [] [Html.text <| String.fromInt health]
                         ]
 
                 Hero name health ->
-                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon "0" "0")))) ]
+                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon (i+1) "0" "0")))) ]
                         [ Table.td [] [Html.text <| String.fromInt (i+1)]
                         , Table.td [] [Html.text name]
                         , Table.td [] [Html.text <| String.fromInt health]
@@ -90,20 +90,23 @@ stopBubbling : msg -> Svg.Attribute msg
 stopBubbling msg =
     Html.Events.stopPropagationOn "click" (Json.Decode.map (\m -> ( m, True )) (Json.Decode.succeed msg))
 
+
+
 svgIconList : Model -> List (Svg.Svg Msg)
 svgIconList model =
-    List.foldl (++) [] (List.indexedMap getAreaParam model.characterList)
+    List.foldl (++) [] (List.map getAreaParam model.characterList)
 
-getAreaParam : Int -> DungeonMap_Character -> List (Svg.Svg Msg)
-getAreaParam i s =
-    let 
+getAreaParam : DungeonMap_Character -> List (Svg.Svg Msg)
+getAreaParam s =
+    let
       xCor = Maybe.withDefault "0" (List.head (String.split "," (getCoord s)))
       yCor = Maybe.withDefault "0" (List.head (List.drop 1 (String.split "," (getCoord s))))
+      id = getID s
     in
     case getIcon s of
         "monster" ->
             [ Svg.rect
-                [ SvgAtt.id (String.fromInt i)
+                [ SvgAtt.id (String.fromInt id)
                 , SvgAtt.x xCor
                 , SvgAtt.y yCor
                 , SvgAtt.width "15"
@@ -116,12 +119,12 @@ getAreaParam i s =
                         , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat yCor) + 8.75))
                         , SvgAtt.dominantBaseline "middle"
                         ]
-                        [ Svg.text (String.fromInt i) ]
+                        [ Svg.text (String.fromInt id) ]
             ]
 
         "player" ->
             [ Svg.circle
-                [ SvgAtt.id (String.fromInt i)
+                [ SvgAtt.id (String.fromInt id)
                 , SvgAtt.cx xCor
                 , SvgAtt.cy yCor
                 , SvgAtt.r "10"
@@ -133,11 +136,11 @@ getAreaParam i s =
                         , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat yCor) + 0.75))
                         , SvgAtt.dominantBaseline "middle"
                         ]
-                        [ Svg.text (String.fromInt i) ]
+                        [ Svg.text (String.fromInt id) ]
             ]
         _ ->
             [ Svg.circle
-                [ SvgAtt.id (String.fromInt i)
+                [ SvgAtt.id (String.fromInt id)
                 , SvgAtt.cx xCor
                 , SvgAtt.cy yCor
                 , SvgAtt.r "0"
@@ -147,19 +150,27 @@ getAreaParam i s =
 
 getIcon object =
     case object of
-        Monster x y ->
+        Monster i x y ->
             "monster"
 
-        Player x y ->
+        Player i x y ->
             "player"
 
 getCoord object =
     case object of
-        Monster x y ->
+        Monster i x y ->
             x ++ "," ++ y
 
-        Player x y ->
+        Player i x y ->
             x ++ "," ++ y
+
+getID object =
+    case object of
+        Monster i x y ->
+            i
+
+        Player i x y ->
+            i
 
 
 mouseDrawEvents : AddCharacterIconState -> List (Svg.Attribute Msg)
@@ -167,14 +178,14 @@ mouseDrawEvents addCharacterIcon =
     case addCharacterIcon of
         DrawIcon characterIcon ->
             case characterIcon of
-                PlayerIcon x y ->
+                PlayerIcon i x y ->
                     [ Svg.Events.onClick (AddCharacterIcon (MouseClick characterIcon))
-                    , onMouseMove positionToCircleCenter
+                    , onMouseMove (positionToCircleCenter i)
                     ]
 
-                MonsterIcon x y ->
+                MonsterIcon i x y ->
                     [ Svg.Events.onClick (AddCharacterIcon (MouseClick characterIcon))
-                    , onMouseMove positionToRectangleCorner
+                    , onMouseMove (positionToRectangleCorner i)
                     ]
 
         _ ->
@@ -192,14 +203,14 @@ mousePosition =
         (Json.Decode.at [ "detail", "x" ] Json.Decode.float)
         (Json.Decode.at [ "detail", "y" ] Json.Decode.float)
 
-positionToCircleCenter : MousePosition -> Msg
-positionToCircleCenter position =
-    AddCharacterIcon (MouseDraw (PlayerIcon (String.fromFloat position.x) (String.fromFloat position.y)))
+positionToCircleCenter : Int -> MousePosition -> Msg
+positionToCircleCenter i position =
+    AddCharacterIcon (MouseDraw (PlayerIcon i (String.fromFloat position.x) (String.fromFloat position.y)))
 
 
-positionToRectangleCorner : MousePosition -> Msg
-positionToRectangleCorner position =
-    AddCharacterIcon (MouseDraw (MonsterIcon (String.fromFloat position.x) (String.fromFloat position.y)))
+positionToRectangleCorner : Int -> MousePosition -> Msg
+positionToRectangleCorner i position =
+    AddCharacterIcon (MouseDraw (MonsterIcon i (String.fromFloat position.x) (String.fromFloat position.y)))
 
 
 newIconsView : AddCharacterIconState -> List (Svg.Svg Msg)
@@ -209,7 +220,7 @@ newIconsView addCharacterIcon =
             [ Svg.g
                 []
                 [ case characterIcon of
-                    PlayerIcon x y ->
+                    PlayerIcon i x y ->
                         Svg.circle
                             [ SvgAtt.cx x
                             , SvgAtt.cy y
@@ -217,7 +228,7 @@ newIconsView addCharacterIcon =
                             ]
                             []
 
-                    MonsterIcon x y ->
+                    MonsterIcon i x y ->
                         Svg.rect
                             [ SvgAtt.x x
                             , SvgAtt.y y
