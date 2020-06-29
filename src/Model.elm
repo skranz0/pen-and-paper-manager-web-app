@@ -50,11 +50,11 @@ init _ =
         , characterList = []
         , addCharacterIcon = DrawingInactive
         , dieFaces = []
-        , showAttackModal = Modal.hidden 
+        , showAttackModal = Modal.hidden
         , showDeathAlert = Modal.hidden
         , showCustomEnemy = Modal.hidden
         , characterId = 0
-        , enemyHero = ""
+        , enemyHero = "Enemy"
         }
     , Cmd.none
     )
@@ -114,17 +114,17 @@ type AddCharacterIconMsg
     | MouseClick CharacterIcon
 
 type DungeonMap_Character
-    = Player String String
-    | Monster String String
+    = Player Int String String
+    | Monster Int String String
+    --        ID  x-coord y-coord
 
 type
     CharacterIcon
-    = PlayerIcon String String
-    | MonsterIcon String String
+    = PlayerIcon Int String String
+    | MonsterIcon Int String String
+    --            ID  x-coord y-coord
 
 type alias MousePosition =
     { x : Float
     , y : Float
     }
-
-

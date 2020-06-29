@@ -16,14 +16,12 @@ import Array.Extra as Array
 import DungeonMap exposing (dungeonMapView)
 import FightingTool exposing (..)
 import Model exposing (..)
-import Model exposing (ModalType(..))
-import Model exposing (Msg(..))
-
+import About exposing (aboutView)
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         LoadEnemy enemy ->
-            ( {model | showCustomEnemy = Modal.hidden }
+            ( model
             , Http.get
                 { url = "./res/"++enemy++".json" -- These are the files for the enemies from the DSA handbook
                 , expect =
@@ -32,7 +30,7 @@ update msg model =
             )
 
         EnemyLoaded (Ok newEnemy) ->
-            ( { model | enemy = Array.push newEnemy model.enemy }, Cmd.none )
+            ( { model | tmpEnemy = newEnemy}, Cmd.none )
 
         EnemyLoaded (Err error) ->
             case error of -- We basically just dismiss errors, this could be better
@@ -67,10 +65,10 @@ update msg model =
             ( { model | enemy = Array.removeAt index model.enemy }
             , Cmd.none
             )
-        
-        CharacterDeath index -> 
-            ( 
-                { model | showDeathAlert = Modal.shown 
+
+        CharacterDeath index ->
+            (
+                { model | showDeathAlert = Modal.shown
                 , enemy = Array.removeAt index model.enemy
                 , showAttackModal = Modal.hidden
                 }
@@ -123,20 +121,35 @@ update msg model =
             case addCharacterIconMsg of
                 MouseClick characterIcon ->
                     case characterIcon of
-                        PlayerIcon x y ->
-                            ( { model | characterList = model.characterList ++ [Player x y], addCharacterIcon = DrawingInactive }, Cmd.none )
+                        PlayerIcon i x y ->
+                            if List.length model.characterList == List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID noch nicht in Liste
+                            then    ( { model | characterList = model.characterList ++ [Player i x y], addCharacterIcon = DrawingInactive }, Cmd.none )
+                            else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
-                        MonsterIcon x y ->
-                            ( { model | characterList = model.characterList ++ [Monster x y], addCharacterIcon = DrawingInactive }, Cmd.none )
+                        MonsterIcon i x y ->
+                            if List.length model.characterList == List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID noch nicht in Liste
+                            then    ( { model | characterList = model.characterList ++ [Monster i x y], addCharacterIcon = DrawingInactive }, Cmd.none )
+                            else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
-                MouseDraw s ->
-                    ( { model | addCharacterIcon = DrawIcon s }, Cmd.none )
+                MouseDraw characterIcon ->
+                    case characterIcon of
+                        PlayerIcon i x y ->
+                            if List.length model.characterList > List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID bereits in Liste
+                            then    ( { model | characterList = (List.filter (isNotId i) model.characterList), addCharacterIcon = DrawingInactive }, Cmd.none )
+                            else    ( { model | addCharacterIcon = DrawIcon (PlayerIcon i x y) }, Cmd.none )
+
+                        MonsterIcon i x y ->
+                            if List.length model.characterList > List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID bereits in Liste
+                            then    ( { model | characterList = (List.filter (isNotId i) model.characterList), addCharacterIcon = DrawingInactive }, Cmd.none )
+                            else    ( { model | addCharacterIcon = DrawIcon (MonsterIcon i x y) }, Cmd.none )
+
+                    --( { model | addCharacterIcon = DrawIcon s, characterList = (giveDungeonMap_CharacterIds model.characterList) }, Cmd.none )
 
         CloseModal modalType->
             case modalType of
-                AttackModal -> 
+                AttackModal ->
                     ( { model | showAttackModal = Modal.hidden } , Cmd.none )
-                
+
                 DeathAlert ->
                     ( { model | showDeathAlert = Modal.hidden } , Cmd.none )
 
@@ -145,19 +158,19 @@ update msg model =
 
         ShowModal modalType->
             case modalType of
-                AttackModal -> 
+                AttackModal ->
                     ( { model | showAttackModal = Modal.shown } , Cmd.none )
-                
+
                 DeathAlert ->
                     ( { model | showDeathAlert = Modal.shown } , Cmd.none )
-                    
+
                 CustomEnemy ->
                     ( { model | showCustomEnemy = Modal.shown } , Cmd.none )
-        
+
         ShowAttackModal id->
             ( { model | showAttackModal = Modal.shown , characterId = id} , Cmd.none )
 
-        SwitchEnemyHero string -> 
+        SwitchEnemyHero string ->
                     ( {model | enemyHero = string } , Cmd.none )
 
         DoNothing ->
@@ -170,18 +183,25 @@ view model =
         , Tab.config TabMsg
             |> Tab.items
                 [ Tab.item
-                    { id = "tabItem1"
+                    { id = "tabOverview"
                     , link = Tab.link [ Spacing.mt3 ] [ text "Overview" ]
                     , pane =
                         Tab.pane []
                             [ body model ]
                     }
                 , Tab.item
-                    { id = "tabItem2"
+                    { id = "tabMap"
                     , link = Tab.link [ Spacing.mt3 ] [ text "Map" ]
                     , pane =
                         Tab.pane []
                             [ dungeonMapView model ] -- Map
+                    }
+                , Tab.item
+                    { id = "tabAbout"
+                    , link = Tab.link [ Spacing.mt3 ] [ text "Regeln" ]
+                    , pane =
+                        Tab.pane []
+                            [ aboutView model ]
                     }
                 ]
             |> Tab.view model.tabState
@@ -201,3 +221,22 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Dropdown.subscriptions model.myDrop1State MyDrop1Msg ]
+
+giveDungeonMap_CharacterIds : List DungeonMap_Character -> List DungeonMap_Character
+giveDungeonMap_CharacterIds charList =
+    (List.indexedMap putIdInDMC charList)
+
+putIdInDMC : Int -> DungeonMap_Character -> DungeonMap_Character
+putIdInDMC id dmc =
+    case dmc of
+        Player i x y -> Player (id+1) x y
+        Monster i x y -> Monster (id+1) x y
+
+isNotId : Int -> DungeonMap_Character -> Bool
+isNotId id s =
+    case s of
+        Monster i x y ->
+            id/=i
+
+        Player i x y ->
+            id/=i

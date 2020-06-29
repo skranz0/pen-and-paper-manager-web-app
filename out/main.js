@@ -5439,7 +5439,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Model$init = function (_v0) {
 	return _Utils_Tuple2(
-		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterId: 0, characterList: _List_Nil, damage: 0, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, enemyHero: '', maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpHero: $author$project$Model$initHero, tmpdice: '1W6+0'},
+		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterId: 0, characterList: _List_Nil, damage: 0, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, enemyHero: 'Enemy', maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpHero: $author$project$Model$initHero, tmpdice: '1W6+0'},
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Model$MyDrop1Msg = function (a) {
@@ -6021,13 +6021,21 @@ var $author$project$Model$DrawIcon = function (a) {
 var $author$project$Model$EnemyLoaded = function (a) {
 	return {$: 'EnemyLoaded', a: a};
 };
-var $author$project$Model$Monster = F2(
-	function (a, b) {
-		return {$: 'Monster', a: a, b: b};
+var $author$project$Model$Monster = F3(
+	function (a, b, c) {
+		return {$: 'Monster', a: a, b: b, c: c};
 	});
-var $author$project$Model$Player = F2(
-	function (a, b) {
-		return {$: 'Player', a: a, b: b};
+var $author$project$Model$MonsterIcon = F3(
+	function (a, b, c) {
+		return {$: 'MonsterIcon', a: a, b: b, c: c};
+	});
+var $author$project$Model$Player = F3(
+	function (a, b, c) {
+		return {$: 'Player', a: a, b: b, c: c};
+	});
+var $author$project$Model$PlayerIcon = F3(
+	function (a, b, c) {
+		return {$: 'PlayerIcon', a: a, b: b, c: c};
 	});
 var $elm$core$List$sum = function (numbers) {
 	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
@@ -6559,6 +6567,17 @@ var $elm$http$Http$expectJson = F2(
 						A2($elm$json$Json$Decode$decodeString, decoder, string));
 				}));
 	});
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
 var $author$project$Model$NewRandomList = function (a) {
 	return {$: 'NewRandomList', a: a};
 };
@@ -6913,6 +6932,21 @@ var $elm$core$List$head = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $author$project$Main$isNotId = F2(
+	function (id, s) {
+		if (s.$ === 'Monster') {
+			var i = s.a;
+			var x = s.b;
+			var y = s.c;
+			return !_Utils_eq(id, i);
+		} else {
+			var i = s.a;
+			var x = s.b;
+			var y = s.c;
+			return !_Utils_eq(id, i);
+		}
+	});
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $elm$json$Json$Decode$list = _Json_decodeList;
@@ -7535,9 +7569,7 @@ var $author$project$Main$update = F2(
 			case 'LoadEnemy':
 				var enemy = msg.a;
 				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
+					model,
 					$elm$http$Http$get(
 						{
 							expect: A2($elm$http$Http$expectJson, $author$project$Model$EnemyLoaded, $author$project$FightingTool$parseEnemy),
@@ -7549,9 +7581,7 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{
-								enemy: A2($elm$core$Array$push, newEnemy, model.enemy)
-							}),
+							{tmpEnemy: newEnemy}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					var error = msg.a.a;
@@ -7714,9 +7744,16 @@ var $author$project$Main$update = F2(
 				if (addCharacterIconMsg.$ === 'MouseClick') {
 					var characterIcon = addCharacterIconMsg.a;
 					if (characterIcon.$ === 'PlayerIcon') {
-						var x = characterIcon.a;
-						var y = characterIcon.b;
-						return _Utils_Tuple2(
+						var i = characterIcon.a;
+						var x = characterIcon.b;
+						var y = characterIcon.c;
+						return _Utils_eq(
+							$elm$core$List$length(model.characterList),
+							$elm$core$List$length(
+								A2(
+									$elm$core$List$filter,
+									$author$project$Main$isNotId(i),
+									model.characterList))) ? _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{
@@ -7725,14 +7762,25 @@ var $author$project$Main$update = F2(
 										model.characterList,
 										_List_fromArray(
 											[
-												A2($author$project$Model$Player, x, y)
+												A3($author$project$Model$Player, i, x, y)
 											]))
 								}),
+							$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{addCharacterIcon: $author$project$Model$DrawingInactive}),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						var x = characterIcon.a;
-						var y = characterIcon.b;
-						return _Utils_Tuple2(
+						var i = characterIcon.a;
+						var x = characterIcon.b;
+						var y = characterIcon.c;
+						return _Utils_eq(
+							$elm$core$List$length(model.characterList),
+							$elm$core$List$length(
+								A2(
+									$elm$core$List$filter,
+									$author$project$Main$isNotId(i),
+									model.characterList))) ? _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{
@@ -7741,20 +7789,74 @@ var $author$project$Main$update = F2(
 										model.characterList,
 										_List_fromArray(
 											[
-												A2($author$project$Model$Monster, x, y)
+												A3($author$project$Model$Monster, i, x, y)
 											]))
 								}),
+							$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{addCharacterIcon: $author$project$Model$DrawingInactive}),
 							$elm$core$Platform$Cmd$none);
 					}
 				} else {
-					var s = addCharacterIconMsg.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								addCharacterIcon: $author$project$Model$DrawIcon(s)
-							}),
-						$elm$core$Platform$Cmd$none);
+					var characterIcon = addCharacterIconMsg.a;
+					if (characterIcon.$ === 'PlayerIcon') {
+						var i = characterIcon.a;
+						var x = characterIcon.b;
+						var y = characterIcon.c;
+						return (_Utils_cmp(
+							$elm$core$List$length(model.characterList),
+							$elm$core$List$length(
+								A2(
+									$elm$core$List$filter,
+									$author$project$Main$isNotId(i),
+									model.characterList))) > 0) ? _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									addCharacterIcon: $author$project$Model$DrawingInactive,
+									characterList: A2(
+										$elm$core$List$filter,
+										$author$project$Main$isNotId(i),
+										model.characterList)
+								}),
+							$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									addCharacterIcon: $author$project$Model$DrawIcon(
+										A3($author$project$Model$PlayerIcon, i, x, y))
+								}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var i = characterIcon.a;
+						var x = characterIcon.b;
+						var y = characterIcon.c;
+						return (_Utils_cmp(
+							$elm$core$List$length(model.characterList),
+							$elm$core$List$length(
+								A2(
+									$elm$core$List$filter,
+									$author$project$Main$isNotId(i),
+									model.characterList))) > 0) ? _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									addCharacterIcon: $author$project$Model$DrawingInactive,
+									characterList: A2(
+										$elm$core$List$filter,
+										$author$project$Main$isNotId(i),
+										model.characterList)
+								}),
+							$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									addCharacterIcon: $author$project$Model$DrawIcon(
+										A3($author$project$Model$MonsterIcon, i, x, y))
+								}),
+							$elm$core$Platform$Cmd$none);
+					}
 				}
 			case 'CloseModal':
 				var modalType = msg.a;
@@ -7820,6 +7922,41 @@ var $author$project$Main$update = F2(
 	});
 var $author$project$Model$TabMsg = function (a) {
 	return {$: 'TabMsg', a: a};
+};
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $elm$html$Html$p = _VirtualDom_node('p');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$About$aboutView = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$h1,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Das schwarze Auge Edition 5')
+					])),
+				A2(
+				$elm$html$Html$h3,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Übersicht der Kampfesregeln')
+					])),
+				A2(
+				$elm$html$Html$p,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('\r\n            Die wenigsten Geschichten im Pen & Paper Rollenspiel DSA kommen ohne einen Kampf aus.\r\n            Die Mechanik unterscheidet sich allerdings etwas vom normalen Spielgeschehen.\r\n            ')
+					]))
+			]));
 };
 var $author$project$Model$CustomEnemy = {$: 'CustomEnemy'};
 var $author$project$Model$ShowModal = function (a) {
@@ -7887,17 +8024,6 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
@@ -8077,7 +8203,6 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$footer = F3(
 							{attributes: attributes, children: children}))
 				}));
 	});
-var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $rundis$elm_bootstrap$Bootstrap$Modal$Header = function (a) {
 	return {$: 'Header', a: a};
 };
@@ -8123,7 +8248,6 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick = F2(
 						{hideOnBackdropClick: hide})
 				}));
 	});
-var $elm$html$Html$p = _VirtualDom_node('p');
 var $rundis$elm_bootstrap$Bootstrap$General$Internal$SM = {$: 'SM'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$small = function (_v0) {
 	var conf = _v0.a;
@@ -8139,8 +8263,6 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$small = function (_v0) {
 					})
 			}));
 };
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$virtual_dom$VirtualDom$attribute = F2(
 	function (key, value) {
 		return A2(
@@ -8149,7 +8271,6 @@ var $elm$virtual_dom$VirtualDom$attribute = F2(
 			_VirtualDom_noJavaScriptOrHtmlUri(value));
 	});
 var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
-var $elm$html$Html$div = _VirtualDom_node('div');
 var $rundis$elm_bootstrap$Bootstrap$Modal$StartClose = {$: 'StartClose'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$getCloseMsg = function (config_) {
 	var _v0 = config_.withAnimation;
@@ -8589,6 +8710,7 @@ var $author$project$FightingTool$displayCharacters = function (chars) {
 			function (i, c) {
 				var _v0 = function () {
 					if (c.$ === 'Enemy') {
+<<<<<<< HEAD
 						var n = c.a;
 						var h = c.b;
 						var a = c.d;
@@ -8598,6 +8720,149 @@ var $author$project$FightingTool$displayCharacters = function (chars) {
 						var n = c.a;
 						var a = c.b;
 						return {armor: a, health: 0, name: n, status: _List_Nil};
+=======
+						return A2(
+							$rundis$elm_bootstrap$Bootstrap$Table$tr,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$elm$core$String$fromInt(i + 1))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(name)
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$elm$core$String$fromInt(armor))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$elm$core$String$fromInt(health))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$rundis$elm_bootstrap$Bootstrap$Button$button,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Button$success,
+													$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+													_List_fromArray(
+														[
+															$elm$html$Html$Events$onClick(
+															$author$project$Model$ShowAttackModal(i))
+														]))
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$text('Angriff')
+												]))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$rundis$elm_bootstrap$Bootstrap$Button$button,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Button$danger,
+													$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+													_List_fromArray(
+														[
+															$elm$html$Html$Events$onClick(
+															$author$project$Model$RemoveEnemy(i))
+														]))
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$text('Löschen')
+												]))
+										]))
+								]));
+					} else {
+						return A2(
+							$rundis$elm_bootstrap$Bootstrap$Table$tr,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$elm$core$String$fromInt(i + 1))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(name)
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$elm$core$String$fromInt(armor))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text('')
+										])),
+									A2($rundis$elm_bootstrap$Bootstrap$Table$td, _List_Nil, _List_Nil),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$rundis$elm_bootstrap$Bootstrap$Button$button,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Button$danger,
+													$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+													_List_fromArray(
+														[
+															$elm$html$Html$Events$onClick(
+															$author$project$Model$RemoveEnemy(i))
+														]))
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$text('Löschen')
+												]))
+										]))
+								]));
+>>>>>>> dev
 					}
 				}();
 				var name = _v0.name;
@@ -9407,8 +9672,101 @@ var $author$project$FightingTool$attack = F3(
 			return $author$project$Model$DoNothing;
 		}
 	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Number = {$: 'Number'};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Input = function (a) {
+	return {$: 'Input', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Type = function (a) {
+	return {$: 'Type', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$create = F2(
+	function (tipe, options) {
+		return $rundis$elm_bootstrap$Bootstrap$Form$Input$Input(
+			{
+				options: A2(
+					$elm$core$List$cons,
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$Type(tipe),
+					options)
+			});
+	});
 var $elm$html$Html$input = _VirtualDom_node('input');
-var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$applyModifier = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'Size':
+				var size_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						size: $elm$core$Maybe$Just(size_)
+					});
+			case 'Id':
+				var id_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						id: $elm$core$Maybe$Just(id_)
+					});
+			case 'Type':
+				var tipe = modifier.a;
+				return _Utils_update(
+					options,
+					{tipe: tipe});
+			case 'Disabled':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{disabled: val});
+			case 'Value':
+				var value_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						value: $elm$core$Maybe$Just(value_)
+					});
+			case 'Placeholder':
+				var value_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						placeholder: $elm$core$Maybe$Just(value_)
+					});
+			case 'OnInput':
+				var onInput_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						onInput: $elm$core$Maybe$Just(onInput_)
+					});
+			case 'Validation':
+				var validation_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						validation: $elm$core$Maybe$Just(validation_)
+					});
+			case 'Readonly':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{readonly: val});
+			case 'PlainText':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{plainText: val});
+			default:
+				var attrs_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Text = {$: 'Text'};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$defaultOptions = {attributes: _List_Nil, disabled: false, id: $elm$core$Maybe$Nothing, onInput: $elm$core$Maybe$Nothing, placeholder: $elm$core$Maybe$Nothing, plainText: false, readonly: false, size: $elm$core$Maybe$Nothing, tipe: $rundis$elm_bootstrap$Bootstrap$Form$Input$Text, validation: $elm$core$Maybe$Nothing, value: $elm$core$Maybe$Nothing};
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
@@ -9437,8 +9795,135 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $elm$html$Html$Attributes$readonly = $elm$html$Html$Attributes$boolProperty('readOnly');
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$sizeAttribute = function (size) {
+	return A2(
+		$elm$core$Maybe$map,
+		function (s) {
+			return $elm$html$Html$Attributes$class('form-control-' + s);
+		},
+		$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(size));
+};
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$typeAttribute = function (inputType) {
+	return $elm$html$Html$Attributes$type_(
+		function () {
+			switch (inputType.$) {
+				case 'Text':
+					return 'text';
+				case 'Password':
+					return 'password';
+				case 'DatetimeLocal':
+					return 'datetime-local';
+				case 'Date':
+					return 'date';
+				case 'Month':
+					return 'month';
+				case 'Time':
+					return 'time';
+				case 'Week':
+					return 'week';
+				case 'Number':
+					return 'number';
+				case 'Email':
+					return 'email';
+				case 'Url':
+					return 'url';
+				case 'Search':
+					return 'search';
+				case 'Tel':
+					return 'tel';
+				default:
+					return 'color';
+			}
+		}());
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$FormInternal$validationToString = function (validation) {
+	if (validation.$ === 'Success') {
+		return 'is-valid';
+	} else {
+		return 'is-invalid';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$validationAttribute = function (validation) {
+	return $elm$html$Html$Attributes$class(
+		$rundis$elm_bootstrap$Bootstrap$Form$FormInternal$validationToString(validation));
+};
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$toAttributes = function (modifiers) {
+	var options = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Form$Input$applyModifier, $rundis$elm_bootstrap$Bootstrap$Form$Input$defaultOptions, modifiers);
+	return _Utils_ap(
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class(
+				options.plainText ? 'form-control-plaintext' : 'form-control'),
+				$elm$html$Html$Attributes$disabled(options.disabled),
+				$elm$html$Html$Attributes$readonly(options.readonly || options.plainText),
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$typeAttribute(options.tipe)
+			]),
+		_Utils_ap(
+			A2(
+				$elm$core$List$filterMap,
+				$elm$core$Basics$identity,
+				_List_fromArray(
+					[
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$id, options.id),
+						A2($elm$core$Maybe$andThen, $rundis$elm_bootstrap$Bootstrap$Form$Input$sizeAttribute, options.size),
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$value, options.value),
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$placeholder, options.placeholder),
+						A2($elm$core$Maybe$map, $elm$html$Html$Events$onInput, options.onInput),
+						A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Form$Input$validationAttribute, options.validation)
+					])),
+			options.attributes));
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$view = function (_v0) {
+	var options = _v0.a.options;
+	return A2(
+		$elm$html$Html$input,
+		$rundis$elm_bootstrap$Bootstrap$Form$Input$toAttributes(options),
+		_List_Nil);
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$input = F2(
+	function (tipe, options) {
+		return $rundis$elm_bootstrap$Bootstrap$Form$Input$view(
+			A2($rundis$elm_bootstrap$Bootstrap$Form$Input$create, tipe, options));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$number = $rundis$elm_bootstrap$Bootstrap$Form$Input$input($rundis$elm_bootstrap$Bootstrap$Form$Input$Number);
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$OnInput = function (a) {
+	return {$: 'OnInput', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$onInput = function (toMsg) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Input$OnInput(toMsg);
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Dark = {$: 'Dark'};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined = function (a) {
+	return {$: 'Outlined', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Button$outlineDark = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined($rundis$elm_bootstrap$Bootstrap$Internal$Button$Dark));
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Placeholder = function (a) {
+	return {$: 'Placeholder', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder = function (value_) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Input$Placeholder(value_);
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$text = $rundis$elm_bootstrap$Bootstrap$Form$Input$input($rundis$elm_bootstrap$Bootstrap$Form$Input$Text);
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Value = function (a) {
+	return {$: 'Value', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$value = function (value_) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Input$Value(value_);
+};
 var $author$project$FightingTool$viewAttackModal = function (model) {
+	var insideInput = function () {
+		var _v0 = model.damage;
+		if (!_v0) {
+			return $rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder('Schaden');
+		} else {
+			return $rundis$elm_bootstrap$Bootstrap$Form$Input$value(
+				$elm$core$String$fromInt(model.damage));
+		}
+	}();
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
@@ -9453,11 +9938,16 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 					_List_fromArray(
 						[
 							A2(
-							$elm$html$Html$button,
+							$rundis$elm_bootstrap$Bootstrap$Button$button,
 							_List_fromArray(
 								[
-									$elm$html$Html$Events$onClick(
-									A3($author$project$FightingTool$attack, model, model.characterId, model.damage))
+									$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+									_List_fromArray(
+										[
+											$elm$html$Html$Events$onClick(
+											A3($author$project$FightingTool$attack, model, model.characterId, model.damage))
+										])),
+									$rundis$elm_bootstrap$Bootstrap$Button$success
 								]),
 							_List_fromArray(
 								[
@@ -9469,38 +9959,35 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								A2(
-								$elm$html$Html$input,
+								$rundis$elm_bootstrap$Bootstrap$Form$Input$text(
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$type_('text'),
-										$elm$html$Html$Attributes$name('Dice'),
-										$elm$html$Html$Attributes$placeholder(model.dice),
-										$elm$html$Html$Events$onInput($author$project$Model$ChangeTmpDice)
-									]),
-								_List_Nil),
+										$rundis$elm_bootstrap$Bootstrap$Form$Input$value(model.dice),
+										$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder('1W6+0'),
+										$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput($author$project$Model$ChangeTmpDice)
+									])),
 								A2(
-								$elm$html$Html$button,
+								$rundis$elm_bootstrap$Bootstrap$Button$button,
 								_List_fromArray(
 									[
-										$elm$html$Html$Events$onClick(
-										$author$project$Model$DiceAndSlice(model.tmpdice))
+										$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick(
+												$author$project$Model$DiceAndSlice(model.tmpdice))
+											])),
+										$rundis$elm_bootstrap$Bootstrap$Button$outlineDark
 									]),
 								_List_fromArray(
 									[
 										$elm$html$Html$text('Schaden würfeln')
 									])),
-								A2(
-								$elm$html$Html$input,
+								$rundis$elm_bootstrap$Bootstrap$Form$Input$number(
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$type_('number'),
-										$elm$html$Html$Attributes$name('Damage'),
-										$elm$html$Html$Attributes$placeholder(
-										$elm$core$String$fromInt(model.damage)),
-										$elm$html$Html$Events$onInput($author$project$Model$ChangeDamage)
-									]),
-								_List_Nil)
+										insideInput,
+										$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput($author$project$Model$ChangeDamage)
+									]))
 							]),
 						A3(
 							$rundis$elm_bootstrap$Bootstrap$Modal$h3,
@@ -9601,34 +10088,65 @@ var $author$project$Model$AddEnemy = function (a) {
 var $author$project$Model$UpdateTmp = function (a) {
 	return {$: 'UpdateTmp', a: a};
 };
-var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
-var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$label = _VirtualDom_node('label');
+var $rundis$elm_bootstrap$Bootstrap$Form$label = F2(
+	function (attributes, children) {
+		return A2(
+			$elm$html$Html$label,
+			A2(
+				$elm$core$List$cons,
+				$elm$html$Html$Attributes$class('form-control-label'),
+				attributes),
+			children);
+	});
 var $author$project$FightingTool$customEnemy = function (model) {
+	var _v0 = function () {
+		var _v1 = model.tmpEnemy;
+		if (_v1.$ === 'Enemy') {
+			var n = _v1.a;
+			var h = _v1.b;
+			var a = _v1.c;
+			if (n === 'none') {
+				return _Utils_Tuple3(
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(''),
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(''),
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(''));
+			} else {
+				return _Utils_Tuple3(
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$value(n),
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$value(
+						$elm$core$String$fromInt(h)),
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$value(
+						$elm$core$String$fromInt(a)));
+			}
+		} else {
+			return _Utils_Tuple3(
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(''),
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(''),
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(''));
+		}
+	}();
+	var ddName = _v0.a;
+	var ddHealth = _v0.b;
+	var ddArmor = _v0.c;
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
 				A2(
-				$elm$html$Html$label,
+				$rundis$elm_bootstrap$Bootstrap$Form$label,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$for('name')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Name')
+						$elm$html$Html$text('Name:')
 					])),
-				A2(
-				$elm$html$Html$input,
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$text(
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$type_('text'),
-						$elm$html$Html$Attributes$id('name'),
-						$elm$html$Html$Attributes$name('name'),
-						$elm$html$Html$Events$onInput(
+						$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(
 						function (n) {
+<<<<<<< HEAD
 							var _v0 = function () {
 								var _v1 = model.tmpEnemy;
 								if (_v1.$ === 'Enemy') {
@@ -9637,10 +10155,19 @@ var $author$project$FightingTool$customEnemy = function (model) {
 									var a = _v1.d;
 									var s = _v1.e;
 									return {armor: a, health: h, maxHealth: m, status: s};
+=======
+							var _v3 = function () {
+								var _v4 = model.tmpEnemy;
+								if (_v4.$ === 'Enemy') {
+									var h = _v4.b;
+									var a = _v4.c;
+									return _Utils_Tuple2(h, a);
+>>>>>>> dev
 								} else {
 									return {armor: 0, health: 0, maxHealth: 0, status: _List_Nil};
 								}
 							}();
+<<<<<<< HEAD
 							var health = _v0.health;
 							var maxHealth = _v0.maxHealth;
 							var armor = _v0.armor;
@@ -9650,26 +10177,29 @@ var $author$project$FightingTool$customEnemy = function (model) {
 						})
 					]),
 				_List_Nil),
+=======
+							var health = _v3.a;
+							var armor = _v3.b;
+							return $author$project$Model$UpdateTmp(
+								A3($author$project$Model$Enemy, n, health, armor));
+						}),
+						ddName
+					])),
+>>>>>>> dev
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
-				$elm$html$Html$label,
+				$rundis$elm_bootstrap$Bootstrap$Form$label,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$for('health')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('LeP')
+						$elm$html$Html$text('LeP:')
 					])),
-				A2(
-				$elm$html$Html$input,
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$number(
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$type_('number'),
-						$elm$html$Html$Attributes$id('health'),
-						$elm$html$Html$Attributes$name('health'),
-						$elm$html$Html$Events$onInput(
+						$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(
 						function (h) {
+<<<<<<< HEAD
 							var _v2 = function () {
 								var _v3 = model.tmpEnemy;
 								if (_v3.$ === 'Enemy') {
@@ -9677,13 +10207,26 @@ var $author$project$FightingTool$customEnemy = function (model) {
 									var a = _v3.d;
 									var s = _v3.e;
 									return _Utils_Tuple3(n, a, s);
+=======
+							var _v5 = function () {
+								var _v6 = model.tmpEnemy;
+								if (_v6.$ === 'Enemy') {
+									var n = _v6.a;
+									var a = _v6.c;
+									return _Utils_Tuple2(n, a);
+>>>>>>> dev
 								} else {
 									return _Utils_Tuple3('', 0, _List_Nil);
 								}
 							}();
+<<<<<<< HEAD
 							var name = _v2.a;
 							var armor = _v2.b;
 							var status = _v2.c;
+=======
+							var name = _v5.a;
+							var armor = _v5.b;
+>>>>>>> dev
 							return $author$project$Model$UpdateTmp(
 								A5(
 									$author$project$Model$Enemy,
@@ -9692,6 +10235,7 @@ var $author$project$FightingTool$customEnemy = function (model) {
 										$elm$core$Maybe$withDefault,
 										1,
 										$elm$core$String$toInt(h)),
+<<<<<<< HEAD
 									A2(
 										$elm$core$Maybe$withDefault,
 										1,
@@ -9701,26 +10245,26 @@ var $author$project$FightingTool$customEnemy = function (model) {
 						})
 					]),
 				_List_Nil),
+=======
+									armor));
+						}),
+						ddHealth
+					])),
+>>>>>>> dev
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
-				$elm$html$Html$label,
+				$rundis$elm_bootstrap$Bootstrap$Form$label,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$for('armor')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('RS')
+						$elm$html$Html$text('RS:')
 					])),
-				A2(
-				$elm$html$Html$input,
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$number(
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$type_('number'),
-						$elm$html$Html$Attributes$id('armor'),
-						$elm$html$Html$Attributes$name('armor'),
-						$elm$html$Html$Events$onInput(
+						$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(
 						function (a) {
+<<<<<<< HEAD
 							var _v4 = function () {
 								var _v5 = model.tmpEnemy;
 								if (_v5.$ === 'Enemy') {
@@ -9729,14 +10273,27 @@ var $author$project$FightingTool$customEnemy = function (model) {
 									var m = _v5.c;
 									var s = _v5.e;
 									return {health: h, maxHealth: m, name: n, status: s};
+=======
+							var _v7 = function () {
+								var _v8 = model.tmpEnemy;
+								if (_v8.$ === 'Enemy') {
+									var n = _v8.a;
+									var h = _v8.b;
+									return _Utils_Tuple2(n, h);
+>>>>>>> dev
 								} else {
 									return {health: 0, maxHealth: 0, name: '', status: _List_Nil};
 								}
 							}();
+<<<<<<< HEAD
 							var name = _v4.name;
 							var health = _v4.health;
 							var maxHealth = _v4.maxHealth;
 							var status = _v4.status;
+=======
+							var name = _v7.a;
+							var health = _v7.b;
+>>>>>>> dev
 							return $author$project$Model$UpdateTmp(
 								A5(
 									$author$project$Model$Enemy,
@@ -9746,11 +10303,18 @@ var $author$project$FightingTool$customEnemy = function (model) {
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
+<<<<<<< HEAD
 										$elm$core$String$toInt(a)),
 									status));
 						})
 					]),
 				_List_Nil),
+=======
+										$elm$core$String$toInt(a))));
+						}),
+						ddArmor
+					])),
+>>>>>>> dev
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
 				$rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -9777,23 +10341,16 @@ var $author$project$FightingTool$customHero = function (model) {
 		_List_fromArray(
 			[
 				A2(
-				$elm$html$Html$label,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$for('name')
-					]),
+				$rundis$elm_bootstrap$Bootstrap$Form$label,
+				_List_Nil,
 				_List_fromArray(
 					[
 						$elm$html$Html$text('Name')
 					])),
-				A2(
-				$elm$html$Html$input,
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$text(
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$type_('text'),
-						$elm$html$Html$Attributes$id('name'),
-						$elm$html$Html$Attributes$name('name'),
-						$elm$html$Html$Events$onInput(
+						$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(
 						function (n) {
 							var armor = function () {
 								var _v0 = model.tmpHero;
@@ -9807,27 +10364,19 @@ var $author$project$FightingTool$customHero = function (model) {
 							return $author$project$Model$UpdateTmp(
 								A2($author$project$Model$Hero, n, armor));
 						})
-					]),
-				_List_Nil),
+					])),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
-				$elm$html$Html$label,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$for('armor')
-					]),
+				$rundis$elm_bootstrap$Bootstrap$Form$label,
+				_List_Nil,
 				_List_fromArray(
 					[
 						$elm$html$Html$text('RS')
 					])),
-				A2(
-				$elm$html$Html$input,
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$number(
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$type_('number'),
-						$elm$html$Html$Attributes$id('armor'),
-						$elm$html$Html$Attributes$name('armor'),
-						$elm$html$Html$Events$onInput(
+						$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(
 						function (a) {
 							var name = function () {
 								var _v1 = model.tmpHero;
@@ -9847,8 +10396,7 @@ var $author$project$FightingTool$customHero = function (model) {
 										0,
 										$elm$core$String$toInt(a))));
 						})
-					]),
-				_List_Nil),
+					])),
 				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
 				$rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -9912,7 +10460,6 @@ var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropDir = function (maybeDir) {
 		_List_Nil,
 		A2($elm$core$Maybe$map, toAttrs, maybeDir));
 };
-var $elm$core$Basics$neq = _Utils_notEqual;
 var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownAttributes = F2(
 	function (status, config) {
 		return _Utils_ap(
@@ -10590,7 +11137,9 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Radio$applyModifier = F2(
 		}
 	});
 var $rundis$elm_bootstrap$Bootstrap$Form$Radio$defaultOptions = {attributes: _List_Nil, checked: false, custom: false, disabled: false, id: $elm$core$Maybe$Nothing, inline: false, name: $elm$core$Maybe$Nothing, onClick: $elm$core$Maybe$Nothing, validation: $elm$core$Maybe$Nothing};
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$Attributes$checked = $elm$html$Html$Attributes$boolProperty('checked');
+var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $rundis$elm_bootstrap$Bootstrap$Form$Radio$toAttributes = function (options) {
 	return _Utils_ap(
 		_List_fromArray(
@@ -10939,17 +11488,9 @@ var $rundis$elm_bootstrap$Bootstrap$Table$bordered = $rundis$elm_bootstrap$Boots
 var $author$project$Model$AddCharacterIcon = function (a) {
 	return {$: 'AddCharacterIcon', a: a};
 };
-var $author$project$Model$MonsterIcon = F2(
-	function (a, b) {
-		return {$: 'MonsterIcon', a: a, b: b};
-	});
 var $author$project$Model$MouseDraw = function (a) {
 	return {$: 'MouseDraw', a: a};
 };
-var $author$project$Model$PlayerIcon = F2(
-	function (a, b) {
-		return {$: 'PlayerIcon', a: a, b: b};
-	});
 var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
 	return {$: 'RowAttr', a: a};
 };
@@ -10983,7 +11524,7 @@ var $author$project$DungeonMap$characters2rows = function (chars) {
 								$author$project$DungeonMap$stopBubbling(
 									$author$project$Model$AddCharacterIcon(
 										$author$project$Model$MouseDraw(
-											A2($author$project$Model$MonsterIcon, '0', '0')))))
+											A3($author$project$Model$MonsterIcon, i + 1, '0', '0')))))
 							]),
 						_List_fromArray(
 							[
@@ -11022,7 +11563,7 @@ var $author$project$DungeonMap$characters2rows = function (chars) {
 								$author$project$DungeonMap$stopBubbling(
 									$author$project$Model$AddCharacterIcon(
 										$author$project$Model$MouseDraw(
-											A2($author$project$Model$PlayerIcon, '0', '0')))))
+											A3($author$project$Model$PlayerIcon, i + 1, '0', '0')))))
 							]),
 						_List_fromArray(
 							[
@@ -11140,44 +11681,52 @@ var $author$project$DungeonMap$onMouseMove = function (mapMousePositionToMsg) {
 		'mousemoveWithCoordinates',
 		A2($elm$json$Json$Decode$map, mapMousePositionToMsg, $author$project$DungeonMap$mousePosition));
 };
-var $author$project$DungeonMap$positionToCircleCenter = function (position) {
-	return $author$project$Model$AddCharacterIcon(
-		$author$project$Model$MouseDraw(
-			A2(
-				$author$project$Model$PlayerIcon,
-				$elm$core$String$fromFloat(position.x),
-				$elm$core$String$fromFloat(position.y))));
-};
-var $author$project$DungeonMap$positionToRectangleCorner = function (position) {
-	return $author$project$Model$AddCharacterIcon(
-		$author$project$Model$MouseDraw(
-			A2(
-				$author$project$Model$MonsterIcon,
-				$elm$core$String$fromFloat(position.x),
-				$elm$core$String$fromFloat(position.y))));
-};
+var $author$project$DungeonMap$positionToCircleCenter = F2(
+	function (i, position) {
+		return $author$project$Model$AddCharacterIcon(
+			$author$project$Model$MouseDraw(
+				A3(
+					$author$project$Model$PlayerIcon,
+					i,
+					$elm$core$String$fromFloat(position.x),
+					$elm$core$String$fromFloat(position.y))));
+	});
+var $author$project$DungeonMap$positionToRectangleCorner = F2(
+	function (i, position) {
+		return $author$project$Model$AddCharacterIcon(
+			$author$project$Model$MouseDraw(
+				A3(
+					$author$project$Model$MonsterIcon,
+					i,
+					$elm$core$String$fromFloat(position.x),
+					$elm$core$String$fromFloat(position.y))));
+	});
 var $author$project$DungeonMap$mouseDrawEvents = function (addCharacterIcon) {
 	if (addCharacterIcon.$ === 'DrawIcon') {
 		var characterIcon = addCharacterIcon.a;
 		if (characterIcon.$ === 'PlayerIcon') {
-			var x = characterIcon.a;
-			var y = characterIcon.b;
+			var i = characterIcon.a;
+			var x = characterIcon.b;
+			var y = characterIcon.c;
 			return _List_fromArray(
 				[
 					$elm$svg$Svg$Events$onClick(
 					$author$project$Model$AddCharacterIcon(
 						$author$project$Model$MouseClick(characterIcon))),
-					$author$project$DungeonMap$onMouseMove($author$project$DungeonMap$positionToCircleCenter)
+					$author$project$DungeonMap$onMouseMove(
+					$author$project$DungeonMap$positionToCircleCenter(i))
 				]);
 		} else {
-			var x = characterIcon.a;
-			var y = characterIcon.b;
+			var i = characterIcon.a;
+			var x = characterIcon.b;
+			var y = characterIcon.c;
 			return _List_fromArray(
 				[
 					$elm$svg$Svg$Events$onClick(
 					$author$project$Model$AddCharacterIcon(
 						$author$project$Model$MouseClick(characterIcon))),
-					$author$project$DungeonMap$onMouseMove($author$project$DungeonMap$positionToRectangleCorner)
+					$author$project$DungeonMap$onMouseMove(
+					$author$project$DungeonMap$positionToRectangleCorner(i))
 				]);
 		}
 	} else {
@@ -11206,8 +11755,9 @@ var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 					[
 						function () {
 						if (characterIcon.$ === 'PlayerIcon') {
-							var x = characterIcon.a;
-							var y = characterIcon.b;
+							var i = characterIcon.a;
+							var x = characterIcon.b;
+							var y = characterIcon.c;
 							return A2(
 								$elm$svg$Svg$circle,
 								_List_fromArray(
@@ -11218,8 +11768,9 @@ var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 									]),
 								_List_Nil);
 						} else {
-							var x = characterIcon.a;
-							var y = characterIcon.b;
+							var i = characterIcon.a;
+							var x = characterIcon.b;
+							var y = characterIcon.c;
 							return A2(
 								$elm$svg$Svg$rect,
 								_List_fromArray(
@@ -11254,23 +11805,40 @@ var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
 var $elm$svg$Svg$Attributes$dominantBaseline = _VirtualDom_attribute('dominant-baseline');
 var $author$project$DungeonMap$getCoord = function (object) {
 	if (object.$ === 'Monster') {
-		var x = object.a;
-		var y = object.b;
+		var i = object.a;
+		var x = object.b;
+		var y = object.c;
 		return x + (',' + y);
 	} else {
-		var x = object.a;
-		var y = object.b;
+		var i = object.a;
+		var x = object.b;
+		var y = object.c;
 		return x + (',' + y);
+	}
+};
+var $author$project$DungeonMap$getID = function (object) {
+	if (object.$ === 'Monster') {
+		var i = object.a;
+		var x = object.b;
+		var y = object.c;
+		return i;
+	} else {
+		var i = object.a;
+		var x = object.b;
+		var y = object.c;
+		return i;
 	}
 };
 var $author$project$DungeonMap$getIcon = function (object) {
 	if (object.$ === 'Monster') {
-		var x = object.a;
-		var y = object.b;
+		var i = object.a;
+		var x = object.b;
+		var y = object.c;
 		return 'monster';
 	} else {
-		var x = object.a;
-		var y = object.b;
+		var i = object.a;
+		var x = object.b;
+		var y = object.c;
 		return 'player';
 	}
 };
@@ -11279,128 +11847,128 @@ var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$svg$Svg$Attributes$textAnchor = _VirtualDom_attribute('text-anchor');
 var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
 var $elm$core$String$toFloat = _String_toFloat;
-var $author$project$DungeonMap$getAreaParam = F2(
-	function (i, s) {
-		var yCor = A2(
-			$elm$core$Maybe$withDefault,
-			'0',
-			$elm$core$List$head(
-				A2(
-					$elm$core$List$drop,
-					1,
-					A2(
-						$elm$core$String$split,
-						',',
-						$author$project$DungeonMap$getCoord(s)))));
-		var xCor = A2(
-			$elm$core$Maybe$withDefault,
-			'0',
-			$elm$core$List$head(
+var $author$project$DungeonMap$getAreaParam = function (s) {
+	var yCor = A2(
+		$elm$core$Maybe$withDefault,
+		'0',
+		$elm$core$List$head(
+			A2(
+				$elm$core$List$drop,
+				1,
 				A2(
 					$elm$core$String$split,
 					',',
-					$author$project$DungeonMap$getCoord(s))));
-		var _v0 = $author$project$DungeonMap$getIcon(s);
-		switch (_v0) {
-			case 'monster':
-				return _List_fromArray(
-					[
-						A2(
-						$elm$svg$Svg$rect,
-						_List_fromArray(
-							[
-								$elm$svg$Svg$Attributes$id(
-								$elm$core$String$fromInt(i)),
-								$elm$svg$Svg$Attributes$x(xCor),
-								$elm$svg$Svg$Attributes$y(yCor),
-								$elm$svg$Svg$Attributes$width('15'),
-								$elm$svg$Svg$Attributes$height('15'),
-								$elm$svg$Svg$Attributes$class('MonsterIcon')
-							]),
-						_List_Nil),
-						A2(
-						$elm$svg$Svg$text_,
-						_List_fromArray(
-							[
-								$elm$svg$Svg$Attributes$textAnchor('middle'),
-								$elm$svg$Svg$Attributes$x(
-								$elm$core$String$fromFloat(
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$elm$core$String$toFloat(xCor)) + 7.5)),
-								$elm$svg$Svg$Attributes$y(
-								$elm$core$String$fromFloat(
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$elm$core$String$toFloat(yCor)) + 8.75)),
-								$elm$svg$Svg$Attributes$dominantBaseline('middle')
-							]),
-						_List_fromArray(
-							[
-								$elm$svg$Svg$text(
-								$elm$core$String$fromInt(i))
-							]))
-					]);
-			case 'player':
-				return _List_fromArray(
-					[
-						A2(
-						$elm$svg$Svg$circle,
-						_List_fromArray(
-							[
-								$elm$svg$Svg$Attributes$id(
-								$elm$core$String$fromInt(i)),
-								$elm$svg$Svg$Attributes$cx(xCor),
-								$elm$svg$Svg$Attributes$cy(yCor),
-								$elm$svg$Svg$Attributes$r('10'),
-								$elm$svg$Svg$Attributes$class('PlayerIcon')
-							]),
-						_List_Nil),
-						A2(
-						$elm$svg$Svg$text_,
-						_List_fromArray(
-							[
-								$elm$svg$Svg$Attributes$textAnchor('middle'),
-								$elm$svg$Svg$Attributes$x(xCor),
-								$elm$svg$Svg$Attributes$y(
-								$elm$core$String$fromFloat(
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$elm$core$String$toFloat(yCor)) + 0.75)),
-								$elm$svg$Svg$Attributes$dominantBaseline('middle')
-							]),
-						_List_fromArray(
-							[
-								$elm$svg$Svg$text(
-								$elm$core$String$fromInt(i))
-							]))
-					]);
-			default:
-				return _List_fromArray(
-					[
-						A2(
-						$elm$svg$Svg$circle,
-						_List_fromArray(
-							[
-								$elm$svg$Svg$Attributes$id(
-								$elm$core$String$fromInt(i)),
-								$elm$svg$Svg$Attributes$cx(xCor),
-								$elm$svg$Svg$Attributes$cy(yCor),
-								$elm$svg$Svg$Attributes$r('0')
-							]),
-						_List_Nil)
-					]);
-		}
-	});
+					$author$project$DungeonMap$getCoord(s)))));
+	var xCor = A2(
+		$elm$core$Maybe$withDefault,
+		'0',
+		$elm$core$List$head(
+			A2(
+				$elm$core$String$split,
+				',',
+				$author$project$DungeonMap$getCoord(s))));
+	var id = $author$project$DungeonMap$getID(s);
+	var _v0 = $author$project$DungeonMap$getIcon(s);
+	switch (_v0) {
+		case 'monster':
+			return _List_fromArray(
+				[
+					A2(
+					$elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$id(
+							$elm$core$String$fromInt(id)),
+							$elm$svg$Svg$Attributes$x(xCor),
+							$elm$svg$Svg$Attributes$y(yCor),
+							$elm$svg$Svg$Attributes$width('15'),
+							$elm$svg$Svg$Attributes$height('15'),
+							$elm$svg$Svg$Attributes$class('MonsterIcon')
+						]),
+					_List_Nil),
+					A2(
+					$elm$svg$Svg$text_,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$textAnchor('middle'),
+							$elm$svg$Svg$Attributes$x(
+							$elm$core$String$fromFloat(
+								A2(
+									$elm$core$Maybe$withDefault,
+									0,
+									$elm$core$String$toFloat(xCor)) + 7.5)),
+							$elm$svg$Svg$Attributes$y(
+							$elm$core$String$fromFloat(
+								A2(
+									$elm$core$Maybe$withDefault,
+									0,
+									$elm$core$String$toFloat(yCor)) + 8.75)),
+							$elm$svg$Svg$Attributes$dominantBaseline('middle')
+						]),
+					_List_fromArray(
+						[
+							$elm$svg$Svg$text(
+							$elm$core$String$fromInt(id))
+						]))
+				]);
+		case 'player':
+			return _List_fromArray(
+				[
+					A2(
+					$elm$svg$Svg$circle,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$id(
+							$elm$core$String$fromInt(id)),
+							$elm$svg$Svg$Attributes$cx(xCor),
+							$elm$svg$Svg$Attributes$cy(yCor),
+							$elm$svg$Svg$Attributes$r('10'),
+							$elm$svg$Svg$Attributes$class('PlayerIcon')
+						]),
+					_List_Nil),
+					A2(
+					$elm$svg$Svg$text_,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$textAnchor('middle'),
+							$elm$svg$Svg$Attributes$x(xCor),
+							$elm$svg$Svg$Attributes$y(
+							$elm$core$String$fromFloat(
+								A2(
+									$elm$core$Maybe$withDefault,
+									0,
+									$elm$core$String$toFloat(yCor)) + 0.75)),
+							$elm$svg$Svg$Attributes$dominantBaseline('middle')
+						]),
+					_List_fromArray(
+						[
+							$elm$svg$Svg$text(
+							$elm$core$String$fromInt(id))
+						]))
+				]);
+		default:
+			return _List_fromArray(
+				[
+					A2(
+					$elm$svg$Svg$circle,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$id(
+							$elm$core$String$fromInt(id)),
+							$elm$svg$Svg$Attributes$cx(xCor),
+							$elm$svg$Svg$Attributes$cy(yCor),
+							$elm$svg$Svg$Attributes$r('0')
+						]),
+					_List_Nil)
+				]);
+	}
+};
 var $author$project$DungeonMap$svgIconList = function (model) {
 	return A3(
 		$elm$core$List$foldl,
 		$elm$core$Basics$append,
 		_List_Nil,
-		A2($elm$core$List$indexedMap, $author$project$DungeonMap$getAreaParam, model.characterList));
+		A2($elm$core$List$map, $author$project$DungeonMap$getAreaParam, model.characterList));
 };
 var $elm$svg$Svg$Attributes$title = _VirtualDom_attribute('title');
 var $elm$svg$Svg$Attributes$version = _VirtualDom_attribute('version');
@@ -12330,7 +12898,6 @@ var $author$project$FightingTool$footer = A2(
 						]))
 				]))
 		]));
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $author$project$FightingTool$header = A2(
 	$elm$html$Html$section,
@@ -12706,7 +13273,7 @@ var $author$project$Main$view = function (model) {
 						[
 							$rundis$elm_bootstrap$Bootstrap$Tab$item(
 							{
-								id: 'tabItem1',
+								id: 'tabOverview',
 								link: A2(
 									$rundis$elm_bootstrap$Bootstrap$Tab$link,
 									_List_fromArray(
@@ -12725,7 +13292,7 @@ var $author$project$Main$view = function (model) {
 							}),
 							$rundis$elm_bootstrap$Bootstrap$Tab$item(
 							{
-								id: 'tabItem2',
+								id: 'tabMap',
 								link: A2(
 									$rundis$elm_bootstrap$Bootstrap$Tab$link,
 									_List_fromArray(
@@ -12740,6 +13307,25 @@ var $author$project$Main$view = function (model) {
 									_List_fromArray(
 										[
 											$author$project$DungeonMap$dungeonMapView(model)
+										]))
+							}),
+							$rundis$elm_bootstrap$Bootstrap$Tab$item(
+							{
+								id: 'tabAbout',
+								link: A2(
+									$rundis$elm_bootstrap$Bootstrap$Tab$link,
+									_List_fromArray(
+										[$rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$mt3]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Regeln')
+										])),
+								pane: A2(
+									$rundis$elm_bootstrap$Bootstrap$Tab$pane,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$author$project$About$aboutView(model)
 										]))
 							})
 						]),
