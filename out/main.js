@@ -7818,6 +7818,41 @@ var $author$project$Main$update = F2(
 var $author$project$Model$TabMsg = function (a) {
 	return {$: 'TabMsg', a: a};
 };
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $elm$html$Html$p = _VirtualDom_node('p');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$About$aboutView = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$h1,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Das schwarze Auge Edition 5')
+					])),
+				A2(
+				$elm$html$Html$h3,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Übersicht der Kampfesregeln')
+					])),
+				A2(
+				$elm$html$Html$p,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('\n            Die wenigsten Geschichten im Pen & Paper Rollenspiel DSA kommen ohne einen Kampf aus.\n            Die Mechanik unterscheidet sich allerdings etwas vom normalen Spielgeschehen.\n            ')
+					]))
+			]));
+};
 var $author$project$Model$CustomEnemy = {$: 'CustomEnemy'};
 var $author$project$Model$ShowModal = function (a) {
 	return {$: 'ShowModal', a: a};
@@ -8074,7 +8109,6 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$footer = F3(
 							{attributes: attributes, children: children}))
 				}));
 	});
-var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $rundis$elm_bootstrap$Bootstrap$Modal$Header = function (a) {
 	return {$: 'Header', a: a};
 };
@@ -8120,7 +8154,6 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick = F2(
 						{hideOnBackdropClick: hide})
 				}));
 	});
-var $elm$html$Html$p = _VirtualDom_node('p');
 var $rundis$elm_bootstrap$Bootstrap$General$Internal$SM = {$: 'SM'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$small = function (_v0) {
 	var conf = _v0.a;
@@ -8136,8 +8169,6 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$small = function (_v0) {
 					})
 			}));
 };
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$virtual_dom$VirtualDom$attribute = F2(
 	function (key, value) {
 		return A2(
@@ -8146,7 +8177,6 @@ var $elm$virtual_dom$VirtualDom$attribute = F2(
 			_VirtualDom_noJavaScriptOrHtmlUri(value));
 	});
 var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
-var $elm$html$Html$div = _VirtualDom_node('div');
 var $rundis$elm_bootstrap$Bootstrap$Modal$StartClose = {$: 'StartClose'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$getCloseMsg = function (config_) {
 	var _v0 = config_.withAnimation;
@@ -12463,7 +12493,6 @@ var $author$project$FightingTool$footer = A2(
 						]))
 				]))
 		]));
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $author$project$FightingTool$header = A2(
 	$elm$html$Html$section,
@@ -12839,7 +12868,7 @@ var $author$project$Main$view = function (model) {
 						[
 							$rundis$elm_bootstrap$Bootstrap$Tab$item(
 							{
-								id: 'tabItem1',
+								id: 'tabOverview',
 								link: A2(
 									$rundis$elm_bootstrap$Bootstrap$Tab$link,
 									_List_fromArray(
@@ -12858,7 +12887,7 @@ var $author$project$Main$view = function (model) {
 							}),
 							$rundis$elm_bootstrap$Bootstrap$Tab$item(
 							{
-								id: 'tabItem2',
+								id: 'tabMap',
 								link: A2(
 									$rundis$elm_bootstrap$Bootstrap$Tab$link,
 									_List_fromArray(
@@ -12873,6 +12902,25 @@ var $author$project$Main$view = function (model) {
 									_List_fromArray(
 										[
 											$author$project$DungeonMap$dungeonMapView(model)
+										]))
+							}),
+							$rundis$elm_bootstrap$Bootstrap$Tab$item(
+							{
+								id: 'tabAbout',
+								link: A2(
+									$rundis$elm_bootstrap$Bootstrap$Tab$link,
+									_List_fromArray(
+										[$rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$mt3]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Regeln')
+										])),
+								pane: A2(
+									$rundis$elm_bootstrap$Bootstrap$Tab$pane,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$author$project$About$aboutView(model)
 										]))
 							})
 						]),

@@ -8,18 +8,18 @@
   <title>Main</title>
   <script src="out/main.js"></script>
   <style>
-    .PlayerIcon
-	{ fill: black;
-          stroke: red;
-          stroke-width: 2;
-          fill-opacity:0;
-    	}
-    .MonsterIcon
-	{ fill: black;
-          stroke: red;
-          stroke-width: 2;
-          fill-opacity:0;
-    	}
+    .PlayerIcon {
+        fill: black;
+        stroke: red;
+        stroke-width: 2;
+        fill-opacity:0;
+    }
+    .MonsterIcon {
+        fill: black;
+        stroke: red;
+        stroke-width: 2;
+        fill-opacity:0;
+    }
     .PlayerIcon:hover {
         fill: grey-darker;
         opacity:0.5;
@@ -36,47 +36,46 @@
 <body>
   <div id="myapp"></div>
   <script>
-
-var observer = new MutationObserver(function (mutations) {
-function filterSubtree4Svg(node_arr){
-    return node_arr.filter(function (node) {
-              return node.tagName === 'svg';
-            })
-          .concat(
-           node_arr.filter(function (node) {
-              return (node.childNodes && node.childNodes.length);
-            })
-            .reduce(
-              (accumulator, currentValue) => accumulator.concat(
-              filterSubtree4Svg(Array.from(currentValue.childNodes))
-              )
-              , [])
-          );
-}
-  mutations.forEach(function (mutation) {
-    //console.log(mutation);
-    if (mutation.type === 'childList') {
-      filterSubtree4Svg(Array.from(mutation.addedNodes))
-      .forEach(function (svg) {
-          let point, position
-          svg.addEventListener('mousemove', (e) => {
-            point = svg.createSVGPoint()
-            point.x = e.clientX
-            point.y = e.clientY
-            position = point.matrixTransform(svg.getScreenCTM().inverse())
-            let event = new CustomEvent("mousemoveWithCoordinates", { detail: position })
-            svg.dispatchEvent(event)
-          })
-        });
+    var observer = new MutationObserver(function (mutations) {
+      function filterSubtree4Svg(node_arr){
+        return node_arr.filter(function (node) {
+                  return node.tagName === 'svg';
+                })
+              .concat(
+              node_arr.filter(function (node) {
+                  return (node.childNodes && node.childNodes.length);
+                })
+                .reduce(
+                  (accumulator, currentValue) => accumulator.concat(
+                  filterSubtree4Svg(Array.from(currentValue.childNodes))
+                  )
+                  , [])
+              );
     }
-  });
-});
+      mutations.forEach(function (mutation) {
+        //console.log(mutation);
+        if (mutation.type === 'childList') {
+          filterSubtree4Svg(Array.from(mutation.addedNodes))
+          .forEach(function (svg) {
+              let point, position
+              svg.addEventListener('mousemove', (e) => {
+                point = svg.createSVGPoint()
+                point.x = e.clientX
+                point.y = e.clientY
+                position = point.matrixTransform(svg.getScreenCTM().inverse())
+                let event = new CustomEvent("mousemoveWithCoordinates", { detail: position })
+                svg.dispatchEvent(event)
+              })
+            });
+        }
+      });
+    });
 
-observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, { childList: true, subtree: true });
 
-  var app = Elm.Main.init({
-    node: document.getElementById('myapp')
-  });
+      var app = Elm.Main.init({
+        node: document.getElementById('myapp')
+      });
   </script>
 </body>
 </html>

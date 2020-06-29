@@ -16,9 +16,7 @@ import Array.Extra as Array
 import DungeonMap exposing (dungeonMapView)
 import FightingTool exposing (..)
 import Model exposing (..)
-import Model exposing (ModalType(..))
-import Model exposing (Msg(..))
-
+import About exposing (aboutView)
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
@@ -170,18 +168,25 @@ view model =
         , Tab.config TabMsg
             |> Tab.items
                 [ Tab.item
-                    { id = "tabItem1"
+                    { id = "tabOverview"
                     , link = Tab.link [ Spacing.mt3 ] [ text "Overview" ]
                     , pane =
                         Tab.pane []
                             [ body model ]
                     }
                 , Tab.item
-                    { id = "tabItem2"
+                    { id = "tabMap"
                     , link = Tab.link [ Spacing.mt3 ] [ text "Map" ]
                     , pane =
                         Tab.pane []
                             [ dungeonMapView model ] -- Map
+                    }
+                , Tab.item
+                    { id = "tabAbout"
+                    , link = Tab.link [ Spacing.mt3 ] [ text "Regeln" ]
+                    , pane =
+                        Tab.pane []
+                            [ aboutView model ]
                     }
                 ]
             |> Tab.view model.tabState
