@@ -2,9 +2,9 @@
 module DungeonMap exposing (..)
 
 --elm Packages
-import Html exposing (Html, div)
+import Html exposing (Html, div, button, text)
 import Html.Attributes exposing (class)
-import Html.Events
+import Html.Events exposing (onClick)
 import Svg
 import Svg.Attributes as SvgAtt
 import Svg.Events
@@ -12,6 +12,7 @@ import Json.Decode
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Table as Table
+import Bootstrap.Button as Button
 import Array exposing (Array)
 
 
@@ -31,6 +32,7 @@ dungeonMapView model =
                                         ]
                              ]
                   ]
+                  , Button.button [ Button.info, Button.onClick ClearCharacterList ] [ text "Clear Map" ]
             ]
 
 dungeonMap_MonsterList : Model -> Html Msg

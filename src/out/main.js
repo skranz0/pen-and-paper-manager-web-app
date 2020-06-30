@@ -7855,12 +7855,6 @@ var $author$project$Main$update = F2(
 							$elm$core$Platform$Cmd$none);
 					}
 				}
-			case 'ClearCharacterList':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{characterList: _List_Nil}),
-					$elm$core$Platform$Cmd$none);
 			case 'CloseModal':
 				var modalType = msg.a;
 				switch (modalType.$) {
@@ -11217,7 +11211,6 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$config = function (toMsg) {
 	return $rundis$elm_bootstrap$Bootstrap$Tab$Config(
 		{attributes: _List_Nil, isPill: false, items: _List_Nil, layout: $elm$core$Maybe$Nothing, toMsg: toMsg, useHash: false, withAnimation: false});
 };
-var $author$project$Model$ClearCharacterList = {$: 'ClearCharacterList'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Column = function (a) {
 	return {$: 'Column', a: a};
 };
@@ -11381,10 +11374,17 @@ var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$text('LeP')
+										$elm$html$Html$text('LeP2hbkfhbgkdysfhbgskdfhbgkh')
 									]))
 							]))
-				})
+				}),
+				A2(
+				$elm$html$Html$button,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('+')
+					]))
 			]));
 };
 var $elm$html$Html$figure = _VirtualDom_node('figure');
@@ -11773,27 +11773,6 @@ var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Info = {$: 'Info'};
 var $rundis$elm_bootstrap$Bootstrap$Button$info = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Info));
-var $elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
-	return {$: 'MayPreventDefault', a: a};
-};
-var $elm$html$Html$Events$preventDefaultOn = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$MayPreventDefault(decoder));
-	});
-var $rundis$elm_bootstrap$Bootstrap$Button$onClick = function (message) {
-	return $rundis$elm_bootstrap$Bootstrap$Button$attrs(
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$Events$preventDefaultOn,
-				'click',
-				$elm$json$Json$Decode$succeed(
-					_Utils_Tuple2(message, true)))
-			]));
-};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col = {$: 'Col'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width = F2(
 	function (screenSize, columnCount) {
@@ -12626,20 +12605,39 @@ var $author$project$DungeonMap$dungeonMapView = function (model) {
 									[$rundis$elm_bootstrap$Bootstrap$Grid$Col$xs4]),
 								_List_fromArray(
 									[
-										$author$project$DungeonMap$dungeonMap_MonsterList(model)
+										$author$project$DungeonMap$dungeonMap_MonsterList(model),
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[$rundis$elm_bootstrap$Bootstrap$Button$info]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Info')
+											])),
+										A2(
+										$elm$html$Html$button,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('+')
+											]))
 									]))
 							]))
 					])),
 				A2(
 				$rundis$elm_bootstrap$Bootstrap$Button$button,
 				_List_fromArray(
-					[
-						$rundis$elm_bootstrap$Bootstrap$Button$info,
-						$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Model$ClearCharacterList)
-					]),
+					[$rundis$elm_bootstrap$Bootstrap$Button$info]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Clear Map')
+						$elm$html$Html$text('Info')
+					])),
+				A2(
+				$elm$html$Html$button,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('+')
 					]))
 			]));
 };

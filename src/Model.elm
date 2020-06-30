@@ -80,6 +80,7 @@ type Msg
     | DoNothing -- does nothing (yes, this IS necessary)
     | TabMsg Tab.State
     | AddCharacterIcon AddCharacterIconMsg
+    | ClearCharacterList
     | DiceAndSlice String
     | NewRandomList (List Int)
     | ChangeTmpDice String
