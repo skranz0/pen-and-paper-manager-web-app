@@ -11,6 +11,9 @@ import Bootstrap.Tab as Tab
 import Bootstrap.Dropdown as Dropdown
 import Array
 import Array.Extra as Array
+import Task
+import File.Select as Select
+import File
 
 --our Modules
 import DungeonMap exposing (dungeonMapView)
@@ -175,6 +178,32 @@ update msg model =
 
         DoNothing ->
             (model, Cmd.none)
+
+        Pick ->
+            ( model
+            , Select.files ["image/*"] GotFiles
+            )
+
+        DragEnter ->
+            ( { model | hover = True }
+            , Cmd.none
+            )
+
+        DragLeave ->
+            ( { model | hover = False }
+            , Cmd.none
+            )
+
+        GotFiles file files ->
+            ( { model | hover = False }
+            , Task.perform GotPreviews <| Task.sequence <|
+                List.map File.toUrl (file :: files)
+                )
+
+        GotPreviews urls ->
+            ( { model | previews = urls }
+            , Cmd.none
+            )
 
 view : Model -> Html Msg
 view model =

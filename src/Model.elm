@@ -8,6 +8,7 @@ import Bootstrap.Modal as Modal
 import Http
 import Array
 import Array.Extra as Array
+import File
 
 type alias Model =
     { enemy : Array.Array Character -- The enemy displayed on the homepage
@@ -30,6 +31,8 @@ type alias Model =
     , showCustomEnemy : Modal.Visibility
     , characterId : Int
     , enemyHero : String
+    , hover : Bool
+    , previews : List String
     }
 
 init : () -> (Model, Cmd Msg)
@@ -55,6 +58,8 @@ init _ =
         , showCustomEnemy = Modal.hidden
         , characterId = 0
         , enemyHero = "Enemy"
+        , hover = False
+        , previews = []
         }
     , Cmd.none
     )
@@ -87,6 +92,11 @@ type Msg
     | ShowModal ModalType
     | ShowAttackModal Int
     | SwitchEnemyHero String
+    | Pick
+    | DragEnter
+    | DragLeave
+    | GotFiles File.File (List File.File)
+    | GotPreviews (List String)
 
 type ModalType
     = AttackModal
