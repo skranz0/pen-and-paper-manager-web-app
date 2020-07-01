@@ -66,7 +66,7 @@ init _ =
 
 initEnemy : Character
 initEnemy =
-    Enemy "none" 0 0
+    Enemy "none" 0 0 0 ""
 initHero : Character
 initHero =
     Hero "none" 0
@@ -105,10 +105,16 @@ type ModalType
     | CustomEnemy
 
 type Character
-    = Enemy String Int Int
-    --      name   LeP RS
+    = Enemy String Int Int    Int String
+    --      name   LeP maxLeP RS  pain
     | Hero String Int
     --     name   RS
+
+type Status
+    = Pain
+    | Poison
+    | Burn
+    | Drunk
 
 type AddCharacterIconState
     = DrawingInactive

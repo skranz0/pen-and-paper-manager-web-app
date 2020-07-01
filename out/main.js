@@ -5583,11 +5583,11 @@ var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Model$DrawingInactive = {$: 'DrawingInactive'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$Hide = {$: 'Hide'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$hidden = $rundis$elm_bootstrap$Bootstrap$Modal$Hide;
-var $author$project$Model$Enemy = F3(
-	function (a, b, c) {
-		return {$: 'Enemy', a: a, b: b, c: c};
+var $author$project$Model$Enemy = F5(
+	function (a, b, c, d, e) {
+		return {$: 'Enemy', a: a, b: b, c: c, d: d, e: e};
 	});
-var $author$project$Model$initEnemy = A3($author$project$Model$Enemy, 'none', 0, 0);
+var $author$project$Model$initEnemy = A5($author$project$Model$Enemy, 'none', 0, 0, 0, '');
 var $author$project$Model$Hero = F2(
 	function (a, b) {
 		return {$: 'Hero', a: a, b: b};
@@ -7133,24 +7133,24 @@ var $author$project$Main$isNotId = F2(
 	function (id, s) {
 		if (s.$ === 'Monster') {
 			var i = s.a;
-			var x = s.b;
-			var y = s.c;
 			return !_Utils_eq(id, i);
 		} else {
 			var i = s.a;
-			var x = s.b;
-			var y = s.c;
 			return !_Utils_eq(id, i);
 		}
 	});
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$int = _Json_decodeInt;
-var $elm$json$Json$Decode$map3 = _Json_map3;
+var $elm$json$Json$Decode$map4 = _Json_map4;
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$FightingTool$parseEnemy = A4(
-	$elm$json$Json$Decode$map3,
-	$author$project$Model$Enemy,
+var $author$project$FightingTool$parseEnemy = A5(
+	$elm$json$Json$Decode$map4,
+	F4(
+		function (n, h, m, s) {
+			return A5($author$project$Model$Enemy, n, h, m, s, '');
+		}),
 	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'health', $elm$json$Json$Decode$int),
 	A2($elm$json$Json$Decode$field, 'health', $elm$json$Json$Decode$int),
 	A2($elm$json$Json$Decode$field, 'armor', $elm$json$Json$Decode$int));
 var $elm$core$Elm$JsArray$push = _JsArray_push;
@@ -8196,7 +8196,7 @@ var $author$project$About$aboutView = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text('\r\n            Die wenigsten Geschichten im Pen & Paper Rollenspiel DSA kommen ohne einen Kampf aus.\r\n            Die Mechanik unterscheidet sich allerdings etwas vom normalen Spielgeschehen.\r\n            ')
+						$elm$html$Html$text('\n            Die wenigsten Geschichten im Pen & Paper Rollenspiel DSA kommen ohne einen Kampf aus.\n            Die Mechanik unterscheidet sich allerdings etwas vom normalen Spielgeschehen.\n            ')
 					]))
 			]));
 };
@@ -8945,173 +8945,181 @@ var $rundis$elm_bootstrap$Bootstrap$Table$tr = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Table$Row(
 			{cells: cells, options: options});
 	});
-var $author$project$FightingTool$displayCharacters = F2(
-	function (model, chars) {
-		return A2(
-			$elm$core$List$indexedMap,
-			F2(
-				function (i, c) {
-					var _v0 = function () {
-						if (c.$ === 'Enemy') {
-							var n = c.a;
-							var h = c.b;
-							var a = c.c;
-							return _Utils_Tuple3(n, h, a);
-						} else {
-							var n = c.a;
-							var a = c.b;
-							return _Utils_Tuple3(n, 0, a);
-						}
-					}();
-					var name = _v0.a;
-					var health = _v0.b;
-					var armor = _v0.c;
+var $author$project$FightingTool$displayCharacters = function (chars) {
+	return A2(
+		$elm$core$List$indexedMap,
+		F2(
+			function (i, c) {
+				var _v0 = function () {
 					if (c.$ === 'Enemy') {
-						return A2(
-							$rundis$elm_bootstrap$Bootstrap$Table$tr,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(
-											$elm$core$String$fromInt(i + 1))
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(name)
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(
-											$elm$core$String$fromInt(armor))
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(
-											$elm$core$String$fromInt(health))
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$rundis$elm_bootstrap$Bootstrap$Button$button,
-											_List_fromArray(
-												[
-													$rundis$elm_bootstrap$Bootstrap$Button$success,
-													$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-													_List_fromArray(
-														[
-															$elm$html$Html$Events$onClick(
-															$author$project$Model$ShowAttackModal(i))
-														]))
-												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$text('Angriff')
-												]))
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$rundis$elm_bootstrap$Bootstrap$Button$button,
-											_List_fromArray(
-												[
-													$rundis$elm_bootstrap$Bootstrap$Button$danger,
-													$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-													_List_fromArray(
-														[
-															$elm$html$Html$Events$onClick(
-															$author$project$Model$RemoveEnemy(i))
-														]))
-												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$text('Löschen')
-												]))
-										]))
-								]));
+						var n = c.a;
+						var h = c.b;
+						var a = c.d;
+						var p = c.e;
+						return {armor: a, health: h, name: n, pain: p};
 					} else {
-						return A2(
-							$rundis$elm_bootstrap$Bootstrap$Table$tr,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(
-											$elm$core$String$fromInt(i + 1))
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(name)
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(
-											$elm$core$String$fromInt(armor))
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('')
-										])),
-									A2($rundis$elm_bootstrap$Bootstrap$Table$td, _List_Nil, _List_Nil),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$rundis$elm_bootstrap$Bootstrap$Button$button,
-											_List_fromArray(
-												[
-													$rundis$elm_bootstrap$Bootstrap$Button$danger,
-													$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-													_List_fromArray(
-														[
-															$elm$html$Html$Events$onClick(
-															$author$project$Model$RemoveEnemy(i))
-														]))
-												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$text('Löschen')
-												]))
-										]))
-								]));
+						var n = c.a;
+						var a = c.b;
+						return {armor: a, health: 0, name: n, pain: ''};
 					}
-				}),
-			$elm$core$Array$toList(chars));
-	});
+				}();
+				var name = _v0.name;
+				var health = _v0.health;
+				var armor = _v0.armor;
+				var pain = _v0.pain;
+				if (c.$ === 'Enemy') {
+					return A2(
+						$rundis$elm_bootstrap$Bootstrap$Table$tr,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(i + 1))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(name)
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(pain)
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(armor))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(health))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Button$success,
+												$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														$elm$html$Html$Events$onClick(
+														$author$project$Model$ShowAttackModal(i))
+													]))
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Angriff')
+											]))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Button$danger,
+												$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														$elm$html$Html$Events$onClick(
+														$author$project$Model$RemoveEnemy(i))
+													]))
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Löschen')
+											]))
+									]))
+							]));
+				} else {
+					return A2(
+						$rundis$elm_bootstrap$Bootstrap$Table$tr,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(i + 1))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(name)
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(armor))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('')
+									])),
+								A2($rundis$elm_bootstrap$Bootstrap$Table$td, _List_Nil, _List_Nil),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Button$danger,
+												$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														$elm$html$Html$Events$onClick(
+														$author$project$Model$RemoveEnemy(i))
+													]))
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Löschen')
+											]))
+									]))
+							]));
+				}
+			}),
+		$elm$core$Array$toList(chars));
+};
 var $rundis$elm_bootstrap$Bootstrap$Table$Hover = {$: 'Hover'};
 var $rundis$elm_bootstrap$Bootstrap$Table$hover = $rundis$elm_bootstrap$Bootstrap$Table$Hover;
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Light = {$: 'Light'};
@@ -9719,11 +9727,22 @@ var $author$project$FightingTool$attack = F3(
 				var _v1 = _v0.a;
 				var name = _v1.a;
 				var health = _v1.b;
-				var armor = _v1.c;
-				return (_Utils_cmp(damage, armor) > 0) ? ((((health - damage) + armor) <= 0) ? $author$project$Model$CharacterDeath(id) : A2(
+				var maxHealth = _v1.c;
+				var armor = _v1.d;
+				var pain = _v1.e;
+				return (_Utils_cmp(damage, armor) > 0) ? ((((health - damage) + armor) <= 0) ? $author$project$Model$CharacterDeath(id) : ((_Utils_cmp(health - damage, 0.25 * maxHealth) < 1) ? A2(
 					$author$project$Model$UpdateEnemy,
 					id,
-					A3($author$project$Model$Enemy, name, (health - damage) + armor, armor))) : $author$project$Model$CloseModal($author$project$Model$AttackModal);
+					A5($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor, 'Schmerz III')) : ((_Utils_cmp(health - damage, 0.5 * maxHealth) < 1) ? A2(
+					$author$project$Model$UpdateEnemy,
+					id,
+					A5($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor, 'Schmerz II')) : ((_Utils_cmp(health - damage, 0.75 * maxHealth) < 1) ? A2(
+					$author$project$Model$UpdateEnemy,
+					id,
+					A5($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor, 'Schmerz I')) : A2(
+					$author$project$Model$UpdateEnemy,
+					id,
+					A5($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor, pain)))))) : $author$project$Model$CloseModal($author$project$Model$AttackModal);
 			} else {
 				var _v2 = _v0.a;
 				return $author$project$Model$DoNothing;
@@ -10165,7 +10184,7 @@ var $author$project$FightingTool$customEnemy = function (model) {
 		if (_v1.$ === 'Enemy') {
 			var n = _v1.a;
 			var h = _v1.b;
-			var a = _v1.c;
+			var a = _v1.d;
 			if (n === 'none') {
 				return _Utils_Tuple3(
 					$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(''),
@@ -10210,16 +10229,20 @@ var $author$project$FightingTool$customEnemy = function (model) {
 								var _v4 = model.tmpEnemy;
 								if (_v4.$ === 'Enemy') {
 									var h = _v4.b;
-									var a = _v4.c;
-									return _Utils_Tuple2(h, a);
+									var m = _v4.c;
+									var a = _v4.d;
+									var p = _v4.e;
+									return {armor: a, health: h, maxHealth: m, pain: p};
 								} else {
-									return _Utils_Tuple2(0, 0);
+									return {armor: 0, health: 0, maxHealth: 0, pain: ''};
 								}
 							}();
-							var health = _v3.a;
-							var armor = _v3.b;
+							var health = _v3.health;
+							var maxHealth = _v3.maxHealth;
+							var armor = _v3.armor;
+							var pain = _v3.pain;
 							return $author$project$Model$UpdateTmp(
-								A3($author$project$Model$Enemy, n, health, armor));
+								A5($author$project$Model$Enemy, n, health, maxHealth, armor, pain));
 						}),
 						ddName
 					])),
@@ -10240,23 +10263,30 @@ var $author$project$FightingTool$customEnemy = function (model) {
 								var _v6 = model.tmpEnemy;
 								if (_v6.$ === 'Enemy') {
 									var n = _v6.a;
-									var a = _v6.c;
-									return _Utils_Tuple2(n, a);
+									var a = _v6.d;
+									var s = _v6.e;
+									return _Utils_Tuple3(n, a, s);
 								} else {
-									return _Utils_Tuple2('', 0);
+									return _Utils_Tuple3('', 0, '');
 								}
 							}();
 							var name = _v5.a;
 							var armor = _v5.b;
+							var pain = _v5.c;
 							return $author$project$Model$UpdateTmp(
-								A3(
+								A5(
 									$author$project$Model$Enemy,
 									name,
 									A2(
 										$elm$core$Maybe$withDefault,
 										1,
 										$elm$core$String$toInt(h)),
-									armor));
+									A2(
+										$elm$core$Maybe$withDefault,
+										1,
+										$elm$core$String$toInt(h)),
+									armor,
+									pain));
 						}),
 						ddHealth
 					])),
@@ -10278,22 +10308,28 @@ var $author$project$FightingTool$customEnemy = function (model) {
 								if (_v8.$ === 'Enemy') {
 									var n = _v8.a;
 									var h = _v8.b;
-									return _Utils_Tuple2(n, h);
+									var m = _v8.c;
+									var p = _v8.e;
+									return {health: h, maxHealth: m, name: n, pain: p};
 								} else {
-									return _Utils_Tuple2('', 0);
+									return {health: 0, maxHealth: 0, name: '', pain: ''};
 								}
 							}();
-							var name = _v7.a;
-							var health = _v7.b;
+							var name = _v7.name;
+							var health = _v7.health;
+							var maxHealth = _v7.maxHealth;
+							var pain = _v7.pain;
 							return $author$project$Model$UpdateTmp(
-								A3(
+								A5(
 									$author$project$Model$Enemy,
 									name,
 									health,
+									maxHealth,
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toInt(a))));
+										$elm$core$String$toInt(a)),
+									pain));
 						}),
 						ddArmor
 					])),
@@ -10658,10 +10694,10 @@ var $rundis$elm_bootstrap$Bootstrap$Dropdown$nextStatus = function (status) {
 			return $rundis$elm_bootstrap$Bootstrap$Dropdown$Open;
 	}
 };
+var $elm$json$Json$Decode$map3 = _Json_map3;
 var $elm$json$Json$Decode$float = _Json_decodeFloat;
 var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetHeight = A2($elm$json$Json$Decode$field, 'offsetHeight', $elm$json$Json$Decode$float);
 var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetWidth = A2($elm$json$Json$Decode$field, 'offsetWidth', $elm$json$Json$Decode$float);
-var $elm$json$Json$Decode$map4 = _Json_map4;
 var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetLeft = A2($elm$json$Json$Decode$field, 'offsetLeft', $elm$json$Json$Decode$float);
 var $elm$json$Json$Decode$null = _Json_decodeNull;
 var $elm$json$Json$Decode$oneOf = _Json_oneOf;
@@ -11359,7 +11395,7 @@ var $author$project$FightingTool$body = function (model) {
 								$rundis$elm_bootstrap$Bootstrap$Table$tbody,
 								_List_Nil,
 								_Utils_ap(
-									A2($author$project$FightingTool$displayCharacters, model, model.enemy),
+									$author$project$FightingTool$displayCharacters(model.enemy),
 									_List_fromArray(
 										[
 											A2(
@@ -11408,7 +11444,11 @@ var $author$project$FightingTool$body = function (model) {
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+												$elm$html$Html$Attributes$colspan(2))
+											]),
 										_List_fromArray(
 											[
 												$elm$html$Html$text('Name')
