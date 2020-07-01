@@ -6937,13 +6937,9 @@ var $author$project$Main$isNotId = F2(
 	function (id, s) {
 		if (s.$ === 'Monster') {
 			var i = s.a;
-			var x = s.b;
-			var y = s.c;
 			return !_Utils_eq(id, i);
 		} else {
 			var i = s.a;
-			var x = s.b;
-			var y = s.c;
 			return !_Utils_eq(id, i);
 		}
 	});
@@ -11222,7 +11218,11 @@ var $author$project$FightingTool$body = function (model) {
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+												$elm$html$Html$Attributes$colspan(2))
+											]),
 										_List_fromArray(
 											[
 												$elm$html$Html$text('Name')

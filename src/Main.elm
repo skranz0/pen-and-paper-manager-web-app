@@ -135,12 +135,12 @@ update msg model =
                     case characterIcon of
                         PlayerIcon i x y ->
                             if List.length model.characterList > List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID bereits in Liste
-                            then    ( { model | characterList = (List.filter (isNotId i) model.characterList), addCharacterIcon = DrawingInactive }, Cmd.none )
+                            then    ( { model | characterList = List.filter (isNotId i) model.characterList, addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawIcon (PlayerIcon i x y) }, Cmd.none )
 
                         MonsterIcon i x y ->
                             if List.length model.characterList > List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID bereits in Liste
-                            then    ( { model | characterList = (List.filter (isNotId i) model.characterList), addCharacterIcon = DrawingInactive }, Cmd.none )
+                            then    ( { model | characterList = List.filter (isNotId i) model.characterList, addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawIcon (MonsterIcon i x y) }, Cmd.none )
 
                     --( { model | addCharacterIcon = DrawIcon s, characterList = (giveDungeonMap_CharacterIds model.characterList) }, Cmd.none )
@@ -224,19 +224,19 @@ subscriptions model =
 
 giveDungeonMap_CharacterIds : List DungeonMap_Character -> List DungeonMap_Character
 giveDungeonMap_CharacterIds charList =
-    (List.indexedMap putIdInDMC charList)
+    List.indexedMap putIdInDMC charList
 
 putIdInDMC : Int -> DungeonMap_Character -> DungeonMap_Character
 putIdInDMC id dmc =
     case dmc of
-        Player i x y -> Player (id+1) x y
-        Monster i x y -> Monster (id+1) x y
+        Player _ x y -> Player (id+1) x y
+        Monster _ x y -> Monster (id+1) x y
 
 isNotId : Int -> DungeonMap_Character -> Bool
 isNotId id s =
     case s of
-        Monster i x y ->
+        Monster i _ _ ->
             id/=i
 
-        Player i x y ->
+        Player i _ _ ->
             id/=i

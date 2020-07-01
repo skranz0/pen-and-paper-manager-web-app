@@ -30,7 +30,7 @@ body model =
                 { options = [ Table.striped, Table.hover ]
                 , thead =  Table.simpleThead
                     [ Table.th [] [ text "ID" ]
-                    , Table.th [] [ text "Name" ]
+                    , Table.th [ Table.cellAttr <| Attr.colspan 2 ] [ text "Name" ]
                     , Table.th [] [ text "RS" ]
                     , Table.th [] [ text "LeP"]
                     , Table.th [] [ text " "]
