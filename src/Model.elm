@@ -61,7 +61,7 @@ init _ =
 
 initEnemy : Character
 initEnemy =
-    Enemy "none" 0 0 0 []
+    Enemy "none" 0 0 0 ""
 initHero : Character
 initHero =
     Hero "none" 0
@@ -94,8 +94,8 @@ type ModalType
     | CustomEnemy
 
 type Character
-    = Enemy String Int Int    Int (List String)
-    --      name   LeP maxLeP RS  status
+    = Enemy String Int Int    Int String
+    --      name   LeP maxLeP RS  pain
     | Hero String Int
     --     name   RS
 

@@ -5409,7 +5409,7 @@ var $author$project$Model$Enemy = F5(
 	function (a, b, c, d, e) {
 		return {$: 'Enemy', a: a, b: b, c: c, d: d, e: e};
 	});
-var $author$project$Model$initEnemy = A5($author$project$Model$Enemy, 'none', 0, 0, 0, _List_Nil);
+var $author$project$Model$initEnemy = A5($author$project$Model$Enemy, 'none', 0, 0, 0, '');
 var $author$project$Model$Hero = F2(
 	function (a, b) {
 		return {$: 'Hero', a: a, b: b};
@@ -6951,7 +6951,7 @@ var $author$project$FightingTool$parseEnemy = A5(
 	$elm$json$Json$Decode$map4,
 	F4(
 		function (n, h, m, s) {
-			return A5($author$project$Model$Enemy, n, h, m, s, _List_Nil);
+			return A5($author$project$Model$Enemy, n, h, m, s, '');
 		}),
 	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'health', $elm$json$Json$Decode$int),
@@ -8710,18 +8710,18 @@ var $author$project$FightingTool$displayCharacters = function (chars) {
 						var n = c.a;
 						var h = c.b;
 						var a = c.d;
-						var s = c.e;
-						return {armor: a, health: h, name: n, status: s};
+						var p = c.e;
+						return {armor: a, health: h, name: n, pain: p};
 					} else {
 						var n = c.a;
 						var a = c.b;
-						return {armor: a, health: 0, name: n, status: _List_Nil};
+						return {armor: a, health: 0, name: n, pain: ''};
 					}
 				}();
 				var name = _v0.name;
 				var health = _v0.health;
 				var armor = _v0.armor;
-				var status = _v0.status;
+				var pain = _v0.pain;
 				if (c.$ === 'Enemy') {
 					return A2(
 						$rundis$elm_bootstrap$Bootstrap$Table$tr,
@@ -8748,8 +8748,7 @@ var $author$project$FightingTool$displayCharacters = function (chars) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$text(
-										A3($elm$core$List$foldl, $elm$core$Basics$append, '', status))
+										$elm$html$Html$text(pain)
 									])),
 								A2(
 								$rundis$elm_bootstrap$Bootstrap$Table$td,
@@ -9485,38 +9484,20 @@ var $author$project$FightingTool$attack = F3(
 				var health = _v1.b;
 				var maxHealth = _v1.c;
 				var armor = _v1.d;
-				var status = _v1.e;
+				var pain = _v1.e;
 				return (_Utils_cmp(damage, armor) > 0) ? ((((health - damage) + armor) <= 0) ? $author$project$Model$CharacterDeath(id) : ((_Utils_cmp(health - damage, 0.25 * maxHealth) < 1) ? A2(
 					$author$project$Model$UpdateEnemy,
 					id,
-					A5(
-						$author$project$Model$Enemy,
-						name,
-						(health - damage) + armor,
-						maxHealth,
-						armor,
-						A2($elm$core$List$cons, 'I', status))) : ((_Utils_cmp(health - damage, 0.5 * maxHealth) < 1) ? A2(
+					A5($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor, 'Schmerz III')) : ((_Utils_cmp(health - damage, 0.5 * maxHealth) < 1) ? A2(
 					$author$project$Model$UpdateEnemy,
 					id,
-					A5(
-						$author$project$Model$Enemy,
-						name,
-						(health - damage) + armor,
-						maxHealth,
-						armor,
-						A2($elm$core$List$cons, 'I', status))) : ((_Utils_cmp(health - damage, 0.75 * maxHealth) < 1) ? A2(
+					A5($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor, 'Schmerz II')) : ((_Utils_cmp(health - damage, 0.75 * maxHealth) < 1) ? A2(
 					$author$project$Model$UpdateEnemy,
 					id,
-					A5(
-						$author$project$Model$Enemy,
-						name,
-						(health - damage) + armor,
-						maxHealth,
-						armor,
-						A2($elm$core$List$cons, 'Schmerz I', status))) : A2(
+					A5($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor, 'Schmerz I')) : A2(
 					$author$project$Model$UpdateEnemy,
 					id,
-					A5($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor, status)))))) : $author$project$Model$CloseModal($author$project$Model$AttackModal);
+					A5($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor, pain)))))) : $author$project$Model$CloseModal($author$project$Model$AttackModal);
 			} else {
 				var _v2 = _v0.a;
 				return $author$project$Model$DoNothing;
@@ -10005,18 +9986,18 @@ var $author$project$FightingTool$customEnemy = function (model) {
 									var h = _v4.b;
 									var m = _v4.c;
 									var a = _v4.d;
-									var s = _v4.e;
-									return {armor: a, health: h, maxHealth: m, status: s};
+									var p = _v4.e;
+									return {armor: a, health: h, maxHealth: m, pain: p};
 								} else {
-									return {armor: 0, health: 0, maxHealth: 0, status: _List_Nil};
+									return {armor: 0, health: 0, maxHealth: 0, pain: ''};
 								}
 							}();
 							var health = _v3.health;
 							var maxHealth = _v3.maxHealth;
 							var armor = _v3.armor;
-							var status = _v3.status;
+							var pain = _v3.pain;
 							return $author$project$Model$UpdateTmp(
-								A5($author$project$Model$Enemy, n, health, maxHealth, armor, status));
+								A5($author$project$Model$Enemy, n, health, maxHealth, armor, pain));
 						}),
 						ddName
 					])),
@@ -10041,12 +10022,12 @@ var $author$project$FightingTool$customEnemy = function (model) {
 									var s = _v6.e;
 									return _Utils_Tuple3(n, a, s);
 								} else {
-									return _Utils_Tuple3('', 0, _List_Nil);
+									return _Utils_Tuple3('', 0, '');
 								}
 							}();
 							var name = _v5.a;
 							var armor = _v5.b;
-							var status = _v5.c;
+							var pain = _v5.c;
 							return $author$project$Model$UpdateTmp(
 								A5(
 									$author$project$Model$Enemy,
@@ -10060,7 +10041,7 @@ var $author$project$FightingTool$customEnemy = function (model) {
 										1,
 										$elm$core$String$toInt(h)),
 									armor,
-									status));
+									pain));
 						}),
 						ddHealth
 					])),
@@ -10083,16 +10064,16 @@ var $author$project$FightingTool$customEnemy = function (model) {
 									var n = _v8.a;
 									var h = _v8.b;
 									var m = _v8.c;
-									var s = _v8.e;
-									return {health: h, maxHealth: m, name: n, status: s};
+									var p = _v8.e;
+									return {health: h, maxHealth: m, name: n, pain: p};
 								} else {
-									return {health: 0, maxHealth: 0, name: '', status: _List_Nil};
+									return {health: 0, maxHealth: 0, name: '', pain: ''};
 								}
 							}();
 							var name = _v7.name;
 							var health = _v7.health;
 							var maxHealth = _v7.maxHealth;
-							var status = _v7.status;
+							var pain = _v7.pain;
 							return $author$project$Model$UpdateTmp(
 								A5(
 									$author$project$Model$Enemy,
@@ -10103,7 +10084,7 @@ var $author$project$FightingTool$customEnemy = function (model) {
 										$elm$core$Maybe$withDefault,
 										0,
 										$elm$core$String$toInt(a)),
-									status));
+									pain));
 						}),
 						ddArmor
 					])),
