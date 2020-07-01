@@ -175,12 +175,13 @@ viewCustomEnemyModal model =
 
 parseEnemy : Json.Decode.Decoder Character
 parseEnemy =
-    Json.Decode.map5 Enemy
+    Json.Decode.map4 (\n h m s -> Enemy n h m s [])
         (Json.Decode.field "name" Json.Decode.string)
         (Json.Decode.field "health" Json.Decode.int) -- health and maxHealth have the same value on creation
         (Json.Decode.field "health" Json.Decode.int) 
         (Json.Decode.field "armor" Json.Decode.int)
-        (Json.Decode.list <| Json.Decode.string)
+        
+
 displayCharacters : Array.Array Character -> List (Table.Row Msg) -- show stats of the enemy in a table, will have its glow up later
 displayCharacters chars =
     List.indexedMap
