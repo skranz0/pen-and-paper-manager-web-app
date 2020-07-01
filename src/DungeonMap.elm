@@ -33,6 +33,7 @@ dungeonMapView model =
                                         ]
                              ]
                   ]
+                  , Button.button [ Button.info, Button.onClick ClearCharacterList ] [ text "Clear Map" ]
             ]
 
 dungeonMap_MonsterList : Model -> Html Msg

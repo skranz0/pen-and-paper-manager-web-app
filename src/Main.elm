@@ -148,6 +148,11 @@ update msg model =
 
                     --( { model | addCharacterIcon = DrawIcon s, characterList = (giveDungeonMap_CharacterIds model.characterList) }, Cmd.none )
 
+        ClearCharacterList ->
+            ( { model | characterList = [] }
+            , Cmd.none
+            )
+
         CloseModal modalType->
             case modalType of
                 AttackModal ->
