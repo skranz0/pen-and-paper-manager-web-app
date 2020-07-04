@@ -8165,41 +8165,44 @@ var $author$project$Main$update = F2(
 var $author$project$Model$TabMsg = function (a) {
 	return {$: 'TabMsg', a: a};
 };
+var $elm$html$Html$br = _VirtualDom_node('br');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$About$aboutView = function (model) {
-	return A2(
-		$elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$h1,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Das schwarze Auge Edition 5')
-					])),
-				A2(
-				$elm$html$Html$h3,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Übersicht der Kampfesregeln')
-					])),
-				A2(
-				$elm$html$Html$p,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('\n            Die wenigsten Geschichten im Pen & Paper Rollenspiel DSA kommen ohne einen Kampf aus.\n            Die Mechanik unterscheidet sich allerdings etwas vom normalen Spielgeschehen.\n            ')
-					]))
-			]));
-};
+var $author$project$About$aboutView = A2(
+	$elm$html$Html$div,
+	_List_Nil,
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$h1,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Das schwarze Auge Edition 5')
+				])),
+			A2(
+			$elm$html$Html$h3,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Übersicht der Kampfesregeln')
+				])),
+			A2(
+			$elm$html$Html$p,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('\n                Die wenigsten Geschichten im Pen & Paper Rollenspiel DSA kommen ohne einen Kampf aus.\n                Die Mechanik unterscheidet sich allerdings etwas vom normalen Spielgeschehen.\n            '),
+					A2($elm$html$Html$br, _List_Nil, _List_Nil),
+					$elm$html$Html$text('\n                Zur Vorbereitung wird die Reihenfolge der Kämpfenden bestimmt. Dazu wird der die Initiative\n                (INI) ausgewürfelt. Der Spielleiter würfelt für alle NSCs.\n            '),
+					A2($elm$html$Html$br, _List_Nil, _List_Nil),
+					$elm$html$Html$text('\n                Dieser Reihenfolge nach dürfen die Charaktere jetzt je einen Gegner angreifen.\n            ')
+				]))
+		]));
 var $author$project$Model$CustomEnemy = {$: 'CustomEnemy'};
 var $author$project$Model$ShowModal = function (a) {
 	return {$: 'ShowModal', a: a};
@@ -10105,7 +10108,6 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$asGroup = $rundis$elm_bootstra
 			opts,
 			{isGroup: true});
 	});
-var $elm$html$Html$br = _VirtualDom_node('br');
 var $rundis$elm_bootstrap$Bootstrap$Form$Radio$Checked = function (a) {
 	return {$: 'Checked', a: a};
 };
@@ -12142,27 +12144,6 @@ var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Info = {$: 'Info'};
 var $rundis$elm_bootstrap$Bootstrap$Button$info = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Info));
-var $elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
-	return {$: 'MayPreventDefault', a: a};
-};
-var $elm$html$Html$Events$preventDefaultOn = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$MayPreventDefault(decoder));
-	});
-var $rundis$elm_bootstrap$Bootstrap$Button$onClick = function (message) {
-	return $rundis$elm_bootstrap$Bootstrap$Button$attrs(
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$Events$preventDefaultOn,
-				'click',
-				$elm$json$Json$Decode$succeed(
-					_Utils_Tuple2(message, true)))
-			]));
-};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col = {$: 'Col'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width = F2(
 	function (screenSize, columnCount) {
@@ -13465,15 +13446,13 @@ var $author$project$Main$view = function (model) {
 										[$rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$mt3]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text('Regeln')
+											$elm$html$Html$text('Info')
 										])),
 								pane: A2(
 									$rundis$elm_bootstrap$Bootstrap$Tab$pane,
 									_List_Nil,
 									_List_fromArray(
-										[
-											$author$project$About$aboutView(model)
-										]))
+										[$author$project$About$aboutView]))
 							})
 						]),
 					$rundis$elm_bootstrap$Bootstrap$Tab$config($author$project$Model$TabMsg))),

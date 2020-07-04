@@ -232,10 +232,10 @@ view model =
                     }
                 , Tab.item
                     { id = "tabAbout"
-                    , link = Tab.link [ Spacing.mt3 ] [ text "Regeln" ]
+                    , link = Tab.link [ Spacing.mt3 ] [ text "Info" ]
                     , pane =
                         Tab.pane []
-                            [ aboutView model ]
+                            [ aboutView ]
                     }
                 ]
             |> Tab.view model.tabState
