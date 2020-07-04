@@ -18,8 +18,8 @@ aboutView =
         , br [][]
         , text
             """
-                Zur Vorbereitung wird die Reihenfolge der Kämpfenden bestimmt. Dazu wird der die Initiative
-                (INI) ausgewürfelt. Der Spielleiter würfelt für alle NSCs.
+                Zur Vorbereitung wird die Reihenfolge der Kämpfenden bestimmt. Dazu wird der die Initiative (INI) ausgewürfelt.
+                Der Spielleiter würfelt für alle NSCs.
             """
         , br [][]
         , text
@@ -31,8 +31,25 @@ aboutView =
         [ text 
             """
                 Um anzugreifen muss zunächst eine Probe mit einem W20 auf den AT-Wert bestanden werden.
-                Gleichzeitig wirft der Angegriffene auf PA oder AW. Ist er damit erfolgreich bricht der Angriff
-                an dieser Stelle ab.
+                Gleichzeitig wirft der Angegriffene auf PA oder AW. Gelingt die Probe bricht der Angriff an dieser Stelle ab.
             """
+        , br [][]
+        , text
+            """
+                War der Angriff erfolgreich und die Verteidigung ein Fehlschlag wird der Schaden berechnet.
+                Das ist die Gelegenheit den \"Angriff\"-Button zu klicken.
+                Entsprechend der Angabe der Waffe (z.B 1W6+4) wird der Angriffswert erwürfelt.
+                Von diesem wird der RS-Wert des Angegriffenen subtrahiert und das Ergebnis von den LeP abgezogen.
+            """
+        , br [][]
+        , text
+            """
+                Die Berechnung übernimmt der Manager vollständig!
+            """
+        ]
+    , Html.p []
+        [ text "Das ist nur eine minimale Zusammfassung, die genauen Regeln können im "
+        , Html.a [ Attr.href "http://ulisses-regelwiki.de/index.php/Kampfregeln.html" ] [ text "DSA Regelwiki" ]
+        , text " nachgelesen werden."
         ]
     ]
