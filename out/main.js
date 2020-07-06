@@ -9111,7 +9111,11 @@ var $author$project$FightingTool$displayCharacters = function (chars) {
 									])),
 								A2(
 								$rundis$elm_bootstrap$Bootstrap$Table$td,
-								_List_Nil,
+								_List_fromArray(
+									[
+										$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+										$elm$html$Html$Attributes$colspan(2))
+									]),
 								_List_fromArray(
 									[
 										$elm$html$Html$text(name)

@@ -226,7 +226,7 @@ displayCharacters chars =
                     Hero _ _ ->
                         Table.tr []
                         [ Table.td[][text <| String.fromInt (i+1) ]
-                        , Table.td[][text name]
+                        , Table.td[ Table.cellAttr <| Attr.colspan 2 ][text name]
                         , Table.td[][text <| String.fromInt armor]
                         , Table.td[][text <| ""]
                         , Table.td[]
