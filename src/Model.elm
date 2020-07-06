@@ -23,16 +23,19 @@ type alias Model =
     , dieFace : Int
     , maxFace : Int
     , tabState : Tab.State
-    , characterList : List DungeonMap_Character
+    , characterList : List CharacterIcon
+    , objectIconList : List CharacterIcon
     , addCharacterIcon : AddCharacterIconState
     , dieFaces : List Int
     , showAttackModal : Modal.Visibility
     , showDeathAlert : Modal.Visibility
     , showCustomEnemy : Modal.Visibility
+    , showObjectIconModal : Modal.Visibility
     , characterId : Int
     , enemyHero : String
     , hover : Bool
     , previews : List String
+    , iconText : String
     }
 
 init : () -> (Model, Cmd Msg)
@@ -51,15 +54,18 @@ init _ =
         , maxFace = 6
         , tabState = Tab.initialState
         , characterList = []
+        , objectIconList = []
         , addCharacterIcon = DrawingInactive
         , dieFaces = []
         , showAttackModal = Modal.hidden
         , showDeathAlert = Modal.hidden
         , showCustomEnemy = Modal.hidden
+        , showObjectIconModal = Modal.hidden
         , characterId = 0
         , enemyHero = "Enemy"
         , hover = False
         , previews = []
+        , iconText = ""
         }
     , Cmd.none
     )
@@ -98,11 +104,14 @@ type Msg
     | DragLeave
     | GotFiles File.File (List File.File)
     | GotPreviews (List String)
+    | ChangeIconText String
+    | ChangeIcon Int
 
 type ModalType
     = AttackModal
     | DeathAlert
     | CustomEnemy
+    | ObjectIconModal
 
 type Character
     = Enemy String Int Int    Int String
@@ -124,16 +133,12 @@ type AddCharacterIconMsg
     = MouseDraw CharacterIcon
     | MouseClick CharacterIcon
 
-type DungeonMap_Character
-    = Player Int String String
-    | Monster Int String String
-    --        ID  x-coord y-coord
-
-type
-    CharacterIcon
+type CharacterIcon
     = PlayerIcon Int String String
     | MonsterIcon Int String String
-    --            ID  x-coord y-coord
+    | ObjectIcon Int String String String
+    --          ID  x-coord y-coord Text
+    -- ID in ObjectIcon type is not an identifier for a concrete ObjectIcon, its an identifier for the used png
 
 type alias MousePosition =
     { x : Float

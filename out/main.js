@@ -5617,7 +5617,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Model$init = function (_v0) {
 	return _Utils_Tuple2(
-		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterId: 0, characterList: _List_Nil, damage: 0, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, enemyHero: 'Enemy', hover: false, maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, previews: _List_Nil, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpHero: $author$project$Model$initHero, tmpdice: '1W6+0'},
+		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterId: 0, characterList: _List_Nil, damage: 0, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, enemyHero: 'Enemy', hover: false, iconText: '', maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, objectIconList: _List_Nil, previews: _List_Nil, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showObjectIconModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpHero: $author$project$Model$initHero, tmpdice: '1W6+0'},
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Model$MyDrop1Msg = function (a) {
@@ -6206,17 +6206,13 @@ var $author$project$Model$GotFiles = F2(
 var $author$project$Model$GotPreviews = function (a) {
 	return {$: 'GotPreviews', a: a};
 };
-var $author$project$Model$Monster = F3(
-	function (a, b, c) {
-		return {$: 'Monster', a: a, b: b, c: c};
-	});
 var $author$project$Model$MonsterIcon = F3(
 	function (a, b, c) {
 		return {$: 'MonsterIcon', a: a, b: b, c: c};
 	});
-var $author$project$Model$Player = F3(
-	function (a, b, c) {
-		return {$: 'Player', a: a, b: b, c: c};
+var $author$project$Model$ObjectIcon = F4(
+	function (a, b, c, d) {
+		return {$: 'ObjectIcon', a: a, b: b, c: c, d: d};
 	});
 var $author$project$Model$PlayerIcon = F3(
 	function (a, b, c) {
@@ -7131,12 +7127,16 @@ var $elm$core$List$head = function (list) {
 var $elm$core$Basics$neq = _Utils_notEqual;
 var $author$project$Main$isNotId = F2(
 	function (id, s) {
-		if (s.$ === 'Monster') {
-			var i = s.a;
-			return !_Utils_eq(id, i);
-		} else {
-			var i = s.a;
-			return !_Utils_eq(id, i);
+		switch (s.$) {
+			case 'MonsterIcon':
+				var i = s.a;
+				return !_Utils_eq(id, i);
+			case 'PlayerIcon':
+				var i = s.a;
+				return !_Utils_eq(id, i);
+			default:
+				var i = s.a;
+				return !_Utils_eq(id, i);
 		}
 	});
 var $elm$json$Json$Decode$field = _Json_decodeField;
@@ -7876,6 +7876,33 @@ var $author$project$Main$update = F2(
 						model,
 						{tmpdice: newTmpDice}),
 					$elm$core$Platform$Cmd$none);
+			case 'ChangeIconText':
+				var newIconText = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{iconText: newIconText}),
+					$elm$core$Platform$Cmd$none);
+			case 'ChangeIcon':
+				var id = msg.a;
+				var _v3 = model.addCharacterIcon;
+				if ((_v3.$ === 'DrawIcon') && (_v3.a.$ === 'ObjectIcon')) {
+					var _v4 = _v3.a;
+					var i = _v4.a;
+					var x = _v4.b;
+					var y = _v4.c;
+					var t = _v4.d;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								addCharacterIcon: $author$project$Model$DrawIcon(
+									A4($author$project$Model$ObjectIcon, id, x, y, t))
+							}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
 			case 'DiceAndSlice':
 				var newDice = msg.a;
 				var rt = A2(
@@ -7937,126 +7964,157 @@ var $author$project$Main$update = F2(
 				var addCharacterIconMsg = msg.a;
 				if (addCharacterIconMsg.$ === 'MouseClick') {
 					var characterIcon = addCharacterIconMsg.a;
-					if (characterIcon.$ === 'PlayerIcon') {
-						var i = characterIcon.a;
-						var x = characterIcon.b;
-						var y = characterIcon.c;
-						return _Utils_eq(
-							$elm$core$List$length(model.characterList),
-							$elm$core$List$length(
-								A2(
-									$elm$core$List$filter,
-									$author$project$Main$isNotId(i),
-									model.characterList))) ? _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{
-									addCharacterIcon: $author$project$Model$DrawingInactive,
-									characterList: _Utils_ap(
-										model.characterList,
-										_List_fromArray(
-											[
-												A3($author$project$Model$Player, i, x, y)
-											]))
-								}),
-							$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{addCharacterIcon: $author$project$Model$DrawingInactive}),
-							$elm$core$Platform$Cmd$none);
-					} else {
-						var i = characterIcon.a;
-						var x = characterIcon.b;
-						var y = characterIcon.c;
-						return _Utils_eq(
-							$elm$core$List$length(model.characterList),
-							$elm$core$List$length(
-								A2(
-									$elm$core$List$filter,
-									$author$project$Main$isNotId(i),
-									model.characterList))) ? _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{
-									addCharacterIcon: $author$project$Model$DrawingInactive,
-									characterList: _Utils_ap(
-										model.characterList,
-										_List_fromArray(
-											[
-												A3($author$project$Model$Monster, i, x, y)
-											]))
-								}),
-							$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{addCharacterIcon: $author$project$Model$DrawingInactive}),
-							$elm$core$Platform$Cmd$none);
+					switch (characterIcon.$) {
+						case 'PlayerIcon':
+							var i = characterIcon.a;
+							var x = characterIcon.b;
+							var y = characterIcon.c;
+							return _Utils_eq(
+								$elm$core$List$length(model.characterList),
+								$elm$core$List$length(
+									A2(
+										$elm$core$List$filter,
+										$author$project$Main$isNotId(i),
+										model.characterList))) ? _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawingInactive,
+										characterList: _Utils_ap(
+											model.characterList,
+											_List_fromArray(
+												[characterIcon]))
+									}),
+								$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{addCharacterIcon: $author$project$Model$DrawingInactive}),
+								$elm$core$Platform$Cmd$none);
+						case 'MonsterIcon':
+							var i = characterIcon.a;
+							var x = characterIcon.b;
+							var y = characterIcon.c;
+							return _Utils_eq(
+								$elm$core$List$length(model.characterList),
+								$elm$core$List$length(
+									A2(
+										$elm$core$List$filter,
+										$author$project$Main$isNotId(i),
+										model.characterList))) ? _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawingInactive,
+										characterList: _Utils_ap(
+											model.characterList,
+											_List_fromArray(
+												[characterIcon]))
+									}),
+								$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{addCharacterIcon: $author$project$Model$DrawingInactive}),
+								$elm$core$Platform$Cmd$none);
+						default:
+							var i = characterIcon.a;
+							var x = characterIcon.b;
+							var y = characterIcon.c;
+							var t = characterIcon.d;
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawingInactive,
+										iconText: '',
+										objectIconList: _Utils_ap(
+											model.objectIconList,
+											_List_fromArray(
+												[
+													A4($author$project$Model$ObjectIcon, i, x, y, model.iconText)
+												])),
+										showObjectIconModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden
+									}),
+								$elm$core$Platform$Cmd$none);
 					}
 				} else {
 					var characterIcon = addCharacterIconMsg.a;
-					if (characterIcon.$ === 'PlayerIcon') {
-						var i = characterIcon.a;
-						var x = characterIcon.b;
-						var y = characterIcon.c;
-						return (_Utils_cmp(
-							$elm$core$List$length(model.characterList),
-							$elm$core$List$length(
-								A2(
-									$elm$core$List$filter,
-									$author$project$Main$isNotId(i),
-									model.characterList))) > 0) ? _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{
-									addCharacterIcon: $author$project$Model$DrawingInactive,
-									characterList: A2(
+					switch (characterIcon.$) {
+						case 'PlayerIcon':
+							var i = characterIcon.a;
+							var x = characterIcon.b;
+							var y = characterIcon.c;
+							return (_Utils_cmp(
+								$elm$core$List$length(model.characterList),
+								$elm$core$List$length(
+									A2(
 										$elm$core$List$filter,
 										$author$project$Main$isNotId(i),
-										model.characterList)
-								}),
-							$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{
-									addCharacterIcon: $author$project$Model$DrawIcon(
-										A3($author$project$Model$PlayerIcon, i, x, y))
-								}),
-							$elm$core$Platform$Cmd$none);
-					} else {
-						var i = characterIcon.a;
-						var x = characterIcon.b;
-						var y = characterIcon.c;
-						return (_Utils_cmp(
-							$elm$core$List$length(model.characterList),
-							$elm$core$List$length(
-								A2(
-									$elm$core$List$filter,
-									$author$project$Main$isNotId(i),
-									model.characterList))) > 0) ? _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{
-									addCharacterIcon: $author$project$Model$DrawingInactive,
-									characterList: A2(
+										model.characterList))) > 0) ? _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawingInactive,
+										characterList: A2(
+											$elm$core$List$filter,
+											$author$project$Main$isNotId(i),
+											model.characterList)
+									}),
+								$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawIcon(
+											A3($author$project$Model$PlayerIcon, i, x, y))
+									}),
+								$elm$core$Platform$Cmd$none);
+						case 'MonsterIcon':
+							var i = characterIcon.a;
+							var x = characterIcon.b;
+							var y = characterIcon.c;
+							return (_Utils_cmp(
+								$elm$core$List$length(model.characterList),
+								$elm$core$List$length(
+									A2(
 										$elm$core$List$filter,
 										$author$project$Main$isNotId(i),
-										model.characterList)
-								}),
-							$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{
-									addCharacterIcon: $author$project$Model$DrawIcon(
-										A3($author$project$Model$MonsterIcon, i, x, y))
-								}),
-							$elm$core$Platform$Cmd$none);
+										model.characterList))) > 0) ? _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawingInactive,
+										characterList: A2(
+											$elm$core$List$filter,
+											$author$project$Main$isNotId(i),
+											model.characterList)
+									}),
+								$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawIcon(
+											A3($author$project$Model$MonsterIcon, i, x, y))
+									}),
+								$elm$core$Platform$Cmd$none);
+						default:
+							var i = characterIcon.a;
+							var x = characterIcon.b;
+							var y = characterIcon.c;
+							var t = characterIcon.d;
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawIcon(
+											A4($author$project$Model$ObjectIcon, i, x, y, t))
+									}),
+								$elm$core$Platform$Cmd$none);
 					}
 				}
 			case 'ClearCharacterList':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{characterList: _List_Nil}),
+						{characterList: _List_Nil, objectIconList: _List_Nil}),
 					$elm$core$Platform$Cmd$none);
 			case 'CloseModal':
 				var modalType = msg.a;
@@ -8073,11 +8131,17 @@ var $author$project$Main$update = F2(
 								model,
 								{showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
 							$elm$core$Platform$Cmd$none);
-					default:
+					case 'CustomEnemy':
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
+							$elm$core$Platform$Cmd$none);
+					default:
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{showObjectIconModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
 							$elm$core$Platform$Cmd$none);
 				}
 			case 'ShowModal':
@@ -8095,11 +8159,17 @@ var $author$project$Main$update = F2(
 								model,
 								{showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$shown}),
 							$elm$core$Platform$Cmd$none);
-					default:
+					case 'CustomEnemy':
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$shown}),
+							$elm$core$Platform$Cmd$none);
+					default:
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{showObjectIconModal: $rundis$elm_bootstrap$Bootstrap$Modal$shown}),
 							$elm$core$Platform$Cmd$none);
 				}
 			case 'ShowAttackModal':
@@ -8211,22 +8281,22 @@ var $author$project$About$aboutView = A2(
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text('\n                Die wenigsten Geschichten im Pen & Paper Rollenspiel DSA kommen ohne einen Kampf aus.\n                Die Mechanik unterscheidet sich allerdings etwas vom normalen Spielgeschehen.\n            '),
+					$elm$html$Html$text('\r\n                Die wenigsten Geschichten im Pen & Paper Rollenspiel DSA kommen ohne einen Kampf aus.\r\n                Die Mechanik unterscheidet sich allerdings etwas vom normalen Spielgeschehen.\r\n            '),
 					A2($elm$html$Html$br, _List_Nil, _List_Nil),
-					$elm$html$Html$text('\n                Zur Vorbereitung wird die Reihenfolge der Kämpfenden bestimmt. Dazu wird der die Initiative (INI) ausgewürfelt.\n                Der Spielleiter würfelt für alle NSCs.\n            '),
+					$elm$html$Html$text('\r\n                Zur Vorbereitung wird die Reihenfolge der Kämpfenden bestimmt. Dazu wird der die Initiative (INI) ausgewürfelt.\r\n                Der Spielleiter würfelt für alle NSCs.\r\n            '),
 					A2($elm$html$Html$br, _List_Nil, _List_Nil),
-					$elm$html$Html$text('\n                Dieser Reihenfolge nach dürfen die Charaktere jetzt je einen Gegner angreifen.\n            ')
+					$elm$html$Html$text('\r\n                Dieser Reihenfolge nach dürfen die Charaktere jetzt je einen Gegner angreifen.\r\n            ')
 				])),
 			A2(
 			$elm$html$Html$p,
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text('\n                Um anzugreifen muss zunächst eine Probe mit einem W20 auf den AT-Wert bestanden werden.\n                Gleichzeitig wirft der Angegriffene auf PA oder AW. Gelingt die Probe bricht der Angriff an dieser Stelle ab.\n            '),
+					$elm$html$Html$text('\r\n                Um anzugreifen muss zunächst eine Probe mit einem W20 auf den AT-Wert bestanden werden.\r\n                Gleichzeitig wirft der Angegriffene auf PA oder AW. Gelingt die Probe bricht der Angriff an dieser Stelle ab.\r\n            '),
 					A2($elm$html$Html$br, _List_Nil, _List_Nil),
-					$elm$html$Html$text('\n                War der Angriff erfolgreich und die Verteidigung ein Fehlschlag wird der Schaden berechnet.\n                Das ist die Gelegenheit den \"Angriff\"-Button zu klicken.\n                Entsprechend der Angabe der Waffe (z.B 1W6+4) wird der Angriffswert erwürfelt.\n                Von diesem wird der RS-Wert des Angegriffenen subtrahiert und das Ergebnis von den LeP abgezogen.\n            '),
+					$elm$html$Html$text('\r\n                War der Angriff erfolgreich und die Verteidigung ein Fehlschlag wird der Schaden berechnet.\r\n                Das ist die Gelegenheit den \"Angriff\"-Button zu klicken.\r\n                Entsprechend der Angabe der Waffe (z.B 1W6+4) wird der Angriffswert erwürfelt.\r\n                Von diesem wird der RS-Wert des Angegriffenen subtrahiert und das Ergebnis von den LeP abgezogen.\r\n            '),
 					A2($elm$html$Html$br, _List_Nil, _List_Nil),
-					$elm$html$Html$text('\n                Die Berechnung übernimmt der Manager vollständig!\n            ')
+					$elm$html$Html$text('\r\n                Die Berechnung übernimmt der Manager vollständig!\r\n            ')
 				])),
 			A2(
 			$elm$html$Html$p,
@@ -11706,6 +11776,7 @@ var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 };
 var $author$project$Model$DragEnter = {$: 'DragEnter'};
 var $author$project$Model$DragLeave = {$: 'DragLeave'};
+var $author$project$Model$ObjectIconModal = {$: 'ObjectIconModal'};
 var $author$project$Model$Pick = {$: 'Pick'};
 var $elm$file$File$decoder = _File_decoder;
 var $elm$json$Json$Decode$list = _Json_decodeList;
@@ -11799,6 +11870,17 @@ var $author$project$DungeonMap$positionToCircleCenter = F2(
 					$elm$core$String$fromFloat(position.x),
 					$elm$core$String$fromFloat(position.y))));
 	});
+var $author$project$DungeonMap$positionToIconCenter = F2(
+	function (i, position) {
+		return $author$project$Model$AddCharacterIcon(
+			$author$project$Model$MouseDraw(
+				A4(
+					$author$project$Model$ObjectIcon,
+					i,
+					$elm$core$String$fromFloat(position.x),
+					$elm$core$String$fromFloat(position.y),
+					'')));
+	});
 var $author$project$DungeonMap$positionToRectangleCorner = F2(
 	function (i, position) {
 		return $author$project$Model$AddCharacterIcon(
@@ -11812,33 +11894,50 @@ var $author$project$DungeonMap$positionToRectangleCorner = F2(
 var $author$project$DungeonMap$mouseDrawEvents = function (addCharacterIcon) {
 	if (addCharacterIcon.$ === 'DrawIcon') {
 		var characterIcon = addCharacterIcon.a;
-		if (characterIcon.$ === 'PlayerIcon') {
-			var i = characterIcon.a;
-			var x = characterIcon.b;
-			var y = characterIcon.c;
-			return _List_fromArray(
-				[
-					$elm$svg$Svg$Events$onClick(
-					$author$project$Model$AddCharacterIcon(
-						$author$project$Model$MouseClick(characterIcon))),
-					$author$project$DungeonMap$onMouseMove(
-					$author$project$DungeonMap$positionToCircleCenter(i))
-				]);
-		} else {
-			var i = characterIcon.a;
-			var x = characterIcon.b;
-			var y = characterIcon.c;
-			return _List_fromArray(
-				[
-					$elm$svg$Svg$Events$onClick(
-					$author$project$Model$AddCharacterIcon(
-						$author$project$Model$MouseClick(characterIcon))),
-					$author$project$DungeonMap$onMouseMove(
-					$author$project$DungeonMap$positionToRectangleCorner(i))
-				]);
+		switch (characterIcon.$) {
+			case 'PlayerIcon':
+				var i = characterIcon.a;
+				var x = characterIcon.b;
+				var y = characterIcon.c;
+				return _List_fromArray(
+					[
+						$elm$svg$Svg$Events$onClick(
+						$author$project$Model$AddCharacterIcon(
+							$author$project$Model$MouseClick(characterIcon))),
+						$author$project$DungeonMap$onMouseMove(
+						$author$project$DungeonMap$positionToCircleCenter(i))
+					]);
+			case 'MonsterIcon':
+				var i = characterIcon.a;
+				var x = characterIcon.b;
+				var y = characterIcon.c;
+				return _List_fromArray(
+					[
+						$elm$svg$Svg$Events$onClick(
+						$author$project$Model$AddCharacterIcon(
+							$author$project$Model$MouseClick(characterIcon))),
+						$author$project$DungeonMap$onMouseMove(
+						$author$project$DungeonMap$positionToRectangleCorner(i))
+					]);
+			default:
+				var i = characterIcon.a;
+				var x = characterIcon.b;
+				var y = characterIcon.c;
+				var t = characterIcon.d;
+				return _List_fromArray(
+					[
+						$elm$svg$Svg$Events$onClick(
+						$author$project$Model$ShowModal($author$project$Model$ObjectIconModal)),
+						$author$project$DungeonMap$onMouseMove(
+						$author$project$DungeonMap$positionToIconCenter(i))
+					]);
 		}
 	} else {
-		return _List_Nil;
+		return _List_fromArray(
+			[
+				$author$project$DungeonMap$onMouseMove(
+				$author$project$DungeonMap$positionToIconCenter(0))
+			]);
 	}
 };
 var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
@@ -11854,19 +11953,25 @@ var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
 var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 	if (addCharacterIcon.$ === 'DrawIcon') {
 		var characterIcon = addCharacterIcon.a;
-		return _List_fromArray(
-			[
-				A2(
-				$elm$svg$Svg$g,
-				_List_Nil,
-				_List_fromArray(
+		switch (characterIcon.$) {
+			case 'ObjectIcon':
+				var i = characterIcon.a;
+				var x = characterIcon.b;
+				var y = characterIcon.c;
+				var t = characterIcon.d;
+				return _List_Nil;
+			case 'PlayerIcon':
+				var i = characterIcon.a;
+				var x = characterIcon.b;
+				var y = characterIcon.c;
+				return _List_fromArray(
 					[
-						function () {
-						if (characterIcon.$ === 'PlayerIcon') {
-							var i = characterIcon.a;
-							var x = characterIcon.b;
-							var y = characterIcon.c;
-							return A2(
+						A2(
+						$elm$svg$Svg$g,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
 								$elm$svg$Svg$circle,
 								_List_fromArray(
 									[
@@ -11874,23 +11979,8 @@ var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 										$elm$svg$Svg$Attributes$cy(y),
 										$elm$svg$Svg$Attributes$r('10')
 									]),
-								_List_Nil);
-						} else {
-							var i = characterIcon.a;
-							var x = characterIcon.b;
-							var y = characterIcon.c;
-							return A2(
-								$elm$svg$Svg$rect,
-								_List_fromArray(
-									[
-										$elm$svg$Svg$Attributes$x(x),
-										$elm$svg$Svg$Attributes$y(y),
-										$elm$svg$Svg$Attributes$width('15'),
-										$elm$svg$Svg$Attributes$height('15')
-									]),
-								_List_Nil);
-						}
-					}(),
+								_List_Nil)
+							])),
 						A2(
 						$elm$svg$Svg$rect,
 						_List_fromArray(
@@ -11902,8 +11992,42 @@ var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 								$elm$svg$Svg$Attributes$style('fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9')
 							]),
 						_List_Nil)
-					]))
-			]);
+					]);
+			default:
+				var i = characterIcon.a;
+				var x = characterIcon.b;
+				var y = characterIcon.c;
+				return _List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$g,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$elm$svg$Svg$rect,
+								_List_fromArray(
+									[
+										$elm$svg$Svg$Attributes$x(x),
+										$elm$svg$Svg$Attributes$y(y),
+										$elm$svg$Svg$Attributes$width('15'),
+										$elm$svg$Svg$Attributes$height('15')
+									]),
+								_List_Nil)
+							])),
+						A2(
+						$elm$svg$Svg$rect,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$width('800'),
+								$elm$svg$Svg$Attributes$height('600'),
+								$elm$svg$Svg$Attributes$x('0'),
+								$elm$svg$Svg$Attributes$y('0'),
+								$elm$svg$Svg$Attributes$style('fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9')
+							]),
+						_List_Nil)
+					]);
+		}
 	} else {
 		return _List_Nil;
 	}
@@ -11920,52 +12044,110 @@ var $rundis$elm_bootstrap$Bootstrap$Button$onClick = function (message) {
 			]));
 };
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
-var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
 var $elm$svg$Svg$Attributes$dominantBaseline = _VirtualDom_attribute('dominant-baseline');
 var $author$project$DungeonMap$getCoord = function (object) {
-	if (object.$ === 'Monster') {
-		var i = object.a;
-		var x = object.b;
-		var y = object.c;
-		return x + (',' + y);
-	} else {
-		var i = object.a;
-		var x = object.b;
-		var y = object.c;
-		return x + (',' + y);
+	switch (object.$) {
+		case 'MonsterIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return x + (',' + y);
+		case 'PlayerIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return x + (',' + y);
+		default:
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			var t = object.d;
+			return x + (',' + y);
 	}
 };
 var $author$project$DungeonMap$getID = function (object) {
-	if (object.$ === 'Monster') {
-		var i = object.a;
-		var x = object.b;
-		var y = object.c;
-		return i;
-	} else {
-		var i = object.a;
-		var x = object.b;
-		var y = object.c;
-		return i;
+	switch (object.$) {
+		case 'MonsterIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return i;
+		case 'PlayerIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return i;
+		default:
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			var t = object.d;
+			return i;
 	}
 };
 var $author$project$DungeonMap$getIcon = function (object) {
-	if (object.$ === 'Monster') {
-		var i = object.a;
-		var x = object.b;
-		var y = object.c;
-		return 'monster';
-	} else {
-		var i = object.a;
-		var x = object.b;
-		var y = object.c;
-		return 'player';
+	switch (object.$) {
+		case 'MonsterIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return 'monster';
+		case 'PlayerIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return 'player';
+		default:
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			var t = object.d;
+			return 'object';
+	}
+};
+var $author$project$DungeonMap$getIconPath = function (id) {
+	switch (id) {
+		case 1:
+			return 'res/icons/chest.png';
+		case 2:
+			return 'res/icons/key.png';
+		default:
+			return '';
+	}
+};
+var $author$project$DungeonMap$getObjectText = function (object) {
+	switch (object.$) {
+		case 'MonsterIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return '';
+		case 'PlayerIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return '';
+		default:
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			var t = object.d;
+			return t;
 	}
 };
 var $elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
 var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$svg$Svg$Attributes$textAnchor = _VirtualDom_attribute('text-anchor');
 var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
+var $elm$svg$Svg$Attributes$title = _VirtualDom_attribute('title');
 var $elm$core$String$toFloat = _String_toFloat;
+var $elm$svg$Svg$Attributes$xlinkHref = function (value) {
+	return A3(
+		_VirtualDom_attributeNS,
+		'http://www.w3.org/1999/xlink',
+		'xlink:href',
+		_VirtualDom_noJavaScriptUri(value));
+};
 var $author$project$DungeonMap$getAreaParam = function (s) {
 	var yCor = A2(
 		$elm$core$Maybe$withDefault,
@@ -11986,6 +12168,7 @@ var $author$project$DungeonMap$getAreaParam = function (s) {
 				$elm$core$String$split,
 				',',
 				$author$project$DungeonMap$getCoord(s))));
+	var objectText = $author$project$DungeonMap$getObjectText(s);
 	var id = $author$project$DungeonMap$getID(s);
 	var _v0 = $author$project$DungeonMap$getIcon(s);
 	switch (_v0) {
@@ -11993,16 +12176,25 @@ var $author$project$DungeonMap$getAreaParam = function (s) {
 			return _List_fromArray(
 				[
 					A2(
-					$elm$svg$Svg$rect,
+					$elm$svg$Svg$image,
 					_List_fromArray(
 						[
-							$elm$svg$Svg$Attributes$id(
-							$elm$core$String$fromInt(id)),
-							$elm$svg$Svg$Attributes$x(xCor),
-							$elm$svg$Svg$Attributes$y(yCor),
-							$elm$svg$Svg$Attributes$width('15'),
-							$elm$svg$Svg$Attributes$height('15'),
-							$elm$svg$Svg$Attributes$class('MonsterIcon')
+							$elm$svg$Svg$Attributes$width('25'),
+							$elm$svg$Svg$Attributes$height('25'),
+							$elm$svg$Svg$Attributes$x(
+							$elm$core$String$fromFloat(
+								A2(
+									$elm$core$Maybe$withDefault,
+									0,
+									$elm$core$String$toFloat(xCor)) - 11.5)),
+							$elm$svg$Svg$Attributes$y(
+							$elm$core$String$fromFloat(
+								A2(
+									$elm$core$Maybe$withDefault,
+									0,
+									$elm$core$String$toFloat(yCor)) - 11.5)),
+							$elm$svg$Svg$Attributes$title('ObjectIcon'),
+							$elm$svg$Svg$Attributes$xlinkHref('res/icons/skull.png')
 						]),
 					_List_Nil),
 					A2(
@@ -12010,18 +12202,8 @@ var $author$project$DungeonMap$getAreaParam = function (s) {
 					_List_fromArray(
 						[
 							$elm$svg$Svg$Attributes$textAnchor('middle'),
-							$elm$svg$Svg$Attributes$x(
-							$elm$core$String$fromFloat(
-								A2(
-									$elm$core$Maybe$withDefault,
-									0,
-									$elm$core$String$toFloat(xCor)) + 7.5)),
-							$elm$svg$Svg$Attributes$y(
-							$elm$core$String$fromFloat(
-								A2(
-									$elm$core$Maybe$withDefault,
-									0,
-									$elm$core$String$toFloat(yCor)) + 8.75)),
+							$elm$svg$Svg$Attributes$x(xCor),
+							$elm$svg$Svg$Attributes$y(yCor),
 							$elm$svg$Svg$Attributes$dominantBaseline('middle')
 						]),
 					_List_fromArray(
@@ -12034,15 +12216,25 @@ var $author$project$DungeonMap$getAreaParam = function (s) {
 			return _List_fromArray(
 				[
 					A2(
-					$elm$svg$Svg$circle,
+					$elm$svg$Svg$image,
 					_List_fromArray(
 						[
-							$elm$svg$Svg$Attributes$id(
-							$elm$core$String$fromInt(id)),
-							$elm$svg$Svg$Attributes$cx(xCor),
-							$elm$svg$Svg$Attributes$cy(yCor),
-							$elm$svg$Svg$Attributes$r('10'),
-							$elm$svg$Svg$Attributes$class('PlayerIcon')
+							$elm$svg$Svg$Attributes$width('25'),
+							$elm$svg$Svg$Attributes$height('25'),
+							$elm$svg$Svg$Attributes$x(
+							$elm$core$String$fromFloat(
+								A2(
+									$elm$core$Maybe$withDefault,
+									0,
+									$elm$core$String$toFloat(xCor)) - 11.5)),
+							$elm$svg$Svg$Attributes$y(
+							$elm$core$String$fromFloat(
+								A2(
+									$elm$core$Maybe$withDefault,
+									0,
+									$elm$core$String$toFloat(yCor)) - 11.5)),
+							$elm$svg$Svg$Attributes$title('ObjectIcon'),
+							$elm$svg$Svg$Attributes$xlinkHref('res/icons/sword.png')
 						]),
 					_List_Nil),
 					A2(
@@ -12051,12 +12243,7 @@ var $author$project$DungeonMap$getAreaParam = function (s) {
 						[
 							$elm$svg$Svg$Attributes$textAnchor('middle'),
 							$elm$svg$Svg$Attributes$x(xCor),
-							$elm$svg$Svg$Attributes$y(
-							$elm$core$String$fromFloat(
-								A2(
-									$elm$core$Maybe$withDefault,
-									0,
-									$elm$core$String$toFloat(yCor)) + 0.75)),
+							$elm$svg$Svg$Attributes$y(yCor),
 							$elm$svg$Svg$Attributes$dominantBaseline('middle')
 						]),
 					_List_fromArray(
@@ -12064,6 +12251,33 @@ var $author$project$DungeonMap$getAreaParam = function (s) {
 							$elm$svg$Svg$text(
 							$elm$core$String$fromInt(id))
 						]))
+				]);
+		case 'object':
+			return _List_fromArray(
+				[
+					A2(
+					$elm$svg$Svg$image,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$width('25'),
+							$elm$svg$Svg$Attributes$height('25'),
+							$elm$svg$Svg$Attributes$x(
+							$elm$core$String$fromFloat(
+								A2(
+									$elm$core$Maybe$withDefault,
+									0,
+									$elm$core$String$toFloat(xCor)) - 11.5)),
+							$elm$svg$Svg$Attributes$y(
+							$elm$core$String$fromFloat(
+								A2(
+									$elm$core$Maybe$withDefault,
+									0,
+									$elm$core$String$toFloat(yCor)) - 11.5)),
+							$elm$svg$Svg$Attributes$title('ObjectIcon'),
+							$elm$svg$Svg$Attributes$xlinkHref(
+							$author$project$DungeonMap$getIconPath(id))
+						]),
+					_List_Nil)
 				]);
 		default:
 			return _List_fromArray(
@@ -12087,18 +12301,13 @@ var $author$project$DungeonMap$svgIconList = function (model) {
 		$elm$core$List$foldl,
 		$elm$core$Basics$append,
 		_List_Nil,
-		A2($elm$core$List$map, $author$project$DungeonMap$getAreaParam, model.characterList));
+		A2(
+			$elm$core$List$map,
+			$author$project$DungeonMap$getAreaParam,
+			_Utils_ap(model.characterList, model.objectIconList)));
 };
-var $elm$svg$Svg$Attributes$title = _VirtualDom_attribute('title');
 var $elm$svg$Svg$Attributes$version = _VirtualDom_attribute('version');
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var $elm$svg$Svg$Attributes$xlinkHref = function (value) {
-	return A3(
-		_VirtualDom_attributeNS,
-		'http://www.w3.org/1999/xlink',
-		'xlink:href',
-		_VirtualDom_noJavaScriptUri(value));
-};
 var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -12152,7 +12361,13 @@ var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 									$elm$svg$Svg$Attributes$viewBox('0 0 800 600'),
 									$elm$svg$Svg$Attributes$version('1.1')
 								]),
-							$author$project$DungeonMap$mouseDrawEvents(model.addCharacterIcon)),
+							_Utils_ap(
+								$author$project$DungeonMap$mouseDrawEvents(model.addCharacterIcon),
+								_Utils_eq(model.addCharacterIcon, $author$project$Model$DrawingInactive) ? _List_fromArray(
+									[
+										$elm$svg$Svg$Events$onClick(
+										$author$project$Model$ShowModal($author$project$Model$ObjectIconModal))
+									]) : _List_Nil)),
 						_Utils_ap(
 							_List_fromArray(
 								[
@@ -12180,6 +12395,115 @@ var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Info = {$: 'Info'};
 var $rundis$elm_bootstrap$Bootstrap$Button$info = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Info));
+var $author$project$Model$ChangeIcon = function (a) {
+	return {$: 'ChangeIcon', a: a};
+};
+var $author$project$Model$ChangeIconText = function (a) {
+	return {$: 'ChangeIconText', a: a};
+};
+var $author$project$DungeonMap$getCharIcon = function (state) {
+	if (state.$ === 'DrawIcon') {
+		var charIcon = state.a;
+		return charIcon;
+	} else {
+		return A4($author$project$Model$ObjectIcon, 0, '', '', '');
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Secondary = {$: 'Secondary'};
+var $rundis$elm_bootstrap$Bootstrap$Button$secondary = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Secondary));
+var $author$project$DungeonMap$newObjectIconModal = function (model) {
+	return A2(
+		$rundis$elm_bootstrap$Bootstrap$Modal$view,
+		model.showObjectIconModal,
+		A3(
+			$rundis$elm_bootstrap$Bootstrap$Modal$footer,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$rundis$elm_bootstrap$Bootstrap$Button$button,
+					_List_fromArray(
+						[
+							$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$AddCharacterIcon(
+										$author$project$Model$MouseClick(
+											$author$project$DungeonMap$getCharIcon(model.addCharacterIcon))))
+								])),
+							$rundis$elm_bootstrap$Bootstrap$Button$success
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Icon hinzufügen')
+						]))
+				]),
+			A3(
+				$rundis$elm_bootstrap$Bootstrap$Modal$body,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Button$button,
+								_List_fromArray(
+									[
+										$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick(
+												$author$project$Model$ChangeIcon(1))
+											])),
+										$rundis$elm_bootstrap$Bootstrap$Button$secondary
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Schatzkiste')
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Button$button,
+								_List_fromArray(
+									[
+										$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick(
+												$author$project$Model$ChangeIcon(2))
+											])),
+										$rundis$elm_bootstrap$Bootstrap$Button$secondary
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Schlüssel')
+									])),
+								$rundis$elm_bootstrap$Bootstrap$Form$Input$text(
+								_List_fromArray(
+									[
+										$rundis$elm_bootstrap$Bootstrap$Form$Input$value(model.iconText),
+										$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder('Beschreibung'),
+										$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput($author$project$Model$ChangeIconText)
+									]))
+							]))
+					]),
+				A3(
+					$rundis$elm_bootstrap$Bootstrap$Modal$h3,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Neues Icon')
+						]),
+					A2(
+						$rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick,
+						true,
+						$rundis$elm_bootstrap$Bootstrap$Modal$config(
+							$author$project$Model$CloseModal($author$project$Model$ObjectIconModal)))))));
+};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col = {$: 'Col'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width = F2(
 	function (screenSize, columnCount) {
@@ -13026,7 +13350,8 @@ var $author$project$DungeonMap$dungeonMapView = function (model) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text('Clear Map')
-					]))
+					])),
+				$author$project$DungeonMap$newObjectIconModal(model)
 			]));
 };
 var $elm$html$Html$footer = _VirtualDom_node('footer');

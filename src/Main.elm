@@ -93,6 +93,20 @@ update msg model =
             , Cmd.none
             )
 
+        ChangeIconText newIconText ->
+            ( { model | iconText = newIconText}
+            , Cmd.none
+            )
+
+        ChangeIcon id ->
+            case model.addCharacterIcon of
+                DrawIcon (ObjectIcon i x y t) ->
+                    ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t) }
+                    , Cmd.none
+                    )
+
+                _ -> ( model, Cmd.none )
+
         DiceAndSlice newDice ->
             let
                 rt = Maybe.withDefault 0 (String.toInt (Maybe.withDefault "0" (List.head (setDice newDice))))
@@ -126,13 +140,20 @@ update msg model =
                     case characterIcon of
                         PlayerIcon i x y ->
                             if List.length model.characterList == List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID noch nicht in Liste
-                            then    ( { model | characterList = model.characterList ++ [Player i x y], addCharacterIcon = DrawingInactive }, Cmd.none )
+                            then    ( { model | characterList = model.characterList ++ [ characterIcon ], addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
                         MonsterIcon i x y ->
                             if List.length model.characterList == List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID noch nicht in Liste
-                            then    ( { model | characterList = model.characterList ++ [Monster i x y], addCharacterIcon = DrawingInactive }, Cmd.none )
+                            then    ( { model | characterList = model.characterList ++ [ characterIcon ], addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
+
+                        ObjectIcon i x y t ->
+                            ( { model | objectIconList = model.objectIconList ++ [ ObjectIcon i x y model.iconText ]
+                                      , addCharacterIcon = DrawingInactive
+                                      , showObjectIconModal = Modal.hidden
+                                      , iconText = ""
+                              }, Cmd.none )
 
                 MouseDraw characterIcon ->
                     case characterIcon of
@@ -146,10 +167,13 @@ update msg model =
                             then    ( { model | characterList = List.filter (isNotId i) model.characterList, addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawIcon (MonsterIcon i x y) }, Cmd.none )
 
+                        ObjectIcon i x y t ->
+                            ( { model | addCharacterIcon = DrawIcon (ObjectIcon i x y t) }, Cmd.none )
+
                     --( { model | addCharacterIcon = DrawIcon s, characterList = (giveDungeonMap_CharacterIds model.characterList) }, Cmd.none )
 
         ClearCharacterList ->
-            ( { model | characterList = [] }
+            ( { model | characterList = [], objectIconList = [] }
             , Cmd.none
             )
 
@@ -164,6 +188,9 @@ update msg model =
                 CustomEnemy ->
                     ( { model | showCustomEnemy = Modal.hidden } , Cmd.none )
 
+                ObjectIconModal ->
+                    ( { model | showObjectIconModal = Modal.hidden } , Cmd.none )
+
         ShowModal modalType->
             case modalType of
                 AttackModal ->
@@ -174,6 +201,9 @@ update msg model =
 
                 CustomEnemy ->
                     ( { model | showCustomEnemy = Modal.shown } , Cmd.none )
+
+                ObjectIconModal ->
+                    ( { model | showObjectIconModal = Modal.shown } , Cmd.none )
 
         ShowAttackModal id->
             ( { model | showAttackModal = Modal.shown , characterId = id} , Cmd.none )
@@ -256,21 +286,25 @@ subscriptions model =
     Sub.batch
         [ Dropdown.subscriptions model.myDrop1State MyDrop1Msg ]
 
-giveDungeonMap_CharacterIds : List DungeonMap_Character -> List DungeonMap_Character
+giveDungeonMap_CharacterIds : List CharacterIcon -> List CharacterIcon
 giveDungeonMap_CharacterIds charList =
-    List.indexedMap putIdInDMC charList
+    List.indexedMap putIdInCharIcon charList
 
-putIdInDMC : Int -> DungeonMap_Character -> DungeonMap_Character
-putIdInDMC id dmc =
-    case dmc of
-        Player _ x y -> Player (id+1) x y
-        Monster _ x y -> Monster (id+1) x y
+putIdInCharIcon : Int -> CharacterIcon -> CharacterIcon
+putIdInCharIcon id charIcon =
+    case charIcon of
+        PlayerIcon _ x y -> PlayerIcon (id+1) x y
+        MonsterIcon _ x y -> MonsterIcon (id+1) x y
+        ObjectIcon _ x y t -> ObjectIcon (id+1) x y t
 
-isNotId : Int -> DungeonMap_Character -> Bool
+isNotId : Int -> CharacterIcon -> Bool
 isNotId id s =
     case s of
-        Monster i _ _ ->
+        MonsterIcon i _ _ ->
             id/=i
 
-        Player i _ _ ->
+        PlayerIcon i _ _ ->
+            id/=i
+
+        ObjectIcon i _ _ _ ->
             id/=i
