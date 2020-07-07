@@ -17,7 +17,8 @@ import Bootstrap.Modal as Modal
 import Bootstrap.Form.Input as Input
 import Array exposing (Array)
 import File
-
+import ColorPicker
+import Color
 
 --our Modules
 import Model exposing (..)
@@ -113,16 +114,22 @@ newObjectIconModal model =
                 [ Button.button
                     [ Button.attrs [ onClick <| ChangeIcon 1 ]   --ID 1 = ChestIcon right now
                     , Button.secondary
-                    ] [ text "Schatzkiste" ]
+                    ] [ text "Kiste" ]
                 , Button.button
                     [ Button.attrs [ onClick <| ChangeIcon 2 ]   --ID 2 = KeyIcon right now
                     , Button.secondary
                     ] [ text "Schlüssel" ]
+                , Button.button
+                    [ Button.attrs [ onClick <| ChangeIcon 3 ]   --ID 3 = Custom right now
+                    , Button.secondary
+                    ] [ text "Benutzerdefiniert" ]
                 , Input.text
                     [ Input.value model.iconText
                     , Input.placeholder "Beschreibung"
                     , Input.onInput ChangeIconText
                     ]
+                , ColorPicker.view model.colour model.colorPicker
+                    |> Html.map ColorPickerMsg
                 ]
             ]
             |> Modal.footer []
@@ -140,7 +147,7 @@ getCharIcon state =
         DrawIcon charIcon ->
             charIcon
 
-        _ -> ObjectIcon 0 "" "" ""
+        _ -> ObjectIcon 0 "" "" "" Nothing
 
 stopBubbling : msg -> Svg.Attribute msg
 stopBubbling msg =
@@ -159,71 +166,30 @@ getAreaParam s =
       yCor = Maybe.withDefault "0" (List.head (List.drop 1 (String.split "," (getCoord s))))
       id = getID s
       objectText = getObjectText s      --Text of an ObjectIcon, for other Icons empty
+      color = getColor s                --Color of a custom ObjectIcon, for others Nothing
     in
-    case getIcon s of
-        "monster" ->
-            [ Svg.image
-                [ SvgAtt.width "25"
-                , SvgAtt.height "25"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat xCor) - 11.5))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat yCor) - 11.5))
-                , SvgAtt.title "ObjectIcon"
-                , SvgAtt.xlinkHref ("res/icons/skull.png")
-                ] []
-            , Svg.text_ [ SvgAtt.textAnchor "middle"
-                        , SvgAtt.x xCor
-                        , SvgAtt.y yCor
-                        , SvgAtt.dominantBaseline "middle"
-                        ]
-                        [ Svg.text (String.fromInt id) ]
-            ]
+    placeIcon (getIconType s) id xCor yCor color
 
-        "player" ->
-            [ Svg.image
-                [ SvgAtt.width "25"
-                , SvgAtt.height "25"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat xCor) - 11.5))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat yCor) - 11.5))
-                , SvgAtt.title "ObjectIcon"
-                , SvgAtt.xlinkHref ("res/icons/sword.png")
-                ] []
-            , Svg.text_ [ SvgAtt.textAnchor "middle"
-                        , SvgAtt.x xCor
-                        , SvgAtt.y yCor
-                        , SvgAtt.dominantBaseline "middle"
-                        ]
-                        [ Svg.text (String.fromInt id) ]
-            ]
+getColor object =
+    case object of
+        MonsterIcon i x y ->
+            Nothing
 
-        "object" ->
-            [ Svg.image
-                [ SvgAtt.width "25"
-                , SvgAtt.height "25"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat xCor) - 11.5))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat yCor) - 11.5))
-                , SvgAtt.title "ObjectIcon"
-                , SvgAtt.xlinkHref (getIconPath id)
-                ] []
-            ]
+        PlayerIcon i x y ->
+            Nothing
 
-        _ ->
-            [ Svg.circle
-                [ SvgAtt.id (String.fromInt id)
-                , SvgAtt.cx xCor
-                , SvgAtt.cy yCor
-                , SvgAtt.r "0"
-                ]
-                []
-            ]
+        ObjectIcon i x y t c ->
+            c
 
 getIconPath : Int -> String
 getIconPath id =
     case id of
         1 -> "res/icons/chest.png"
         2 -> "res/icons/key.png"
+        3 -> "custom"   --a svg-shape rather than an .png file, see placeIcon function
         _ -> ""
 
-getIcon object =
+getIconType object =
     case object of
         MonsterIcon i x y ->
             "monster"
@@ -231,7 +197,7 @@ getIcon object =
         PlayerIcon i x y ->
             "player"
 
-        ObjectIcon i x y t ->
+        ObjectIcon i x y t c ->
             "object"
 
 getCoord object =
@@ -242,7 +208,7 @@ getCoord object =
         PlayerIcon i x y ->
             x ++ "," ++ y
 
-        ObjectIcon i x y t ->
+        ObjectIcon i x y t c ->
             x ++ "," ++ y
 
 getID object =
@@ -253,7 +219,7 @@ getID object =
         PlayerIcon i x y ->
             i
 
-        ObjectIcon i x y t ->
+        ObjectIcon i x y t c ->
             i
 
 getObjectText object =
@@ -264,9 +230,76 @@ getObjectText object =
         PlayerIcon i x y ->
             ""
 
-        ObjectIcon i x y t ->
+        ObjectIcon i x y t c ->
             t
 
+
+placeIcon : String -> Int -> String -> String -> Maybe Color.Color -> List (Svg.Svg Msg)
+placeIcon iconType id x y color =
+    case iconType of
+        "monster" ->
+            [ Svg.image
+                [ SvgAtt.width "25"
+                , SvgAtt.height "25"
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
+                , SvgAtt.title "MonsterIcon"
+                , SvgAtt.xlinkHref ("res/icons/skull.png")
+                ] []
+            , Svg.text_ [ SvgAtt.textAnchor "middle"
+                , SvgAtt.x x
+                , SvgAtt.y y
+                , SvgAtt.dominantBaseline "middle"
+                ]
+                [ Svg.text (String.fromInt id) ]
+            ]
+
+        "player" ->
+            [ Svg.image
+                [ SvgAtt.width "25"
+                , SvgAtt.height "25"
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
+                , SvgAtt.title "ObjectIcon"
+                , SvgAtt.xlinkHref ("res/icons/sword.png")
+                ] []
+            , Svg.text_ [ SvgAtt.textAnchor "middle"
+                        , SvgAtt.x x
+                        , SvgAtt.y y
+                        , SvgAtt.dominantBaseline "middle"
+                        ]
+                        [ Svg.text (String.fromInt id) ]
+            ]
+
+        "object" ->
+            case getIconPath id of
+                "custom" -> [ Svg.circle
+                                [ SvgAtt.id (String.fromInt id)
+                                , SvgAtt.cx x
+                                , SvgAtt.cy y
+                                , SvgAtt.r "10"
+                                , SvgAtt.style (buildCustomObjectIconStyle color)
+                                ]
+                                []
+                            ]
+
+
+                _ -> [ Svg.image
+                         [ SvgAtt.width "25"
+                         , SvgAtt.height "25"
+                         , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
+                         , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
+                         , SvgAtt.title "ObjectIcon"
+                         , SvgAtt.xlinkHref (getIconPath id)
+                         ] []
+                     ]
+
+        _ ->
+            []
+
+buildCustomObjectIconStyle : Maybe Color.Color -> String
+buildCustomObjectIconStyle color =
+    "stroke:black;stroke-width:4;fill:" ++ (Color.toCssString (Maybe.withDefault Color.black color))
 
 mouseDrawEvents : AddCharacterIconState -> List (Svg.Attribute Msg)
 mouseDrawEvents addCharacterIcon =
@@ -283,7 +316,7 @@ mouseDrawEvents addCharacterIcon =
                     , onMouseMove (positionToRectangleCorner i)
                     ]
 
-                ObjectIcon i x y t ->
+                ObjectIcon i x y t c ->
                     [ Svg.Events.onClick (ShowModal ObjectIconModal)
                     , onMouseMove (positionToIconCenter i)
                     ]
@@ -315,56 +348,39 @@ positionToRectangleCorner i position =
 
 positionToIconCenter : Int -> MousePosition -> Msg
 positionToIconCenter i position =
-    AddCharacterIcon (MouseDraw (ObjectIcon i (String.fromFloat position.x) (String.fromFloat position.y) "" ))
+    AddCharacterIcon (MouseDraw (ObjectIcon i (String.fromFloat position.x) (String.fromFloat position.y) "" Nothing ))
 
 newIconsView : AddCharacterIconState -> List (Svg.Svg Msg)
 newIconsView addCharacterIcon =
     case addCharacterIcon of
         DrawIcon characterIcon ->
             case characterIcon of
-                ObjectIcon i x y t ->
+                ObjectIcon i x y t c ->
                     []
 
                 PlayerIcon i x y ->
-                    [ Svg.g
-                        []
-                        [ Svg.circle
-                            [ SvgAtt.cx x
-                            , SvgAtt.cy y
-                            , SvgAtt.r "10"
+                    (placeIcon "player" i x y Nothing)
+                        ++  [ Svg.rect
+                                [ SvgAtt.width "800"
+                                , SvgAtt.height "600"
+                                , SvgAtt.x "0"
+                                , SvgAtt.y "0"
+                                , SvgAtt.style "fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9"
+                                ]
+                                []
                             ]
-                            []
-                        ]
-                    , Svg.rect
-                        [ SvgAtt.width "800"
-                        , SvgAtt.height "600"
-                        , SvgAtt.x "0"
-                        , SvgAtt.y "0"
-                        , SvgAtt.style "fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9"
-                        ]
-                        []
-                    ]
 
                 MonsterIcon i x y ->
-                    [ Svg.g
-                        []
-                        [ Svg.rect
-                            [ SvgAtt.x x
-                            , SvgAtt.y y
-                            , SvgAtt.width "15"
-                            , SvgAtt.height "15"
+                    (placeIcon "monster" i x y Nothing)
+                        ++  [ Svg.rect
+                                [ SvgAtt.width "800"
+                                , SvgAtt.height "600"
+                                , SvgAtt.x "0"
+                                , SvgAtt.y "0"
+                                , SvgAtt.style "fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9"
+                                ]
+                                []
                             ]
-                            []
-                        ]
-                    , Svg.rect
-                        [ SvgAtt.width "800"
-                        , SvgAtt.height "600"
-                        , SvgAtt.x "0"
-                        , SvgAtt.y "0"
-                        , SvgAtt.style "fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9"
-                        ]
-                        []
-                    ]
         _ ->
             []
 

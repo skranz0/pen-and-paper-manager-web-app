@@ -9,6 +9,8 @@ import Http
 import Array
 import Array.Extra as Array
 import File
+import ColorPicker
+import Color
 
 type alias Model =
     { enemy : Array.Array Character -- The enemy displayed on the homepage
@@ -36,6 +38,8 @@ type alias Model =
     , hover : Bool
     , previews : List String
     , iconText : String
+    , colorPicker : ColorPicker.State
+    , colour : Color.Color
     }
 
 init : () -> (Model, Cmd Msg)
@@ -66,6 +70,8 @@ init _ =
         , hover = False
         , previews = []
         , iconText = ""
+        , colorPicker = ColorPicker.empty
+        , colour = Color.rgb 255 0 0
         }
     , Cmd.none
     )
@@ -106,6 +112,7 @@ type Msg
     | GotPreviews (List String)
     | ChangeIconText String
     | ChangeIcon Int
+    | ColorPickerMsg ColorPicker.Msg
 
 type ModalType
     = AttackModal
@@ -136,8 +143,8 @@ type AddCharacterIconMsg
 type CharacterIcon
     = PlayerIcon Int String String
     | MonsterIcon Int String String
-    | ObjectIcon Int String String String
-    --          ID  x-coord y-coord Text
+    | ObjectIcon Int String String String (Maybe Color.Color)
+    --       type-ID x-coord y-coord Text custom-color
     -- ID in ObjectIcon type is not an identifier for a concrete ObjectIcon, its an identifier for the used png
 
 type alias MousePosition =

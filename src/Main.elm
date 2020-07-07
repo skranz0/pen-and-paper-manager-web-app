@@ -14,6 +14,8 @@ import Array.Extra as Array
 import Task
 import File.Select as Select
 import File
+import ColorPicker
+import Color
 
 --our Modules
 import DungeonMap exposing (dungeonMapView)
@@ -100,10 +102,15 @@ update msg model =
 
         ChangeIcon id ->
             case model.addCharacterIcon of
-                DrawIcon (ObjectIcon i x y t) ->
-                    ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t) }
-                    , Cmd.none
-                    )
+                DrawIcon (ObjectIcon i x y t c) ->
+                    case id of
+                        3 -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t c) }
+                             , Cmd.none
+                             )
+
+                        _ -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t Nothing) }
+                             , Cmd.none
+                             )
 
                 _ -> ( model, Cmd.none )
 
@@ -148,8 +155,8 @@ update msg model =
                             then    ( { model | characterList = model.characterList ++ [ characterIcon ], addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
-                        ObjectIcon i x y t ->
-                            ( { model | objectIconList = model.objectIconList ++ [ ObjectIcon i x y model.iconText ]
+                        ObjectIcon i x y t c ->
+                            ( { model | objectIconList = model.objectIconList ++ [ ObjectIcon i x y model.iconText c ]
                                       , addCharacterIcon = DrawingInactive
                                       , showObjectIconModal = Modal.hidden
                                       , iconText = ""
@@ -167,8 +174,8 @@ update msg model =
                             then    ( { model | characterList = List.filter (isNotId i) model.characterList, addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawIcon (MonsterIcon i x y) }, Cmd.none )
 
-                        ObjectIcon i x y t ->
-                            ( { model | addCharacterIcon = DrawIcon (ObjectIcon i x y t) }, Cmd.none )
+                        ObjectIcon i x y t c ->
+                            ( { model | addCharacterIcon = DrawIcon (ObjectIcon i x y t c) }, Cmd.none )
 
                     --( { model | addCharacterIcon = DrawIcon s, characterList = (giveDungeonMap_CharacterIds model.characterList) }, Cmd.none )
 
@@ -228,17 +235,29 @@ update msg model =
             ( { model | hover = False }
             , Cmd.none
             )
-
         GotFiles file files ->
             ( { model | hover = False }
             , Task.perform GotPreviews <| Task.sequence <|
                 List.map File.toUrl (file :: files)
                 )
-
         GotPreviews urls ->
             ( { model | previews = urls }
             , Cmd.none
             )
+
+        ColorPickerMsg cpMsg ->
+            case model.addCharacterIcon of
+                DrawIcon (ObjectIcon i x y t c) ->  let
+                                                        ( m, colour ) = ColorPicker.update cpMsg model.colour model.colorPicker
+                                                    in
+                                                        ( { model | colorPicker = m
+                                                                  , colour = colour |> Maybe.withDefault model.colour
+                                                                  , addCharacterIcon = DrawIcon (ObjectIcon i x y t (Just model.colour))
+                                                          }
+                                                        , Cmd.none
+                                                        )
+
+                _ -> ( model, Cmd.none )
 
 view : Model -> Html Msg
 view model =
@@ -295,7 +314,7 @@ putIdInCharIcon id charIcon =
     case charIcon of
         PlayerIcon _ x y -> PlayerIcon (id+1) x y
         MonsterIcon _ x y -> MonsterIcon (id+1) x y
-        ObjectIcon _ x y t -> ObjectIcon (id+1) x y t
+        ObjectIcon _ x y t c -> ObjectIcon (id+1) x y t c
 
 isNotId : Int -> CharacterIcon -> Bool
 isNotId id s =
@@ -306,5 +325,5 @@ isNotId id s =
         PlayerIcon i _ _ ->
             id/=i
 
-        ObjectIcon i _ _ _ ->
+        ObjectIcon i _ _ _ _->
             id/=i
