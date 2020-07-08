@@ -244,16 +244,16 @@ placeIcon iconType id x y color =
     case iconType of
         "monster" ->
             [ Svg.image
-                [ SvgAtt.width "34"
-                , SvgAtt.height "34"
+                [ SvgAtt.width "30"
+                , SvgAtt.height "30"
                 , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 17.5))
                 , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 17.5))
                 , SvgAtt.title "MonsterIcon"
                 , SvgAtt.xlinkHref ("res/icons/enemy.png")
                 ] []
             , Svg.text_ [ SvgAtt.textAnchor "middle"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 0.5))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) + 1.5))
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 3))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 0.5))
                 , SvgAtt.dominantBaseline "middle"
                 ]
                 [ Svg.text (String.fromInt id) ]

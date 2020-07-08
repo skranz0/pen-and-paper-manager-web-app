@@ -170,7 +170,7 @@
      inkscape:label="Ebene 1">
     <path
        d="M 68.806218,35.482623 A 39.999999,39.999999 0 0 1 28.806076,75.482765 v 69.999865 a 39.999999,39.999999 0 0 1 40.000142,40.00014 h 69.999862 a 39.999999,39.999999 0 0 1 40.00014,-40.00014 V 75.482765 A 39.999999,39.999999 0 0 1 138.80608,35.482623 Z"
-       style="fill:none;stroke-width:19;opacity:1;stroke:black;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:none;stroke-width:10;opacity:1;stroke:black;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        id="rect1039" />
   </g>
 </svg>

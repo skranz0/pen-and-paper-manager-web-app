@@ -12323,8 +12323,8 @@ var $author$project$DungeonMap$placeIcon = F5(
 						$elm$svg$Svg$image,
 						_List_fromArray(
 							[
-								$elm$svg$Svg$Attributes$width('34'),
-								$elm$svg$Svg$Attributes$height('34'),
+								$elm$svg$Svg$Attributes$width('30'),
+								$elm$svg$Svg$Attributes$height('30'),
 								$elm$svg$Svg$Attributes$x(
 								$elm$core$String$fromFloat(
 									A2(
@@ -12351,13 +12351,13 @@ var $author$project$DungeonMap$placeIcon = F5(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(x)) - 0.5)),
+										$elm$core$String$toFloat(x)) - 3)),
 								$elm$svg$Svg$Attributes$y(
 								$elm$core$String$fromFloat(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(y)) + 1.5)),
+										$elm$core$String$toFloat(y)) - 0.5)),
 								$elm$svg$Svg$Attributes$dominantBaseline('middle')
 							]),
 						_List_fromArray(
