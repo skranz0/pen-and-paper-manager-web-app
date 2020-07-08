@@ -15,6 +15,7 @@ import Bootstrap.Table as Table
 import Bootstrap.Button as Button
 import Bootstrap.Modal as Modal
 import Bootstrap.Form.Input as Input
+import Bootstrap.Form.Radio as Radio
 import Array exposing (Array)
 import File
 import ColorPicker
@@ -61,14 +62,14 @@ characters2rows chars =
         (\i c ->
             case c of
                 Enemy name health _ _ _ ->
-                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon (i+1) "0" "0")))) ]
+                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon (i+1) "-100" "-100")))) ]
                         [ Table.td [] [Html.text <| String.fromInt (i+1)]
                         , Table.td [] [Html.text name]
                         , Table.td [] [Html.text <| String.fromInt health]
                         ]
 
                 Hero name health ->
-                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon (i+1) "0" "0")))) ]
+                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon (i+1) "-100" "-100")))) ]
                         [ Table.td [] [Html.text <| String.fromInt (i+1)]
                         , Table.td [] [Html.text name]
                         , Table.td [] [Html.text <| String.fromInt health]
@@ -111,25 +112,28 @@ newObjectIconModal model =
         |> Modal.h3 [] [ text "Neues Icon" ]
         |> Modal.body []
             [ div []
-                [ Button.button
-                    [ Button.attrs [ onClick <| ChangeIcon 1 ]   --ID 1 = ChestIcon right now
-                    , Button.secondary
-                    ] [ text "Kiste" ]
-                , Button.button
-                    [ Button.attrs [ onClick <| ChangeIcon 2 ]   --ID 2 = KeyIcon right now
-                    , Button.secondary
-                    ] [ text "Schlüssel" ]
-                , Button.button
-                    [ Button.attrs [ onClick <| ChangeIcon 3 ]   --ID 3 = Custom right now
-                    , Button.secondary
-                    ] [ text "Benutzerdefiniert" ]
-                , Input.text
-                    [ Input.value model.iconText
-                    , Input.placeholder "Beschreibung"
-                    , Input.onInput ChangeIconText
-                    ]
-                , ColorPicker.view model.colour model.colorPicker
-                    |> Html.map ColorPickerMsg
+                [ div []
+                    ( Radio.radioList "customradiogroup"
+                        [ Radio.createCustom [ Radio.id "rdi1", Radio.inline, Radio.onClick (ChangeIcon 1), Radio.checked (1 == model.radioCheckedID) ] "Kiste"
+                        , Radio.createCustom [ Radio.id "rdi2", Radio.inline, Radio.onClick (ChangeIcon 2), Radio.checked (2 == model.radioCheckedID) ] "Schlüssel"
+                        , Radio.createCustom [ Radio.id "rdi3", Radio.inline, Radio.onClick (ChangeIcon 3), Radio.checked (3 == model.radioCheckedID) ] "Benutzerdefiniert"
+                        ]
+                    )
+                , div []
+                    ( [ Html.br [] []
+                      , Input.text
+                          [ Input.value model.iconText
+                          , Input.placeholder "Beschreibung"
+                          , Input.onInput ChangeIconText
+                          ]
+                      ]
+                      ++  case model.radioCheckedID of
+                              3 -> [ Html.br [] []
+                                   , ColorPicker.view model.colour model.colorPicker
+                                      |> Html.map ColorPickerMsg
+                                   ]
+                              _ -> []
+                    )
                 ]
             ]
             |> Modal.footer []
@@ -239,16 +243,16 @@ placeIcon iconType id x y color =
     case iconType of
         "monster" ->
             [ Svg.image
-                [ SvgAtt.width "25"
-                , SvgAtt.height "25"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
+                [ SvgAtt.width "34"
+                , SvgAtt.height "34"
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 17.5))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 17.5))
                 , SvgAtt.title "MonsterIcon"
-                , SvgAtt.xlinkHref ("res/icons/skull.png")
+                , SvgAtt.xlinkHref ("res/icons/enemy.png")
                 ] []
             , Svg.text_ [ SvgAtt.textAnchor "middle"
-                , SvgAtt.x x
-                , SvgAtt.y y
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 0.5))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) + 1.5))
                 , SvgAtt.dominantBaseline "middle"
                 ]
                 [ Svg.text (String.fromInt id) ]
@@ -261,14 +265,14 @@ placeIcon iconType id x y color =
                 , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
                 , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
                 , SvgAtt.title "ObjectIcon"
-                , SvgAtt.xlinkHref ("res/icons/sword.png")
+                , SvgAtt.xlinkHref ("res/icons/hero.png")
                 ] []
             , Svg.text_ [ SvgAtt.textAnchor "middle"
-                        , SvgAtt.x x
-                        , SvgAtt.y y
-                        , SvgAtt.dominantBaseline "middle"
-                        ]
-                        [ Svg.text (String.fromInt id) ]
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) + 1))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) + 2.5))
+                , SvgAtt.dominantBaseline "middle"
+                ]
+                [ Svg.text (String.fromInt id) ]
             ]
 
         "object" ->

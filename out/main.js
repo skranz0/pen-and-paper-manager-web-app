@@ -5650,6 +5650,7 @@ var $author$project$Model$init = function (_v0) {
 			myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState,
 			objectIconList: _List_Nil,
 			previews: _List_Nil,
+			radioCheckedID: 0,
 			showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden,
 			showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden,
 			showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden,
@@ -8151,7 +8152,8 @@ var $author$project$Main$update = F2(
 								model,
 								{
 									addCharacterIcon: $author$project$Model$DrawIcon(
-										A5($author$project$Model$ObjectIcon, id, x, y, t, c))
+										A5($author$project$Model$ObjectIcon, id, x, y, t, c)),
+									radioCheckedID: id
 								}),
 							$elm$core$Platform$Cmd$none);
 					} else {
@@ -8160,7 +8162,8 @@ var $author$project$Main$update = F2(
 								model,
 								{
 									addCharacterIcon: $author$project$Model$DrawIcon(
-										A5($author$project$Model$ObjectIcon, id, x, y, t, $elm$core$Maybe$Nothing))
+										A5($author$project$Model$ObjectIcon, id, x, y, t, $elm$core$Maybe$Nothing)),
+									radioCheckedID: id
 								}),
 							$elm$core$Platform$Cmd$none);
 					}
@@ -8295,7 +8298,13 @@ var $author$project$Main$update = F2(
 											model.objectIconList,
 											_List_fromArray(
 												[
-													A5($author$project$Model$ObjectIcon, i, x, y, model.iconText, c)
+													A5(
+													$author$project$Model$ObjectIcon,
+													i,
+													x,
+													y,
+													model.iconText,
+													$elm$core$Maybe$Just(model.colour))
 												])),
 										showObjectIconModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden
 									}),
@@ -8513,14 +8522,6 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								addCharacterIcon: $author$project$Model$DrawIcon(
-									A5(
-										$author$project$Model$ObjectIcon,
-										i,
-										x,
-										y,
-										t,
-										$elm$core$Maybe$Just(model.colour))),
 								colorPicker: m,
 								colour: A2($elm$core$Maybe$withDefault, model.colour, colour)
 							}),
@@ -11951,7 +11952,7 @@ var $author$project$DungeonMap$characters2rows = function (chars) {
 								$author$project$DungeonMap$stopBubbling(
 									$author$project$Model$AddCharacterIcon(
 										$author$project$Model$MouseDraw(
-											A3($author$project$Model$MonsterIcon, i + 1, '0', '0')))))
+											A3($author$project$Model$MonsterIcon, i + 1, '-100', '-100')))))
 							]),
 						_List_fromArray(
 							[
@@ -11990,7 +11991,7 @@ var $author$project$DungeonMap$characters2rows = function (chars) {
 								$author$project$DungeonMap$stopBubbling(
 									$author$project$Model$AddCharacterIcon(
 										$author$project$Model$MouseDraw(
-											A3($author$project$Model$PlayerIcon, i + 1, '0', '0')))))
+											A3($author$project$Model$PlayerIcon, i + 1, '-100', '-100')))))
 							]),
 						_List_fromArray(
 							[
@@ -12321,22 +12322,23 @@ var $author$project$DungeonMap$placeIcon = F5(
 						$elm$svg$Svg$image,
 						_List_fromArray(
 							[
-								$elm$svg$Svg$Attributes$width('25'),
-								$elm$svg$Svg$Attributes$height('25'),
+								$elm$svg$Svg$Attributes$width('34'),
+								$elm$svg$Svg$Attributes$height('34'),
 								$elm$svg$Svg$Attributes$x(
 								$elm$core$String$fromFloat(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(x)) - 11.5)),
+										$elm$core$String$toFloat(x)) - 17.5)),
 								$elm$svg$Svg$Attributes$y(
 								$elm$core$String$fromFloat(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(y)) - 11.5)),
+										$elm$core$String$toFloat(y)) - 17.5)),
 								$elm$svg$Svg$Attributes$title('MonsterIcon'),
-								$elm$svg$Svg$Attributes$xlinkHref('res/icons/skull.png')
+								$elm$svg$Svg$Attributes$xlinkHref('res/icons/enemy.png'),
+								$elm$svg$Svg$Events$onClick($author$project$Model$DoNothing)
 							]),
 						_List_Nil),
 						A2(
@@ -12344,8 +12346,18 @@ var $author$project$DungeonMap$placeIcon = F5(
 						_List_fromArray(
 							[
 								$elm$svg$Svg$Attributes$textAnchor('middle'),
-								$elm$svg$Svg$Attributes$x(x),
-								$elm$svg$Svg$Attributes$y(y),
+								$elm$svg$Svg$Attributes$x(
+								$elm$core$String$fromFloat(
+									A2(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toFloat(x)) - 0.5)),
+								$elm$svg$Svg$Attributes$y(
+								$elm$core$String$fromFloat(
+									A2(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toFloat(y)) + 1.5)),
 								$elm$svg$Svg$Attributes$dominantBaseline('middle')
 							]),
 						_List_fromArray(
@@ -12376,7 +12388,8 @@ var $author$project$DungeonMap$placeIcon = F5(
 										0,
 										$elm$core$String$toFloat(y)) - 11.5)),
 								$elm$svg$Svg$Attributes$title('ObjectIcon'),
-								$elm$svg$Svg$Attributes$xlinkHref('res/icons/sword.png')
+								$elm$svg$Svg$Attributes$xlinkHref('res/icons/hero.png'),
+								$elm$svg$Svg$Events$onClick($author$project$Model$DoNothing)
 							]),
 						_List_Nil),
 						A2(
@@ -12384,8 +12397,18 @@ var $author$project$DungeonMap$placeIcon = F5(
 						_List_fromArray(
 							[
 								$elm$svg$Svg$Attributes$textAnchor('middle'),
-								$elm$svg$Svg$Attributes$x(x),
-								$elm$svg$Svg$Attributes$y(y),
+								$elm$svg$Svg$Attributes$x(
+								$elm$core$String$fromFloat(
+									A2(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toFloat(x)) + 1)),
+								$elm$svg$Svg$Attributes$y(
+								$elm$core$String$fromFloat(
+									A2(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toFloat(y)) + 2.5)),
 								$elm$svg$Svg$Attributes$dominantBaseline('middle')
 							]),
 						_List_fromArray(
@@ -12409,7 +12432,8 @@ var $author$project$DungeonMap$placeIcon = F5(
 									$elm$svg$Svg$Attributes$cy(y),
 									$elm$svg$Svg$Attributes$r('10'),
 									$elm$svg$Svg$Attributes$style(
-									$author$project$DungeonMap$buildCustomObjectIconStyle(color))
+									$author$project$DungeonMap$buildCustomObjectIconStyle(color)),
+									$elm$svg$Svg$Events$onClick($author$project$Model$DoNothing)
 								]),
 							_List_Nil)
 						]);
@@ -12436,7 +12460,8 @@ var $author$project$DungeonMap$placeIcon = F5(
 											$elm$core$String$toFloat(y)) - 11.5)),
 									$elm$svg$Svg$Attributes$title('ObjectIcon'),
 									$elm$svg$Svg$Attributes$xlinkHref(
-									$author$project$DungeonMap$getIconPath(id))
+									$author$project$DungeonMap$getIconPath(id)),
+									$elm$svg$Svg$Events$onClick($author$project$Model$DoNothing)
 								]),
 							_List_Nil)
 						]);
@@ -12758,6 +12783,11 @@ var $author$project$Model$ChangeIconText = function (a) {
 var $author$project$Model$ColorPickerMsg = function (a) {
 	return {$: 'ColorPickerMsg', a: a};
 };
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$Custom = {$: 'Custom'};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$createCustom = function (options) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Radio$create(
+		A2($elm$core$List$cons, $rundis$elm_bootstrap$Bootstrap$Form$Radio$Custom, options));
+};
 var $author$project$DungeonMap$getCharIcon = function (state) {
 	if (state.$ === 'DrawIcon') {
 		var charIcon = state.a;
@@ -12766,11 +12796,10 @@ var $author$project$DungeonMap$getCharIcon = function (state) {
 		return A5($author$project$Model$ObjectIcon, 0, '', '', '', $elm$core$Maybe$Nothing);
 	}
 };
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$Inline = {$: 'Inline'};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$inline = $rundis$elm_bootstrap$Bootstrap$Form$Radio$Inline;
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
-var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Secondary = {$: 'Secondary'};
-var $rundis$elm_bootstrap$Bootstrap$Button$secondary = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
-	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Secondary));
 var $simonh1000$elm_colorpicker$ColorPicker$markerAttrs = _List_fromArray(
 	[
 		A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
@@ -13316,64 +13345,77 @@ var $author$project$DungeonMap$newObjectIconModal = function (model) {
 						_List_fromArray(
 							[
 								A2(
-								$rundis$elm_bootstrap$Bootstrap$Button$button,
-								_List_fromArray(
-									[
-										$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-										_List_fromArray(
-											[
-												$elm$html$Html$Events$onClick(
-												$author$project$Model$ChangeIcon(1))
-											])),
-										$rundis$elm_bootstrap$Bootstrap$Button$secondary
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Kiste')
-									])),
+								$elm$html$Html$div,
+								_List_Nil,
 								A2(
-								$rundis$elm_bootstrap$Bootstrap$Button$button,
-								_List_fromArray(
-									[
-										$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-										_List_fromArray(
-											[
-												$elm$html$Html$Events$onClick(
-												$author$project$Model$ChangeIcon(2))
-											])),
-										$rundis$elm_bootstrap$Bootstrap$Button$secondary
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Schlüssel')
-									])),
+									$rundis$elm_bootstrap$Bootstrap$Form$Radio$radioList,
+									'customradiogroup',
+									_List_fromArray(
+										[
+											A2(
+											$rundis$elm_bootstrap$Bootstrap$Form$Radio$createCustom,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$id('rdi1'),
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$inline,
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$onClick(
+													$author$project$Model$ChangeIcon(1)),
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$checked(1 === model.radioCheckedID)
+												]),
+											'Kiste'),
+											A2(
+											$rundis$elm_bootstrap$Bootstrap$Form$Radio$createCustom,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$id('rdi2'),
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$inline,
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$onClick(
+													$author$project$Model$ChangeIcon(2)),
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$checked(2 === model.radioCheckedID)
+												]),
+											'Schlüssel'),
+											A2(
+											$rundis$elm_bootstrap$Bootstrap$Form$Radio$createCustom,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$id('rdi3'),
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$inline,
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$onClick(
+													$author$project$Model$ChangeIcon(3)),
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$checked(3 === model.radioCheckedID)
+												]),
+											'Benutzerdefiniert')
+										]))),
 								A2(
-								$rundis$elm_bootstrap$Bootstrap$Button$button,
-								_List_fromArray(
-									[
-										$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-										_List_fromArray(
-											[
-												$elm$html$Html$Events$onClick(
-												$author$project$Model$ChangeIcon(3))
-											])),
-										$rundis$elm_bootstrap$Bootstrap$Button$secondary
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Benutzerdefiniert')
-									])),
-								$rundis$elm_bootstrap$Bootstrap$Form$Input$text(
-								_List_fromArray(
-									[
-										$rundis$elm_bootstrap$Bootstrap$Form$Input$value(model.iconText),
-										$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder('Beschreibung'),
-										$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput($author$project$Model$ChangeIconText)
-									])),
-								A2(
-								$elm$html$Html$map,
-								$author$project$Model$ColorPickerMsg,
-								A2($simonh1000$elm_colorpicker$ColorPicker$view, model.colour, model.colorPicker))
+								$elm$html$Html$div,
+								_List_Nil,
+								_Utils_ap(
+									_List_fromArray(
+										[
+											A2($elm$html$Html$br, _List_Nil, _List_Nil),
+											$rundis$elm_bootstrap$Bootstrap$Form$Input$text(
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Form$Input$value(model.iconText),
+													$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder('Beschreibung'),
+													$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput($author$project$Model$ChangeIconText)
+												]))
+										]),
+									function () {
+										var _v0 = model.radioCheckedID;
+										if (_v0 === 3) {
+											return _List_fromArray(
+												[
+													A2($elm$html$Html$br, _List_Nil, _List_Nil),
+													A2(
+													$elm$html$Html$map,
+													$author$project$Model$ColorPickerMsg,
+													A2($simonh1000$elm_colorpicker$ColorPicker$view, model.colour, model.colorPicker))
+												]);
+										} else {
+											return _List_Nil;
+										}
+									}()))
 							]))
 					]),
 				A3(

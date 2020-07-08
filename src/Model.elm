@@ -40,6 +40,7 @@ type alias Model =
     , iconText : String
     , colorPicker : ColorPicker.State
     , colour : Color.Color
+    , radioCheckedID : Int
     }
 
 init : () -> (Model, Cmd Msg)
@@ -72,6 +73,7 @@ init _ =
         , iconText = ""
         , colorPicker = ColorPicker.empty
         , colour = Color.rgb 255 0 0
+        , radioCheckedID = 0
         }
     , Cmd.none
     )

@@ -104,11 +104,13 @@ update msg model =
             case model.addCharacterIcon of
                 DrawIcon (ObjectIcon i x y t c) ->
                     case id of
-                        3 -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t c) }
+                        3 -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t c)
+                                       , radioCheckedID = id }
                              , Cmd.none
                              )
 
-                        _ -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t Nothing) }
+                        _ -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t Nothing)
+                                       , radioCheckedID = id }
                              , Cmd.none
                              )
 
@@ -156,7 +158,7 @@ update msg model =
                             else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
                         ObjectIcon i x y t c ->
-                            ( { model | objectIconList = model.objectIconList ++ [ ObjectIcon i x y model.iconText c ]
+                            ( { model | objectIconList = model.objectIconList ++ [ ObjectIcon i x y model.iconText (Just model.colour) ]
                                       , addCharacterIcon = DrawingInactive
                                       , showObjectIconModal = Modal.hidden
                                       , iconText = ""
@@ -252,7 +254,6 @@ update msg model =
                                                     in
                                                         ( { model | colorPicker = m
                                                                   , colour = colour |> Maybe.withDefault model.colour
-                                                                  , addCharacterIcon = DrawIcon (ObjectIcon i x y t (Just model.colour))
                                                           }
                                                         , Cmd.none
                                                         )
