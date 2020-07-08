@@ -9,6 +9,8 @@ import Http
 import Array
 import Array.Extra as Array
 import File
+import ColorPicker
+import Color
 
 type alias Model =
     { enemy : Array.Array Character -- The enemy displayed on the homepage
@@ -23,16 +25,22 @@ type alias Model =
     , dieFace : Int
     , maxFace : Int
     , tabState : Tab.State
-    , characterList : List DungeonMap_Character
+    , characterList : List CharacterIcon
+    , objectIconList : List CharacterIcon
     , addCharacterIcon : AddCharacterIconState
     , dieFaces : List Int
     , showAttackModal : Modal.Visibility
     , showDeathAlert : Modal.Visibility
     , showCustomEnemy : Modal.Visibility
+    , showObjectIconModal : Modal.Visibility
     , characterId : Int
     , enemyHero : String
     , hover : Bool
     , previews : List String
+    , iconText : String
+    , colorPicker : ColorPicker.State
+    , colour : Color.Color
+    , radioCheckedID : Int
     }
 
 init : () -> (Model, Cmd Msg)
@@ -51,15 +59,21 @@ init _ =
         , maxFace = 6
         , tabState = Tab.initialState
         , characterList = []
+        , objectIconList = []
         , addCharacterIcon = DrawingInactive
         , dieFaces = []
         , showAttackModal = Modal.hidden
         , showDeathAlert = Modal.hidden
         , showCustomEnemy = Modal.hidden
+        , showObjectIconModal = Modal.hidden
         , characterId = 0
         , enemyHero = "Enemy"
         , hover = False
         , previews = []
+        , iconText = ""
+        , colorPicker = ColorPicker.empty
+        , colour = Color.rgb 255 0 0
+        , radioCheckedID = 0
         }
     , Cmd.none
     )
@@ -98,11 +112,15 @@ type Msg
     | DragLeave
     | GotFiles File.File (List File.File)
     | GotPreviews (List String)
+    | ChangeIconText String
+    | ChangeIcon Int
+    | ColorPickerMsg ColorPicker.Msg
 
 type ModalType
     = AttackModal
     | DeathAlert
     | CustomEnemy
+    | ObjectIconModal
 
 type Character
     = Enemy String Int Int    Int String
@@ -124,16 +142,12 @@ type AddCharacterIconMsg
     = MouseDraw CharacterIcon
     | MouseClick CharacterIcon
 
-type DungeonMap_Character
-    = Player Int String String
-    | Monster Int String String
-    --        ID  x-coord y-coord
-
-type
-    CharacterIcon
+type CharacterIcon
     = PlayerIcon Int String String
     | MonsterIcon Int String String
-    --            ID  x-coord y-coord
+    | ObjectIcon Int String String String (Maybe Color.Color)
+    --       type-ID x-coord y-coord Text custom-color
+    -- ID in ObjectIcon type is not an identifier for a concrete ObjectIcon, its an identifier for the used png
 
 type alias MousePosition =
     { x : Float
