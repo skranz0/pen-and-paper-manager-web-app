@@ -8306,6 +8306,7 @@ var $author$project$Main$update = F2(
 													model.iconText,
 													$elm$core$Maybe$Just(model.colour))
 												])),
+										radioCheckedID: 0,
 										showObjectIconModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden
 									}),
 								$elm$core$Platform$Cmd$none);
@@ -12337,8 +12338,7 @@ var $author$project$DungeonMap$placeIcon = F5(
 										0,
 										$elm$core$String$toFloat(y)) - 17.5)),
 								$elm$svg$Svg$Attributes$title('MonsterIcon'),
-								$elm$svg$Svg$Attributes$xlinkHref('res/icons/enemy.png'),
-								$elm$svg$Svg$Events$onClick($author$project$Model$DoNothing)
+								$elm$svg$Svg$Attributes$xlinkHref('res/icons/enemy.png')
 							]),
 						_List_Nil),
 						A2(
@@ -12388,8 +12388,7 @@ var $author$project$DungeonMap$placeIcon = F5(
 										0,
 										$elm$core$String$toFloat(y)) - 11.5)),
 								$elm$svg$Svg$Attributes$title('ObjectIcon'),
-								$elm$svg$Svg$Attributes$xlinkHref('res/icons/hero.png'),
-								$elm$svg$Svg$Events$onClick($author$project$Model$DoNothing)
+								$elm$svg$Svg$Attributes$xlinkHref('res/icons/hero.png')
 							]),
 						_List_Nil),
 						A2(
@@ -12432,8 +12431,7 @@ var $author$project$DungeonMap$placeIcon = F5(
 									$elm$svg$Svg$Attributes$cy(y),
 									$elm$svg$Svg$Attributes$r('10'),
 									$elm$svg$Svg$Attributes$style(
-									$author$project$DungeonMap$buildCustomObjectIconStyle(color)),
-									$elm$svg$Svg$Events$onClick($author$project$Model$DoNothing)
+									$author$project$DungeonMap$buildCustomObjectIconStyle(color))
 								]),
 							_List_Nil)
 						]);
@@ -12460,8 +12458,7 @@ var $author$project$DungeonMap$placeIcon = F5(
 											$elm$core$String$toFloat(y)) - 11.5)),
 									$elm$svg$Svg$Attributes$title('ObjectIcon'),
 									$elm$svg$Svg$Attributes$xlinkHref(
-									$author$project$DungeonMap$getIconPath(id)),
-									$elm$svg$Svg$Events$onClick($author$project$Model$DoNothing)
+									$author$project$DungeonMap$getIconPath(id))
 								]),
 							_List_Nil)
 						]);
@@ -12787,6 +12784,12 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Radio$Custom = {$: 'Custom'};
 var $rundis$elm_bootstrap$Bootstrap$Form$Radio$createCustom = function (options) {
 	return $rundis$elm_bootstrap$Bootstrap$Form$Radio$create(
 		A2($elm$core$List$cons, $rundis$elm_bootstrap$Bootstrap$Form$Radio$Custom, options));
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Disabled = function (a) {
+	return {$: 'Disabled', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Button$disabled = function (disabled_) {
+	return $rundis$elm_bootstrap$Bootstrap$Internal$Button$Disabled(disabled_);
 };
 var $author$project$DungeonMap$getCharIcon = function (state) {
 	if (state.$ === 'DrawIcon') {
@@ -13327,7 +13330,8 @@ var $author$project$DungeonMap$newObjectIconModal = function (model) {
 										$author$project$Model$MouseClick(
 											$author$project$DungeonMap$getCharIcon(model.addCharacterIcon))))
 								])),
-							$rundis$elm_bootstrap$Bootstrap$Button$success
+							$rundis$elm_bootstrap$Bootstrap$Button$success,
+							$rundis$elm_bootstrap$Bootstrap$Button$disabled(!model.radioCheckedID)
 						]),
 					_List_fromArray(
 						[

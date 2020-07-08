@@ -140,6 +140,7 @@ newObjectIconModal model =
                 [ Button.button
                     [ Button.attrs [onClick <| AddCharacterIcon (MouseClick (getCharIcon model.addCharacterIcon)) ]
                     , Button.success
+                    , Button.disabled (model.radioCheckedID==0)
                     ]
                     [ text "Icon hinzufügen" ]
                 ]

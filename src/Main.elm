@@ -162,6 +162,7 @@ update msg model =
                                       , addCharacterIcon = DrawingInactive
                                       , showObjectIconModal = Modal.hidden
                                       , iconText = ""
+                                      , radioCheckedID = 0
                               }, Cmd.none )
 
                 MouseDraw characterIcon ->
