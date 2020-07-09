@@ -261,6 +261,12 @@ update msg model =
 
                 _ -> ( model, Cmd.none )
 
+        ToolTipMsg tooltip ->
+            ( { model | activeTooltip = tooltip }
+            , Cmd.none
+            )
+
+
 view : Model -> Html Msg
 view model =
     div []

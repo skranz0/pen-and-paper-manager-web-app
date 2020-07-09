@@ -5632,6 +5632,7 @@ var $avh4$elm_color$Color$rgb = F3(
 var $author$project$Model$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
+			activeTooltip: 'Tooltip',
 			addCharacterIcon: $author$project$Model$DrawingInactive,
 			bonusDamage: 0,
 			characterId: 0,
@@ -8506,7 +8507,7 @@ var $author$project$Main$update = F2(
 						model,
 						{previews: urls}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'ColorPickerMsg':
 				var cpMsg = msg.a;
 				var _v11 = model.addCharacterIcon;
 				if ((_v11.$ === 'DrawIcon') && (_v11.a.$ === 'ObjectIcon')) {
@@ -8530,6 +8531,13 @@ var $author$project$Main$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
+			default:
+				var tooltip = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{activeTooltip: tooltip}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Model$TabMsg = function (a) {
@@ -11916,6 +11924,8 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$col = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Grid$Column(
 			{children: children, options: options});
 	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Disabled = {$: 'Disabled'};
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$disabled = $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Disabled;
 var $rundis$elm_bootstrap$Bootstrap$Table$Bordered = {$: 'Bordered'};
 var $rundis$elm_bootstrap$Bootstrap$Table$bordered = $rundis$elm_bootstrap$Bootstrap$Table$Bordered;
 var $author$project$Model$AddCharacterIcon = function (a) {
@@ -12245,6 +12255,9 @@ var $author$project$DungeonMap$mouseDrawEvents = function (addCharacterIcon) {
 			]);
 	}
 };
+var $author$project$Model$ToolTipMsg = function (a) {
+	return {$: 'ToolTipMsg', a: a};
+};
 var $avh4$elm_color$Color$black = A4($avh4$elm_color$Color$RgbaSpace, 0 / 255, 0 / 255, 0 / 255, 1.0);
 var $elm$core$String$concat = function (strings) {
 	return A2($elm$core$String$join, '', strings);
@@ -12284,6 +12297,7 @@ var $author$project$DungeonMap$buildCustomObjectIconStyle = function (color) {
 		A2($elm$core$Maybe$withDefault, $avh4$elm_color$Color$black, color));
 };
 var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
+var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
 var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
 var $elm$svg$Svg$Attributes$dominantBaseline = _VirtualDom_attribute('dominant-baseline');
@@ -12300,6 +12314,18 @@ var $author$project$DungeonMap$getIconPath = function (id) {
 	}
 };
 var $elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
+var $elm$svg$Svg$Events$onMouseOut = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'mouseout',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $elm$svg$Svg$Events$onMouseOver = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'mouseover',
+		$elm$json$Json$Decode$succeed(msg));
+};
 var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
 var $elm$svg$Svg$Attributes$style = _VirtualDom_attribute('style');
 var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
@@ -12317,34 +12343,12 @@ var $elm$svg$Svg$Attributes$xlinkHref = function (value) {
 		_VirtualDom_noJavaScriptUri(value));
 };
 var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var $author$project$DungeonMap$placeIcon = F5(
-	function (iconType, id, x, y, color) {
+var $author$project$DungeonMap$placeIcon = F6(
+	function (iconType, id, x, y, text, color) {
 		switch (iconType) {
 			case 'monster':
 				return _List_fromArray(
 					[
-						A2(
-						$elm$svg$Svg$image,
-						_List_fromArray(
-							[
-								$elm$svg$Svg$Attributes$width('30'),
-								$elm$svg$Svg$Attributes$height('30'),
-								$elm$svg$Svg$Attributes$x(
-								$elm$core$String$fromFloat(
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$elm$core$String$toFloat(x)) - 17.5)),
-								$elm$svg$Svg$Attributes$y(
-								$elm$core$String$fromFloat(
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$elm$core$String$toFloat(y)) - 17.5)),
-								$elm$svg$Svg$Attributes$title('MonsterIcon'),
-								$elm$svg$Svg$Attributes$xlinkHref('res/icons/enemy.png')
-							]),
-						_List_Nil),
 						A2(
 						$elm$svg$Svg$text_,
 						_List_fromArray(
@@ -12368,33 +12372,33 @@ var $author$project$DungeonMap$placeIcon = F5(
 							[
 								$elm$svg$Svg$text(
 								$elm$core$String$fromInt(id))
-							]))
-					]);
-			case 'player':
-				return _List_fromArray(
-					[
+							])),
 						A2(
 						$elm$svg$Svg$image,
 						_List_fromArray(
 							[
-								$elm$svg$Svg$Attributes$width('25'),
-								$elm$svg$Svg$Attributes$height('25'),
+								$elm$svg$Svg$Attributes$width('35'),
+								$elm$svg$Svg$Attributes$height('35'),
 								$elm$svg$Svg$Attributes$x(
 								$elm$core$String$fromFloat(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(x)) - 11.5)),
+										$elm$core$String$toFloat(x)) - 17.5)),
 								$elm$svg$Svg$Attributes$y(
 								$elm$core$String$fromFloat(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(y)) - 11.5)),
-								$elm$svg$Svg$Attributes$title('ObjectIcon'),
-								$elm$svg$Svg$Attributes$xlinkHref('res/icons/hero.png')
+										$elm$core$String$toFloat(y)) - 17.5)),
+								$elm$svg$Svg$Attributes$xlinkHref('res/icons/enemy.png'),
+								$elm$svg$Svg$Attributes$class('Icon')
 							]),
-						_List_Nil),
+						_List_Nil)
+					]);
+			case 'player':
+				return _List_fromArray(
+					[
 						A2(
 						$elm$svg$Svg$text_,
 						_List_fromArray(
@@ -12418,7 +12422,29 @@ var $author$project$DungeonMap$placeIcon = F5(
 							[
 								$elm$svg$Svg$text(
 								$elm$core$String$fromInt(id))
-							]))
+							])),
+						A2(
+						$elm$svg$Svg$image,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$width('25'),
+								$elm$svg$Svg$Attributes$height('25'),
+								$elm$svg$Svg$Attributes$x(
+								$elm$core$String$fromFloat(
+									A2(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toFloat(x)) - 11.5)),
+								$elm$svg$Svg$Attributes$y(
+								$elm$core$String$fromFloat(
+									A2(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toFloat(y)) - 11.5)),
+								$elm$svg$Svg$Attributes$xlinkHref('res/icons/hero.png'),
+								$elm$svg$Svg$Attributes$class('Icon')
+							]),
+						_List_Nil)
 					]);
 			case 'object':
 				var _v1 = $author$project$DungeonMap$getIconPath(id);
@@ -12435,7 +12461,12 @@ var $author$project$DungeonMap$placeIcon = F5(
 									$elm$svg$Svg$Attributes$cy(y),
 									$elm$svg$Svg$Attributes$r('10'),
 									$elm$svg$Svg$Attributes$style(
-									$author$project$DungeonMap$buildCustomObjectIconStyle(color))
+									$author$project$DungeonMap$buildCustomObjectIconStyle(color)),
+									$elm$svg$Svg$Events$onMouseOver(
+									$author$project$Model$ToolTipMsg(text)),
+									$elm$svg$Svg$Events$onMouseOut(
+									$author$project$Model$ToolTipMsg('Tooltip')),
+									$elm$svg$Svg$Attributes$class('Icon')
 								]),
 							_List_Nil)
 						]);
@@ -12462,7 +12493,12 @@ var $author$project$DungeonMap$placeIcon = F5(
 											$elm$core$String$toFloat(y)) - 11.5)),
 									$elm$svg$Svg$Attributes$title('ObjectIcon'),
 									$elm$svg$Svg$Attributes$xlinkHref(
-									$author$project$DungeonMap$getIconPath(id))
+									$author$project$DungeonMap$getIconPath(id)),
+									$elm$svg$Svg$Events$onMouseOver(
+									$author$project$Model$ToolTipMsg(text)),
+									$elm$svg$Svg$Events$onMouseOut(
+									$author$project$Model$ToolTipMsg('Tooltip')),
+									$elm$svg$Svg$Attributes$class('Icon')
 								]),
 							_List_Nil)
 						]);
@@ -12488,7 +12524,7 @@ var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 				var x = characterIcon.b;
 				var y = characterIcon.c;
 				return _Utils_ap(
-					A5($author$project$DungeonMap$placeIcon, 'player', i, x, y, $elm$core$Maybe$Nothing),
+					A6($author$project$DungeonMap$placeIcon, 'player', i, x, y, '', $elm$core$Maybe$Nothing),
 					_List_fromArray(
 						[
 							A2(
@@ -12508,7 +12544,7 @@ var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 				var x = characterIcon.b;
 				var y = characterIcon.c;
 				return _Utils_ap(
-					A5($author$project$DungeonMap$placeIcon, 'monster', i, x, y, $elm$core$Maybe$Nothing),
+					A6($author$project$DungeonMap$placeIcon, 'monster', i, x, y, '', $elm$core$Maybe$Nothing),
 					_List_fromArray(
 						[
 							A2(
@@ -12668,12 +12704,13 @@ var $author$project$DungeonMap$getAreaParam = function (s) {
 	var objectText = $author$project$DungeonMap$getObjectText(s);
 	var id = $author$project$DungeonMap$getID(s);
 	var color = $author$project$DungeonMap$getColor(s);
-	return A5(
+	return A6(
 		$author$project$DungeonMap$placeIcon,
 		$author$project$DungeonMap$getIconType(s),
 		id,
 		xCor,
 		yCor,
+		objectText,
 		color);
 };
 var $author$project$DungeonMap$svgIconList = function (model) {
@@ -12862,7 +12899,6 @@ var $simonh1000$elm_colorpicker$ColorPicker$OnMouseMove = F2(
 	function (a, b) {
 		return {$: 'OnMouseMove', a: a, b: b};
 	});
-var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
 var $elm$svg$Svg$defs = $elm$svg$Svg$trustedNode('defs');
 var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var $elm$svg$Svg$linearGradient = $elm$svg$Svg$trustedNode('linearGradient');
@@ -14225,7 +14261,119 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$row = F2(
 			$rundis$elm_bootstrap$Bootstrap$Grid$Internal$rowAttributes(options),
 			A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Grid$renderCol, cols));
 	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Rows = function (a) {
+	return {$: 'Rows', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$rows = function (rows_) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Rows(rows_);
+};
 var $elm$html$Html$section = _VirtualDom_node('section');
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Textarea = function (a) {
+	return {$: 'Textarea', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$create = function (options) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Textarea(
+		{options: options});
+};
+var $elm$html$Html$textarea = _VirtualDom_node('textarea');
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$applyModifier = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'Id':
+				var id_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						id: $elm$core$Maybe$Just(id_)
+					});
+			case 'Rows':
+				var rows_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						rows: $elm$core$Maybe$Just(rows_)
+					});
+			case 'Disabled':
+				return _Utils_update(
+					options,
+					{disabled: true});
+			case 'Value':
+				var value_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						value: $elm$core$Maybe$Just(value_)
+					});
+			case 'OnInput':
+				var onInput_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						onInput: $elm$core$Maybe$Just(onInput_)
+					});
+			case 'Validation':
+				var validation = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						validation: $elm$core$Maybe$Just(validation)
+					});
+			default:
+				var attrs_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$defaultOptions = {attributes: _List_Nil, disabled: false, id: $elm$core$Maybe$Nothing, onInput: $elm$core$Maybe$Nothing, rows: $elm$core$Maybe$Nothing, validation: $elm$core$Maybe$Nothing, value: $elm$core$Maybe$Nothing};
+var $elm$html$Html$Attributes$rows = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'rows',
+		$elm$core$String$fromInt(n));
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$validationAttribute = function (validation) {
+	return $elm$html$Html$Attributes$class(
+		$rundis$elm_bootstrap$Bootstrap$Form$FormInternal$validationToString(validation));
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$toAttributes = function (modifiers) {
+	var options = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Form$Textarea$applyModifier, $rundis$elm_bootstrap$Bootstrap$Form$Textarea$defaultOptions, modifiers);
+	return _Utils_ap(
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('form-control'),
+				$elm$html$Html$Attributes$disabled(options.disabled)
+			]),
+		_Utils_ap(
+			A2(
+				$elm$core$List$filterMap,
+				$elm$core$Basics$identity,
+				_List_fromArray(
+					[
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$id, options.id),
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$rows, options.rows),
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$value, options.value),
+						A2($elm$core$Maybe$map, $elm$html$Html$Events$onInput, options.onInput),
+						A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Form$Textarea$validationAttribute, options.validation)
+					])),
+			options.attributes));
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$view = function (_v0) {
+	var options = _v0.a.options;
+	return A2(
+		$elm$html$Html$textarea,
+		$rundis$elm_bootstrap$Bootstrap$Form$Textarea$toAttributes(options),
+		_List_Nil);
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$textarea = A2($elm$core$Basics$composeL, $rundis$elm_bootstrap$Bootstrap$Form$Textarea$view, $rundis$elm_bootstrap$Bootstrap$Form$Textarea$create);
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Value = function (a) {
+	return {$: 'Value', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$value = function (value_) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Value(value_);
+};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col4 = {$: 'Col4'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$ColWidth = function (a) {
 	return {$: 'ColWidth', a: a};
@@ -14263,6 +14411,14 @@ var $author$project$DungeonMap$dungeonMapView = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
+										$rundis$elm_bootstrap$Bootstrap$Form$Textarea$textarea(
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Form$Textarea$rows(1),
+												$rundis$elm_bootstrap$Bootstrap$Form$Textarea$disabled,
+												$rundis$elm_bootstrap$Bootstrap$Form$Textarea$value(model.activeTooltip)
+											])),
+										A2($elm$html$Html$br, _List_Nil, _List_Nil),
 										$author$project$DungeonMap$dungeonMap_Svg(model)
 									])),
 								A2(

@@ -16,6 +16,7 @@ import Bootstrap.Button as Button
 import Bootstrap.Modal as Modal
 import Bootstrap.Form.Input as Input
 import Bootstrap.Form.Radio as Radio
+import Bootstrap.Form.Textarea as Textarea
 import Array exposing (Array)
 import File
 import ColorPicker
@@ -30,7 +31,13 @@ dungeonMapView model =
             [ div [ class "section" ]
                   [ Grid.row []
                              [ Grid.col []
-                                        [ dungeonMap_Svg model
+                                        [ Textarea.textarea
+                                            [ Textarea.rows 1
+                                            , Textarea.disabled
+                                            , Textarea.value model.activeTooltip
+                                            ]
+                                        , Html.br [] []
+                                        , dungeonMap_Svg model
                                         ]
                              , Grid.col [ Col.xs4 ]
                                         [ dungeonMap_MonsterList model
@@ -173,7 +180,7 @@ getAreaParam s =
       objectText = getObjectText s      --Text of an ObjectIcon, for other Icons empty
       color = getColor s                --Color of a custom ObjectIcon, for others Nothing
     in
-    placeIcon (getIconType s) id xCor yCor color
+    placeIcon (getIconType s) id xCor yCor objectText color
 
 getColor object =
     case object of
@@ -239,41 +246,41 @@ getObjectText object =
             t
 
 
-placeIcon : String -> Int -> String -> String -> Maybe Color.Color -> List (Svg.Svg Msg)
-placeIcon iconType id x y color =
+placeIcon : String -> Int -> String -> String -> String -> Maybe Color.Color -> List (Svg.Svg Msg)
+placeIcon iconType id x y text color =
     case iconType of
         "monster" ->
-            [ Svg.image
-                [ SvgAtt.width "30"
-                , SvgAtt.height "30"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 17.5))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 17.5))
-                , SvgAtt.title "MonsterIcon"
-                , SvgAtt.xlinkHref ("res/icons/enemy.png")
-                ] []
-            , Svg.text_ [ SvgAtt.textAnchor "middle"
+            [ Svg.text_ [ SvgAtt.textAnchor "middle"
                 , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 3))
                 , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 0.5))
                 , SvgAtt.dominantBaseline "middle"
                 ]
                 [ Svg.text (String.fromInt id) ]
+            , Svg.image
+                [ SvgAtt.width "35"
+                , SvgAtt.height "35"
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 17.5))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 17.5))
+                , SvgAtt.xlinkHref ("res/icons/enemy.png")
+                , SvgAtt.class "Icon"
+                ] []
             ]
 
         "player" ->
-            [ Svg.image
-                [ SvgAtt.width "25"
-                , SvgAtt.height "25"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
-                , SvgAtt.title "ObjectIcon"
-                , SvgAtt.xlinkHref ("res/icons/hero.png")
-                ] []
-            , Svg.text_ [ SvgAtt.textAnchor "middle"
+            [ Svg.text_ [ SvgAtt.textAnchor "middle"
                 , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) + 1))
                 , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) + 2.5))
                 , SvgAtt.dominantBaseline "middle"
                 ]
                 [ Svg.text (String.fromInt id) ]
+            , Svg.image
+                [ SvgAtt.width "25"
+                , SvgAtt.height "25"
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
+                , SvgAtt.xlinkHref ("res/icons/hero.png")
+                , SvgAtt.class "Icon"
+                ] []
             ]
 
         "object" ->
@@ -284,6 +291,9 @@ placeIcon iconType id x y color =
                                 , SvgAtt.cy y
                                 , SvgAtt.r "10"
                                 , SvgAtt.style (buildCustomObjectIconStyle color)
+                                , Svg.Events.onMouseOver (ToolTipMsg text)
+                                , Svg.Events.onMouseOut (ToolTipMsg "Tooltip")
+                                , SvgAtt.class "Icon"
                                 ]
                                 []
                             ]
@@ -296,6 +306,9 @@ placeIcon iconType id x y color =
                          , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
                          , SvgAtt.title "ObjectIcon"
                          , SvgAtt.xlinkHref (getIconPath id)
+                         , Svg.Events.onMouseOver (ToolTipMsg text)
+                         , Svg.Events.onMouseOut (ToolTipMsg "Tooltip")
+                         , SvgAtt.class "Icon"
                          ] []
                      ]
 
@@ -364,7 +377,7 @@ newIconsView addCharacterIcon =
                     []
 
                 PlayerIcon i x y ->
-                    (placeIcon "player" i x y Nothing)
+                    (placeIcon "player" i x y "" Nothing)
                         ++  [ Svg.rect
                                 [ SvgAtt.width "800"
                                 , SvgAtt.height "600"
@@ -376,7 +389,7 @@ newIconsView addCharacterIcon =
                             ]
 
                 MonsterIcon i x y ->
-                    (placeIcon "monster" i x y Nothing)
+                    (placeIcon "monster" i x y "" Nothing)
                         ++  [ Svg.rect
                                 [ SvgAtt.width "800"
                                 , SvgAtt.height "600"

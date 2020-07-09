@@ -5,6 +5,7 @@ module Model exposing (..)
 import Bootstrap.Tab as Tab
 import Bootstrap.Dropdown as Dropdown
 import Bootstrap.Modal as Modal
+import Bootstrap.Form.Textarea as Textarea
 import Http
 import Array
 import Array.Extra as Array
@@ -41,6 +42,7 @@ type alias Model =
     , colorPicker : ColorPicker.State
     , colour : Color.Color
     , radioCheckedID : Int
+    , activeTooltip : String
     }
 
 init : () -> (Model, Cmd Msg)
@@ -74,6 +76,7 @@ init _ =
         , colorPicker = ColorPicker.empty
         , colour = Color.rgb 255 0 0
         , radioCheckedID = 0
+        , activeTooltip = "Tooltip"
         }
     , Cmd.none
     )
@@ -115,6 +118,7 @@ type Msg
     | ChangeIconText String
     | ChangeIcon Int
     | ColorPickerMsg ColorPicker.Msg
+    | ToolTipMsg String
 
 type ModalType
     = AttackModal
