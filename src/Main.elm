@@ -147,12 +147,12 @@ update msg model =
             case addCharacterIconMsg of
                 MouseClick characterIcon ->
                     case characterIcon of
-                        PlayerIcon i x y ->
+                        PlayerIcon i x y n ->
                             if List.length model.characterList == List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID noch nicht in Liste
                             then    ( { model | characterList = model.characterList ++ [ characterIcon ], addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
-                        MonsterIcon i x y ->
+                        MonsterIcon i x y n ->
                             if List.length model.characterList == List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID noch nicht in Liste
                             then    ( { model | characterList = model.characterList ++ [ characterIcon ], addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
@@ -167,15 +167,15 @@ update msg model =
 
                 MouseDraw characterIcon ->
                     case characterIcon of
-                        PlayerIcon i x y ->
+                        PlayerIcon i x y name ->
                             if List.length model.characterList > List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID bereits in Liste
                             then    ( { model | characterList = List.filter (isNotId i) model.characterList, addCharacterIcon = DrawingInactive }, Cmd.none )
-                            else    ( { model | addCharacterIcon = DrawIcon (PlayerIcon i x y) }, Cmd.none )
+                            else    ( { model | addCharacterIcon = DrawIcon (PlayerIcon i x y name) }, Cmd.none )
 
-                        MonsterIcon i x y ->
+                        MonsterIcon i x y name ->
                             if List.length model.characterList > List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID bereits in Liste
                             then    ( { model | characterList = List.filter (isNotId i) model.characterList, addCharacterIcon = DrawingInactive }, Cmd.none )
-                            else    ( { model | addCharacterIcon = DrawIcon (MonsterIcon i x y) }, Cmd.none )
+                            else    ( { model | addCharacterIcon = DrawIcon (MonsterIcon i x y name) }, Cmd.none )
 
                         ObjectIcon i x y t c ->
                             ( { model | addCharacterIcon = DrawIcon (ObjectIcon i x y t c) }, Cmd.none )
@@ -262,10 +262,20 @@ update msg model =
                 _ -> ( model, Cmd.none )
 
         ToolTipMsg tooltip ->
-            ( { model | activeTooltip = tooltip }
+            case tooltip of
+                "" ->   ( { model | activeTooltip = "Tooltip" }
+                        , Cmd.none
+                        )
+
+                _ ->    ( { model | activeTooltip = tooltip }
+                        , Cmd.none
+                        )
+
+        HighlightTableRow id name ->
+            ( { model | highlightedTableRow = id
+                      , activeTooltip = name }
             , Cmd.none
             )
-
 
 view : Model -> Html Msg
 view model =
@@ -320,17 +330,17 @@ giveDungeonMap_CharacterIds charList =
 putIdInCharIcon : Int -> CharacterIcon -> CharacterIcon
 putIdInCharIcon id charIcon =
     case charIcon of
-        PlayerIcon _ x y -> PlayerIcon (id+1) x y
-        MonsterIcon _ x y -> MonsterIcon (id+1) x y
+        PlayerIcon _ x y n -> PlayerIcon (id+1) x y n
+        MonsterIcon _ x y n -> MonsterIcon (id+1) x y n
         ObjectIcon _ x y t c -> ObjectIcon (id+1) x y t c
 
 isNotId : Int -> CharacterIcon -> Bool
 isNotId id s =
     case s of
-        MonsterIcon i _ _ ->
+        MonsterIcon i _ _ _ ->
             id/=i
 
-        PlayerIcon i _ _ ->
+        PlayerIcon i _ _ _ ->
             id/=i
 
         ObjectIcon i _ _ _ _->

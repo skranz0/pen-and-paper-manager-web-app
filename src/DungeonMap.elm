@@ -51,7 +51,7 @@ dungeonMapView model =
 dungeonMap_MonsterList : Model -> Html Msg
 dungeonMap_MonsterList model =
     div [ class "container" ]
-        [ Table.table { options = [ Table.striped, Table.hover, Table.bordered, Table.responsive ]
+        [ Table.table { options = [ Table.hover, Table.bordered, Table.responsive ]
                       , thead =  Table.simpleThead
                           [ Table.th [] [ Html.text "ID" ]
                           , Table.th [] [ Html.text "Name" ]
@@ -59,24 +59,26 @@ dungeonMap_MonsterList model =
                           ]
                       , tbody =
                           Table.tbody []
-                            <| characters2rows model.enemy
+                            <| characters2rows model.enemy model.highlightedTableRow
                       }
         ]
 
-characters2rows : Array.Array Character -> List (Table.Row Msg)
-characters2rows chars =
+characters2rows : Array.Array Character -> Int -> List (Table.Row Msg)
+characters2rows chars highlighted =
     List.indexedMap
         (\i c ->
             case c of
                 Enemy name health _ _ _ ->
-                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon (i+1) "-100" "-100")))) ]
+                    Table.tr ([ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon (i+1) "-100" "-100" name)))) ]
+                             ++ if highlighted==i+1 then [ Table.rowSecondary ] else [])
                         [ Table.td [] [Html.text <| String.fromInt (i+1)]
                         , Table.td [] [Html.text name]
                         , Table.td [] [Html.text <| String.fromInt health]
                         ]
 
                 Hero name health ->
-                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon (i+1) "-100" "-100")))) ]
+                    Table.tr ([ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon (i+1) "-100" "-100" name)))) ]
+                             ++ if highlighted==i+1 then [ Table.rowSecondary ] else [])
                         [ Table.td [] [Html.text <| String.fromInt (i+1)]
                         , Table.td [] [Html.text name]
                         , Table.td [] [Html.text <| String.fromInt health]
@@ -184,10 +186,10 @@ getAreaParam s =
 
 getColor object =
     case object of
-        MonsterIcon i x y ->
+        MonsterIcon i x y n ->
             Nothing
 
-        PlayerIcon i x y ->
+        PlayerIcon i x y n ->
             Nothing
 
         ObjectIcon i x y t c ->
@@ -203,10 +205,10 @@ getIconPath id =
 
 getIconType object =
     case object of
-        MonsterIcon i x y ->
+        MonsterIcon i x y n ->
             "monster"
 
-        PlayerIcon i x y ->
+        PlayerIcon i x y n ->
             "player"
 
         ObjectIcon i x y t c ->
@@ -214,10 +216,10 @@ getIconType object =
 
 getCoord object =
     case object of
-        MonsterIcon i x y ->
+        MonsterIcon i x y n ->
             x ++ "," ++ y
 
-        PlayerIcon i x y ->
+        PlayerIcon i x y n ->
             x ++ "," ++ y
 
         ObjectIcon i x y t c ->
@@ -225,10 +227,10 @@ getCoord object =
 
 getID object =
     case object of
-        MonsterIcon i x y ->
+        MonsterIcon i x y n ->
             i
 
-        PlayerIcon i x y ->
+        PlayerIcon i x y n ->
             i
 
         ObjectIcon i x y t c ->
@@ -236,12 +238,11 @@ getID object =
 
 getObjectText object =
     case object of
-        MonsterIcon i x y ->
-            ""
+        MonsterIcon i x y name ->
+            name
 
-        PlayerIcon i x y ->
-            ""
-
+        PlayerIcon i x y name ->
+            name
         ObjectIcon i x y t c ->
             t
 
@@ -257,12 +258,14 @@ placeIcon iconType id x y text color =
                 ]
                 [ Svg.text (String.fromInt id) ]
             , Svg.image
-                [ SvgAtt.width "35"
-                , SvgAtt.height "35"
+                [ SvgAtt.width "30"
+                , SvgAtt.height "30"
                 , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 17.5))
                 , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 17.5))
                 , SvgAtt.xlinkHref ("res/icons/enemy.png")
                 , SvgAtt.class "Icon"
+                , Svg.Events.onMouseOver (HighlightTableRow id text)
+                , Svg.Events.onMouseOut (HighlightTableRow 0 "Tooltip")
                 ] []
             ]
 
@@ -280,6 +283,8 @@ placeIcon iconType id x y text color =
                 , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
                 , SvgAtt.xlinkHref ("res/icons/hero.png")
                 , SvgAtt.class "Icon"
+                , Svg.Events.onMouseOver (HighlightTableRow id text)
+                , Svg.Events.onMouseOut (HighlightTableRow 0 "Tooltip")
                 ] []
             ]
 
@@ -324,23 +329,23 @@ mouseDrawEvents addCharacterIcon =
     case addCharacterIcon of
         DrawIcon characterIcon ->
             case characterIcon of
-                PlayerIcon i x y ->
+                PlayerIcon i x y n ->
                     [ Svg.Events.onClick (AddCharacterIcon (MouseClick characterIcon))
-                    , onMouseMove (positionToCircleCenter i)
+                    , onMouseMove (positionToIconCenter "player" n i)
                     ]
 
-                MonsterIcon i x y ->
+                MonsterIcon i x y n ->
                     [ Svg.Events.onClick (AddCharacterIcon (MouseClick characterIcon))
-                    , onMouseMove (positionToRectangleCorner i)
+                    , onMouseMove (positionToIconCenter "monster" n i)
                     ]
 
                 ObjectIcon i x y t c ->
                     [ Svg.Events.onClick (ShowModal ObjectIconModal)
-                    , onMouseMove (positionToIconCenter i)
+                    , onMouseMove (positionToIconCenter "object" "" i)
                     ]
 
         DrawingInactive ->
-                [ onMouseMove (positionToIconCenter 0)
+                [ onMouseMove (positionToIconCenter "object" "" 0)
                 ]
 
 
@@ -355,18 +360,20 @@ mousePosition =
         (Json.Decode.at [ "detail", "x" ] Json.Decode.float)
         (Json.Decode.at [ "detail", "y" ] Json.Decode.float)
 
-positionToCircleCenter : Int -> MousePosition -> Msg
-positionToCircleCenter i position =
-    AddCharacterIcon (MouseDraw (PlayerIcon i (String.fromFloat position.x) (String.fromFloat position.y)))
+positionToIconCenter : String -> String -> Int -> MousePosition -> Msg
+positionToIconCenter icon name i position =
+    case icon of
+        "player" ->
+            AddCharacterIcon (MouseDraw (PlayerIcon i (String.fromFloat position.x) (String.fromFloat position.y) name))
 
+        "monster" ->
+            AddCharacterIcon (MouseDraw (MonsterIcon i (String.fromFloat position.x) (String.fromFloat position.y) name))
 
-positionToRectangleCorner : Int -> MousePosition -> Msg
-positionToRectangleCorner i position =
-    AddCharacterIcon (MouseDraw (MonsterIcon i (String.fromFloat position.x) (String.fromFloat position.y)))
+        "object" ->
+            AddCharacterIcon (MouseDraw (ObjectIcon i (String.fromFloat position.x) (String.fromFloat position.y) "" Nothing ))
 
-positionToIconCenter : Int -> MousePosition -> Msg
-positionToIconCenter i position =
-    AddCharacterIcon (MouseDraw (ObjectIcon i (String.fromFloat position.x) (String.fromFloat position.y) "" Nothing ))
+        _ ->
+            DoNothing
 
 newIconsView : AddCharacterIconState -> List (Svg.Svg Msg)
 newIconsView addCharacterIcon =
@@ -376,8 +383,8 @@ newIconsView addCharacterIcon =
                 ObjectIcon i x y t c ->
                     []
 
-                PlayerIcon i x y ->
-                    (placeIcon "player" i x y "" Nothing)
+                PlayerIcon i x y n ->
+                    (placeIcon "player" i x y n Nothing)
                         ++  [ Svg.rect
                                 [ SvgAtt.width "800"
                                 , SvgAtt.height "600"
@@ -388,8 +395,8 @@ newIconsView addCharacterIcon =
                                 []
                             ]
 
-                MonsterIcon i x y ->
-                    (placeIcon "monster" i x y "" Nothing)
+                MonsterIcon i x y n ->
+                    (placeIcon "monster" i x y n Nothing)
                         ++  [ Svg.rect
                                 [ SvgAtt.width "800"
                                 , SvgAtt.height "600"

@@ -43,6 +43,7 @@ type alias Model =
     , colour : Color.Color
     , radioCheckedID : Int
     , activeTooltip : String
+    , highlightedTableRow : Int
     }
 
 init : () -> (Model, Cmd Msg)
@@ -77,6 +78,7 @@ init _ =
         , colour = Color.rgb 255 0 0
         , radioCheckedID = 0
         , activeTooltip = "Tooltip"
+        , highlightedTableRow = 0
         }
     , Cmd.none
     )
@@ -119,6 +121,7 @@ type Msg
     | ChangeIcon Int
     | ColorPickerMsg ColorPicker.Msg
     | ToolTipMsg String
+    | HighlightTableRow Int String
 
 type ModalType
     = AttackModal
@@ -147,8 +150,9 @@ type AddCharacterIconMsg
     | MouseClick CharacterIcon
 
 type CharacterIcon
-    = PlayerIcon Int String String
-    | MonsterIcon Int String String
+    = PlayerIcon Int String String String
+    | MonsterIcon Int String String String
+    --            ID  x-coord y-coord name
     | ObjectIcon Int String String String (Maybe Color.Color)
     --       type-ID x-coord y-coord Text custom-color
     -- ID in ObjectIcon type is not an identifier for a concrete ObjectIcon, its an identifier for the used png
