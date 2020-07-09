@@ -195,7 +195,7 @@ placeIcon s =
                 , SvgAtt.xlinkHref ("res/icons/enemy.png")
                 , SvgAtt.class "MonsterIcon"
                 , Svg.Events.onMouseOver (HighlightTableRow id text)
-                , Svg.Events.onMouseOut (HighlightTableRow 0 "Tooltip")
+                , Svg.Events.onMouseOut (HighlightTableRow 0 "Beschreibung")
                 , Svg.Events.onClick (DeleteIcon iconType id)
                 ] []
             ]
@@ -214,7 +214,7 @@ placeIcon s =
                 , SvgAtt.xlinkHref ("res/icons/hero.png")
                 , SvgAtt.class "PlayerIcon"
                 , Svg.Events.onMouseOver (HighlightTableRow id text)
-                , Svg.Events.onMouseOut (HighlightTableRow 0 "Tooltip")
+                , Svg.Events.onMouseOut (HighlightTableRow 0 "Beschreibung")
                 , Svg.Events.onClick (DeleteIcon iconType id)
                 ] []
             ]
@@ -228,7 +228,7 @@ placeIcon s =
                                 , SvgAtt.r "10"
                                 , SvgAtt.style (buildCustomObjectIconStyle color)
                                 , Svg.Events.onMouseOver (ToolTipMsg text)
-                                , Svg.Events.onMouseOut (ToolTipMsg "Tooltip")
+                                , Svg.Events.onMouseOut (ToolTipMsg "Beschreibung")
                                 , SvgAtt.class "ObjectIcon"
                                 , Svg.Events.onClick (DeleteIcon iconType id)
                                 ]
@@ -242,7 +242,7 @@ placeIcon s =
                          , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
                          , SvgAtt.xlinkHref (getIconPath typeID)
                          , Svg.Events.onMouseOver (ToolTipMsg text)
-                         , Svg.Events.onMouseOut (ToolTipMsg "Tooltip")
+                         , Svg.Events.onMouseOut (ToolTipMsg "Beschreibung")
                          , SvgAtt.class "ObjectIcon"
                          , Svg.Events.onClick (DeleteIcon iconType id)
                          ] []

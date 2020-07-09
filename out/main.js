@@ -8572,8 +8572,8 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								activeTooltip: 'Tooltip',
-								mouseInIcon: (tooltip === 'Tooltip') ? false : true
+								activeTooltip: 'Beschreibung',
+								mouseInIcon: (tooltip === 'Beschreibung') ? false : true
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -8582,7 +8582,7 @@ var $author$project$Main$update = F2(
 							model,
 							{
 								activeTooltip: tooltip,
-								mouseInIcon: (tooltip === 'Tooltip') ? false : true
+								mouseInIcon: (tooltip === 'Beschreibung') ? false : true
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
@@ -8606,7 +8606,7 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								activeTooltip: 'Tooltip',
+								activeTooltip: 'Beschreibung',
 								objectIconList: A2(
 									$elm$core$List$filter,
 									$author$project$Main$isNotId(id),
@@ -8618,7 +8618,7 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								activeTooltip: 'Tooltip',
+								activeTooltip: 'Beschreibung',
 								characterList: A2(
 									$elm$core$List$filter,
 									$author$project$Main$isNotId(id),
@@ -12669,7 +12669,7 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 							$elm$svg$Svg$Events$onMouseOver(
 							A2($author$project$Model$HighlightTableRow, id, text)),
 							$elm$svg$Svg$Events$onMouseOut(
-							A2($author$project$Model$HighlightTableRow, 0, 'Tooltip')),
+							A2($author$project$Model$HighlightTableRow, 0, 'Beschreibung')),
 							$elm$svg$Svg$Events$onClick(
 							A2($author$project$Model$DeleteIcon, iconType, id))
 						]),
@@ -12724,7 +12724,7 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 							$elm$svg$Svg$Events$onMouseOver(
 							A2($author$project$Model$HighlightTableRow, id, text)),
 							$elm$svg$Svg$Events$onMouseOut(
-							A2($author$project$Model$HighlightTableRow, 0, 'Tooltip')),
+							A2($author$project$Model$HighlightTableRow, 0, 'Beschreibung')),
 							$elm$svg$Svg$Events$onClick(
 							A2($author$project$Model$DeleteIcon, iconType, id))
 						]),
@@ -12749,7 +12749,7 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 								$elm$svg$Svg$Events$onMouseOver(
 								$author$project$Model$ToolTipMsg(text)),
 								$elm$svg$Svg$Events$onMouseOut(
-								$author$project$Model$ToolTipMsg('Tooltip')),
+								$author$project$Model$ToolTipMsg('Beschreibung')),
 								$elm$svg$Svg$Attributes$class('ObjectIcon'),
 								$elm$svg$Svg$Events$onClick(
 								A2($author$project$Model$DeleteIcon, iconType, id))
@@ -12781,7 +12781,7 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 								$elm$svg$Svg$Events$onMouseOver(
 								$author$project$Model$ToolTipMsg(text)),
 								$elm$svg$Svg$Events$onMouseOut(
-								$author$project$Model$ToolTipMsg('Tooltip')),
+								$author$project$Model$ToolTipMsg('Beschreibung')),
 								$elm$svg$Svg$Attributes$class('ObjectIcon'),
 								$elm$svg$Svg$Events$onClick(
 								A2($author$project$Model$DeleteIcon, iconType, id))
