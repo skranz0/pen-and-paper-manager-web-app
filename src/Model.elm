@@ -44,6 +44,7 @@ type alias Model =
     , radioCheckedID : Int
     , activeTooltip : String
     , highlightedTableRow : Int
+    , mouseInIcon : Bool
     }
 
 init : () -> (Model, Cmd Msg)
@@ -79,6 +80,7 @@ init _ =
         , radioCheckedID = 0
         , activeTooltip = "Tooltip"
         , highlightedTableRow = 0
+        , mouseInIcon = False
         }
     , Cmd.none
     )
@@ -122,6 +124,7 @@ type Msg
     | ColorPickerMsg ColorPicker.Msg
     | ToolTipMsg String
     | HighlightTableRow Int String
+    | DeleteIcon String Int
 
 type ModalType
     = AttackModal
@@ -153,8 +156,8 @@ type CharacterIcon
     = PlayerIcon Int String String String
     | MonsterIcon Int String String String
     --            ID  x-coord y-coord name
-    | ObjectIcon Int String String String (Maybe Color.Color)
-    --       type-ID x-coord y-coord Text custom-color
+    | ObjectIcon Int     String  String  String (Maybe Color.Color) Int
+    --           type-ID x-coord y-coord Text custom-color          ident
     -- ID in ObjectIcon type is not an identifier for a concrete ObjectIcon, its an identifier for the used png
 
 type alias MousePosition =
