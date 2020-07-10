@@ -12,6 +12,11 @@ import Bootstrap.Tab as Tab
 import Bootstrap.Dropdown as Dropdown
 import Array
 import Array.Extra as Array
+import Task
+import File.Select as Select
+import File
+import ColorPicker
+import Color
 
 --our Modules
 import DungeonMap exposing (dungeonMapView)
@@ -48,7 +53,7 @@ update msg model =
 
         UpdateTmp new ->
             case new of
-                Enemy _ _ _ ->
+                Enemy _ _ _ _ _ ->
                     ( { model | tmpEnemy = new }
                     , Cmd.none
                     )
@@ -66,10 +71,10 @@ update msg model =
             ( { model | enemy = Array.removeAt index model.enemy }
             , Cmd.none
             )
-        
-        CharacterDeath index -> 
-            ( 
-                { model | showDeathAlert = Modal.shown 
+
+        CharacterDeath index ->
+            (
+                { model | showDeathAlert = Modal.shown
                 , enemy = Array.removeAt index model.enemy
                 , showAttackModal = Modal.hidden
                 }
@@ -90,6 +95,27 @@ update msg model =
             ( { model | tmpdice = newTmpDice}
             , Cmd.none
             )
+
+        ChangeIconText newIconText ->
+            ( { model | iconText = newIconText}
+            , Cmd.none
+            )
+
+        ChangeIcon id ->
+            case model.addCharacterIcon of
+                DrawIcon (ObjectIcon i x y t c) ->
+                    case id of
+                        3 -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t c)
+                                       , radioCheckedID = id }
+                             , Cmd.none
+                             )
+
+                        _ -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t Nothing)
+                                       , radioCheckedID = id }
+                             , Cmd.none
+                             )
+
+                _ -> ( model, Cmd.none )
 
         DiceAndSlice newDice ->
             let
@@ -122,45 +148,119 @@ update msg model =
             case addCharacterIconMsg of
                 MouseClick characterIcon ->
                     case characterIcon of
-                        PlayerIcon x y ->
-                            ( { model | characterList = model.characterList ++ [Player x y], addCharacterIcon = DrawingInactive }, Cmd.none )
+                        PlayerIcon i x y ->
+                            if List.length model.characterList == List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID noch nicht in Liste
+                            then    ( { model | characterList = model.characterList ++ [ characterIcon ], addCharacterIcon = DrawingInactive }, Cmd.none )
+                            else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
-                        MonsterIcon x y ->
-                            ( { model | characterList = model.characterList ++ [Monster x y], addCharacterIcon = DrawingInactive }, Cmd.none )
+                        MonsterIcon i x y ->
+                            if List.length model.characterList == List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID noch nicht in Liste
+                            then    ( { model | characterList = model.characterList ++ [ characterIcon ], addCharacterIcon = DrawingInactive }, Cmd.none )
+                            else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
-                MouseDraw s ->
-                    ( { model | addCharacterIcon = DrawIcon s }, Cmd.none )
+                        ObjectIcon i x y t c ->
+                            ( { model | objectIconList = model.objectIconList ++ [ ObjectIcon i x y model.iconText (Just model.colour) ]
+                                      , addCharacterIcon = DrawingInactive
+                                      , showObjectIconModal = Modal.hidden
+                                      , iconText = ""
+                                      , radioCheckedID = 0
+                              }, Cmd.none )
+
+                MouseDraw characterIcon ->
+                    case characterIcon of
+                        PlayerIcon i x y ->
+                            if List.length model.characterList > List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID bereits in Liste
+                            then    ( { model | characterList = List.filter (isNotId i) model.characterList, addCharacterIcon = DrawingInactive }, Cmd.none )
+                            else    ( { model | addCharacterIcon = DrawIcon (PlayerIcon i x y) }, Cmd.none )
+
+                        MonsterIcon i x y ->
+                            if List.length model.characterList > List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID bereits in Liste
+                            then    ( { model | characterList = List.filter (isNotId i) model.characterList, addCharacterIcon = DrawingInactive }, Cmd.none )
+                            else    ( { model | addCharacterIcon = DrawIcon (MonsterIcon i x y) }, Cmd.none )
+
+                        ObjectIcon i x y t c ->
+                            ( { model | addCharacterIcon = DrawIcon (ObjectIcon i x y t c) }, Cmd.none )
+
+                    --( { model | addCharacterIcon = DrawIcon s, characterList = (giveDungeonMap_CharacterIds model.characterList) }, Cmd.none )
+
+        ClearCharacterList ->
+            ( { model | characterList = [], objectIconList = [] }
+            , Cmd.none
+            )
 
         CloseModal modalType->
             case modalType of
-                AttackModal -> 
+                AttackModal ->
                     ( { model | showAttackModal = Modal.hidden } , Cmd.none )
-                
+
                 DeathAlert ->
                     ( { model | showDeathAlert = Modal.hidden } , Cmd.none )
 
                 CustomEnemy ->
                     ( { model | showCustomEnemy = Modal.hidden } , Cmd.none )
 
+                ObjectIconModal ->
+                    ( { model | showObjectIconModal = Modal.hidden } , Cmd.none )
+
         ShowModal modalType->
             case modalType of
-                AttackModal -> 
+                AttackModal ->
                     ( { model | showAttackModal = Modal.shown } , Cmd.none )
-                
+
                 DeathAlert ->
                     ( { model | showDeathAlert = Modal.shown } , Cmd.none )
-                    
+
                 CustomEnemy ->
                     ( { model | showCustomEnemy = Modal.shown } , Cmd.none )
-        
+
+                ObjectIconModal ->
+                    ( { model | showObjectIconModal = Modal.shown } , Cmd.none )
+
         ShowAttackModal id->
             ( { model | showAttackModal = Modal.shown , characterId = id} , Cmd.none )
 
-        SwitchEnemyHero string -> 
+        SwitchEnemyHero string ->
                     ( {model | enemyHero = string } , Cmd.none )
 
         DoNothing ->
             (model, Cmd.none)
+
+        Pick ->
+            ( model
+            , Select.files ["image/*"] GotFiles
+            )
+
+        DragEnter ->
+            ( { model | hover = True }
+            , Cmd.none
+            )
+
+        DragLeave ->
+            ( { model | hover = False }
+            , Cmd.none
+            )
+        GotFiles file files ->
+            ( { model | hover = False }
+            , Task.perform GotPreviews <| Task.sequence <|
+                List.map File.toUrl (file :: files)
+                )
+        GotPreviews urls ->
+            ( { model | previews = urls }
+            , Cmd.none
+            )
+
+        ColorPickerMsg cpMsg ->
+            case model.addCharacterIcon of
+                DrawIcon (ObjectIcon i x y t c) ->  let
+                                                        ( m, colour ) = ColorPicker.update cpMsg model.colour model.colorPicker
+                                                    in
+                                                        ( { model | colorPicker = m
+                                                                  , colour = colour |> Maybe.withDefault model.colour
+                                                          }
+                                                        , Cmd.none
+                                                        )
+
+                _ -> ( model, Cmd.none )
 
 view : Model -> Html Msg
 view model =
@@ -184,10 +284,10 @@ view model =
                     }
                 , Tab.item
                     { id = "tabAbout"
-                    , link = Tab.link [ Spacing.mt3 ] [ text "Regeln" ]
+                    , link = Tab.link [ Spacing.mt3 ] [ text "Info" ]
                     , pane =
                         Tab.pane []
-                            [ aboutView model ]
+                            [ aboutView ]
                     }
                 ]
             |> Tab.view model.tabState
@@ -207,3 +307,26 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Dropdown.subscriptions model.myDrop1State MyDrop1Msg ]
+
+giveDungeonMap_CharacterIds : List CharacterIcon -> List CharacterIcon
+giveDungeonMap_CharacterIds charList =
+    List.indexedMap putIdInCharIcon charList
+
+putIdInCharIcon : Int -> CharacterIcon -> CharacterIcon
+putIdInCharIcon id charIcon =
+    case charIcon of
+        PlayerIcon _ x y -> PlayerIcon (id+1) x y
+        MonsterIcon _ x y -> MonsterIcon (id+1) x y
+        ObjectIcon _ x y t c -> ObjectIcon (id+1) x y t c
+
+isNotId : Int -> CharacterIcon -> Bool
+isNotId id s =
+    case s of
+        MonsterIcon i _ _ ->
+            id/=i
+
+        PlayerIcon i _ _ ->
+            id/=i
+
+        ObjectIcon i _ _ _ _->
+            id/=i

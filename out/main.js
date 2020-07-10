@@ -4533,6 +4533,184 @@ function _Http_track(router, xhr, tracker)
 }
 
 
+// DECODER
+
+var _File_decoder = _Json_decodePrim(function(value) {
+	// NOTE: checks if `File` exists in case this is run on node
+	return (typeof File !== 'undefined' && value instanceof File)
+		? $elm$core$Result$Ok(value)
+		: _Json_expecting('a FILE', value);
+});
+
+
+// METADATA
+
+function _File_name(file) { return file.name; }
+function _File_mime(file) { return file.type; }
+function _File_size(file) { return file.size; }
+
+function _File_lastModified(file)
+{
+	return $elm$time$Time$millisToPosix(file.lastModified);
+}
+
+
+// DOWNLOAD
+
+var _File_downloadNode;
+
+function _File_getDownloadNode()
+{
+	return _File_downloadNode || (_File_downloadNode = document.createElement('a'));
+}
+
+var _File_download = F3(function(name, mime, content)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var blob = new Blob([content], {type: mime});
+
+		// for IE10+
+		if (navigator.msSaveOrOpenBlob)
+		{
+			navigator.msSaveOrOpenBlob(blob, name);
+			return;
+		}
+
+		// for HTML5
+		var node = _File_getDownloadNode();
+		var objectUrl = URL.createObjectURL(blob);
+		node.href = objectUrl;
+		node.download = name;
+		_File_click(node);
+		URL.revokeObjectURL(objectUrl);
+	});
+});
+
+function _File_downloadUrl(href)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var node = _File_getDownloadNode();
+		node.href = href;
+		node.download = '';
+		node.origin === location.origin || (node.target = '_blank');
+		_File_click(node);
+	});
+}
+
+
+// IE COMPATIBILITY
+
+function _File_makeBytesSafeForInternetExplorer(bytes)
+{
+	// only needed by IE10 and IE11 to fix https://github.com/elm/file/issues/10
+	// all other browsers can just run `new Blob([bytes])` directly with no problem
+	//
+	return new Uint8Array(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+}
+
+function _File_click(node)
+{
+	// only needed by IE10 and IE11 to fix https://github.com/elm/file/issues/11
+	// all other browsers have MouseEvent and do not need this conditional stuff
+	//
+	if (typeof MouseEvent === 'function')
+	{
+		node.dispatchEvent(new MouseEvent('click'));
+	}
+	else
+	{
+		var event = document.createEvent('MouseEvents');
+		event.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+		document.body.appendChild(node);
+		node.dispatchEvent(event);
+		document.body.removeChild(node);
+	}
+}
+
+
+// UPLOAD
+
+var _File_node;
+
+function _File_uploadOne(mimes)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		_File_node = document.createElement('input');
+		_File_node.type = 'file';
+		_File_node.accept = A2($elm$core$String$join, ',', mimes);
+		_File_node.addEventListener('change', function(event)
+		{
+			callback(_Scheduler_succeed(event.target.files[0]));
+		});
+		_File_click(_File_node);
+	});
+}
+
+function _File_uploadOneOrMore(mimes)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		_File_node = document.createElement('input');
+		_File_node.type = 'file';
+		_File_node.multiple = true;
+		_File_node.accept = A2($elm$core$String$join, ',', mimes);
+		_File_node.addEventListener('change', function(event)
+		{
+			var elmFiles = _List_fromArray(event.target.files);
+			callback(_Scheduler_succeed(_Utils_Tuple2(elmFiles.a, elmFiles.b)));
+		});
+		_File_click(_File_node);
+	});
+}
+
+
+// CONTENT
+
+function _File_toString(blob)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var reader = new FileReader();
+		reader.addEventListener('loadend', function() {
+			callback(_Scheduler_succeed(reader.result));
+		});
+		reader.readAsText(blob);
+		return function() { reader.abort(); };
+	});
+}
+
+function _File_toBytes(blob)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var reader = new FileReader();
+		reader.addEventListener('loadend', function() {
+			callback(_Scheduler_succeed(new DataView(reader.result)));
+		});
+		reader.readAsArrayBuffer(blob);
+		return function() { reader.abort(); };
+	});
+}
+
+function _File_toUrl(blob)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var reader = new FileReader();
+		reader.addEventListener('loadend', function() {
+			callback(_Scheduler_succeed(reader.result));
+		});
+		reader.readAsDataURL(blob);
+		return function() { reader.abort(); };
+	});
+}
+
+
+
+
 var _Bitwise_and = F2(function(a, b)
 {
 	return a & b;
@@ -5403,13 +5581,19 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Model$DrawingInactive = {$: 'DrawingInactive'};
+var $simonh1000$elm_colorpicker$ColorPicker$State = function (a) {
+	return {$: 'State', a: a};
+};
+var $simonh1000$elm_colorpicker$ColorPicker$Unpressed = {$: 'Unpressed'};
+var $simonh1000$elm_colorpicker$ColorPicker$blankModel = {hue: $elm$core$Maybe$Nothing, mouseTarget: $simonh1000$elm_colorpicker$ColorPicker$Unpressed};
+var $simonh1000$elm_colorpicker$ColorPicker$empty = $simonh1000$elm_colorpicker$ColorPicker$State($simonh1000$elm_colorpicker$ColorPicker$blankModel);
 var $rundis$elm_bootstrap$Bootstrap$Modal$Hide = {$: 'Hide'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$hidden = $rundis$elm_bootstrap$Bootstrap$Modal$Hide;
-var $author$project$Model$Enemy = F3(
-	function (a, b, c) {
-		return {$: 'Enemy', a: a, b: b, c: c};
+var $author$project$Model$Enemy = F5(
+	function (a, b, c, d, e) {
+		return {$: 'Enemy', a: a, b: b, c: c, d: d, e: e};
 	});
-var $author$project$Model$initEnemy = A3($author$project$Model$Enemy, 'none', 0, 0);
+var $author$project$Model$initEnemy = A5($author$project$Model$Enemy, 'none', 0, 0, 0, '');
 var $author$project$Model$Hero = F2(
 	function (a, b) {
 		return {$: 'Hero', a: a, b: b};
@@ -5437,9 +5621,46 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$initialState = $rundis$elm_bootstrap$Boo
 	{activeTab: $elm$core$Maybe$Nothing, visibility: $rundis$elm_bootstrap$Bootstrap$Tab$Showing});
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $avh4$elm_color$Color$RgbaSpace = F4(
+	function (a, b, c, d) {
+		return {$: 'RgbaSpace', a: a, b: b, c: c, d: d};
+	});
+var $avh4$elm_color$Color$rgb = F3(
+	function (r, g, b) {
+		return A4($avh4$elm_color$Color$RgbaSpace, r, g, b, 1.0);
+	});
 var $author$project$Model$init = function (_v0) {
 	return _Utils_Tuple2(
-		{addCharacterIcon: $author$project$Model$DrawingInactive, bonusDamage: 0, characterId: 0, characterList: _List_Nil, damage: 0, dice: '1W6+0', dieFace: 0, dieFaces: _List_Nil, enemy: $elm$core$Array$empty, enemyHero: 'Enemy', maxFace: 6, myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState, showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden, showString: '', tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState, tmpEnemy: $author$project$Model$initEnemy, tmpHero: $author$project$Model$initHero, tmpdice: '1W6+0'},
+		{
+			addCharacterIcon: $author$project$Model$DrawingInactive,
+			bonusDamage: 0,
+			characterId: 0,
+			characterList: _List_Nil,
+			colorPicker: $simonh1000$elm_colorpicker$ColorPicker$empty,
+			colour: A3($avh4$elm_color$Color$rgb, 255, 0, 0),
+			damage: 0,
+			dice: '1W6+0',
+			dieFace: 0,
+			dieFaces: _List_Nil,
+			enemy: $elm$core$Array$empty,
+			enemyHero: 'Enemy',
+			hover: false,
+			iconText: '',
+			maxFace: 6,
+			myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState,
+			objectIconList: _List_Nil,
+			previews: _List_Nil,
+			radioCheckedID: 0,
+			showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden,
+			showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden,
+			showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden,
+			showObjectIconModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden,
+			showString: '',
+			tabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState,
+			tmpEnemy: $author$project$Model$initEnemy,
+			tmpHero: $author$project$Model$initHero,
+			tmpdice: '1W6+0'
+		},
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Model$MyDrop1Msg = function (a) {
@@ -6021,13 +6242,24 @@ var $author$project$Model$DrawIcon = function (a) {
 var $author$project$Model$EnemyLoaded = function (a) {
 	return {$: 'EnemyLoaded', a: a};
 };
-var $author$project$Model$Monster = F2(
+var $author$project$Model$GotFiles = F2(
 	function (a, b) {
-		return {$: 'Monster', a: a, b: b};
+		return {$: 'GotFiles', a: a, b: b};
 	});
-var $author$project$Model$Player = F2(
-	function (a, b) {
-		return {$: 'Player', a: a, b: b};
+var $author$project$Model$GotPreviews = function (a) {
+	return {$: 'GotPreviews', a: a};
+};
+var $author$project$Model$MonsterIcon = F3(
+	function (a, b, c) {
+		return {$: 'MonsterIcon', a: a, b: b, c: c};
+	});
+var $author$project$Model$ObjectIcon = F5(
+	function (a, b, c, d, e) {
+		return {$: 'ObjectIcon', a: a, b: b, c: c, d: d, e: e};
+	});
+var $author$project$Model$PlayerIcon = F3(
+	function (a, b, c) {
+		return {$: 'PlayerIcon', a: a, b: b, c: c};
 	});
 var $elm$core$List$sum = function (numbers) {
 	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
@@ -6559,6 +6791,28 @@ var $elm$http$Http$expectJson = F2(
 						A2($elm$json$Json$Decode$decodeString, decoder, string));
 				}));
 	});
+var $elm$file$File$Select$files = F2(
+	function (mimes, toMsg) {
+		return A2(
+			$elm$core$Task$perform,
+			function (_v0) {
+				var f = _v0.a;
+				var fs = _v0.b;
+				return A2(toMsg, f, fs);
+			},
+			_File_uploadOneOrMore(mimes));
+	});
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
 var $author$project$Model$NewRandomList = function (a) {
 	return {$: 'NewRandomList', a: a};
 };
@@ -6913,14 +7167,33 @@ var $elm$core$List$head = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $author$project$Main$isNotId = F2(
+	function (id, s) {
+		switch (s.$) {
+			case 'MonsterIcon':
+				var i = s.a;
+				return !_Utils_eq(id, i);
+			case 'PlayerIcon':
+				var i = s.a;
+				return !_Utils_eq(id, i);
+			default:
+				var i = s.a;
+				return !_Utils_eq(id, i);
+		}
+	});
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$int = _Json_decodeInt;
-var $elm$json$Json$Decode$map3 = _Json_map3;
+var $elm$json$Json$Decode$map4 = _Json_map4;
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$FightingTool$parseEnemy = A4(
-	$elm$json$Json$Decode$map3,
-	$author$project$Model$Enemy,
+var $author$project$FightingTool$parseEnemy = A5(
+	$elm$json$Json$Decode$map4,
+	F4(
+		function (n, h, m, s) {
+			return A5($author$project$Model$Enemy, n, h, m, s, '');
+		}),
 	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'health', $elm$json$Json$Decode$int),
 	A2($elm$json$Json$Decode$field, 'health', $elm$json$Json$Decode$int),
 	A2($elm$json$Json$Decode$field, 'armor', $elm$json$Json$Decode$int));
 var $elm$core$Elm$JsArray$push = _JsArray_push;
@@ -7526,6 +7799,217 @@ var $author$project$FightingTool$setDice = function (set) {
 };
 var $rundis$elm_bootstrap$Bootstrap$Modal$Show = {$: 'Show'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$shown = $rundis$elm_bootstrap$Bootstrap$Modal$Show;
+var $elm$file$File$toUrl = _File_toUrl;
+var $elm$core$Tuple$mapFirst = F2(
+	function (func, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			func(x),
+			y);
+	});
+var $avh4$elm_color$Color$hsla = F4(
+	function (hue, sat, light, alpha) {
+		var _v0 = _Utils_Tuple3(hue, sat, light);
+		var h = _v0.a;
+		var s = _v0.b;
+		var l = _v0.c;
+		var m2 = (l <= 0.5) ? (l * (s + 1)) : ((l + s) - (l * s));
+		var m1 = (l * 2) - m2;
+		var hueToRgb = function (h__) {
+			var h_ = (h__ < 0) ? (h__ + 1) : ((h__ > 1) ? (h__ - 1) : h__);
+			return ((h_ * 6) < 1) ? (m1 + (((m2 - m1) * h_) * 6)) : (((h_ * 2) < 1) ? m2 : (((h_ * 3) < 2) ? (m1 + (((m2 - m1) * ((2 / 3) - h_)) * 6)) : m1));
+		};
+		var b = hueToRgb(h - (1 / 3));
+		var g = hueToRgb(h);
+		var r = hueToRgb(h + (1 / 3));
+		return A4($avh4$elm_color$Color$RgbaSpace, r, g, b, alpha);
+	});
+var $avh4$elm_color$Color$fromHsla = function (_v0) {
+	var hue = _v0.hue;
+	var saturation = _v0.saturation;
+	var lightness = _v0.lightness;
+	var alpha = _v0.alpha;
+	return A4($avh4$elm_color$Color$hsla, hue, saturation, lightness, alpha);
+};
+var $elm$core$Basics$isNaN = _Basics_isNaN;
+var $elm$core$Basics$min = F2(
+	function (x, y) {
+		return (_Utils_cmp(x, y) < 0) ? x : y;
+	});
+var $avh4$elm_color$Color$toHsla = function (_v0) {
+	var r = _v0.a;
+	var g = _v0.b;
+	var b = _v0.c;
+	var a = _v0.d;
+	var minColor = A2(
+		$elm$core$Basics$min,
+		r,
+		A2($elm$core$Basics$min, g, b));
+	var maxColor = A2(
+		$elm$core$Basics$max,
+		r,
+		A2($elm$core$Basics$max, g, b));
+	var l = (minColor + maxColor) / 2;
+	var s = _Utils_eq(minColor, maxColor) ? 0 : ((l < 0.5) ? ((maxColor - minColor) / (maxColor + minColor)) : ((maxColor - minColor) / ((2 - maxColor) - minColor)));
+	var h1 = _Utils_eq(maxColor, r) ? ((g - b) / (maxColor - minColor)) : (_Utils_eq(maxColor, g) ? (2 + ((b - r) / (maxColor - minColor))) : (4 + ((r - g) / (maxColor - minColor))));
+	var h2 = h1 * (1 / 6);
+	var h3 = $elm$core$Basics$isNaN(h2) ? 0 : ((h2 < 0) ? (h2 + 1) : h2);
+	return {alpha: a, hue: h3, lightness: l, saturation: s};
+};
+var $simonh1000$elm_colorpicker$ColorPicker$widgetWidth = 200;
+var $simonh1000$elm_colorpicker$ColorPicker$calcHue = F2(
+	function (col, _v0) {
+		var x = _v0.x;
+		var mousePressed = _v0.mousePressed;
+		var hue = x / $simonh1000$elm_colorpicker$ColorPicker$widgetWidth;
+		var hsla = $avh4$elm_color$Color$toHsla(col);
+		var saturation = hsla.saturation;
+		var lightness = hsla.lightness;
+		var alpha = hsla.alpha;
+		var newCol = ((!saturation) && (lightness < 0.02)) ? _Utils_update(
+			hsla,
+			{hue: hue, lightness: 0.5, saturation: 0.5}) : _Utils_update(
+			hsla,
+			{hue: hue});
+		return $avh4$elm_color$Color$fromHsla(newCol);
+	});
+var $simonh1000$elm_colorpicker$ColorPicker$calcOpacity = F3(
+	function (col, _v0, _v1) {
+		var x = _v1.x;
+		var mousePressed = _v1.mousePressed;
+		var hsla = $avh4$elm_color$Color$toHsla(col);
+		return $avh4$elm_color$Color$fromHsla(
+			_Utils_update(
+				hsla,
+				{alpha: x / $simonh1000$elm_colorpicker$ColorPicker$widgetWidth}));
+	});
+var $simonh1000$elm_colorpicker$ColorPicker$widgetHeight = 150;
+var $simonh1000$elm_colorpicker$ColorPicker$calcSatLight = F3(
+	function (col, currHue, _v0) {
+		var x = _v0.x;
+		var y = _v0.y;
+		var mousePressed = _v0.mousePressed;
+		var hsla = $avh4$elm_color$Color$toHsla(col);
+		return $avh4$elm_color$Color$fromHsla(
+			_Utils_update(
+				hsla,
+				{hue: currHue, lightness: 1 - (y / $simonh1000$elm_colorpicker$ColorPicker$widgetHeight), saturation: x / $simonh1000$elm_colorpicker$ColorPicker$widgetWidth}));
+	});
+var $elm$core$Basics$not = _Basics_not;
+var $simonh1000$elm_colorpicker$ColorPicker$setHue = F3(
+	function (mouseTarget, mouseInfo, model) {
+		switch (mouseTarget.$) {
+			case 'SatLight':
+				var hue = mouseTarget.a;
+				return _Utils_update(
+					model,
+					{
+						hue: $elm$core$Maybe$Just(
+							A2($elm$core$Maybe$withDefault, hue, model.hue))
+					});
+			case 'HueSlider':
+				return _Utils_update(
+					model,
+					{
+						hue: $elm$core$Maybe$Just(mouseInfo.x / $simonh1000$elm_colorpicker$ColorPicker$widgetWidth)
+					});
+			case 'OpacitySlider':
+				var hue = mouseTarget.a;
+				return _Utils_update(
+					model,
+					{
+						hue: $elm$core$Maybe$Just(
+							A2($elm$core$Maybe$withDefault, hue, model.hue))
+					});
+			default:
+				return model;
+		}
+	});
+var $simonh1000$elm_colorpicker$ColorPicker$setMouseTarget = F2(
+	function (mouseTarget, model) {
+		return _Utils_update(
+			model,
+			{mouseTarget: mouseTarget});
+	});
+var $simonh1000$elm_colorpicker$ColorPicker$update_ = F3(
+	function (message, col, model) {
+		var calcNewColour = function (mouseTarget) {
+			switch (mouseTarget.$) {
+				case 'SatLight':
+					var hue = mouseTarget.a;
+					return A2(
+						$elm$core$Basics$composeL,
+						$elm$core$Maybe$Just,
+						A2(
+							$simonh1000$elm_colorpicker$ColorPicker$calcSatLight,
+							col,
+							A2($elm$core$Maybe$withDefault, hue, model.hue)));
+				case 'HueSlider':
+					return A2(
+						$elm$core$Basics$composeL,
+						$elm$core$Maybe$Just,
+						$simonh1000$elm_colorpicker$ColorPicker$calcHue(col));
+				case 'OpacitySlider':
+					var hue = mouseTarget.a;
+					return A2(
+						$elm$core$Basics$composeL,
+						$elm$core$Maybe$Just,
+						A2(
+							$simonh1000$elm_colorpicker$ColorPicker$calcOpacity,
+							col,
+							A2($elm$core$Maybe$withDefault, hue, model.hue)));
+				default:
+					return function (_v2) {
+						return $elm$core$Maybe$Nothing;
+					};
+			}
+		};
+		var handleMouseMove = F2(
+			function (mouseTarget, mouseInfo) {
+				return (mouseInfo.mousePressed && _Utils_eq(model.mouseTarget, mouseTarget)) ? _Utils_Tuple2(
+					A3($simonh1000$elm_colorpicker$ColorPicker$setHue, mouseTarget, mouseInfo, model),
+					A2(calcNewColour, mouseTarget, mouseInfo)) : (((!mouseInfo.mousePressed) && _Utils_eq(model.mouseTarget, mouseTarget)) ? _Utils_Tuple2(
+					A2($simonh1000$elm_colorpicker$ColorPicker$setMouseTarget, $simonh1000$elm_colorpicker$ColorPicker$Unpressed, model),
+					$elm$core$Maybe$Nothing) : _Utils_Tuple2(model, $elm$core$Maybe$Nothing));
+			});
+		switch (message.$) {
+			case 'OnMouseDown':
+				var mouseTarget = message.a;
+				var mouseInfo = message.b;
+				return _Utils_Tuple2(
+					A3(
+						$simonh1000$elm_colorpicker$ColorPicker$setHue,
+						mouseTarget,
+						mouseInfo,
+						A2($simonh1000$elm_colorpicker$ColorPicker$setMouseTarget, mouseTarget, model)),
+					A2(calcNewColour, mouseTarget, mouseInfo));
+			case 'OnMouseMove':
+				var mouseTarget = message.a;
+				var mouseInfo = message.b;
+				return A2(handleMouseMove, mouseTarget, mouseInfo);
+			case 'OnClick':
+				var mouseTarget = message.a;
+				var mouseInfo = message.b;
+				return _Utils_Tuple2(
+					A3($simonh1000$elm_colorpicker$ColorPicker$setHue, mouseTarget, mouseInfo, model),
+					A2(calcNewColour, mouseTarget, mouseInfo));
+			case 'OnMouseUp':
+				return _Utils_Tuple2(
+					A2($simonh1000$elm_colorpicker$ColorPicker$setMouseTarget, $simonh1000$elm_colorpicker$ColorPicker$Unpressed, model),
+					$elm$core$Maybe$Nothing);
+			default:
+				return _Utils_Tuple2(model, $elm$core$Maybe$Nothing);
+		}
+	});
+var $simonh1000$elm_colorpicker$ColorPicker$update = F3(
+	function (message, col, _v0) {
+		var model = _v0.a;
+		return A2(
+			$elm$core$Tuple$mapFirst,
+			$simonh1000$elm_colorpicker$ColorPicker$State,
+			A3($simonh1000$elm_colorpicker$ColorPicker$update_, message, col, model));
+	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -7645,6 +8129,47 @@ var $author$project$Main$update = F2(
 						model,
 						{tmpdice: newTmpDice}),
 					$elm$core$Platform$Cmd$none);
+			case 'ChangeIconText':
+				var newIconText = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{iconText: newIconText}),
+					$elm$core$Platform$Cmd$none);
+			case 'ChangeIcon':
+				var id = msg.a;
+				var _v3 = model.addCharacterIcon;
+				if ((_v3.$ === 'DrawIcon') && (_v3.a.$ === 'ObjectIcon')) {
+					var _v4 = _v3.a;
+					var i = _v4.a;
+					var x = _v4.b;
+					var y = _v4.c;
+					var t = _v4.d;
+					var c = _v4.e;
+					if (id === 3) {
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									addCharacterIcon: $author$project$Model$DrawIcon(
+										A5($author$project$Model$ObjectIcon, id, x, y, t, c)),
+									radioCheckedID: id
+								}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									addCharacterIcon: $author$project$Model$DrawIcon(
+										A5($author$project$Model$ObjectIcon, id, x, y, t, $elm$core$Maybe$Nothing)),
+									radioCheckedID: id
+								}),
+							$elm$core$Platform$Cmd$none);
+					}
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
 			case 'DiceAndSlice':
 				var newDice = msg.a;
 				var rt = A2(
@@ -7706,49 +8231,167 @@ var $author$project$Main$update = F2(
 				var addCharacterIconMsg = msg.a;
 				if (addCharacterIconMsg.$ === 'MouseClick') {
 					var characterIcon = addCharacterIconMsg.a;
-					if (characterIcon.$ === 'PlayerIcon') {
-						var x = characterIcon.a;
-						var y = characterIcon.b;
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{
-									addCharacterIcon: $author$project$Model$DrawingInactive,
-									characterList: _Utils_ap(
-										model.characterList,
-										_List_fromArray(
-											[
-												A2($author$project$Model$Player, x, y)
-											]))
-								}),
-							$elm$core$Platform$Cmd$none);
-					} else {
-						var x = characterIcon.a;
-						var y = characterIcon.b;
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{
-									addCharacterIcon: $author$project$Model$DrawingInactive,
-									characterList: _Utils_ap(
-										model.characterList,
-										_List_fromArray(
-											[
-												A2($author$project$Model$Monster, x, y)
-											]))
-								}),
-							$elm$core$Platform$Cmd$none);
+					switch (characterIcon.$) {
+						case 'PlayerIcon':
+							var i = characterIcon.a;
+							var x = characterIcon.b;
+							var y = characterIcon.c;
+							return _Utils_eq(
+								$elm$core$List$length(model.characterList),
+								$elm$core$List$length(
+									A2(
+										$elm$core$List$filter,
+										$author$project$Main$isNotId(i),
+										model.characterList))) ? _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawingInactive,
+										characterList: _Utils_ap(
+											model.characterList,
+											_List_fromArray(
+												[characterIcon]))
+									}),
+								$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{addCharacterIcon: $author$project$Model$DrawingInactive}),
+								$elm$core$Platform$Cmd$none);
+						case 'MonsterIcon':
+							var i = characterIcon.a;
+							var x = characterIcon.b;
+							var y = characterIcon.c;
+							return _Utils_eq(
+								$elm$core$List$length(model.characterList),
+								$elm$core$List$length(
+									A2(
+										$elm$core$List$filter,
+										$author$project$Main$isNotId(i),
+										model.characterList))) ? _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawingInactive,
+										characterList: _Utils_ap(
+											model.characterList,
+											_List_fromArray(
+												[characterIcon]))
+									}),
+								$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{addCharacterIcon: $author$project$Model$DrawingInactive}),
+								$elm$core$Platform$Cmd$none);
+						default:
+							var i = characterIcon.a;
+							var x = characterIcon.b;
+							var y = characterIcon.c;
+							var t = characterIcon.d;
+							var c = characterIcon.e;
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawingInactive,
+										iconText: '',
+										objectIconList: _Utils_ap(
+											model.objectIconList,
+											_List_fromArray(
+												[
+													A5(
+													$author$project$Model$ObjectIcon,
+													i,
+													x,
+													y,
+													model.iconText,
+													$elm$core$Maybe$Just(model.colour))
+												])),
+										radioCheckedID: 0,
+										showObjectIconModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden
+									}),
+								$elm$core$Platform$Cmd$none);
 					}
 				} else {
-					var s = addCharacterIconMsg.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								addCharacterIcon: $author$project$Model$DrawIcon(s)
-							}),
-						$elm$core$Platform$Cmd$none);
+					var characterIcon = addCharacterIconMsg.a;
+					switch (characterIcon.$) {
+						case 'PlayerIcon':
+							var i = characterIcon.a;
+							var x = characterIcon.b;
+							var y = characterIcon.c;
+							return (_Utils_cmp(
+								$elm$core$List$length(model.characterList),
+								$elm$core$List$length(
+									A2(
+										$elm$core$List$filter,
+										$author$project$Main$isNotId(i),
+										model.characterList))) > 0) ? _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawingInactive,
+										characterList: A2(
+											$elm$core$List$filter,
+											$author$project$Main$isNotId(i),
+											model.characterList)
+									}),
+								$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawIcon(
+											A3($author$project$Model$PlayerIcon, i, x, y))
+									}),
+								$elm$core$Platform$Cmd$none);
+						case 'MonsterIcon':
+							var i = characterIcon.a;
+							var x = characterIcon.b;
+							var y = characterIcon.c;
+							return (_Utils_cmp(
+								$elm$core$List$length(model.characterList),
+								$elm$core$List$length(
+									A2(
+										$elm$core$List$filter,
+										$author$project$Main$isNotId(i),
+										model.characterList))) > 0) ? _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawingInactive,
+										characterList: A2(
+											$elm$core$List$filter,
+											$author$project$Main$isNotId(i),
+											model.characterList)
+									}),
+								$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawIcon(
+											A3($author$project$Model$MonsterIcon, i, x, y))
+									}),
+								$elm$core$Platform$Cmd$none);
+						default:
+							var i = characterIcon.a;
+							var x = characterIcon.b;
+							var y = characterIcon.c;
+							var t = characterIcon.d;
+							var c = characterIcon.e;
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										addCharacterIcon: $author$project$Model$DrawIcon(
+											A5($author$project$Model$ObjectIcon, i, x, y, t, c))
+									}),
+								$elm$core$Platform$Cmd$none);
+					}
 				}
+			case 'ClearCharacterList':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{characterList: _List_Nil, objectIconList: _List_Nil}),
+					$elm$core$Platform$Cmd$none);
 			case 'CloseModal':
 				var modalType = msg.a;
 				switch (modalType.$) {
@@ -7764,11 +8407,17 @@ var $author$project$Main$update = F2(
 								model,
 								{showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
 							$elm$core$Platform$Cmd$none);
-					default:
+					case 'CustomEnemy':
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
+							$elm$core$Platform$Cmd$none);
+					default:
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{showObjectIconModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
 							$elm$core$Platform$Cmd$none);
 				}
 			case 'ShowModal':
@@ -7786,11 +8435,17 @@ var $author$project$Main$update = F2(
 								model,
 								{showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$shown}),
 							$elm$core$Platform$Cmd$none);
-					default:
+					case 'CustomEnemy':
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{showCustomEnemy: $rundis$elm_bootstrap$Bootstrap$Modal$shown}),
+							$elm$core$Platform$Cmd$none);
+					default:
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{showObjectIconModal: $rundis$elm_bootstrap$Bootstrap$Modal$shown}),
 							$elm$core$Platform$Cmd$none);
 				}
 			case 'ShowAttackModal':
@@ -7807,48 +8462,161 @@ var $author$project$Main$update = F2(
 						model,
 						{enemyHero: string}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'DoNothing':
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+			case 'Pick':
+				return _Utils_Tuple2(
+					model,
+					A2(
+						$elm$file$File$Select$files,
+						_List_fromArray(
+							['image/*']),
+						$author$project$Model$GotFiles));
+			case 'DragEnter':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{hover: true}),
+					$elm$core$Platform$Cmd$none);
+			case 'DragLeave':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{hover: false}),
+					$elm$core$Platform$Cmd$none);
+			case 'GotFiles':
+				var file = msg.a;
+				var files = msg.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{hover: false}),
+					A2(
+						$elm$core$Task$perform,
+						$author$project$Model$GotPreviews,
+						$elm$core$Task$sequence(
+							A2(
+								$elm$core$List$map,
+								$elm$file$File$toUrl,
+								A2($elm$core$List$cons, file, files)))));
+			case 'GotPreviews':
+				var urls = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{previews: urls}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				var cpMsg = msg.a;
+				var _v11 = model.addCharacterIcon;
+				if ((_v11.$ === 'DrawIcon') && (_v11.a.$ === 'ObjectIcon')) {
+					var _v12 = _v11.a;
+					var i = _v12.a;
+					var x = _v12.b;
+					var y = _v12.c;
+					var t = _v12.d;
+					var c = _v12.e;
+					var _v13 = A3($simonh1000$elm_colorpicker$ColorPicker$update, cpMsg, model.colour, model.colorPicker);
+					var m = _v13.a;
+					var colour = _v13.b;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								colorPicker: m,
+								colour: A2($elm$core$Maybe$withDefault, model.colour, colour)
+							}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
 		}
 	});
 var $author$project$Model$TabMsg = function (a) {
 	return {$: 'TabMsg', a: a};
 };
+var $elm$html$Html$a = _VirtualDom_node('a');
+var $elm$html$Html$br = _VirtualDom_node('br');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$About$aboutView = function (model) {
-	return A2(
-		$elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$h1,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Das schwarze Auge Edition 5')
-					])),
-				A2(
-				$elm$html$Html$h3,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Übersicht der Kampfesregeln')
-					])),
-				A2(
-				$elm$html$Html$p,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('\n            Die wenigsten Geschichten im Pen & Paper Rollenspiel DSA kommen ohne einen Kampf aus.\n            Die Mechanik unterscheidet sich allerdings etwas vom normalen Spielgeschehen.\n            ')
-					]))
-			]));
-};
+var $author$project$About$aboutView = A2(
+	$elm$html$Html$div,
+	_List_Nil,
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$h1,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Das schwarze Auge Edition 5')
+				])),
+			A2(
+			$elm$html$Html$h3,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Übersicht der Kampfesregeln')
+				])),
+			A2(
+			$elm$html$Html$p,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('\r\n                Die wenigsten Geschichten im Pen & Paper Rollenspiel DSA kommen ohne einen Kampf aus.\r\n                Die Mechanik unterscheidet sich allerdings etwas vom normalen Spielgeschehen.\r\n            '),
+					A2($elm$html$Html$br, _List_Nil, _List_Nil),
+					$elm$html$Html$text('\r\n                Zur Vorbereitung wird die Reihenfolge der Kämpfenden bestimmt. Dazu wird der die Initiative (INI) ausgewürfelt.\r\n                Der Spielleiter würfelt für alle NSCs.\r\n            '),
+					A2($elm$html$Html$br, _List_Nil, _List_Nil),
+					$elm$html$Html$text('\r\n                Dieser Reihenfolge nach dürfen die Charaktere jetzt je einen Gegner angreifen.\r\n            ')
+				])),
+			A2(
+			$elm$html$Html$p,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('\r\n                Um anzugreifen muss zunächst eine Probe mit einem W20 auf den AT-Wert bestanden werden.\r\n                Gleichzeitig wirft der Angegriffene auf PA oder AW. Gelingt die Probe bricht der Angriff an dieser Stelle ab.\r\n            '),
+					A2($elm$html$Html$br, _List_Nil, _List_Nil),
+					$elm$html$Html$text('\r\n                War der Angriff erfolgreich und die Verteidigung ein Fehlschlag wird der Schaden berechnet.\r\n                Das ist die Gelegenheit den \"Angriff\"-Button zu klicken.\r\n                Entsprechend der Angabe der Waffe (z.B 1W6+4) wird der Angriffswert erwürfelt.\r\n                Von diesem wird der RS-Wert des Angegriffenen subtrahiert und das Ergebnis von den LeP abgezogen.\r\n            '),
+					A2($elm$html$Html$br, _List_Nil, _List_Nil),
+					$elm$html$Html$text('\r\n                Die Berechnung übernimmt der Manager vollständig!\r\n            ')
+				])),
+			A2(
+			$elm$html$Html$p,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Das ist nur eine minimale Zusammfassung, die genauen Regeln können im '),
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$href('http://ulisses-regelwiki.de/index.php/Kampfregeln.html')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('DSA Regelwiki')
+						])),
+					$elm$html$Html$text(' nachgelesen werden.')
+				]))
+		]));
 var $author$project$Model$CustomEnemy = {$: 'CustomEnemy'};
 var $author$project$Model$ShowModal = function (a) {
 	return {$: 'ShowModal', a: a};
@@ -7906,26 +8674,7 @@ var $rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier = F2(
 					});
 		}
 	});
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
-	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
@@ -8602,28 +9351,14 @@ var $rundis$elm_bootstrap$Bootstrap$Table$tr = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Table$Row(
 			{cells: cells, options: options});
 	});
-var $author$project$FightingTool$displayCharacters = F2(
-	function (model, chars) {
-		return A2(
-			$elm$core$List$indexedMap,
-			F2(
-				function (i, c) {
-					var _v0 = function () {
-						if (c.$ === 'Enemy') {
-							var n = c.a;
-							var h = c.b;
-							var a = c.c;
-							return _Utils_Tuple3(n, h, a);
-						} else {
-							var n = c.a;
-							var a = c.b;
-							return _Utils_Tuple3(n, 0, a);
-						}
-					}();
-					var name = _v0.a;
-					var health = _v0.b;
-					var armor = _v0.c;
+var $author$project$FightingTool$displayCharacters = function (chars) {
+	return A2(
+		$elm$core$List$indexedMap,
+		F2(
+			function (i, c) {
+				var _v0 = function () {
 					if (c.$ === 'Enemy') {
+<<<<<<< HEAD
 						return A2(
 							$rundis$elm_bootstrap$Bootstrap$Table$tr,
 							_List_Nil,
@@ -8701,81 +9436,200 @@ var $author$project$FightingTool$displayCharacters = F2(
 												]))
 										]))
 								]));
+=======
+						var n = c.a;
+						var h = c.b;
+						var a = c.d;
+						var p = c.e;
+						return {armor: a, health: h, name: n, pain: p};
+>>>>>>> dev
 					} else {
-						return A2(
-							$rundis$elm_bootstrap$Bootstrap$Table$tr,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(
-											$elm$core$String$fromInt(i + 1))
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(name)
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(
-											$elm$core$String$fromInt(armor))
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('')
-										])),
-									A2($rundis$elm_bootstrap$Bootstrap$Table$td, _List_Nil, _List_Nil),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$rundis$elm_bootstrap$Bootstrap$Button$button,
-											_List_fromArray(
-												[
-													$rundis$elm_bootstrap$Bootstrap$Button$danger,
-													$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-													_List_fromArray(
-														[
-															$elm$html$Html$Events$onClick(
-															$author$project$Model$RemoveEnemy(i))
-														]))
-												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$text('Löschen')
-												]))
-										]))
-								]));
+						var n = c.a;
+						var a = c.b;
+						return {armor: a, health: 0, name: n, pain: ''};
 					}
+<<<<<<< HEAD
 				}),
 			$elm$core$Array$toList(chars));
 	});
+=======
+				}();
+				var name = _v0.name;
+				var health = _v0.health;
+				var armor = _v0.armor;
+				var pain = _v0.pain;
+				if (c.$ === 'Enemy') {
+					return A2(
+						$rundis$elm_bootstrap$Bootstrap$Table$tr,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(i + 1))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(name)
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(pain)
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(armor))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(health))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Button$success,
+												$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														$elm$html$Html$Events$onClick(
+														$author$project$Model$ShowAttackModal(i))
+													]))
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Angriff')
+											]))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Button$danger,
+												$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														$elm$html$Html$Events$onClick(
+														$author$project$Model$RemoveEnemy(i))
+													]))
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Löschen')
+											]))
+									]))
+							]));
+				} else {
+					return A2(
+						$rundis$elm_bootstrap$Bootstrap$Table$tr,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(i + 1))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_fromArray(
+									[
+										$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+										$elm$html$Html$Attributes$colspan(2))
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(name)
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$fromInt(armor))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('')
+									])),
+								A2($rundis$elm_bootstrap$Bootstrap$Table$td, _List_Nil, _List_Nil),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Table$td,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Button$danger,
+												$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														$elm$html$Html$Events$onClick(
+														$author$project$Model$RemoveEnemy(i))
+													]))
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Löschen')
+											]))
+									]))
+							]));
+				}
+			}),
+		$elm$core$Array$toList(chars));
+};
+>>>>>>> dev
 var $rundis$elm_bootstrap$Bootstrap$Table$Hover = {$: 'Hover'};
 var $rundis$elm_bootstrap$Bootstrap$Table$hover = $rundis$elm_bootstrap$Bootstrap$Table$Hover;
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Light = {$: 'Light'};
 var $rundis$elm_bootstrap$Bootstrap$Button$light = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Light));
+<<<<<<< HEAD
 var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
 	return {$: 'RowAttr', a: a};
 };
 var $rundis$elm_bootstrap$Bootstrap$Table$rowAttr = function (attr_) {
 	return $rundis$elm_bootstrap$Bootstrap$Table$RowAttr(attr_);
 };
+=======
+>>>>>>> dev
 var $rundis$elm_bootstrap$Bootstrap$Table$THead = function (a) {
 	return {$: 'THead', a: a};
 };
@@ -8793,6 +9647,11 @@ var $rundis$elm_bootstrap$Bootstrap$Table$simpleThead = function (cells) {
 				A2($rundis$elm_bootstrap$Bootstrap$Table$tr, _List_Nil, cells)
 			]));
 };
+<<<<<<< HEAD
+=======
+var $rundis$elm_bootstrap$Bootstrap$Table$Striped = {$: 'Striped'};
+var $rundis$elm_bootstrap$Bootstrap$Table$striped = $rundis$elm_bootstrap$Bootstrap$Table$Striped;
+>>>>>>> dev
 var $rundis$elm_bootstrap$Bootstrap$Table$Inversed = {$: 'Inversed'};
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
@@ -8997,7 +9856,6 @@ var $rundis$elm_bootstrap$Bootstrap$Table$maybeWrapResponsive = F2(
 			_List_fromArray(
 				[table_])) : table_;
 	});
-var $elm$core$Basics$not = _Basics_not;
 var $elm$html$Html$Attributes$scope = $elm$html$Html$Attributes$stringProperty('scope');
 var $rundis$elm_bootstrap$Bootstrap$Table$addScopeIfTh = function (cell) {
 	if (cell.$ === 'Th') {
@@ -9376,11 +10234,22 @@ var $author$project$FightingTool$attack = F3(
 				var _v1 = _v0.a;
 				var name = _v1.a;
 				var health = _v1.b;
-				var armor = _v1.c;
-				return (_Utils_cmp(damage, armor) > 0) ? ((((health - damage) + armor) <= 0) ? $author$project$Model$CharacterDeath(id) : A2(
+				var maxHealth = _v1.c;
+				var armor = _v1.d;
+				var pain = _v1.e;
+				return (_Utils_cmp(damage, armor) > 0) ? ((((health - damage) + armor) <= 0) ? $author$project$Model$CharacterDeath(id) : ((_Utils_cmp(health - damage, 0.25 * maxHealth) < 1) ? A2(
 					$author$project$Model$UpdateEnemy,
 					id,
-					A3($author$project$Model$Enemy, name, (health - damage) + armor, armor))) : $author$project$Model$CloseModal($author$project$Model$AttackModal);
+					A5($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor, 'Schmerz III')) : ((_Utils_cmp(health - damage, 0.5 * maxHealth) < 1) ? A2(
+					$author$project$Model$UpdateEnemy,
+					id,
+					A5($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor, 'Schmerz II')) : ((_Utils_cmp(health - damage, 0.75 * maxHealth) < 1) ? A2(
+					$author$project$Model$UpdateEnemy,
+					id,
+					A5($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor, 'Schmerz I')) : A2(
+					$author$project$Model$UpdateEnemy,
+					id,
+					A5($author$project$Model$Enemy, name, (health - damage) + armor, maxHealth, armor, pain)))))) : $author$project$Model$CloseModal($author$project$Model$AttackModal);
 			} else {
 				var _v2 = _v0.a;
 				return $author$project$Model$DoNothing;
@@ -9746,7 +10615,6 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Fieldset$asGroup = $rundis$elm_bootstra
 			opts,
 			{isGroup: true});
 	});
-var $elm$html$Html$br = _VirtualDom_node('br');
 var $rundis$elm_bootstrap$Bootstrap$Form$Radio$Checked = function (a) {
 	return {$: 'Checked', a: a};
 };
@@ -9825,7 +10693,7 @@ var $author$project$FightingTool$customEnemy = function (model) {
 		if (_v1.$ === 'Enemy') {
 			var n = _v1.a;
 			var h = _v1.b;
-			var a = _v1.c;
+			var a = _v1.d;
 			if (n === 'none') {
 				return _Utils_Tuple3(
 					$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(''),
@@ -9870,16 +10738,20 @@ var $author$project$FightingTool$customEnemy = function (model) {
 								var _v4 = model.tmpEnemy;
 								if (_v4.$ === 'Enemy') {
 									var h = _v4.b;
-									var a = _v4.c;
-									return _Utils_Tuple2(h, a);
+									var m = _v4.c;
+									var a = _v4.d;
+									var p = _v4.e;
+									return {armor: a, health: h, maxHealth: m, pain: p};
 								} else {
-									return _Utils_Tuple2(0, 0);
+									return {armor: 0, health: 0, maxHealth: 0, pain: ''};
 								}
 							}();
-							var health = _v3.a;
-							var armor = _v3.b;
+							var health = _v3.health;
+							var maxHealth = _v3.maxHealth;
+							var armor = _v3.armor;
+							var pain = _v3.pain;
 							return $author$project$Model$UpdateTmp(
-								A3($author$project$Model$Enemy, n, health, armor));
+								A5($author$project$Model$Enemy, n, health, maxHealth, armor, pain));
 						}),
 						ddName
 					])),
@@ -9900,23 +10772,30 @@ var $author$project$FightingTool$customEnemy = function (model) {
 								var _v6 = model.tmpEnemy;
 								if (_v6.$ === 'Enemy') {
 									var n = _v6.a;
-									var a = _v6.c;
-									return _Utils_Tuple2(n, a);
+									var a = _v6.d;
+									var s = _v6.e;
+									return _Utils_Tuple3(n, a, s);
 								} else {
-									return _Utils_Tuple2('', 0);
+									return _Utils_Tuple3('', 0, '');
 								}
 							}();
 							var name = _v5.a;
 							var armor = _v5.b;
+							var pain = _v5.c;
 							return $author$project$Model$UpdateTmp(
-								A3(
+								A5(
 									$author$project$Model$Enemy,
 									name,
 									A2(
 										$elm$core$Maybe$withDefault,
 										1,
 										$elm$core$String$toInt(h)),
-									armor));
+									A2(
+										$elm$core$Maybe$withDefault,
+										1,
+										$elm$core$String$toInt(h)),
+									armor,
+									pain));
 						}),
 						ddHealth
 					])),
@@ -9938,22 +10817,28 @@ var $author$project$FightingTool$customEnemy = function (model) {
 								if (_v8.$ === 'Enemy') {
 									var n = _v8.a;
 									var h = _v8.b;
-									return _Utils_Tuple2(n, h);
+									var m = _v8.c;
+									var p = _v8.e;
+									return {health: h, maxHealth: m, name: n, pain: p};
 								} else {
-									return _Utils_Tuple2('', 0);
+									return {health: 0, maxHealth: 0, name: '', pain: ''};
 								}
 							}();
-							var name = _v7.a;
-							var health = _v7.b;
+							var name = _v7.name;
+							var health = _v7.health;
+							var maxHealth = _v7.maxHealth;
+							var pain = _v7.pain;
 							return $author$project$Model$UpdateTmp(
-								A3(
+								A5(
 									$author$project$Model$Enemy,
 									name,
 									health,
+									maxHealth,
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toInt(a))));
+										$elm$core$String$toInt(a)),
+									pain));
 						}),
 						ddArmor
 					])),
@@ -10102,7 +10987,6 @@ var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropDir = function (maybeDir) {
 		_List_Nil,
 		A2($elm$core$Maybe$map, toAttrs, maybeDir));
 };
-var $elm$core$Basics$neq = _Utils_notEqual;
 var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownAttributes = F2(
 	function (status, config) {
 		return _Utils_ap(
@@ -10319,10 +11203,10 @@ var $rundis$elm_bootstrap$Bootstrap$Dropdown$nextStatus = function (status) {
 			return $rundis$elm_bootstrap$Bootstrap$Dropdown$Open;
 	}
 };
+var $elm$json$Json$Decode$map3 = _Json_map3;
 var $elm$json$Json$Decode$float = _Json_decodeFloat;
 var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetHeight = A2($elm$json$Json$Decode$field, 'offsetHeight', $elm$json$Json$Decode$float);
 var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetWidth = A2($elm$json$Json$Decode$field, 'offsetWidth', $elm$json$Json$Decode$float);
-var $elm$json$Json$Decode$map4 = _Json_map4;
 var $rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetLeft = A2($elm$json$Json$Decode$field, 'offsetLeft', $elm$json$Json$Decode$float);
 var $elm$json$Json$Decode$null = _Json_decodeNull;
 var $elm$json$Json$Decode$oneOf = _Json_oneOf;
@@ -11020,7 +11904,7 @@ var $author$project$FightingTool$body = function (model) {
 								$rundis$elm_bootstrap$Bootstrap$Table$tbody,
 								_List_Nil,
 								_Utils_ap(
-									A2($author$project$FightingTool$displayCharacters, model, model.enemy),
+									$author$project$FightingTool$displayCharacters(model.enemy),
 									_List_fromArray(
 										[
 											A2(
@@ -11080,7 +11964,11 @@ var $author$project$FightingTool$body = function (model) {
 										_List_fromArray(
 											[
 												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+<<<<<<< HEAD
 												$elm$html$Html$Attributes$class('th'))
+=======
+												$elm$html$Html$Attributes$colspan(2))
+>>>>>>> dev
 											]),
 										_List_fromArray(
 											[
@@ -11145,6 +12033,7 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$config = function (toMsg) {
 	return $rundis$elm_bootstrap$Bootstrap$Tab$Config(
 		{attributes: _List_Nil, isPill: false, items: _List_Nil, layout: $elm$core$Maybe$Nothing, toMsg: toMsg, useHash: false, withAnimation: false});
 };
+var $author$project$Model$ClearCharacterList = {$: 'ClearCharacterList'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Column = function (a) {
 	return {$: 'Column', a: a};
 };
@@ -11158,17 +12047,22 @@ var $rundis$elm_bootstrap$Bootstrap$Table$bordered = $rundis$elm_bootstrap$Boots
 var $author$project$Model$AddCharacterIcon = function (a) {
 	return {$: 'AddCharacterIcon', a: a};
 };
-var $author$project$Model$MonsterIcon = F2(
-	function (a, b) {
-		return {$: 'MonsterIcon', a: a, b: b};
-	});
 var $author$project$Model$MouseDraw = function (a) {
 	return {$: 'MouseDraw', a: a};
 };
+<<<<<<< HEAD
 var $author$project$Model$PlayerIcon = F2(
 	function (a, b) {
 		return {$: 'PlayerIcon', a: a, b: b};
 	});
+=======
+var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
+	return {$: 'RowAttr', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$rowAttr = function (attr_) {
+	return $rundis$elm_bootstrap$Bootstrap$Table$RowAttr(attr_);
+};
+>>>>>>> dev
 var $author$project$DungeonMap$stopBubbling = function (msg) {
 	return A2(
 		$elm$html$Html$Events$stopPropagationOn,
@@ -11196,7 +12090,7 @@ var $author$project$DungeonMap$characters2rows = function (chars) {
 								$author$project$DungeonMap$stopBubbling(
 									$author$project$Model$AddCharacterIcon(
 										$author$project$Model$MouseDraw(
-											A2($author$project$Model$MonsterIcon, '0', '0')))))
+											A3($author$project$Model$MonsterIcon, i + 1, '-100', '-100')))))
 							]),
 						_List_fromArray(
 							[
@@ -11235,7 +12129,7 @@ var $author$project$DungeonMap$characters2rows = function (chars) {
 								$author$project$DungeonMap$stopBubbling(
 									$author$project$Model$AddCharacterIcon(
 										$author$project$Model$MouseDraw(
-											A2($author$project$Model$PlayerIcon, '0', '0')))))
+											A3($author$project$Model$PlayerIcon, i + 1, '-100', '-100')))))
 							]),
 						_List_fromArray(
 							[
@@ -11318,8 +12212,57 @@ var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 				})
 			]));
 };
+var $author$project$Model$DragEnter = {$: 'DragEnter'};
+var $author$project$Model$DragLeave = {$: 'DragLeave'};
+var $author$project$Model$ObjectIconModal = {$: 'ObjectIconModal'};
+var $author$project$Model$Pick = {$: 'Pick'};
+var $elm$file$File$decoder = _File_decoder;
+var $elm$json$Json$Decode$list = _Json_decodeList;
+var $elm$json$Json$Decode$oneOrMoreHelp = F2(
+	function (toValue, xs) {
+		if (!xs.b) {
+			return $elm$json$Json$Decode$fail('a ARRAY with at least ONE element');
+		} else {
+			var y = xs.a;
+			var ys = xs.b;
+			return $elm$json$Json$Decode$succeed(
+				A2(toValue, y, ys));
+		}
+	});
+var $elm$json$Json$Decode$oneOrMore = F2(
+	function (toValue, decoder) {
+		return A2(
+			$elm$json$Json$Decode$andThen,
+			$elm$json$Json$Decode$oneOrMoreHelp(toValue),
+			$elm$json$Json$Decode$list(decoder));
+	});
+var $author$project$DungeonMap$dropDecoder = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['dataTransfer', 'files']),
+	A2($elm$json$Json$Decode$oneOrMore, $author$project$Model$GotFiles, $elm$file$File$decoder));
 var $elm$html$Html$figure = _VirtualDom_node('figure');
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
+var $author$project$DungeonMap$hijack = function (msg) {
+	return _Utils_Tuple2(msg, true);
+};
+var $elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
+	return {$: 'MayPreventDefault', a: a};
+};
+var $elm$html$Html$Events$preventDefaultOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayPreventDefault(decoder));
+	});
+var $author$project$DungeonMap$hijackOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$html$Html$Events$preventDefaultOn,
+			event,
+			A2($elm$json$Json$Decode$map, $author$project$DungeonMap$hijack, decoder));
+	});
 var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var $elm$svg$Svg$image = $elm$svg$Svg$trustedNode('image');
 var $author$project$Model$MouseClick = function (a) {
@@ -11355,182 +12298,186 @@ var $author$project$DungeonMap$onMouseMove = function (mapMousePositionToMsg) {
 		'mousemoveWithCoordinates',
 		A2($elm$json$Json$Decode$map, mapMousePositionToMsg, $author$project$DungeonMap$mousePosition));
 };
-var $author$project$DungeonMap$positionToCircleCenter = function (position) {
-	return $author$project$Model$AddCharacterIcon(
-		$author$project$Model$MouseDraw(
-			A2(
-				$author$project$Model$PlayerIcon,
-				$elm$core$String$fromFloat(position.x),
-				$elm$core$String$fromFloat(position.y))));
-};
-var $author$project$DungeonMap$positionToRectangleCorner = function (position) {
-	return $author$project$Model$AddCharacterIcon(
-		$author$project$Model$MouseDraw(
-			A2(
-				$author$project$Model$MonsterIcon,
-				$elm$core$String$fromFloat(position.x),
-				$elm$core$String$fromFloat(position.y))));
-};
+var $author$project$DungeonMap$positionToCircleCenter = F2(
+	function (i, position) {
+		return $author$project$Model$AddCharacterIcon(
+			$author$project$Model$MouseDraw(
+				A3(
+					$author$project$Model$PlayerIcon,
+					i,
+					$elm$core$String$fromFloat(position.x),
+					$elm$core$String$fromFloat(position.y))));
+	});
+var $author$project$DungeonMap$positionToIconCenter = F2(
+	function (i, position) {
+		return $author$project$Model$AddCharacterIcon(
+			$author$project$Model$MouseDraw(
+				A5(
+					$author$project$Model$ObjectIcon,
+					i,
+					$elm$core$String$fromFloat(position.x),
+					$elm$core$String$fromFloat(position.y),
+					'',
+					$elm$core$Maybe$Nothing)));
+	});
+var $author$project$DungeonMap$positionToRectangleCorner = F2(
+	function (i, position) {
+		return $author$project$Model$AddCharacterIcon(
+			$author$project$Model$MouseDraw(
+				A3(
+					$author$project$Model$MonsterIcon,
+					i,
+					$elm$core$String$fromFloat(position.x),
+					$elm$core$String$fromFloat(position.y))));
+	});
 var $author$project$DungeonMap$mouseDrawEvents = function (addCharacterIcon) {
 	if (addCharacterIcon.$ === 'DrawIcon') {
 		var characterIcon = addCharacterIcon.a;
-		if (characterIcon.$ === 'PlayerIcon') {
-			var x = characterIcon.a;
-			var y = characterIcon.b;
-			return _List_fromArray(
-				[
-					$elm$svg$Svg$Events$onClick(
-					$author$project$Model$AddCharacterIcon(
-						$author$project$Model$MouseClick(characterIcon))),
-					$author$project$DungeonMap$onMouseMove($author$project$DungeonMap$positionToCircleCenter)
-				]);
-		} else {
-			var x = characterIcon.a;
-			var y = characterIcon.b;
-			return _List_fromArray(
-				[
-					$elm$svg$Svg$Events$onClick(
-					$author$project$Model$AddCharacterIcon(
-						$author$project$Model$MouseClick(characterIcon))),
-					$author$project$DungeonMap$onMouseMove($author$project$DungeonMap$positionToRectangleCorner)
-				]);
+		switch (characterIcon.$) {
+			case 'PlayerIcon':
+				var i = characterIcon.a;
+				var x = characterIcon.b;
+				var y = characterIcon.c;
+				return _List_fromArray(
+					[
+						$elm$svg$Svg$Events$onClick(
+						$author$project$Model$AddCharacterIcon(
+							$author$project$Model$MouseClick(characterIcon))),
+						$author$project$DungeonMap$onMouseMove(
+						$author$project$DungeonMap$positionToCircleCenter(i))
+					]);
+			case 'MonsterIcon':
+				var i = characterIcon.a;
+				var x = characterIcon.b;
+				var y = characterIcon.c;
+				return _List_fromArray(
+					[
+						$elm$svg$Svg$Events$onClick(
+						$author$project$Model$AddCharacterIcon(
+							$author$project$Model$MouseClick(characterIcon))),
+						$author$project$DungeonMap$onMouseMove(
+						$author$project$DungeonMap$positionToRectangleCorner(i))
+					]);
+			default:
+				var i = characterIcon.a;
+				var x = characterIcon.b;
+				var y = characterIcon.c;
+				var t = characterIcon.d;
+				var c = characterIcon.e;
+				return _List_fromArray(
+					[
+						$elm$svg$Svg$Events$onClick(
+						$author$project$Model$ShowModal($author$project$Model$ObjectIconModal)),
+						$author$project$DungeonMap$onMouseMove(
+						$author$project$DungeonMap$positionToIconCenter(i))
+					]);
 		}
 	} else {
-		return _List_Nil;
+		return _List_fromArray(
+			[
+				$author$project$DungeonMap$onMouseMove(
+				$author$project$DungeonMap$positionToIconCenter(0))
+			]);
 	}
+};
+var $avh4$elm_color$Color$black = A4($avh4$elm_color$Color$RgbaSpace, 0 / 255, 0 / 255, 0 / 255, 1.0);
+var $elm$core$String$concat = function (strings) {
+	return A2($elm$core$String$join, '', strings);
+};
+var $elm$core$Basics$round = _Basics_round;
+var $avh4$elm_color$Color$toCssString = function (_v0) {
+	var r = _v0.a;
+	var g = _v0.b;
+	var b = _v0.c;
+	var a = _v0.d;
+	var roundTo = function (x) {
+		return $elm$core$Basics$round(x * 1000) / 1000;
+	};
+	var pct = function (x) {
+		return $elm$core$Basics$round(x * 10000) / 100;
+	};
+	return $elm$core$String$concat(
+		_List_fromArray(
+			[
+				'rgba(',
+				$elm$core$String$fromFloat(
+				pct(r)),
+				'%,',
+				$elm$core$String$fromFloat(
+				pct(g)),
+				'%,',
+				$elm$core$String$fromFloat(
+				pct(b)),
+				'%,',
+				$elm$core$String$fromFloat(
+				roundTo(a)),
+				')'
+			]));
+};
+var $author$project$DungeonMap$buildCustomObjectIconStyle = function (color) {
+	return 'stroke:black;stroke-width:4;fill:' + $avh4$elm_color$Color$toCssString(
+		A2($elm$core$Maybe$withDefault, $avh4$elm_color$Color$black, color));
 };
 var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
 var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
-var $elm$svg$Svg$g = $elm$svg$Svg$trustedNode('g');
-var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
-var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
-var $elm$svg$Svg$Attributes$style = _VirtualDom_attribute('style');
-var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
-var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
-var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
-	if (addCharacterIcon.$ === 'DrawIcon') {
-		var characterIcon = addCharacterIcon.a;
-		return _List_fromArray(
-			[
-				A2(
-				$elm$svg$Svg$g,
-				_List_Nil,
-				_List_fromArray(
-					[
-						function () {
-						if (characterIcon.$ === 'PlayerIcon') {
-							var x = characterIcon.a;
-							var y = characterIcon.b;
-							return A2(
-								$elm$svg$Svg$circle,
-								_List_fromArray(
-									[
-										$elm$svg$Svg$Attributes$cx(x),
-										$elm$svg$Svg$Attributes$cy(y),
-										$elm$svg$Svg$Attributes$r('10')
-									]),
-								_List_Nil);
-						} else {
-							var x = characterIcon.a;
-							var y = characterIcon.b;
-							return A2(
-								$elm$svg$Svg$rect,
-								_List_fromArray(
-									[
-										$elm$svg$Svg$Attributes$x(x),
-										$elm$svg$Svg$Attributes$y(y),
-										$elm$svg$Svg$Attributes$width('15'),
-										$elm$svg$Svg$Attributes$height('15')
-									]),
-								_List_Nil);
-						}
-					}(),
-						A2(
-						$elm$svg$Svg$rect,
-						_List_fromArray(
-							[
-								$elm$svg$Svg$Attributes$width('800'),
-								$elm$svg$Svg$Attributes$height('600'),
-								$elm$svg$Svg$Attributes$x('0'),
-								$elm$svg$Svg$Attributes$y('0'),
-								$elm$svg$Svg$Attributes$style('fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9')
-							]),
-						_List_Nil)
-					]))
-			]);
-	} else {
-		return _List_Nil;
-	}
-};
-var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
-var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
 var $elm$svg$Svg$Attributes$dominantBaseline = _VirtualDom_attribute('dominant-baseline');
-var $author$project$DungeonMap$getCoord = function (object) {
-	if (object.$ === 'Monster') {
-		var x = object.a;
-		var y = object.b;
-		return x + (',' + y);
-	} else {
-		var x = object.a;
-		var y = object.b;
-		return x + (',' + y);
-	}
-};
-var $author$project$DungeonMap$getIcon = function (object) {
-	if (object.$ === 'Monster') {
-		var x = object.a;
-		var y = object.b;
-		return 'monster';
-	} else {
-		var x = object.a;
-		var y = object.b;
-		return 'player';
+var $author$project$DungeonMap$getIconPath = function (id) {
+	switch (id) {
+		case 1:
+			return 'res/icons/chest.png';
+		case 2:
+			return 'res/icons/key.png';
+		case 3:
+			return 'custom';
+		default:
+			return '';
 	}
 };
 var $elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
+var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
+var $elm$svg$Svg$Attributes$style = _VirtualDom_attribute('style');
 var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$svg$Svg$Attributes$textAnchor = _VirtualDom_attribute('text-anchor');
 var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
+var $elm$svg$Svg$Attributes$title = _VirtualDom_attribute('title');
 var $elm$core$String$toFloat = _String_toFloat;
-var $author$project$DungeonMap$getAreaParam = F2(
-	function (i, s) {
-		var yCor = A2(
-			$elm$core$Maybe$withDefault,
-			'0',
-			$elm$core$List$head(
-				A2(
-					$elm$core$List$drop,
-					1,
-					A2(
-						$elm$core$String$split,
-						',',
-						$author$project$DungeonMap$getCoord(s)))));
-		var xCor = A2(
-			$elm$core$Maybe$withDefault,
-			'0',
-			$elm$core$List$head(
-				A2(
-					$elm$core$String$split,
-					',',
-					$author$project$DungeonMap$getCoord(s))));
-		var _v0 = $author$project$DungeonMap$getIcon(s);
-		switch (_v0) {
+var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
+var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
+var $elm$svg$Svg$Attributes$xlinkHref = function (value) {
+	return A3(
+		_VirtualDom_attributeNS,
+		'http://www.w3.org/1999/xlink',
+		'xlink:href',
+		_VirtualDom_noJavaScriptUri(value));
+};
+var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
+var $author$project$DungeonMap$placeIcon = F5(
+	function (iconType, id, x, y, color) {
+		switch (iconType) {
 			case 'monster':
 				return _List_fromArray(
 					[
 						A2(
-						$elm$svg$Svg$rect,
+						$elm$svg$Svg$image,
 						_List_fromArray(
 							[
-								$elm$svg$Svg$Attributes$id(
-								$elm$core$String$fromInt(i)),
-								$elm$svg$Svg$Attributes$x(xCor),
-								$elm$svg$Svg$Attributes$y(yCor),
-								$elm$svg$Svg$Attributes$width('15'),
-								$elm$svg$Svg$Attributes$height('15'),
-								$elm$svg$Svg$Attributes$class('MonsterIcon')
+								$elm$svg$Svg$Attributes$width('30'),
+								$elm$svg$Svg$Attributes$height('30'),
+								$elm$svg$Svg$Attributes$x(
+								$elm$core$String$fromFloat(
+									A2(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toFloat(x)) - 17.5)),
+								$elm$svg$Svg$Attributes$y(
+								$elm$core$String$fromFloat(
+									A2(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toFloat(y)) - 17.5)),
+								$elm$svg$Svg$Attributes$title('MonsterIcon'),
+								$elm$svg$Svg$Attributes$xlinkHref('res/icons/enemy.png')
 							]),
 						_List_Nil),
 						A2(
@@ -11543,34 +12490,44 @@ var $author$project$DungeonMap$getAreaParam = F2(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(xCor)) + 7.5)),
+										$elm$core$String$toFloat(x)) - 3)),
 								$elm$svg$Svg$Attributes$y(
 								$elm$core$String$fromFloat(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(yCor)) + 8.75)),
+										$elm$core$String$toFloat(y)) - 0.5)),
 								$elm$svg$Svg$Attributes$dominantBaseline('middle')
 							]),
 						_List_fromArray(
 							[
 								$elm$svg$Svg$text(
-								$elm$core$String$fromInt(i))
+								$elm$core$String$fromInt(id))
 							]))
 					]);
 			case 'player':
 				return _List_fromArray(
 					[
 						A2(
-						$elm$svg$Svg$circle,
+						$elm$svg$Svg$image,
 						_List_fromArray(
 							[
-								$elm$svg$Svg$Attributes$id(
-								$elm$core$String$fromInt(i)),
-								$elm$svg$Svg$Attributes$cx(xCor),
-								$elm$svg$Svg$Attributes$cy(yCor),
-								$elm$svg$Svg$Attributes$r('10'),
-								$elm$svg$Svg$Attributes$class('PlayerIcon')
+								$elm$svg$Svg$Attributes$width('25'),
+								$elm$svg$Svg$Attributes$height('25'),
+								$elm$svg$Svg$Attributes$x(
+								$elm$core$String$fromFloat(
+									A2(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toFloat(x)) - 11.5)),
+								$elm$svg$Svg$Attributes$y(
+								$elm$core$String$fromFloat(
+									A2(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toFloat(y)) - 11.5)),
+								$elm$svg$Svg$Attributes$title('ObjectIcon'),
+								$elm$svg$Svg$Attributes$xlinkHref('res/icons/hero.png')
 							]),
 						_List_Nil),
 						A2(
@@ -11578,64 +12535,330 @@ var $author$project$DungeonMap$getAreaParam = F2(
 						_List_fromArray(
 							[
 								$elm$svg$Svg$Attributes$textAnchor('middle'),
-								$elm$svg$Svg$Attributes$x(xCor),
+								$elm$svg$Svg$Attributes$x(
+								$elm$core$String$fromFloat(
+									A2(
+										$elm$core$Maybe$withDefault,
+										0,
+										$elm$core$String$toFloat(x)) + 1)),
 								$elm$svg$Svg$Attributes$y(
 								$elm$core$String$fromFloat(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(yCor)) + 0.75)),
+										$elm$core$String$toFloat(y)) + 2.5)),
 								$elm$svg$Svg$Attributes$dominantBaseline('middle')
 							]),
 						_List_fromArray(
 							[
 								$elm$svg$Svg$text(
-								$elm$core$String$fromInt(i))
+								$elm$core$String$fromInt(id))
 							]))
 					]);
+			case 'object':
+				var _v1 = $author$project$DungeonMap$getIconPath(id);
+				if (_v1 === 'custom') {
+					return _List_fromArray(
+						[
+							A2(
+							$elm$svg$Svg$circle,
+							_List_fromArray(
+								[
+									$elm$svg$Svg$Attributes$id(
+									$elm$core$String$fromInt(id)),
+									$elm$svg$Svg$Attributes$cx(x),
+									$elm$svg$Svg$Attributes$cy(y),
+									$elm$svg$Svg$Attributes$r('10'),
+									$elm$svg$Svg$Attributes$style(
+									$author$project$DungeonMap$buildCustomObjectIconStyle(color))
+								]),
+							_List_Nil)
+						]);
+				} else {
+					return _List_fromArray(
+						[
+							A2(
+							$elm$svg$Svg$image,
+							_List_fromArray(
+								[
+									$elm$svg$Svg$Attributes$width('25'),
+									$elm$svg$Svg$Attributes$height('25'),
+									$elm$svg$Svg$Attributes$x(
+									$elm$core$String$fromFloat(
+										A2(
+											$elm$core$Maybe$withDefault,
+											0,
+											$elm$core$String$toFloat(x)) - 11.5)),
+									$elm$svg$Svg$Attributes$y(
+									$elm$core$String$fromFloat(
+										A2(
+											$elm$core$Maybe$withDefault,
+											0,
+											$elm$core$String$toFloat(y)) - 11.5)),
+									$elm$svg$Svg$Attributes$title('ObjectIcon'),
+									$elm$svg$Svg$Attributes$xlinkHref(
+									$author$project$DungeonMap$getIconPath(id))
+								]),
+							_List_Nil)
+						]);
+				}
 			default:
-				return _List_fromArray(
-					[
-						A2(
-						$elm$svg$Svg$circle,
-						_List_fromArray(
-							[
-								$elm$svg$Svg$Attributes$id(
-								$elm$core$String$fromInt(i)),
-								$elm$svg$Svg$Attributes$cx(xCor),
-								$elm$svg$Svg$Attributes$cy(yCor),
-								$elm$svg$Svg$Attributes$r('0')
-							]),
-						_List_Nil)
-					]);
+				return _List_Nil;
 		}
 	});
+var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
+var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
+	if (addCharacterIcon.$ === 'DrawIcon') {
+		var characterIcon = addCharacterIcon.a;
+		switch (characterIcon.$) {
+			case 'ObjectIcon':
+				var i = characterIcon.a;
+				var x = characterIcon.b;
+				var y = characterIcon.c;
+				var t = characterIcon.d;
+				var c = characterIcon.e;
+				return _List_Nil;
+			case 'PlayerIcon':
+				var i = characterIcon.a;
+				var x = characterIcon.b;
+				var y = characterIcon.c;
+				return _Utils_ap(
+					A5($author$project$DungeonMap$placeIcon, 'player', i, x, y, $elm$core$Maybe$Nothing),
+					_List_fromArray(
+						[
+							A2(
+							$elm$svg$Svg$rect,
+							_List_fromArray(
+								[
+									$elm$svg$Svg$Attributes$width('800'),
+									$elm$svg$Svg$Attributes$height('600'),
+									$elm$svg$Svg$Attributes$x('0'),
+									$elm$svg$Svg$Attributes$y('0'),
+									$elm$svg$Svg$Attributes$style('fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9')
+								]),
+							_List_Nil)
+						]));
+			default:
+				var i = characterIcon.a;
+				var x = characterIcon.b;
+				var y = characterIcon.c;
+				return _Utils_ap(
+					A5($author$project$DungeonMap$placeIcon, 'monster', i, x, y, $elm$core$Maybe$Nothing),
+					_List_fromArray(
+						[
+							A2(
+							$elm$svg$Svg$rect,
+							_List_fromArray(
+								[
+									$elm$svg$Svg$Attributes$width('800'),
+									$elm$svg$Svg$Attributes$height('600'),
+									$elm$svg$Svg$Attributes$x('0'),
+									$elm$svg$Svg$Attributes$y('0'),
+									$elm$svg$Svg$Attributes$style('fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9')
+								]),
+							_List_Nil)
+						]));
+		}
+	} else {
+		return _List_Nil;
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Button$onClick = function (message) {
+	return $rundis$elm_bootstrap$Bootstrap$Button$attrs(
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$Events$preventDefaultOn,
+				'click',
+				$elm$json$Json$Decode$succeed(
+					_Utils_Tuple2(message, true)))
+			]));
+};
+var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
+var $author$project$DungeonMap$getColor = function (object) {
+	switch (object.$) {
+		case 'MonsterIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return $elm$core$Maybe$Nothing;
+		case 'PlayerIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return $elm$core$Maybe$Nothing;
+		default:
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			var t = object.d;
+			var c = object.e;
+			return c;
+	}
+};
+var $author$project$DungeonMap$getCoord = function (object) {
+	switch (object.$) {
+		case 'MonsterIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return x + (',' + y);
+		case 'PlayerIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return x + (',' + y);
+		default:
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			var t = object.d;
+			var c = object.e;
+			return x + (',' + y);
+	}
+};
+var $author$project$DungeonMap$getID = function (object) {
+	switch (object.$) {
+		case 'MonsterIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return i;
+		case 'PlayerIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return i;
+		default:
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			var t = object.d;
+			var c = object.e;
+			return i;
+	}
+};
+var $author$project$DungeonMap$getIconType = function (object) {
+	switch (object.$) {
+		case 'MonsterIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return 'monster';
+		case 'PlayerIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return 'player';
+		default:
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			var t = object.d;
+			var c = object.e;
+			return 'object';
+	}
+};
+var $author$project$DungeonMap$getObjectText = function (object) {
+	switch (object.$) {
+		case 'MonsterIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return '';
+		case 'PlayerIcon':
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			return '';
+		default:
+			var i = object.a;
+			var x = object.b;
+			var y = object.c;
+			var t = object.d;
+			var c = object.e;
+			return t;
+	}
+};
+var $author$project$DungeonMap$getAreaParam = function (s) {
+	var yCor = A2(
+		$elm$core$Maybe$withDefault,
+		'0',
+		$elm$core$List$head(
+			A2(
+				$elm$core$List$drop,
+				1,
+				A2(
+					$elm$core$String$split,
+					',',
+					$author$project$DungeonMap$getCoord(s)))));
+	var xCor = A2(
+		$elm$core$Maybe$withDefault,
+		'0',
+		$elm$core$List$head(
+			A2(
+				$elm$core$String$split,
+				',',
+				$author$project$DungeonMap$getCoord(s))));
+	var objectText = $author$project$DungeonMap$getObjectText(s);
+	var id = $author$project$DungeonMap$getID(s);
+	var color = $author$project$DungeonMap$getColor(s);
+	return A5(
+		$author$project$DungeonMap$placeIcon,
+		$author$project$DungeonMap$getIconType(s),
+		id,
+		xCor,
+		yCor,
+		color);
+};
 var $author$project$DungeonMap$svgIconList = function (model) {
 	return A3(
 		$elm$core$List$foldl,
 		$elm$core$Basics$append,
 		_List_Nil,
-		A2($elm$core$List$indexedMap, $author$project$DungeonMap$getAreaParam, model.characterList));
+		A2(
+			$elm$core$List$map,
+			$author$project$DungeonMap$getAreaParam,
+			_Utils_ap(model.characterList, model.objectIconList)));
 };
-var $elm$svg$Svg$Attributes$title = _VirtualDom_attribute('title');
 var $elm$svg$Svg$Attributes$version = _VirtualDom_attribute('version');
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var $elm$svg$Svg$Attributes$xlinkHref = function (value) {
-	return A3(
-		_VirtualDom_attributeNS,
-		'http://www.w3.org/1999/xlink',
-		'xlink:href',
-		_VirtualDom_noJavaScriptUri(value));
-};
 var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('container')
+				$elm$html$Html$Attributes$class('container'),
+				A2(
+				$elm$html$Html$Attributes$style,
+				'border',
+				model.hover ? '6px dashed purple' : '6px dashed #ccc'),
+				A2(
+				$author$project$DungeonMap$hijackOn,
+				'dragenter',
+				$elm$json$Json$Decode$succeed($author$project$Model$DragEnter)),
+				A2(
+				$author$project$DungeonMap$hijackOn,
+				'dragover',
+				$elm$json$Json$Decode$succeed($author$project$Model$DragEnter)),
+				A2(
+				$author$project$DungeonMap$hijackOn,
+				'dragleave',
+				$elm$json$Json$Decode$succeed($author$project$Model$DragLeave)),
+				A2($author$project$DungeonMap$hijackOn, 'drop', $author$project$DungeonMap$dropDecoder)
 			]),
 		_List_fromArray(
 			[
+				A2(
+				$rundis$elm_bootstrap$Bootstrap$Button$button,
+				_List_fromArray(
+					[
+						$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Model$Pick)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Upload Map')
+					])),
 				A2(
 				$elm$html$Html$figure,
 				_List_fromArray(
@@ -11653,7 +12876,13 @@ var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 									$elm$svg$Svg$Attributes$viewBox('0 0 800 600'),
 									$elm$svg$Svg$Attributes$version('1.1')
 								]),
-							$author$project$DungeonMap$mouseDrawEvents(model.addCharacterIcon)),
+							_Utils_ap(
+								$author$project$DungeonMap$mouseDrawEvents(model.addCharacterIcon),
+								_Utils_eq(model.addCharacterIcon, $author$project$Model$DrawingInactive) ? _List_fromArray(
+									[
+										$elm$svg$Svg$Events$onClick(
+										$author$project$Model$ShowModal($author$project$Model$ObjectIconModal))
+									]) : _List_Nil)),
 						_Utils_ap(
 							_List_fromArray(
 								[
@@ -11664,7 +12893,11 @@ var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 											$elm$svg$Svg$Attributes$width('800'),
 											$elm$svg$Svg$Attributes$height('600'),
 											$elm$svg$Svg$Attributes$title('DungeonMap'),
-											$elm$svg$Svg$Attributes$xlinkHref('src/dungeons/library_of_ice_lily.png')
+											$elm$svg$Svg$Attributes$xlinkHref(
+											A2(
+												$elm$core$Maybe$withDefault,
+												'',
+												$elm$core$List$head(model.previews)))
 										]),
 									_List_Nil)
 								]),
@@ -11673,6 +12906,673 @@ var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 								$author$project$DungeonMap$newIconsView(model.addCharacterIcon))))
 					]))
 			]));
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Info = {$: 'Info'};
+var $rundis$elm_bootstrap$Bootstrap$Button$info = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Info));
+var $author$project$Model$ChangeIcon = function (a) {
+	return {$: 'ChangeIcon', a: a};
+};
+var $author$project$Model$ChangeIconText = function (a) {
+	return {$: 'ChangeIconText', a: a};
+};
+var $author$project$Model$ColorPickerMsg = function (a) {
+	return {$: 'ColorPickerMsg', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$Custom = {$: 'Custom'};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$createCustom = function (options) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Radio$create(
+		A2($elm$core$List$cons, $rundis$elm_bootstrap$Bootstrap$Form$Radio$Custom, options));
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Disabled = function (a) {
+	return {$: 'Disabled', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Button$disabled = function (disabled_) {
+	return $rundis$elm_bootstrap$Bootstrap$Internal$Button$Disabled(disabled_);
+};
+var $author$project$DungeonMap$getCharIcon = function (state) {
+	if (state.$ === 'DrawIcon') {
+		var charIcon = state.a;
+		return charIcon;
+	} else {
+		return A5($author$project$Model$ObjectIcon, 0, '', '', '', $elm$core$Maybe$Nothing);
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$Inline = {$: 'Inline'};
+var $rundis$elm_bootstrap$Bootstrap$Form$Radio$inline = $rundis$elm_bootstrap$Bootstrap$Form$Radio$Inline;
+var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
+var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
+var $simonh1000$elm_colorpicker$ColorPicker$markerAttrs = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+		A2($elm$html$Html$Attributes$style, 'top', '1px'),
+		A2($elm$html$Html$Attributes$style, 'bottom', '1px'),
+		A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd'),
+		A2($elm$html$Html$Attributes$style, 'background-color', '#ffffff'),
+		A2($elm$html$Html$Attributes$style, 'width', '6px'),
+		A2($elm$html$Html$Attributes$style, 'pointer-events', 'none')
+	]);
+var $simonh1000$elm_colorpicker$ColorPicker$alphaMarker = function (alpha) {
+	var correction = 4;
+	var xVal = $elm$core$String$fromInt(
+		$elm$core$Basics$round((alpha * $simonh1000$elm_colorpicker$ColorPicker$widgetWidth) - correction));
+	return A2(
+		$elm$html$Html$div,
+		A2(
+			$elm$core$List$cons,
+			A2($elm$html$Html$Attributes$style, 'left', xVal + 'px'),
+			$simonh1000$elm_colorpicker$ColorPicker$markerAttrs),
+		_List_Nil);
+};
+var $simonh1000$elm_colorpicker$ColorPicker$NoOp = {$: 'NoOp'};
+var $simonh1000$elm_colorpicker$ColorPicker$bubblePreventer = A2(
+	$elm$html$Html$Events$stopPropagationOn,
+	'click',
+	$elm$json$Json$Decode$succeed(
+		_Utils_Tuple2($simonh1000$elm_colorpicker$ColorPicker$NoOp, true)));
+var $simonh1000$elm_colorpicker$ColorPicker$checkedBkgStyles = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'background-size', '12px 12px'),
+		A2($elm$html$Html$Attributes$style, 'background-position', '0 0, 0 6px, 6px -6px, -6px 0px'),
+		A2($elm$html$Html$Attributes$style, 'background-image', 'linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%)')
+	]);
+var $avh4$elm_color$Color$hsl = F3(
+	function (h, s, l) {
+		return A4($avh4$elm_color$Color$hsla, h, s, l, 1.0);
+	});
+var $simonh1000$elm_colorpicker$ColorPicker$hueMarker = function (lastHue) {
+	var correction = 4;
+	var xVal = $elm$core$String$fromInt(
+		$elm$core$Basics$round((lastHue * $simonh1000$elm_colorpicker$ColorPicker$widgetWidth) - correction));
+	return A2(
+		$elm$html$Html$div,
+		A2(
+			$elm$core$List$cons,
+			A2($elm$html$Html$Attributes$style, 'left', xVal + 'px'),
+			$simonh1000$elm_colorpicker$ColorPicker$markerAttrs),
+		_List_Nil);
+};
+var $simonh1000$elm_colorpicker$ColorPicker$HueSlider = {$: 'HueSlider'};
+var $simonh1000$elm_colorpicker$ColorPicker$OnMouseMove = F2(
+	function (a, b) {
+		return {$: 'OnMouseMove', a: a, b: b};
+	});
+var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
+var $elm$svg$Svg$defs = $elm$svg$Svg$trustedNode('defs');
+var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var $elm$svg$Svg$linearGradient = $elm$svg$Svg$trustedNode('linearGradient');
+var $elm$svg$Svg$Attributes$offset = _VirtualDom_attribute('offset');
+var $elm$svg$Svg$Attributes$display = _VirtualDom_attribute('display');
+var $simonh1000$elm_colorpicker$ColorPicker$sliderStyles = _List_fromArray(
+	[
+		$elm$svg$Svg$Attributes$width(
+		$elm$core$String$fromInt($simonh1000$elm_colorpicker$ColorPicker$widgetWidth)),
+		$elm$svg$Svg$Attributes$height('100%'),
+		$elm$svg$Svg$Attributes$display('block')
+	]);
+var $elm$svg$Svg$stop = $elm$svg$Svg$trustedNode('stop');
+var $elm$svg$Svg$Attributes$stopColor = _VirtualDom_attribute('stop-color');
+var $elm$svg$Svg$Attributes$stopOpacity = _VirtualDom_attribute('stop-opacity');
+var $simonh1000$elm_colorpicker$ColorPicker$OnClick = F2(
+	function (a, b) {
+		return {$: 'OnClick', a: a, b: b};
+	});
+var $simonh1000$elm_colorpicker$ColorPicker$OnMouseDown = F2(
+	function (a, b) {
+		return {$: 'OnMouseDown', a: a, b: b};
+	});
+var $simonh1000$elm_colorpicker$ColorPicker$OnMouseUp = {$: 'OnMouseUp'};
+var $simonh1000$elm_colorpicker$ColorPicker$MouseInfo = F3(
+	function (x, y, mousePressed) {
+		return {mousePressed: mousePressed, x: x, y: y};
+	});
+var $simonh1000$elm_colorpicker$ColorPicker$decodeMouseInfo = A4(
+	$elm$json$Json$Decode$map3,
+	$simonh1000$elm_colorpicker$ColorPicker$MouseInfo,
+	A2($elm$json$Json$Decode$field, 'offsetX', $elm$json$Json$Decode$int),
+	A2($elm$json$Json$Decode$field, 'offsetY', $elm$json$Json$Decode$int),
+	A2(
+		$elm$json$Json$Decode$map,
+		$elm$core$Basics$neq(0),
+		A2($elm$json$Json$Decode$field, 'buttons', $elm$json$Json$Decode$int)));
+var $simonh1000$elm_colorpicker$ColorPicker$onClickSvg = function (msgCreator) {
+	return A2(
+		$elm$svg$Svg$Events$on,
+		'click',
+		A2($elm$json$Json$Decode$map, msgCreator, $simonh1000$elm_colorpicker$ColorPicker$decodeMouseInfo));
+};
+var $simonh1000$elm_colorpicker$ColorPicker$onMouseDownSvg = function (msgCreator) {
+	return A2(
+		$elm$svg$Svg$Events$on,
+		'mousedown',
+		A2($elm$json$Json$Decode$map, msgCreator, $simonh1000$elm_colorpicker$ColorPicker$decodeMouseInfo));
+};
+var $simonh1000$elm_colorpicker$ColorPicker$onMouseMoveSvg = function (msgCreator) {
+	return A2(
+		$elm$svg$Svg$Events$on,
+		'mousemove',
+		A2($elm$json$Json$Decode$map, msgCreator, $simonh1000$elm_colorpicker$ColorPicker$decodeMouseInfo));
+};
+var $elm$svg$Svg$Events$onMouseUp = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'mouseup',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $simonh1000$elm_colorpicker$ColorPicker$svgDragAttrs = F3(
+	function (currMouseTgt, thisTgt, onMoveMsg) {
+		var common = _List_fromArray(
+			[
+				$simonh1000$elm_colorpicker$ColorPicker$onMouseDownSvg(
+				$simonh1000$elm_colorpicker$ColorPicker$OnMouseDown(thisTgt)),
+				$elm$svg$Svg$Events$onMouseUp($simonh1000$elm_colorpicker$ColorPicker$OnMouseUp),
+				$simonh1000$elm_colorpicker$ColorPicker$onClickSvg(
+				$simonh1000$elm_colorpicker$ColorPicker$OnClick(thisTgt))
+			]);
+		return _Utils_eq(currMouseTgt, thisTgt) ? A2(
+			$elm$core$List$cons,
+			$simonh1000$elm_colorpicker$ColorPicker$onMouseMoveSvg(onMoveMsg),
+			common) : common;
+	});
+var $elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
+var $elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
+var $elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
+var $elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
+var $simonh1000$elm_colorpicker$ColorPicker$huePalette = function (mouseTarget) {
+	var stops = _List_fromArray(
+		[
+			_Utils_Tuple2('0%', '#FF0000'),
+			_Utils_Tuple2('17%', '#FF00FF'),
+			_Utils_Tuple2('33%', '#0000FF'),
+			_Utils_Tuple2('50%', '#00FFFF'),
+			_Utils_Tuple2('66%', '#00FF00'),
+			_Utils_Tuple2('83%', '#FFFF00'),
+			_Utils_Tuple2('100%', '#FF0000')
+		]);
+	var mkStop = function (_v0) {
+		var os = _v0.a;
+		var sc = _v0.b;
+		return A2(
+			$elm$svg$Svg$stop,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$offset(os),
+					$elm$svg$Svg$Attributes$stopColor(sc),
+					$elm$svg$Svg$Attributes$stopOpacity('1')
+				]),
+			_List_Nil);
+	};
+	return A2(
+		$elm$svg$Svg$svg,
+		A2(
+			$elm$core$List$cons,
+			$elm$svg$Svg$Attributes$class('hue-picker'),
+			$simonh1000$elm_colorpicker$ColorPicker$sliderStyles),
+		_List_fromArray(
+			[
+				A2(
+				$elm$svg$Svg$defs,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$linearGradient,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$id('gradient-hsv'),
+								$elm$svg$Svg$Attributes$x1('100%'),
+								$elm$svg$Svg$Attributes$y1('0%'),
+								$elm$svg$Svg$Attributes$x2('0%'),
+								$elm$svg$Svg$Attributes$y2('0%')
+							]),
+						A2($elm$core$List$map, mkStop, stops))
+					])),
+				A2(
+				$elm$svg$Svg$rect,
+				_Utils_ap(
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$x('0'),
+							$elm$svg$Svg$Attributes$y('0'),
+							$elm$svg$Svg$Attributes$width(
+							$elm$core$String$fromInt($simonh1000$elm_colorpicker$ColorPicker$widgetWidth)),
+							$elm$svg$Svg$Attributes$height('100%'),
+							$elm$svg$Svg$Attributes$fill('url(#gradient-hsv)')
+						]),
+					A3(
+						$simonh1000$elm_colorpicker$ColorPicker$svgDragAttrs,
+						mouseTarget,
+						$simonh1000$elm_colorpicker$ColorPicker$HueSlider,
+						$simonh1000$elm_colorpicker$ColorPicker$OnMouseMove($simonh1000$elm_colorpicker$ColorPicker$HueSlider))),
+				_List_Nil)
+			]));
+};
+var $simonh1000$elm_colorpicker$ColorPicker$OpacitySlider = function (a) {
+	return {$: 'OpacitySlider', a: a};
+};
+var $simonh1000$elm_colorpicker$ColorPicker$onClickHtml = function (msgCreator) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		A2($elm$json$Json$Decode$map, msgCreator, $simonh1000$elm_colorpicker$ColorPicker$decodeMouseInfo));
+};
+var $elm$html$Html$Events$onMouseUp = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'mouseup',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $simonh1000$elm_colorpicker$ColorPicker$htmlDragAttrs = F3(
+	function (currMouseTgt, thisTgt, onMoveMsg) {
+		var common = _List_fromArray(
+			[
+				A2(
+				$elm$html$Html$Events$on,
+				'mousedown',
+				A2(
+					$elm$json$Json$Decode$map,
+					$simonh1000$elm_colorpicker$ColorPicker$OnMouseDown(thisTgt),
+					$simonh1000$elm_colorpicker$ColorPicker$decodeMouseInfo)),
+				$elm$html$Html$Events$onMouseUp($simonh1000$elm_colorpicker$ColorPicker$OnMouseUp),
+				$simonh1000$elm_colorpicker$ColorPicker$onClickHtml(
+				$simonh1000$elm_colorpicker$ColorPicker$OnClick(thisTgt))
+			]);
+		return _Utils_eq(currMouseTgt, thisTgt) ? A2(
+			$elm$core$List$cons,
+			A2(
+				$elm$html$Html$Events$on,
+				'mousemove',
+				A2($elm$json$Json$Decode$map, onMoveMsg, $simonh1000$elm_colorpicker$ColorPicker$decodeMouseInfo)),
+			common) : common;
+	});
+var $simonh1000$elm_colorpicker$ColorPicker$opacityPalette = F2(
+	function (hsla, model) {
+		var mouseTarget = $simonh1000$elm_colorpicker$ColorPicker$OpacitySlider(hsla.hue);
+		var mkCol = function (op) {
+			return $avh4$elm_color$Color$toCssString(
+				A4($avh4$elm_color$Color$hsla, hsla.hue, hsla.saturation, hsla.lightness, op));
+		};
+		var grad = 'linear-gradient(0.25turn, ' + (mkCol(0) + (', ' + (mkCol(1) + ')')));
+		var overlay = _List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'background', grad),
+				A2($elm$html$Html$Attributes$style, 'height', '100%'),
+				A2($elm$html$Html$Attributes$style, 'width', '100%')
+			]);
+		return A2(
+			$elm$html$Html$div,
+			_Utils_ap(
+				overlay,
+				A3(
+					$simonh1000$elm_colorpicker$ColorPicker$htmlDragAttrs,
+					model.mouseTarget,
+					mouseTarget,
+					$simonh1000$elm_colorpicker$ColorPicker$OnMouseMove(mouseTarget))),
+			_List_Nil);
+	});
+var $simonh1000$elm_colorpicker$ColorPicker$pickerIndicator = function (col) {
+	var adjustment = 4;
+	var _v0 = $avh4$elm_color$Color$toHsla(col);
+	var saturation = _v0.saturation;
+	var lightness = _v0.lightness;
+	var borderColor = (lightness > 0.95) ? '#cccccc' : '#ffffff';
+	var cy_ = $elm$core$String$fromInt(
+		$elm$core$Basics$round(($simonh1000$elm_colorpicker$ColorPicker$widgetHeight - (lightness * $simonh1000$elm_colorpicker$ColorPicker$widgetHeight)) - adjustment));
+	var cx_ = $elm$core$String$fromInt(
+		$elm$core$Basics$round((saturation * $simonh1000$elm_colorpicker$ColorPicker$widgetWidth) - adjustment));
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+				A2($elm$html$Html$Attributes$style, 'top', cy_ + 'px'),
+				A2($elm$html$Html$Attributes$style, 'left', cx_ + 'px'),
+				A2($elm$html$Html$Attributes$style, 'border-radius', '100%'),
+				A2($elm$html$Html$Attributes$style, 'border', '2px solid ' + borderColor),
+				A2($elm$html$Html$Attributes$style, 'width', '6px'),
+				A2($elm$html$Html$Attributes$style, 'height', '6px'),
+				A2($elm$html$Html$Attributes$style, 'pointer-events', 'none')
+			]),
+		_List_Nil);
+};
+var $simonh1000$elm_colorpicker$ColorPicker$pickerStyles = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'cursor', 'crosshair'),
+		A2($elm$html$Html$Attributes$style, 'position', 'relative')
+	]);
+var $simonh1000$elm_colorpicker$ColorPicker$SatLight = function (a) {
+	return {$: 'SatLight', a: a};
+};
+var $simonh1000$elm_colorpicker$ColorPicker$satLightPalette = F3(
+	function (hue, colCss, mouseTarget) {
+		return A2(
+			$elm$svg$Svg$svg,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$width(
+					$elm$core$String$fromInt($simonh1000$elm_colorpicker$ColorPicker$widgetWidth)),
+					$elm$svg$Svg$Attributes$height(
+					$elm$core$String$fromInt($simonh1000$elm_colorpicker$ColorPicker$widgetHeight)),
+					$elm$svg$Svg$Attributes$class('main-picker'),
+					$elm$svg$Svg$Attributes$display('block')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$svg$Svg$defs,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$svg$Svg$linearGradient,
+							_List_fromArray(
+								[
+									$elm$svg$Svg$Attributes$id('pickerSaturation')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$svg$Svg$stop,
+									_List_fromArray(
+										[
+											$elm$svg$Svg$Attributes$offset('0'),
+											$elm$svg$Svg$Attributes$stopColor('#808080'),
+											$elm$svg$Svg$Attributes$stopOpacity('1')
+										]),
+									_List_Nil),
+									A2(
+									$elm$svg$Svg$stop,
+									_List_fromArray(
+										[
+											$elm$svg$Svg$Attributes$offset('1'),
+											$elm$svg$Svg$Attributes$stopColor('#808080'),
+											$elm$svg$Svg$Attributes$stopOpacity('0')
+										]),
+									_List_Nil)
+								])),
+							A2(
+							$elm$svg$Svg$linearGradient,
+							_List_fromArray(
+								[
+									$elm$svg$Svg$Attributes$id('pickerBrightness'),
+									$elm$svg$Svg$Attributes$x1('0'),
+									$elm$svg$Svg$Attributes$y1('0'),
+									$elm$svg$Svg$Attributes$x2('0'),
+									$elm$svg$Svg$Attributes$y2('1')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$svg$Svg$stop,
+									_List_fromArray(
+										[
+											$elm$svg$Svg$Attributes$offset('0'),
+											$elm$svg$Svg$Attributes$stopColor('#fff'),
+											$elm$svg$Svg$Attributes$stopOpacity('1')
+										]),
+									_List_Nil),
+									A2(
+									$elm$svg$Svg$stop,
+									_List_fromArray(
+										[
+											$elm$svg$Svg$Attributes$offset('0.499'),
+											$elm$svg$Svg$Attributes$stopColor('#fff'),
+											$elm$svg$Svg$Attributes$stopOpacity('0')
+										]),
+									_List_Nil),
+									A2(
+									$elm$svg$Svg$stop,
+									_List_fromArray(
+										[
+											$elm$svg$Svg$Attributes$offset('0.5'),
+											$elm$svg$Svg$Attributes$stopColor('#000'),
+											$elm$svg$Svg$Attributes$stopOpacity('0')
+										]),
+									_List_Nil),
+									A2(
+									$elm$svg$Svg$stop,
+									_List_fromArray(
+										[
+											$elm$svg$Svg$Attributes$offset('1'),
+											$elm$svg$Svg$Attributes$stopColor('#000'),
+											$elm$svg$Svg$Attributes$stopOpacity('1')
+										]),
+									_List_Nil)
+								]))
+						])),
+					A2(
+					$elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$width(
+							$elm$core$String$fromInt($simonh1000$elm_colorpicker$ColorPicker$widgetWidth)),
+							$elm$svg$Svg$Attributes$height(
+							$elm$core$String$fromInt($simonh1000$elm_colorpicker$ColorPicker$widgetHeight)),
+							$elm$svg$Svg$Attributes$fill(colCss),
+							$elm$svg$Svg$Attributes$id('picker')
+						]),
+					_List_Nil),
+					A2(
+					$elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$width(
+							$elm$core$String$fromInt($simonh1000$elm_colorpicker$ColorPicker$widgetWidth)),
+							$elm$svg$Svg$Attributes$height(
+							$elm$core$String$fromInt($simonh1000$elm_colorpicker$ColorPicker$widgetHeight)),
+							$elm$svg$Svg$Attributes$fill('url(#pickerSaturation)')
+						]),
+					_List_Nil),
+					A2(
+					$elm$svg$Svg$rect,
+					_Utils_ap(
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$width(
+								$elm$core$String$fromInt($simonh1000$elm_colorpicker$ColorPicker$widgetWidth)),
+								$elm$svg$Svg$Attributes$height(
+								$elm$core$String$fromInt($simonh1000$elm_colorpicker$ColorPicker$widgetHeight)),
+								$elm$svg$Svg$Attributes$fill('url(#pickerBrightness)')
+							]),
+						A3(
+							$simonh1000$elm_colorpicker$ColorPicker$svgDragAttrs,
+							mouseTarget,
+							$simonh1000$elm_colorpicker$ColorPicker$SatLight(hue),
+							$simonh1000$elm_colorpicker$ColorPicker$OnMouseMove(
+								$simonh1000$elm_colorpicker$ColorPicker$SatLight(hue)))),
+					_List_Nil)
+				]));
+	});
+var $simonh1000$elm_colorpicker$ColorPicker$sliderContainerStyles = function (name) {
+	return _List_fromArray(
+		[
+			A2(
+			$elm$html$Html$Attributes$style,
+			'width',
+			$elm$core$String$fromInt($simonh1000$elm_colorpicker$ColorPicker$widgetWidth) + 'px'),
+			A2($elm$html$Html$Attributes$style, 'height', '12px'),
+			A2($elm$html$Html$Attributes$style, 'marginTop', '8px'),
+			$elm$html$Html$Attributes$class('color-picker-slider ' + name)
+		]);
+};
+var $simonh1000$elm_colorpicker$ColorPicker$view = F2(
+	function (col, _v0) {
+		var model = _v0.a;
+		var hsla = $avh4$elm_color$Color$toHsla(col);
+		var hue = A2($elm$core$Maybe$withDefault, hsla.hue, model.hue);
+		var colCss = $avh4$elm_color$Color$toCssString(
+			A3($avh4$elm_color$Color$hsl, hue, 1, 0.5));
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'background-color', 'white'),
+					A2($elm$html$Html$Attributes$style, 'padding', '6px'),
+					A2($elm$html$Html$Attributes$style, 'display', 'inline-block'),
+					A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
+					A2($elm$html$Html$Attributes$style, 'box-shadow', 'rgba(0, 0, 0, 0.15) 0px 0px 0px 1px, rgba(0, 0, 0, 0.15) 0px 8px 16px'),
+					$elm$html$Html$Attributes$class('color-picker-container'),
+					$simonh1000$elm_colorpicker$ColorPicker$bubblePreventer
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					$simonh1000$elm_colorpicker$ColorPicker$pickerStyles,
+					_List_fromArray(
+						[
+							A3($simonh1000$elm_colorpicker$ColorPicker$satLightPalette, hue, colCss, model.mouseTarget),
+							$simonh1000$elm_colorpicker$ColorPicker$pickerIndicator(col)
+						])),
+					A2(
+					$elm$html$Html$div,
+					_Utils_ap(
+						$simonh1000$elm_colorpicker$ColorPicker$pickerStyles,
+						$simonh1000$elm_colorpicker$ColorPicker$sliderContainerStyles('hue')),
+					_List_fromArray(
+						[
+							$simonh1000$elm_colorpicker$ColorPicker$huePalette(model.mouseTarget),
+							$simonh1000$elm_colorpicker$ColorPicker$hueMarker(hue)
+						])),
+					A2(
+					$elm$html$Html$div,
+					_Utils_ap(
+						$simonh1000$elm_colorpicker$ColorPicker$checkedBkgStyles,
+						_Utils_ap(
+							$simonh1000$elm_colorpicker$ColorPicker$pickerStyles,
+							$simonh1000$elm_colorpicker$ColorPicker$sliderContainerStyles('opacity'))),
+					_List_fromArray(
+						[
+							A2($simonh1000$elm_colorpicker$ColorPicker$opacityPalette, hsla, model),
+							$simonh1000$elm_colorpicker$ColorPicker$alphaMarker(hsla.alpha)
+						]))
+				]));
+	});
+var $author$project$DungeonMap$newObjectIconModal = function (model) {
+	return A2(
+		$rundis$elm_bootstrap$Bootstrap$Modal$view,
+		model.showObjectIconModal,
+		A3(
+			$rundis$elm_bootstrap$Bootstrap$Modal$footer,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$rundis$elm_bootstrap$Bootstrap$Button$button,
+					_List_fromArray(
+						[
+							$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Model$AddCharacterIcon(
+										$author$project$Model$MouseClick(
+											$author$project$DungeonMap$getCharIcon(model.addCharacterIcon))))
+								])),
+							$rundis$elm_bootstrap$Bootstrap$Button$success,
+							$rundis$elm_bootstrap$Bootstrap$Button$disabled(!model.radioCheckedID)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Icon hinzufügen')
+						]))
+				]),
+			A3(
+				$rundis$elm_bootstrap$Bootstrap$Modal$body,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_Nil,
+								A2(
+									$rundis$elm_bootstrap$Bootstrap$Form$Radio$radioList,
+									'customradiogroup',
+									_List_fromArray(
+										[
+											A2(
+											$rundis$elm_bootstrap$Bootstrap$Form$Radio$createCustom,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$id('rdi1'),
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$inline,
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$onClick(
+													$author$project$Model$ChangeIcon(1)),
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$checked(1 === model.radioCheckedID)
+												]),
+											'Kiste'),
+											A2(
+											$rundis$elm_bootstrap$Bootstrap$Form$Radio$createCustom,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$id('rdi2'),
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$inline,
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$onClick(
+													$author$project$Model$ChangeIcon(2)),
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$checked(2 === model.radioCheckedID)
+												]),
+											'Schlüssel'),
+											A2(
+											$rundis$elm_bootstrap$Bootstrap$Form$Radio$createCustom,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$id('rdi3'),
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$inline,
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$onClick(
+													$author$project$Model$ChangeIcon(3)),
+													$rundis$elm_bootstrap$Bootstrap$Form$Radio$checked(3 === model.radioCheckedID)
+												]),
+											'Benutzerdefiniert')
+										]))),
+								A2(
+								$elm$html$Html$div,
+								_List_Nil,
+								_Utils_ap(
+									_List_fromArray(
+										[
+											A2($elm$html$Html$br, _List_Nil, _List_Nil),
+											$rundis$elm_bootstrap$Bootstrap$Form$Input$text(
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Form$Input$value(model.iconText),
+													$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder('Beschreibung'),
+													$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput($author$project$Model$ChangeIconText)
+												]))
+										]),
+									function () {
+										var _v0 = model.radioCheckedID;
+										if (_v0 === 3) {
+											return _List_fromArray(
+												[
+													A2($elm$html$Html$br, _List_Nil, _List_Nil),
+													A2(
+													$elm$html$Html$map,
+													$author$project$Model$ColorPickerMsg,
+													A2($simonh1000$elm_colorpicker$ColorPicker$view, model.colour, model.colorPicker))
+												]);
+										} else {
+											return _List_Nil;
+										}
+									}()))
+							]))
+					]),
+				A3(
+					$rundis$elm_bootstrap$Bootstrap$Modal$h3,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Neues Icon')
+						]),
+					A2(
+						$rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick,
+						true,
+						$rundis$elm_bootstrap$Bootstrap$Modal$config(
+							$author$project$Model$CloseModal($author$project$Model$ObjectIconModal)))))));
 };
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col = {$: 'Col'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width = F2(
@@ -12509,7 +14409,19 @@ var $author$project$DungeonMap$dungeonMapView = function (model) {
 										$author$project$DungeonMap$dungeonMap_MonsterList(model)
 									]))
 							]))
-					]))
+					])),
+				A2(
+				$rundis$elm_bootstrap$Bootstrap$Button$button,
+				_List_fromArray(
+					[
+						$rundis$elm_bootstrap$Bootstrap$Button$info,
+						$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Model$ClearCharacterList)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Clear Map')
+					])),
+				$author$project$DungeonMap$newObjectIconModal(model)
 			]));
 };
 var $elm$html$Html$footer = _VirtualDom_node('footer');
@@ -12682,13 +14594,6 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$getActiveItem = F2(
 		}
 	});
 var $rundis$elm_bootstrap$Bootstrap$Tab$Hidden = {$: 'Hidden'};
-var $elm$html$Html$a = _VirtualDom_node('a');
-var $elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
-};
 var $elm$html$Html$li = _VirtualDom_node('li');
 var $rundis$elm_bootstrap$Bootstrap$Tab$Start = {$: 'Start'};
 var $rundis$elm_bootstrap$Bootstrap$Tab$visibilityTransition = F2(
@@ -12999,15 +14904,13 @@ var $author$project$Main$view = function (model) {
 										[$rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$mt3]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text('Regeln')
+											$elm$html$Html$text('Info')
 										])),
 								pane: A2(
 									$rundis$elm_bootstrap$Bootstrap$Tab$pane,
 									_List_Nil,
 									_List_fromArray(
-										[
-											$author$project$About$aboutView(model)
-										]))
+										[$author$project$About$aboutView]))
 							})
 						]),
 					$rundis$elm_bootstrap$Bootstrap$Tab$config($author$project$Model$TabMsg))),
