@@ -8537,9 +8537,6 @@ var $author$project$Model$TabMsg = function (a) {
 };
 var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$html$Html$br = _VirtualDom_node('br');
-var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -8548,6 +8545,10 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			key,
 			$elm$json$Json$Encode$string(string));
 	});
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$Attributes$href = function (url) {
 	return A2(
 		$elm$html$Html$Attributes$stringProperty,
@@ -8559,12 +8560,18 @@ var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$About$aboutView = A2(
 	$elm$html$Html$div,
-	_List_Nil,
+	_List_fromArray(
+		[
+			$elm$html$Html$Attributes$class('aboutText')
+		]),
 	_List_fromArray(
 		[
 			A2(
 			$elm$html$Html$h1,
-			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('about')
+				]),
 			_List_fromArray(
 				[
 					$elm$html$Html$text('Das schwarze Auge Edition 5')
@@ -8581,22 +8588,22 @@ var $author$project$About$aboutView = A2(
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text('\r\n                Die wenigsten Geschichten im Pen & Paper Rollenspiel DSA kommen ohne einen Kampf aus.\r\n                Die Mechanik unterscheidet sich allerdings etwas vom normalen Spielgeschehen.\r\n            '),
+					$elm$html$Html$text('\n                Die wenigsten Geschichten im Pen & Paper Rollenspiel DSA kommen ohne einen Kampf aus.\n                Die Mechanik unterscheidet sich allerdings etwas vom normalen Spielgeschehen.\n            '),
 					A2($elm$html$Html$br, _List_Nil, _List_Nil),
-					$elm$html$Html$text('\r\n                Zur Vorbereitung wird die Reihenfolge der Kämpfenden bestimmt. Dazu wird der die Initiative (INI) ausgewürfelt.\r\n                Der Spielleiter würfelt für alle NSCs.\r\n            '),
+					$elm$html$Html$text('\n                Zur Vorbereitung wird die Reihenfolge der Kämpfenden bestimmt. Dazu wird der die Initiative (INI) ausgewürfelt.\n                Der Spielleiter würfelt für alle NSCs.\n            '),
 					A2($elm$html$Html$br, _List_Nil, _List_Nil),
-					$elm$html$Html$text('\r\n                Dieser Reihenfolge nach dürfen die Charaktere jetzt je einen Gegner angreifen.\r\n            ')
+					$elm$html$Html$text('\n                Dieser Reihenfolge nach dürfen die Charaktere jetzt je einen Gegner angreifen.\n            ')
 				])),
 			A2(
 			$elm$html$Html$p,
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text('\r\n                Um anzugreifen muss zunächst eine Probe mit einem W20 auf den AT-Wert bestanden werden.\r\n                Gleichzeitig wirft der Angegriffene auf PA oder AW. Gelingt die Probe bricht der Angriff an dieser Stelle ab.\r\n            '),
+					$elm$html$Html$text('\n                Um anzugreifen muss zunächst eine Probe mit einem W20 auf den AT-Wert bestanden werden.\n                Gleichzeitig wirft der Angegriffene auf PA oder AW. Gelingt die Probe bricht der Angriff an dieser Stelle ab.\n            '),
 					A2($elm$html$Html$br, _List_Nil, _List_Nil),
-					$elm$html$Html$text('\r\n                War der Angriff erfolgreich und die Verteidigung ein Fehlschlag wird der Schaden berechnet.\r\n                Das ist die Gelegenheit den \"Angriff\"-Button zu klicken.\r\n                Entsprechend der Angabe der Waffe (z.B 1W6+4) wird der Angriffswert erwürfelt.\r\n                Von diesem wird der RS-Wert des Angegriffenen subtrahiert und das Ergebnis von den LeP abgezogen.\r\n            '),
+					$elm$html$Html$text('\n                War der Angriff erfolgreich und die Verteidigung ein Fehlschlag wird der Schaden berechnet.\n                Das ist die Gelegenheit den \"Angriff\"-Button zu klicken.\n                Entsprechend der Angabe der Waffe (z.B 1W6+4) wird der Angriffswert erwürfelt.\n                Von diesem wird der RS-Wert des Angegriffenen subtrahiert und das Ergebnis von den LeP abgezogen.\n            '),
 					A2($elm$html$Html$br, _List_Nil, _List_Nil),
-					$elm$html$Html$text('\r\n                Die Berechnung übernimmt der Manager vollständig!\r\n            ')
+					$elm$html$Html$text('\n                Die Berechnung übernimmt der Manager vollständig!\n            ')
 				])),
 			A2(
 			$elm$html$Html$p,
@@ -8674,7 +8681,6 @@ var $rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier = F2(
 					});
 		}
 	});
-var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
@@ -9358,97 +9364,16 @@ var $author$project$FightingTool$displayCharacters = function (chars) {
 			function (i, c) {
 				var _v0 = function () {
 					if (c.$ === 'Enemy') {
-<<<<<<< HEAD
 						var n = c.a;
 						var h = c.b;
 						var a = c.d;
 						var p = c.e;
 						return {armor: a, health: h, name: n, pain: p};
-=======
-						return A2(
-							$rundis$elm_bootstrap$Bootstrap$Table$tr,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(
-											$elm$core$String$fromInt(i + 1))
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(name)
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(
-											$elm$core$String$fromInt(armor))
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(
-											$elm$core$String$fromInt(health))
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$button,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('metalButton'),
-													$elm$html$Html$Events$onClick(
-													$author$project$Model$ShowAttackModal(i))
-												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$text('Angriff')
-												]))
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Table$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$rundis$elm_bootstrap$Bootstrap$Button$button,
-											_List_fromArray(
-												[
-													$rundis$elm_bootstrap$Bootstrap$Button$danger,
-													$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-													_List_fromArray(
-														[
-															$elm$html$Html$Events$onClick(
-															$author$project$Model$RemoveEnemy(i))
-														]))
-												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$text('Löschen')
-												]))
-										]))
-								]));
->>>>>>> style
 					} else {
 						var n = c.a;
 						var a = c.b;
 						return {armor: a, health: 0, name: n, pain: ''};
 					}
-<<<<<<< HEAD
 				}();
 				var name = _v0.name;
 				var health = _v0.health;
@@ -9504,16 +9429,12 @@ var $author$project$FightingTool$displayCharacters = function (chars) {
 								_List_fromArray(
 									[
 										A2(
-										$rundis$elm_bootstrap$Bootstrap$Button$button,
+										$elm$html$Html$button,
 										_List_fromArray(
 											[
-												$rundis$elm_bootstrap$Bootstrap$Button$success,
-												$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-												_List_fromArray(
-													[
-														$elm$html$Html$Events$onClick(
-														$author$project$Model$ShowAttackModal(i))
-													]))
+												$elm$html$Html$Attributes$class('metalButton'),
+												$elm$html$Html$Events$onClick(
+												$author$project$Model$ShowAttackModal(i))
 											]),
 										_List_fromArray(
 											[
@@ -9611,25 +9532,17 @@ var $author$project$FightingTool$displayCharacters = function (chars) {
 			}),
 		$elm$core$Array$toList(chars));
 };
-=======
-				}),
-			$elm$core$Array$toList(chars));
-	});
->>>>>>> style
 var $rundis$elm_bootstrap$Bootstrap$Table$Hover = {$: 'Hover'};
 var $rundis$elm_bootstrap$Bootstrap$Table$hover = $rundis$elm_bootstrap$Bootstrap$Table$Hover;
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Light = {$: 'Light'};
 var $rundis$elm_bootstrap$Bootstrap$Button$light = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Light));
-<<<<<<< HEAD
-=======
 var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
 	return {$: 'RowAttr', a: a};
 };
 var $rundis$elm_bootstrap$Bootstrap$Table$rowAttr = function (attr_) {
 	return $rundis$elm_bootstrap$Bootstrap$Table$RowAttr(attr_);
 };
->>>>>>> style
 var $rundis$elm_bootstrap$Bootstrap$Table$THead = function (a) {
 	return {$: 'THead', a: a};
 };
@@ -9647,11 +9560,6 @@ var $rundis$elm_bootstrap$Bootstrap$Table$simpleThead = function (cells) {
 				A2($rundis$elm_bootstrap$Bootstrap$Table$tr, _List_Nil, cells)
 			]));
 };
-<<<<<<< HEAD
-var $rundis$elm_bootstrap$Bootstrap$Table$Striped = {$: 'Striped'};
-var $rundis$elm_bootstrap$Bootstrap$Table$striped = $rundis$elm_bootstrap$Bootstrap$Table$Striped;
-=======
->>>>>>> style
 var $rundis$elm_bootstrap$Bootstrap$Table$Inversed = {$: 'Inversed'};
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
@@ -11950,11 +11858,7 @@ var $author$project$FightingTool$body = function (model) {
 									[
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_fromArray(
-											[
-												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
-											]),
+										_List_Nil,
 										_List_fromArray(
 											[
 												$elm$html$Html$text('ID')
@@ -11964,11 +11868,7 @@ var $author$project$FightingTool$body = function (model) {
 										_List_fromArray(
 											[
 												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-<<<<<<< HEAD
 												$elm$html$Html$Attributes$colspan(2))
-=======
-												$elm$html$Html$Attributes$class('th'))
->>>>>>> style
 											]),
 										_List_fromArray(
 											[
@@ -11976,44 +11876,28 @@ var $author$project$FightingTool$body = function (model) {
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_fromArray(
-											[
-												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
-											]),
+										_List_Nil,
 										_List_fromArray(
 											[
 												$elm$html$Html$text('RS')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_fromArray(
-											[
-												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
-											]),
+										_List_Nil,
 										_List_fromArray(
 											[
 												$elm$html$Html$text('LeP')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_fromArray(
-											[
-												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
-											]),
+										_List_Nil,
 										_List_fromArray(
 											[
 												$elm$html$Html$text(' ')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_fromArray(
-											[
-												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
-											]),
+										_List_Nil,
 										_List_fromArray(
 											[
 												$elm$html$Html$text(' ')
@@ -12050,19 +11934,6 @@ var $author$project$Model$AddCharacterIcon = function (a) {
 var $author$project$Model$MouseDraw = function (a) {
 	return {$: 'MouseDraw', a: a};
 };
-<<<<<<< HEAD
-var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
-	return {$: 'RowAttr', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Table$rowAttr = function (attr_) {
-	return $rundis$elm_bootstrap$Bootstrap$Table$RowAttr(attr_);
-};
-=======
-var $author$project$Model$PlayerIcon = F2(
-	function (a, b) {
-		return {$: 'PlayerIcon', a: a, b: b};
-	});
->>>>>>> style
 var $author$project$DungeonMap$stopBubbling = function (msg) {
 	return A2(
 		$elm$html$Html$Events$stopPropagationOn,

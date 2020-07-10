@@ -40,7 +40,7 @@ body model =
                     ]
                 , tbody =
                     Table.tbody []
-                        (displayCharacters model model.enemy ++ 
+                        (displayCharacters model.enemy ++ 
                         [Table.tr [Table.rowAttr <| class "tr"] 
                             [ Table.td[Table.cellAttr <| Attr.colspan 10] -- naja um sicher zu gehen
                                 [ Button.button
