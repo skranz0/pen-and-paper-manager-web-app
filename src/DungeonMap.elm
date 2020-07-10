@@ -31,7 +31,8 @@ dungeonMapView model =
             [ div [ class "section" ]
                   [ Grid.row []
                              [ Grid.col []
-                                        [ Textarea.textarea
+                                        [ Html.br [] []
+                                        ,Textarea.textarea
                                             [ Textarea.rows 1
                                             , Textarea.disabled
                                             , Textarea.value model.activeTooltip
@@ -39,12 +40,23 @@ dungeonMapView model =
                                         , Html.br [] []
                                         , dungeonMap_Svg model
                                         ]
-                             , Grid.col [ Col.xs4 ]
-                                        [ dungeonMap_MonsterList model
+                             , Grid.col [ Col.xs5 ]
+                                        [ Grid.row []
+                                            [ Grid.col []
+                                                [ Html.br [] []
+                                                , dungeonMap_MonsterList model
+                                                ]
+                                             , Grid.col [ Col.xs4 ]
+                                                [ Html.br [] []
+                                                , Html.button
+                                                    [ class "metalButton"
+                                                    , onClick ClearCharacterList ] 
+                                                    [ text "Clear Map" ]
+                                                ]
+                                             ]
                                         ]
                              ]
                   ]
-                  , Button.button [ Button.info, Button.onClick ClearCharacterList ] [ text "Clear Map" ]
                   , newObjectIconModal model
             ]
 

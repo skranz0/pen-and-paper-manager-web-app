@@ -12951,9 +12951,6 @@ var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 					]))
 			]));
 };
-var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Info = {$: 'Info'};
-var $rundis$elm_bootstrap$Bootstrap$Button$info = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
-	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Info));
 var $author$project$Model$ChangeIcon = function (a) {
 	return {$: 'ChangeIcon', a: a};
 };
@@ -14526,6 +14523,8 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$width = F2(
 			A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width, size, count));
 	});
 var $rundis$elm_bootstrap$Bootstrap$Grid$Col$xs4 = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$XS, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col4);
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col5 = {$: 'Col5'};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Col$xs5 = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$XS, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col5);
 var $author$project$DungeonMap$dungeonMapView = function (model) {
 	return A2(
 		$elm$html$Html$section,
@@ -14553,6 +14552,7 @@ var $author$project$DungeonMap$dungeonMapView = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
+										A2($elm$html$Html$br, _List_Nil, _List_Nil),
 										$rundis$elm_bootstrap$Bootstrap$Form$Textarea$textarea(
 										_List_fromArray(
 											[
@@ -14566,23 +14566,44 @@ var $author$project$DungeonMap$dungeonMapView = function (model) {
 								A2(
 								$rundis$elm_bootstrap$Bootstrap$Grid$col,
 								_List_fromArray(
-									[$rundis$elm_bootstrap$Bootstrap$Grid$Col$xs4]),
+									[$rundis$elm_bootstrap$Bootstrap$Grid$Col$xs5]),
 								_List_fromArray(
 									[
-										$author$project$DungeonMap$dungeonMap_MonsterList(model)
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Grid$row,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Grid$col,
+												_List_Nil,
+												_List_fromArray(
+													[
+														A2($elm$html$Html$br, _List_Nil, _List_Nil),
+														$author$project$DungeonMap$dungeonMap_MonsterList(model)
+													])),
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Grid$col,
+												_List_fromArray(
+													[$rundis$elm_bootstrap$Bootstrap$Grid$Col$xs4]),
+												_List_fromArray(
+													[
+														A2($elm$html$Html$br, _List_Nil, _List_Nil),
+														A2(
+														$elm$html$Html$button,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('metalButton'),
+																$elm$html$Html$Events$onClick($author$project$Model$ClearCharacterList)
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Clear Map')
+															]))
+													]))
+											]))
 									]))
 							]))
-					])),
-				A2(
-				$rundis$elm_bootstrap$Bootstrap$Button$button,
-				_List_fromArray(
-					[
-						$rundis$elm_bootstrap$Bootstrap$Button$info,
-						$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Model$ClearCharacterList)
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Clear Map')
 					])),
 				$author$project$DungeonMap$newObjectIconModal(model)
 			]));
