@@ -9335,9 +9335,6 @@ var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled = function (a) {
 };
 var $rundis$elm_bootstrap$Bootstrap$Button$danger = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Danger));
-var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Success = {$: 'Success'};
-var $rundis$elm_bootstrap$Bootstrap$Button$success = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
-	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Success));
 var $rundis$elm_bootstrap$Bootstrap$Table$Td = function (a) {
 	return {$: 'Td', a: a};
 };
@@ -9361,16 +9358,97 @@ var $author$project$FightingTool$displayCharacters = function (chars) {
 			function (i, c) {
 				var _v0 = function () {
 					if (c.$ === 'Enemy') {
+<<<<<<< HEAD
 						var n = c.a;
 						var h = c.b;
 						var a = c.d;
 						var p = c.e;
 						return {armor: a, health: h, name: n, pain: p};
+=======
+						return A2(
+							$rundis$elm_bootstrap$Bootstrap$Table$tr,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$elm$core$String$fromInt(i + 1))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(name)
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$elm$core$String$fromInt(armor))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											$elm$core$String$fromInt(health))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$button,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$class('metalButton'),
+													$elm$html$Html$Events$onClick(
+													$author$project$Model$ShowAttackModal(i))
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$text('Angriff')
+												]))
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Table$td,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$rundis$elm_bootstrap$Bootstrap$Button$button,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Button$danger,
+													$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+													_List_fromArray(
+														[
+															$elm$html$Html$Events$onClick(
+															$author$project$Model$RemoveEnemy(i))
+														]))
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$text('Löschen')
+												]))
+										]))
+								]));
+>>>>>>> style
 					} else {
 						var n = c.a;
 						var a = c.b;
 						return {armor: a, health: 0, name: n, pain: ''};
 					}
+<<<<<<< HEAD
 				}();
 				var name = _v0.name;
 				var health = _v0.health;
@@ -9533,11 +9611,25 @@ var $author$project$FightingTool$displayCharacters = function (chars) {
 			}),
 		$elm$core$Array$toList(chars));
 };
+=======
+				}),
+			$elm$core$Array$toList(chars));
+	});
+>>>>>>> style
 var $rundis$elm_bootstrap$Bootstrap$Table$Hover = {$: 'Hover'};
 var $rundis$elm_bootstrap$Bootstrap$Table$hover = $rundis$elm_bootstrap$Bootstrap$Table$Hover;
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Light = {$: 'Light'};
 var $rundis$elm_bootstrap$Bootstrap$Button$light = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Light));
+<<<<<<< HEAD
+=======
+var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
+	return {$: 'RowAttr', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$rowAttr = function (attr_) {
+	return $rundis$elm_bootstrap$Bootstrap$Table$RowAttr(attr_);
+};
+>>>>>>> style
 var $rundis$elm_bootstrap$Bootstrap$Table$THead = function (a) {
 	return {$: 'THead', a: a};
 };
@@ -9555,8 +9647,11 @@ var $rundis$elm_bootstrap$Bootstrap$Table$simpleThead = function (cells) {
 				A2($rundis$elm_bootstrap$Bootstrap$Table$tr, _List_Nil, cells)
 			]));
 };
+<<<<<<< HEAD
 var $rundis$elm_bootstrap$Bootstrap$Table$Striped = {$: 'Striped'};
 var $rundis$elm_bootstrap$Bootstrap$Table$striped = $rundis$elm_bootstrap$Bootstrap$Table$Striped;
+=======
+>>>>>>> style
 var $rundis$elm_bootstrap$Bootstrap$Table$Inversed = {$: 'Inversed'};
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
@@ -10398,6 +10493,9 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Input$Placeholder = function (a) {
 var $rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder = function (value_) {
 	return $rundis$elm_bootstrap$Bootstrap$Form$Input$Placeholder(value_);
 };
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Success = {$: 'Success'};
+var $rundis$elm_bootstrap$Bootstrap$Button$success = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Success));
 var $rundis$elm_bootstrap$Bootstrap$Form$Input$text = $rundis$elm_bootstrap$Bootstrap$Form$Input$input($rundis$elm_bootstrap$Bootstrap$Form$Input$Text);
 var $rundis$elm_bootstrap$Bootstrap$Form$Input$Value = function (a) {
 	return {$: 'Value', a: a};
@@ -11801,7 +11899,7 @@ var $author$project$FightingTool$body = function (model) {
 						$rundis$elm_bootstrap$Bootstrap$Table$table(
 						{
 							options: _List_fromArray(
-								[$rundis$elm_bootstrap$Bootstrap$Table$striped, $rundis$elm_bootstrap$Bootstrap$Table$hover]),
+								[$rundis$elm_bootstrap$Bootstrap$Table$hover]),
 							tbody: A2(
 								$rundis$elm_bootstrap$Bootstrap$Table$tbody,
 								_List_Nil,
@@ -11811,7 +11909,11 @@ var $author$project$FightingTool$body = function (model) {
 										[
 											A2(
 											$rundis$elm_bootstrap$Bootstrap$Table$tr,
-											_List_Nil,
+											_List_fromArray(
+												[
+													$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
+													$elm$html$Html$Attributes$class('tr'))
+												]),
 											_List_fromArray(
 												[
 													A2(
@@ -11848,7 +11950,11 @@ var $author$project$FightingTool$body = function (model) {
 									[
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+												$elm$html$Html$Attributes$class('th'))
+											]),
 										_List_fromArray(
 											[
 												$elm$html$Html$text('ID')
@@ -11858,7 +11964,11 @@ var $author$project$FightingTool$body = function (model) {
 										_List_fromArray(
 											[
 												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+<<<<<<< HEAD
 												$elm$html$Html$Attributes$colspan(2))
+=======
+												$elm$html$Html$Attributes$class('th'))
+>>>>>>> style
 											]),
 										_List_fromArray(
 											[
@@ -11866,28 +11976,44 @@ var $author$project$FightingTool$body = function (model) {
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+												$elm$html$Html$Attributes$class('th'))
+											]),
 										_List_fromArray(
 											[
 												$elm$html$Html$text('RS')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+												$elm$html$Html$Attributes$class('th'))
+											]),
 										_List_fromArray(
 											[
 												$elm$html$Html$text('LeP')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+												$elm$html$Html$Attributes$class('th'))
+											]),
 										_List_fromArray(
 											[
 												$elm$html$Html$text(' ')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+												$elm$html$Html$Attributes$class('th'))
+											]),
 										_List_fromArray(
 											[
 												$elm$html$Html$text(' ')
@@ -11924,12 +12050,19 @@ var $author$project$Model$AddCharacterIcon = function (a) {
 var $author$project$Model$MouseDraw = function (a) {
 	return {$: 'MouseDraw', a: a};
 };
+<<<<<<< HEAD
 var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
 	return {$: 'RowAttr', a: a};
 };
 var $rundis$elm_bootstrap$Bootstrap$Table$rowAttr = function (attr_) {
 	return $rundis$elm_bootstrap$Bootstrap$Table$RowAttr(attr_);
 };
+=======
+var $author$project$Model$PlayerIcon = F2(
+	function (a, b) {
+		return {$: 'PlayerIcon', a: a, b: b};
+	});
+>>>>>>> style
 var $author$project$DungeonMap$stopBubbling = function (msg) {
 	return A2(
 		$elm$html$Html$Events$stopPropagationOn,
@@ -12032,6 +12165,8 @@ var $rundis$elm_bootstrap$Bootstrap$Table$Responsive = function (a) {
 	return {$: 'Responsive', a: a};
 };
 var $rundis$elm_bootstrap$Bootstrap$Table$responsive = $rundis$elm_bootstrap$Bootstrap$Table$Responsive($elm$core$Maybe$Nothing);
+var $rundis$elm_bootstrap$Bootstrap$Table$Striped = {$: 'Striped'};
+var $rundis$elm_bootstrap$Bootstrap$Table$striped = $rundis$elm_bootstrap$Bootstrap$Table$Striped;
 var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -14300,10 +14435,7 @@ var $author$project$FightingTool$footer = A2(
 		[
 			A2(
 			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('content has-text-centered')
-				]),
+			_List_Nil,
 			_List_fromArray(
 				[
 					A2(
@@ -14323,11 +14455,12 @@ var $author$project$FightingTool$footer = A2(
 				]))
 		]));
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
+var $elm$html$Html$header = _VirtualDom_node('header');
 var $author$project$FightingTool$header = A2(
-	$elm$html$Html$section,
+	$elm$html$Html$header,
 	_List_fromArray(
 		[
-			$elm$html$Html$Attributes$class('hero is-primary is-bold animate__animated animate__fadeInDown')
+			$elm$html$Html$Attributes$class('header is-bold animate__animated animate__fadeInDown')
 		]),
 	_List_fromArray(
 		[
@@ -14335,15 +14468,45 @@ var $author$project$FightingTool$header = A2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('hero-body')
+					$elm$html$Html$Attributes$class('grid-container')
 				]),
 			_List_fromArray(
 				[
 					A2(
+					$elm$html$Html$figure,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('image animate__animated animate__rollIn')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$svg$Svg$svg,
+							_List_fromArray(
+								[
+									$elm$svg$Svg$Attributes$width('100%'),
+									A2($elm$html$Html$Attributes$style, 'margin-top', '-18%'),
+									A2($elm$html$Html$Attributes$style, 'margin-left', '10%')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$svg$Svg$image,
+									_List_fromArray(
+										[
+											$elm$svg$Svg$Attributes$width('100%'),
+											$elm$svg$Svg$Attributes$height('100%'),
+											$elm$svg$Svg$Attributes$title('Logo'),
+											$elm$svg$Svg$Attributes$xlinkHref('res/P&P Manager Logo 512x512px noBG.png')
+										]),
+									_List_Nil)
+								]))
+						])),
+					A2(
 					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('container')
+							$elm$html$Html$Attributes$class('item1')
 						]),
 					_List_fromArray(
 						[
@@ -14351,7 +14514,9 @@ var $author$project$FightingTool$header = A2(
 							$elm$html$Html$h1,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('title')
+									$elm$html$Html$Attributes$class('title'),
+									A2($elm$html$Html$Attributes$style, 'margin-left', '2%'),
+									A2($elm$html$Html$Attributes$style, 'margin-top', '4px')
 								]),
 							_List_fromArray(
 								[
@@ -14361,7 +14526,8 @@ var $author$project$FightingTool$header = A2(
 							$elm$html$Html$h2,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('subtitle')
+									$elm$html$Html$Attributes$class('subtitle'),
+									A2($elm$html$Html$Attributes$style, 'margin-left', '2%')
 								]),
 							_List_fromArray(
 								[
@@ -14677,7 +14843,10 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$view = F2(
 var $author$project$Main$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
-		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('body')
+			]),
 		_List_fromArray(
 			[
 				$author$project$FightingTool$header,

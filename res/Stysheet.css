@@ -1,0 +1,88 @@
+.header {
+    background-image: repeating-linear-gradient(to right bottom, #b87333 , #ce8a4b , #b87333 40% );
+    color: white;
+    text-shadow: 3px 3px 6px #4d3319;
+    text-align: left;
+    padding: 10px;
+    margin-bottom: 1%;
+  }
+
+.footer {
+    background-color: #e4be9b;
+    color: #666666;
+    text-align: center;
+    padding: 10px;
+    margin-top: 3%;
+}
+
+.body {
+    background-color: #faf2eb;
+    max-width: 100%;
+}
+
+.grid-container {
+    display: grid;
+    grid-gap: 2%;
+    grid-template-columns: 7% auto;
+    height: 15%;
+}
+
+.item1 {
+    border-left: #8c5826;
+    border-left-style: double; 
+    border-width: 5px;
+    height: 75%;
+    width: 120%;
+}
+
+.th {
+    background-color: #e4be9b
+}
+
+.tr {
+    background-color: #faf2eb;
+}
+
+tr:nth-child(even) {background-color: white;}
+
+.metalButton {
+    background-image: repeating-linear-gradient(to right bottom, #acacac , #bfbfbf , #acacac 40% );
+    border-radius: 8px;
+    padding: 8px 28px;
+    color: white;
+    align-self: flex-end;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: 2px 2px 5px #404040;
+    font-size: 1rem;
+  }
+
+.metalButton:hover{
+    background-image: repeating-linear-gradient(to right bottom, #acacac , #bfbfbf 10%, #acacac 40% );
+}
+
+.PlayerIcon {
+    fill: black;
+    stroke: red;
+    stroke-width: 2;
+    fill-opacity:0;
+}
+
+.MonsterIcon {
+    fill: black;
+    stroke: red;
+    stroke-width: 2;
+    fill-opacity:0;
+}
+
+.PlayerIcon:hover {
+    fill: grey-darker;
+    opacity:0.5;
+    fill-opacity:0.5;
+}
+
+.MonsterIcon:hover {
+    fill: grey-darker;
+    opacity:0.5;
+    fill-opacity:0.5;
+}
