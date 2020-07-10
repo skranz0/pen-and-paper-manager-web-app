@@ -264,7 +264,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [Html.Attributes.class "body"]
+    div [Html.Attributes.class "body", Html.Attributes.style "height" "100%"]
         [ header
         , Tab.config TabMsg
             |> Tab.items

@@ -32,7 +32,7 @@ body model =
                 { options = [Table.hover ]
                 , thead =  Table.simpleThead
                     [ Table.th [Table.cellAttr <| class "th"] [ text "ID" ]
-                    , Table.th [ Table.cellAttr <| Attr.colspan 2 ] [ text "Name" ]
+                    , Table.th [ Table.cellAttr <| Attr.colspan 2 , Table.cellAttr <| class "th"] [ text "Name" ]
                     , Table.th [Table.cellAttr <| class "th"] [ text "RS" ]
                     , Table.th [Table.cellAttr <| class "th"] [ text "LeP"]
                     , Table.th [Table.cellAttr <| class "th"] [ text " "]
@@ -40,7 +40,7 @@ body model =
                     ]
                 , tbody =
                     Table.tbody []
-                        (displayCharacters model model.enemy ++ 
+                        (displayCharacters model.enemy ++ 
                         [Table.tr [Table.rowAttr <| class "tr"] 
                             [ Table.td[Table.cellAttr <| Attr.colspan 10] -- naja um sicher zu gehen
                                 [ Button.button
@@ -62,7 +62,7 @@ body model =
 
 header : Html Msg
 header =
-  Html.header [class "header is-bold animate__animated animate__fadeInDown"]
+  Html.header [class "header animate__animated animate__fadeInDown"]
                 [ div [class "grid-container"]
                     [ Html.figure [ class "image animate__animated animate__rollIn"]
                         [ Svg.svg
@@ -97,29 +97,29 @@ viewAttackModal model =
     div []
         [ Modal.config (CloseModal AttackModal)
             |> Modal.hideOnBackdropClick True
-            |> Modal.h3 [] [ text "Angriff" ]
-            |> Modal.body []
+            |> Modal.header [class "colored-header-footer"]
+                [ Html.h3 [][text "Angriff"]
+                ]
+            |> Modal.body [class "body"]
                 [ Input.text
                     [ Input.value model.dice
                     , Input.placeholder "1W6+0"
                     , Input.onInput ChangeTmpDice
                     ]
-                , Button.button
-                    [ Button.attrs [onClick (DiceAndSlice model.tmpdice) ]
-                    , Button.outlineDark
-                    ]
-                    [ text "Schaden würfeln" ]
+                , Html.button
+                    [ class "metalButton"
+                    , onClick (DiceAndSlice model.tmpdice)
+                    ] [ text "Schaden würfeln" ]
                 , Input.number
                     [ insideInput
                     , Input.onInput ChangeDamage
                     ]
                 ]
-            |> Modal.footer []
-                [ Button.button
-                    [ Button.attrs [onClick <| attack model model.characterId model.damage]
-                    , Button.success
-                    ]
-                    [ text "Schaden zufügen" ]
+            |> Modal.footer [class "colored-header-footer"]
+                [ Html.button
+                    [ class "metalButton"
+                    , onClick <| attack model model.characterId model.damage
+                    ] [ text "Schaden zufügen" ]
                 ]
             |> Modal.view model.showAttackModal
         ]
@@ -146,8 +146,10 @@ viewCustomEnemyModal model =
     in
         Modal.config (CloseModal CustomEnemy)
             |> Modal.hideOnBackdropClick True
-            |> Modal.h3 [] [ text "Charakter hinzufügen" ]
-            |> Modal.body [] [
+            |> Modal.header [class "colored-header-footer"]
+                [ Html.h3 [][text "Charakter hinzufügen"]
+                ]
+            |> Modal.body [ class "body"] [
                 div []
                     [ dropdownMenu model
                     , Html.br [] []
@@ -176,7 +178,7 @@ viewCustomEnemyModal model =
                             else p [][]
                     ]
             ]
-            |> Modal.footer [] []
+            |> Modal.footer [class "colored-header-footer"] []
             |> Modal.view model.showCustomEnemy
 
 
@@ -409,10 +411,10 @@ customEnemy model =
                 , ddArmor
                 ]
             , Html.br [] []
-            , Button.button
-                [ Button.success
-                , Button.attrs [ onClick <| AddEnemy model.tmpEnemy  ]
-                ] [ text "Hinzufügen"]
+            , Html.button 
+                [ class "metalButton"
+                , onClick <| AddEnemy model.tmpEnemy ]
+                [ text "Hinzufügen"]
             ]
 
 customHero : Model -> Html Msg
@@ -442,8 +444,8 @@ customHero model =
                     UpdateTmp <| Hero name (Maybe.withDefault 0 <| String.toInt a)
             )]
         , Html.br [] []
-        , Button.button
-            [ Button.success
-            , Button.attrs [ onClick <| AddEnemy model.tmpHero  ]
-            ] [ text "Hinzufügen"]
+        , Html.button
+            [class "metalButton"
+            , onClick <| AddEnemy model.tmpHero ]
+            [text "Hinzufügen"]
         ]

@@ -20,6 +20,10 @@
     max-width: 100%;
 }
 
+.colored-header-footer{
+    background-color: #e4be9b;
+}
+
 .grid-container {
     display: grid;
     grid-gap: 2%;
@@ -32,7 +36,7 @@
     border-left-style: double; 
     border-width: 5px;
     height: 75%;
-    width: 120%;
+    width: 100%;
 }
 
 .th {
@@ -50,7 +54,6 @@ tr:nth-child(even) {background-color: white;}
     border-radius: 8px;
     padding: 8px 28px;
     color: white;
-    align-self: flex-end;
     text-align: center;
     text-decoration: none;
     text-shadow: 2px 2px 5px #404040;
