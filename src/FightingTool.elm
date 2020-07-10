@@ -3,8 +3,10 @@ module FightingTool exposing (..)
 
 --elm Packages
 import Html exposing (Html, div, text, h1, h2, p)
-import Html.Attributes as Attr exposing (class)
+import Html.Attributes as Attr exposing (class,style)
 import Html.Events exposing (onClick)
+import Svg
+import Svg.Attributes as SvgAtt
 import Json.Decode
 import Bootstrap.Modal as Modal
 import Bootstrap.Button as Button
@@ -27,7 +29,7 @@ body model =
     div []
         [ div []
             [ Table.table
-                { options = [ Table.striped, Table.hover ]
+                { options = [Table.hover ]
                 , thead =  Table.simpleThead
                     [ Table.th [] [ text "ID" ]
                     , Table.th [ Table.cellAttr <| Attr.colspan 2 ] [ text "Name" ]
@@ -60,19 +62,24 @@ body model =
 
 header : Html Msg
 header =
-    Html.section [class "hero is-primary is-bold animate__animated animate__fadeInDown"]
-            [ div [class "hero-body"]
-                [ div [class "container"]
-                    [ h1 [class "title"] [text "Pen & Paper Manager"]
-                    , h2 [class "subtitle"] [text "Für \"Das schwarze Auge\" Version 5"]
+  Html.header [class "header is-bold animate__animated animate__fadeInDown"]
+                [ div [class "grid-container"]
+                    [ Html.figure [ class "image animate__animated animate__rollIn"]
+                        [ Svg.svg
+                            [ SvgAtt.width "100%", style "margin-top" "-18%", style "margin-left" "10%"]                
+                            [ Svg.image [ SvgAtt.width "100%", SvgAtt.height "100%", SvgAtt.title "Logo", SvgAtt.xlinkHref "res/P&P Manager Logo 512x512px noBG.png" ] [] ]
+                        ]
+                    , div [class "item1"]
+                        [ h1 [class "title", style "margin-left" "2%", style "margin-top" "4px"] [text "Pen & Paper Manager"]
+                        , h2 [class "subtitle", style "margin-left" "2%"] [text "Für \"Das schwarze Auge\" Version 5"]
+                        ]
                     ]
                 ]
-            ]
 
 footer : Html Msg
 footer =
     Html.footer [class "footer animate__animated animate__fadeInUp"]
-            [ div [class "content has-text-centered"]
+            [ div []
                 [ Html.p [] [ text "Entwickelt von Laura Spilling, Stefan Kranz, Marcus Gagelmann und Alexander Kampf" ]
                 , Html.p [] [ text "Einführung in das World Wide Web" ]
                 ]
@@ -211,9 +218,9 @@ displayCharacters chars =
                         , Table.td[][text <| String.fromInt armor]
                         , Table.td[][text <| String.fromInt health]
                         , Table.td[]
-                            [ Button.button
-                                [ Button.success
-                                , Button.attrs [onClick <| ShowAttackModal i]]
+                            [ Html.button 
+                                [ class "metalButton"
+                                , onClick <| ShowAttackModal i]
                                 [ text "Angriff"]
                             ]
                         , Table.td[]

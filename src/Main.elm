@@ -5,6 +5,7 @@ module Main exposing (main)
 import Browser
 import Http
 import Html exposing (Html, div, text)
+import Html.Attributes
 import Bootstrap.Utilities.Spacing as Spacing exposing (mt3)
 import Bootstrap.Modal as Modal
 import Bootstrap.Tab as Tab
@@ -300,7 +301,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
+    div [Html.Attributes.class "body"]
         [ header
         , Tab.config TabMsg
             |> Tab.items
