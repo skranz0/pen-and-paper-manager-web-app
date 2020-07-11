@@ -103,14 +103,14 @@ update msg model =
 
         ChangeIcon id ->
             case model.addCharacterIcon of
-                DrawIcon (ObjectIcon i x y t c) ->
+                DrawIcon (ObjectIcon i x y t c ident) ->
                     case id of
-                        3 -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t c)
+                        3 -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t c ident)
                                        , radioCheckedID = id }
                              , Cmd.none
                              )
 
-                        _ -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t Nothing)
+                        _ -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t Nothing ident)
                                        , radioCheckedID = id }
                              , Cmd.none
                              )
@@ -148,18 +148,18 @@ update msg model =
             case addCharacterIconMsg of
                 MouseClick characterIcon ->
                     case characterIcon of
-                        PlayerIcon i x y ->
+                        PlayerIcon i x y n ->
                             if List.length model.characterList == List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID noch nicht in Liste
                             then    ( { model | characterList = model.characterList ++ [ characterIcon ], addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
-                        MonsterIcon i x y ->
+                        MonsterIcon i x y n ->
                             if List.length model.characterList == List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID noch nicht in Liste
                             then    ( { model | characterList = model.characterList ++ [ characterIcon ], addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
-                        ObjectIcon i x y t c ->
-                            ( { model | objectIconList = model.objectIconList ++ [ ObjectIcon i x y model.iconText (Just model.colour) ]
+                        ObjectIcon i x y t c ident ->
+                            ( { model | objectIconList = (generateObjectIdents (model.objectIconList ++ [ ObjectIcon i x y model.iconText (Just model.colour) ident ]))
                                       , addCharacterIcon = DrawingInactive
                                       , showObjectIconModal = Modal.hidden
                                       , iconText = ""
@@ -168,18 +168,18 @@ update msg model =
 
                 MouseDraw characterIcon ->
                     case characterIcon of
-                        PlayerIcon i x y ->
+                        PlayerIcon i x y name ->
                             if List.length model.characterList > List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID bereits in Liste
                             then    ( { model | characterList = List.filter (isNotId i) model.characterList, addCharacterIcon = DrawingInactive }, Cmd.none )
-                            else    ( { model | addCharacterIcon = DrawIcon (PlayerIcon i x y) }, Cmd.none )
+                            else    ( { model | addCharacterIcon = DrawIcon (PlayerIcon i x y name) }, Cmd.none )
 
-                        MonsterIcon i x y ->
+                        MonsterIcon i x y name ->
                             if List.length model.characterList > List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID bereits in Liste
                             then    ( { model | characterList = List.filter (isNotId i) model.characterList, addCharacterIcon = DrawingInactive }, Cmd.none )
-                            else    ( { model | addCharacterIcon = DrawIcon (MonsterIcon i x y) }, Cmd.none )
+                            else    ( { model | addCharacterIcon = DrawIcon (MonsterIcon i x y name) }, Cmd.none )
 
-                        ObjectIcon i x y t c ->
-                            ( { model | addCharacterIcon = DrawIcon (ObjectIcon i x y t c) }, Cmd.none )
+                        ObjectIcon i x y t c ident ->
+                            ( { model | addCharacterIcon = DrawIcon (ObjectIcon i x y t c ident) }, Cmd.none )
 
                     --( { model | addCharacterIcon = DrawIcon s, characterList = (giveDungeonMap_CharacterIds model.characterList) }, Cmd.none )
 
@@ -214,7 +214,9 @@ update msg model =
                     ( { model | showCustomEnemy = Modal.shown } , Cmd.none )
 
                 ObjectIconModal ->
-                    ( { model | showObjectIconModal = Modal.shown } , Cmd.none )
+                    ( { model | showObjectIconModal =   if model.mouseInIcon then Modal.hidden else Modal.shown
+                              , mouseInIcon = False }
+                    , Cmd.none )
 
         ShowAttackModal id->
             ( { model | showAttackModal = Modal.shown , characterId = id} , Cmd.none )
@@ -251,16 +253,51 @@ update msg model =
 
         ColorPickerMsg cpMsg ->
             case model.addCharacterIcon of
-                DrawIcon (ObjectIcon i x y t c) ->  let
-                                                        ( m, colour ) = ColorPicker.update cpMsg model.colour model.colorPicker
-                                                    in
-                                                        ( { model | colorPicker = m
-                                                                  , colour = colour |> Maybe.withDefault model.colour
-                                                          }
-                                                        , Cmd.none
-                                                        )
+                DrawIcon (ObjectIcon i x y t c ident) ->    let
+                                                                ( m, colour ) = ColorPicker.update cpMsg model.colour model.colorPicker
+                                                            in
+                                                            ( { model | colorPicker = m
+                                                                      , colour = colour |> Maybe.withDefault model.colour
+                                                              }
+                                                            , Cmd.none
+                                                            )
 
                 _ -> ( model, Cmd.none )
+
+        ToolTipMsg tooltip ->
+            case tooltip of
+                "" ->   ( { model | activeTooltip = "Beschreibung"
+                                  , mouseInIcon = (if tooltip=="Beschreibung" then False else True) }
+                        , Cmd.none
+                        )
+
+                _ ->    ( { model | activeTooltip = tooltip
+                                  , mouseInIcon = (if tooltip=="Beschreibung" then False else True) }
+                        , Cmd.none
+                        )
+
+        HighlightTableRow id name ->
+            ( { model | highlightedTableRow = id
+                      , activeTooltip = name
+                      , mouseInIcon = (if id==0 then False else True) }
+            , Cmd.none
+            )
+
+        DeleteIcon iconType id ->
+            case iconType of
+                "object" ->
+                    ( { model | objectIconList = List.filter (isNotId id) model.objectIconList
+                              , activeTooltip = "Beschreibung" }
+                    , Cmd.none
+                    )
+
+
+                _ ->
+                    ( { model | characterList = List.filter (isNotId id) model.characterList
+                              , highlightedTableRow = 0
+                              , activeTooltip = "Beschreibung" }
+                    , Cmd.none
+                    )
 
 view : Model -> Html Msg
 view model =
@@ -315,18 +352,30 @@ giveDungeonMap_CharacterIds charList =
 putIdInCharIcon : Int -> CharacterIcon -> CharacterIcon
 putIdInCharIcon id charIcon =
     case charIcon of
-        PlayerIcon _ x y -> PlayerIcon (id+1) x y
-        MonsterIcon _ x y -> MonsterIcon (id+1) x y
-        ObjectIcon _ x y t c -> ObjectIcon (id+1) x y t c
+        PlayerIcon _ x y n -> PlayerIcon (id+1) x y n
+        MonsterIcon _ x y n -> MonsterIcon (id+1) x y n
+        ObjectIcon _ x y t c ident -> ObjectIcon (id+1) x y t c ident
 
 isNotId : Int -> CharacterIcon -> Bool
 isNotId id s =
     case s of
-        MonsterIcon i _ _ ->
+        MonsterIcon i _ _ _ ->
             id/=i
 
-        PlayerIcon i _ _ ->
+        PlayerIcon i _ _ _ ->
             id/=i
 
-        ObjectIcon i _ _ _ _->
-            id/=i
+        ObjectIcon _ _ _ _ _ ident ->
+            id/=ident
+
+generateObjectIdents : List CharacterIcon -> List CharacterIcon
+generateObjectIdents list =
+    List.indexedMap
+        (\id char ->
+            case char of
+                ObjectIcon typeID x y t c ident ->
+                    ObjectIcon typeID x y t c (id+1)
+
+                _ ->
+                    ObjectIcon 0 "" "" "" Nothing 0
+        ) list

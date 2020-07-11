@@ -16,6 +16,7 @@ import Bootstrap.Button as Button
 import Bootstrap.Modal as Modal
 import Bootstrap.Form.Input as Input
 import Bootstrap.Form.Radio as Radio
+import Bootstrap.Form.Textarea as Textarea
 import Array exposing (Array)
 import File
 import ColorPicker
@@ -30,7 +31,13 @@ dungeonMapView model =
             [ div [ class "section" ]
                   [ Grid.row []
                              [ Grid.col []
-                                        [ dungeonMap_Svg model
+                                        [ Textarea.textarea
+                                            [ Textarea.rows 1
+                                            , Textarea.disabled
+                                            , Textarea.value model.activeTooltip
+                                            ]
+                                        , Html.br [] []
+                                        , dungeonMap_Svg model
                                         ]
                              , Grid.col [ Col.xs4 ]
                                         [ dungeonMap_MonsterList model
@@ -44,7 +51,7 @@ dungeonMapView model =
 dungeonMap_MonsterList : Model -> Html Msg
 dungeonMap_MonsterList model =
     div [ class "container" ]
-        [ Table.table { options = [ Table.striped, Table.hover, Table.bordered, Table.responsive ]
+        [ Table.table { options = [ Table.hover, Table.bordered, Table.responsive ]
                       , thead =  Table.simpleThead
                           [ Table.th [] [ Html.text "ID" ]
                           , Table.th [] [ Html.text "Name" ]
@@ -52,24 +59,26 @@ dungeonMap_MonsterList model =
                           ]
                       , tbody =
                           Table.tbody []
-                            <| characters2rows model.enemy
+                            <| characters2rows model.enemy model.highlightedTableRow
                       }
         ]
 
-characters2rows : Array.Array Character -> List (Table.Row Msg)
-characters2rows chars =
+characters2rows : Array.Array Character -> Int -> List (Table.Row Msg)
+characters2rows chars highlighted =
     List.indexedMap
         (\i c ->
             case c of
                 Enemy name health _ _ _ ->
-                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon (i+1) "-100" "-100")))) ]
+                    Table.tr ([ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon (i+1) "-100" "-100" name)))) ]
+                             ++ if highlighted==i+1 then [ Table.rowSecondary ] else [])
                         [ Table.td [] [Html.text <| String.fromInt (i+1)]
                         , Table.td [] [Html.text name]
                         , Table.td [] [Html.text <| String.fromInt health]
                         ]
 
                 Hero name health ->
-                    Table.tr [ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon (i+1) "-100" "-100")))) ]
+                    Table.tr ([ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon (i+1) "-100" "-100" name)))) ]
+                             ++ if highlighted==i+1 then [ Table.rowSecondary ] else [])
                         [ Table.td [] [Html.text <| String.fromInt (i+1)]
                         , Table.td [] [Html.text name]
                         , Table.td [] [Html.text <| String.fromInt health]
@@ -93,10 +102,6 @@ dungeonMap_Svg model =
            [ Svg.svg
                 ([ SvgAtt.width "100%", SvgAtt.viewBox "0 0 800 600", SvgAtt.version "1.1" ]
                     ++ mouseDrawEvents model.addCharacterIcon
-                    ++  if model.addCharacterIcon==DrawingInactive
-                        then [ Svg.Events.onClick (ShowModal ObjectIconModal)
-                             ]
-                        else []
                 )
                 ([ Svg.image [ SvgAtt.width "800", SvgAtt.height "600", SvgAtt.title "DungeonMap", SvgAtt.xlinkHref (Maybe.withDefault "" (List.head model.previews)) ] [] ]
                     ++ svgIconList model
@@ -152,7 +157,7 @@ getCharIcon state =
         DrawIcon charIcon ->
             charIcon
 
-        _ -> ObjectIcon 0 "" "" "" Nothing
+        _ -> ObjectIcon 0 "" "" "" Nothing 0
 
 stopBubbling : msg -> Svg.Attribute msg
 stopBubbling msg =
@@ -162,28 +167,99 @@ stopBubbling msg =
 
 svgIconList : Model -> List (Svg.Svg Msg)
 svgIconList model =
-    List.foldl (++) [] (List.map getAreaParam (model.characterList ++ model.objectIconList))
+    List.foldl (++) [] (List.map placeIcon (model.characterList ++ model.objectIconList))
 
-getAreaParam : CharacterIcon -> List (Svg.Svg Msg)
-getAreaParam s =
+placeIcon : CharacterIcon -> List (Svg.Svg Msg)
+placeIcon s =
     let
-      xCor = Maybe.withDefault "0" (List.head (String.split "," (getCoord s)))
-      yCor = Maybe.withDefault "0" (List.head (List.drop 1 (String.split "," (getCoord s))))
+      x = Maybe.withDefault "0" (List.head (String.split "," (getCoord s)))
+      y = Maybe.withDefault "0" (List.head (List.drop 1 (String.split "," (getCoord s))))
       id = getID s
-      objectText = getObjectText s      --Text of an ObjectIcon, for other Icons empty
-      color = getColor s                --Color of a custom ObjectIcon, for others Nothing
+      text = getObjectText s        --Text of an ObjectIcon, for other Icons empty
+      color = getColor s            --Color of a custom ObjectIcon, for others Nothing
+      iconType = getIconType s
+      typeID = getTypeID s
     in
-    placeIcon (getIconType s) id xCor yCor color
+    case iconType of
+        "monster" ->
+            [ Svg.text_ [ SvgAtt.textAnchor "middle"
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 3))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 0.5))
+                , SvgAtt.dominantBaseline "middle"
+                ]
+                [ Svg.text (String.fromInt id) ]
+            , Svg.image
+                [ SvgAtt.style "width:30px;height:30px;"
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 17.5))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 17.5))
+                , SvgAtt.xlinkHref ("res/icons/enemy.png")
+                , SvgAtt.class "MonsterIcon"
+                , Svg.Events.onMouseOver (HighlightTableRow id text)
+                , Svg.Events.onMouseOut (HighlightTableRow 0 "Beschreibung")
+                , Svg.Events.onClick (DeleteIcon iconType id)
+                ] []
+            ]
+
+        "player" ->
+            [ Svg.text_ [ SvgAtt.textAnchor "middle"
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) + 1))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) + 2.5))
+                , SvgAtt.dominantBaseline "middle"
+                ]
+                [ Svg.text (String.fromInt id) ]
+            , Svg.image
+                [ SvgAtt.style "width:25px;height:25px;"
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
+                , SvgAtt.xlinkHref ("res/icons/hero.png")
+                , SvgAtt.class "PlayerIcon"
+                , Svg.Events.onMouseOver (HighlightTableRow id text)
+                , Svg.Events.onMouseOut (HighlightTableRow 0 "Beschreibung")
+                , Svg.Events.onClick (DeleteIcon iconType id)
+                ] []
+            ]
+
+        "object" ->
+            case getIconPath typeID of
+                "custom" -> [ Svg.circle
+                                [ SvgAtt.id (String.fromInt id)
+                                , SvgAtt.cx x
+                                , SvgAtt.cy y
+                                , SvgAtt.r "10"
+                                , SvgAtt.style (buildCustomObjectIconStyle color)
+                                , Svg.Events.onMouseOver (ToolTipMsg text)
+                                , Svg.Events.onMouseOut (ToolTipMsg "Beschreibung")
+                                , SvgAtt.class "ObjectIcon"
+                                , Svg.Events.onClick (DeleteIcon iconType id)
+                                ]
+                                []
+                            ]
+
+
+                _ -> [ Svg.image
+                         [ SvgAtt.style "width:25px;height:25px;"
+                         , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
+                         , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
+                         , SvgAtt.xlinkHref (getIconPath typeID)
+                         , Svg.Events.onMouseOver (ToolTipMsg text)
+                         , Svg.Events.onMouseOut (ToolTipMsg "Beschreibung")
+                         , SvgAtt.class "ObjectIcon"
+                         , Svg.Events.onClick (DeleteIcon iconType id)
+                         ] []
+                     ]
+
+        _ ->
+            []
 
 getColor object =
     case object of
-        MonsterIcon i x y ->
+        MonsterIcon i x y n ->
             Nothing
 
-        PlayerIcon i x y ->
+        PlayerIcon i x y n ->
             Nothing
 
-        ObjectIcon i x y t c ->
+        ObjectIcon i x y t c ident ->
             c
 
 getIconPath : Int -> String
@@ -196,46 +272,53 @@ getIconPath id =
 
 getIconType object =
     case object of
-        MonsterIcon i x y ->
+        MonsterIcon i x y n ->
             "monster"
 
-        PlayerIcon i x y ->
+        PlayerIcon i x y n ->
             "player"
 
-        ObjectIcon i x y t c ->
+        ObjectIcon i x y t c ident ->
             "object"
 
 getCoord object =
     case object of
-        MonsterIcon i x y ->
+        MonsterIcon i x y n ->
             x ++ "," ++ y
 
-        PlayerIcon i x y ->
+        PlayerIcon i x y n ->
             x ++ "," ++ y
 
-        ObjectIcon i x y t c ->
+        ObjectIcon i x y t c ident ->
             x ++ "," ++ y
 
 getID object =
     case object of
-        MonsterIcon i x y ->
+        MonsterIcon i x y n ->
             i
 
-        PlayerIcon i x y ->
+        PlayerIcon i x y n ->
             i
 
-        ObjectIcon i x y t c ->
+        ObjectIcon i x y t c ident ->
+            ident
+
+getTypeID object =
+    case object of
+        ObjectIcon i x y t c ident ->
             i
+
+        _ ->
+            0
 
 getObjectText object =
     case object of
-        MonsterIcon i x y ->
-            ""
+        MonsterIcon i x y name ->
+            name
 
-        PlayerIcon i x y ->
-            ""
-
-        ObjectIcon i x y t c ->
+        PlayerIcon i x y name ->
+            name
+        ObjectIcon i x y t c ident ->
             t
 
 
@@ -311,23 +394,23 @@ mouseDrawEvents addCharacterIcon =
     case addCharacterIcon of
         DrawIcon characterIcon ->
             case characterIcon of
-                PlayerIcon i x y ->
+                PlayerIcon i x y n ->
                     [ Svg.Events.onClick (AddCharacterIcon (MouseClick characterIcon))
-                    , onMouseMove (positionToCircleCenter i)
+                    , onMouseMove (positionToIconCenter "player" n i)
                     ]
 
-                MonsterIcon i x y ->
+                MonsterIcon i x y n ->
                     [ Svg.Events.onClick (AddCharacterIcon (MouseClick characterIcon))
-                    , onMouseMove (positionToRectangleCorner i)
+                    , onMouseMove (positionToIconCenter "monster" n i)
                     ]
 
-                ObjectIcon i x y t c ->
+                ObjectIcon i x y t c ident ->
                     [ Svg.Events.onClick (ShowModal ObjectIconModal)
-                    , onMouseMove (positionToIconCenter i)
+                    , onMouseMove (positionToIconCenter "object" "" i)
                     ]
 
         DrawingInactive ->
-                [ onMouseMove (positionToIconCenter 0)
+                [ onMouseMove (positionToIconCenter "object" "" 0)
                 ]
 
 
@@ -342,29 +425,31 @@ mousePosition =
         (Json.Decode.at [ "detail", "x" ] Json.Decode.float)
         (Json.Decode.at [ "detail", "y" ] Json.Decode.float)
 
-positionToCircleCenter : Int -> MousePosition -> Msg
-positionToCircleCenter i position =
-    AddCharacterIcon (MouseDraw (PlayerIcon i (String.fromFloat position.x) (String.fromFloat position.y)))
+positionToIconCenter : String -> String -> Int -> MousePosition -> Msg
+positionToIconCenter icon name i position =
+    case icon of
+        "player" ->
+            AddCharacterIcon (MouseDraw (PlayerIcon i (String.fromFloat position.x) (String.fromFloat position.y) name))
 
+        "monster" ->
+            AddCharacterIcon (MouseDraw (MonsterIcon i (String.fromFloat position.x) (String.fromFloat position.y) name))
 
-positionToRectangleCorner : Int -> MousePosition -> Msg
-positionToRectangleCorner i position =
-    AddCharacterIcon (MouseDraw (MonsterIcon i (String.fromFloat position.x) (String.fromFloat position.y)))
+        "object" ->
+            AddCharacterIcon (MouseDraw (ObjectIcon i (String.fromFloat position.x) (String.fromFloat position.y) "" Nothing 0 ))
 
-positionToIconCenter : Int -> MousePosition -> Msg
-positionToIconCenter i position =
-    AddCharacterIcon (MouseDraw (ObjectIcon i (String.fromFloat position.x) (String.fromFloat position.y) "" Nothing ))
+        _ ->
+            DoNothing
 
 newIconsView : AddCharacterIconState -> List (Svg.Svg Msg)
 newIconsView addCharacterIcon =
     case addCharacterIcon of
         DrawIcon characterIcon ->
             case characterIcon of
-                ObjectIcon i x y t c ->
+                ObjectIcon i x y t c ident ->
                     []
 
-                PlayerIcon i x y ->
-                    (placeIcon "player" i x y Nothing)
+                PlayerIcon i x y n ->
+                    (placeIcon characterIcon)
                         ++  [ Svg.rect
                                 [ SvgAtt.width "800"
                                 , SvgAtt.height "600"
@@ -375,8 +460,8 @@ newIconsView addCharacterIcon =
                                 []
                             ]
 
-                MonsterIcon i x y ->
-                    (placeIcon "monster" i x y Nothing)
+                MonsterIcon i x y n ->
+                    (placeIcon characterIcon)
                         ++  [ Svg.rect
                                 [ SvgAtt.width "800"
                                 , SvgAtt.height "600"
