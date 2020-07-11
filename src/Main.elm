@@ -144,6 +144,11 @@ update msg model =
             , Cmd.none
             )
 
+        ModalTabMsg state ->
+            ( { model | modalTabState = state }
+            , Cmd.none
+            )
+
         AddCharacterIcon addCharacterIconMsg ->
             case addCharacterIconMsg of
                 MouseClick characterIcon ->

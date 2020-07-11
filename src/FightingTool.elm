@@ -16,6 +16,8 @@ import Bootstrap.Form as Form
 import Bootstrap.Form.Radio as Radio
 import Bootstrap.Form.Fieldset as Fieldset
 import Bootstrap.Form.Input as Input
+import Bootstrap.Tab as Tab
+import Bootstrap.Utilities.Spacing as Spacing
 import Array
 import Array.Extra as Array
 import Random
@@ -132,55 +134,38 @@ viewCustomEnemyModal model =
     just works the way it is.
     It will probably be put in a modal in the future.
 -}
-    let
-        enemybool =
-            case model.enemyHero of
-               "Enemy" ->  True
-               _ -> False
-        herobool =
-            case model.enemyHero of
-               "Hero" ->  True
-               _ -> False
-
-
-    in
-        Modal.config (CloseModal CustomEnemy)
-            |> Modal.hideOnBackdropClick True
-            |> Modal.header [class "colored-header-footer"]
-                [ Html.h3 [][text "Charakter hinzufügen"]
-                ]
-            |> Modal.body [ class "body"] [
-                div []
-                    [ dropdownMenu model
-                    , Html.br [] []
-                    , Fieldset.config
-                        |> Fieldset.asGroup
-                        |> Fieldset.legend [] [ text "Benutzerdefiniert: " ]
-                        |> Fieldset.children
-                            ( Radio.radioList "EnemyHero"
-                                [ Radio.create
-                                    [ Radio.id "enemy"
-                                    , Radio.onClick <| SwitchEnemyHero "Enemy"
-                                    , Radio.checked enemybool
-                                    ] "Gegner"
-                                , Radio.create
-                                    [ Radio.id "hero"
-                                    , Radio.onClick <| SwitchEnemyHero "Hero"
-                                    , Radio.checked herobool
-                                    ] "Held"
-                                ]
-                            )
-                        |> Fieldset.view
-                    , if model.enemyHero == "Hero"
-                        then customHero model
-                        else if model.enemyHero == "Enemy"
-                            then customEnemy model
-                            else p [][]
+    Modal.config (CloseModal CustomEnemy)
+    |> Modal.hideOnBackdropClick True
+    |> Modal.header [class "colored-header-footer"]
+        [ Html.h3 [][text "Charakter hinzufügen"] ]
+    |> Modal.body [ class "body"]
+        [ div []
+            [ Html.h5 [][text "Vordefiniert"] 
+            , dropdownMenu model
+            , Html.br [] []
+            , Html.h5 [][text "Benutzerdefiniert"]
+            , Tab.config ModalTabMsg
+                |> Tab.items
+                    [ Tab.item
+                        { id = "enemy"
+                        , link = Tab.link [] [ text "Gegner" ]
+                        , pane =
+                            Tab.pane [ Spacing.mt3 ]
+                                [ customEnemy model ]
+                        }
+                    , Tab.item
+                        { id = "hero"
+                        , link = Tab.link [] [ text "Held" ]
+                        , pane =
+                            Tab.pane [ Spacing.mt3 ]
+                                [ customHero model ]
+                        }
                     ]
+                |> Tab.view model.modalTabState
             ]
-            |> Modal.footer [class "colored-header-footer"] []
-            |> Modal.view model.showCustomEnemy
-
+        ]
+    |> Modal.footer [class "colored-header-footer"] []
+    |> Modal.view model.showCustomEnemy
 
 parseEnemy : Json.Decode.Decoder Character
 parseEnemy =
@@ -305,7 +290,7 @@ dropdownMenu model =
             { options = [ Dropdown.dropRight ]
             , toggleMsg = MyDrop1Msg
             , toggleButton =
-                Dropdown.toggle [ Button.primary ] [ text "Gegner" ]
+                Dropdown.toggle [ Button.primary ] [ text "Monster" ]
             , items =
                 -- give a name to the LoadEnemy method and it will pull up the corresponding JSON
                 [ Dropdown.header [ text "Kulturschaffender"]
