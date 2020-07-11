@@ -12360,22 +12360,22 @@ var $author$project$DungeonMap$placeIcon = F5(
 						$elm$svg$Svg$image,
 						_List_fromArray(
 							[
-								$elm$svg$Svg$Attributes$width('30'),
-								$elm$svg$Svg$Attributes$height('30'),
+								$elm$svg$Svg$Attributes$width('50'),
+								$elm$svg$Svg$Attributes$height('50'),
 								$elm$svg$Svg$Attributes$x(
 								$elm$core$String$fromFloat(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(x)) - 17.5)),
+										$elm$core$String$toFloat(x)) - 25.5)),
 								$elm$svg$Svg$Attributes$y(
 								$elm$core$String$fromFloat(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(y)) - 17.5)),
+										$elm$core$String$toFloat(y)) - 24.5)),
 								$elm$svg$Svg$Attributes$title('MonsterIcon'),
-								$elm$svg$Svg$Attributes$xlinkHref('res/icons/enemy.png')
+								$elm$svg$Svg$Attributes$xlinkHref('res/icons/Enemy.svg')
 							]),
 						_List_Nil),
 						A2(
@@ -12388,13 +12388,13 @@ var $author$project$DungeonMap$placeIcon = F5(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(x)) - 3)),
+										$elm$core$String$toFloat(x)))),
 								$elm$svg$Svg$Attributes$y(
 								$elm$core$String$fromFloat(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(y)) - 0.5)),
+										$elm$core$String$toFloat(y)))),
 								$elm$svg$Svg$Attributes$dominantBaseline('middle')
 							]),
 						_List_fromArray(
