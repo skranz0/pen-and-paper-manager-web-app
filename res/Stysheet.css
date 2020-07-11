@@ -101,3 +101,13 @@ tr:nth-child(even) {background-color: white;}
     opacity:0.5;
     fill-opacity:0.5;
 }
+
+.aboutText {
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+h1.about {
+    padding-top: 20px;
+    font-variant: small-caps;
+}

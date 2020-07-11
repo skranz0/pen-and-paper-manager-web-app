@@ -8537,9 +8537,6 @@ var $author$project$Model$TabMsg = function (a) {
 };
 var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$html$Html$br = _VirtualDom_node('br');
-var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -8548,6 +8545,10 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			key,
 			$elm$json$Json$Encode$string(string));
 	});
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$Attributes$href = function (url) {
 	return A2(
 		$elm$html$Html$Attributes$stringProperty,
@@ -8559,12 +8560,18 @@ var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$About$aboutView = A2(
 	$elm$html$Html$div,
-	_List_Nil,
+	_List_fromArray(
+		[
+			$elm$html$Html$Attributes$class('aboutText')
+		]),
 	_List_fromArray(
 		[
 			A2(
 			$elm$html$Html$h1,
-			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('about')
+				]),
 			_List_fromArray(
 				[
 					$elm$html$Html$text('Das schwarze Auge Edition 5')
@@ -8674,7 +8681,6 @@ var $rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier = F2(
 					});
 		}
 	});
-var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
@@ -11857,11 +11863,7 @@ var $author$project$FightingTool$body = function (model) {
 									[
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_fromArray(
-											[
-												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
-											]),
+										_List_Nil,
 										_List_fromArray(
 											[
 												$elm$html$Html$text('ID')
@@ -11871,9 +11873,13 @@ var $author$project$FightingTool$body = function (model) {
 										_List_fromArray(
 											[
 												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+<<<<<<< HEAD
 												$elm$html$Html$Attributes$colspan(2)),
 												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
 												$elm$html$Html$Attributes$class('th'))
+=======
+												$elm$html$Html$Attributes$colspan(2))
+>>>>>>> about_style
 											]),
 										_List_fromArray(
 											[
@@ -11881,44 +11887,28 @@ var $author$project$FightingTool$body = function (model) {
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_fromArray(
-											[
-												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
-											]),
+										_List_Nil,
 										_List_fromArray(
 											[
 												$elm$html$Html$text('RS')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_fromArray(
-											[
-												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
-											]),
+										_List_Nil,
 										_List_fromArray(
 											[
 												$elm$html$Html$text('LeP')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_fromArray(
-											[
-												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
-											]),
+										_List_Nil,
 										_List_fromArray(
 											[
 												$elm$html$Html$text(' ')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$th,
-										_List_fromArray(
-											[
-												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
-											]),
+										_List_Nil,
 										_List_fromArray(
 											[
 												$elm$html$Html$text(' ')

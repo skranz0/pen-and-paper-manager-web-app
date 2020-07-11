@@ -6,8 +6,8 @@ import Html.Attributes as Attr exposing (class)
 import Model exposing (..)
 aboutView : Html Msg
 aboutView =
-    div[]
-    [ Html.h1 [] [ text "Das schwarze Auge Edition 5" ]
+    div[ class "aboutText" ]
+    [ Html.h1 [ class "about" ] [ text "Das schwarze Auge Edition 5" ]
     , Html.h3 [] [ text "Übersicht der Kampfesregeln"]
     , Html.p [] 
         [ text
