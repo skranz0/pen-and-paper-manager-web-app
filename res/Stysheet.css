@@ -1,3 +1,15 @@
+html {
+    background-color: #faf2eb;
+}
+
+.wrapper {
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background-color: #faf2eb;
+}
+
+
 .header {
     background-image: repeating-linear-gradient(to right bottom, #b87333 , #ce8a4b , #b87333 40% );
     color: white;

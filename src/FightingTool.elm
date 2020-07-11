@@ -78,7 +78,7 @@ header =
 
 footer : Html Msg
 footer =
-    Html.footer [class "footer animate__animated animate__fadeInUp"]
+    Html.footer [class "footer animate__animated animate__fadeInUp page-footer"]
             [ div []
                 [ Html.p [] [ text "Entwickelt von Laura Spilling, Stefan Kranz, Marcus Gagelmann und Alexander Kampf" ]
                 , Html.p [] [ text "Einführung in das World Wide Web" ]

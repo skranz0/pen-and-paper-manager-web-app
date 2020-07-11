@@ -14324,7 +14324,7 @@ var $author$project$FightingTool$footer = A2(
 	$elm$html$Html$footer,
 	_List_fromArray(
 		[
-			$elm$html$Html$Attributes$class('footer animate__animated animate__fadeInUp')
+			$elm$html$Html$Attributes$class('footer animate__animated animate__fadeInUp page-footer')
 		]),
 	_List_fromArray(
 		[
@@ -14740,7 +14740,7 @@ var $author$project$Main$view = function (model) {
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('body'),
+				$elm$html$Html$Attributes$class('wrapper'),
 				A2($elm$html$Html$Attributes$style, 'height', '100%')
 			]),
 		_List_fromArray(
