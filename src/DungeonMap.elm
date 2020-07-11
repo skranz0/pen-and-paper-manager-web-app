@@ -261,16 +261,16 @@ placeIcon iconType id x y color =
 
         "player" ->
             [ Svg.image
-                [ SvgAtt.width "25"
-                , SvgAtt.height "25"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
+                [ SvgAtt.width "45"
+                , SvgAtt.height "45"
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 22.5))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 22))
                 , SvgAtt.title "ObjectIcon"
-                , SvgAtt.xlinkHref ("res/icons/Hero.svg")
+                , SvgAtt.xlinkHref "res/icons/Hero.svg"
                 ] []
             , Svg.text_ [ SvgAtt.textAnchor "middle"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) + 1))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) + 2.5))
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x)))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y)))
                 , SvgAtt.dominantBaseline "middle"
                 ]
                 [ Svg.text (String.fromInt id) ]

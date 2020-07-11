@@ -12410,20 +12410,20 @@ var $author$project$DungeonMap$placeIcon = F5(
 						$elm$svg$Svg$image,
 						_List_fromArray(
 							[
-								$elm$svg$Svg$Attributes$width('25'),
-								$elm$svg$Svg$Attributes$height('25'),
+								$elm$svg$Svg$Attributes$width('45'),
+								$elm$svg$Svg$Attributes$height('45'),
 								$elm$svg$Svg$Attributes$x(
 								$elm$core$String$fromFloat(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(x)) - 11.5)),
+										$elm$core$String$toFloat(x)) - 22.5)),
 								$elm$svg$Svg$Attributes$y(
 								$elm$core$String$fromFloat(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(y)) - 11.5)),
+										$elm$core$String$toFloat(y)) - 22)),
 								$elm$svg$Svg$Attributes$title('ObjectIcon'),
 								$elm$svg$Svg$Attributes$xlinkHref('res/icons/Hero.svg')
 							]),
@@ -12438,13 +12438,13 @@ var $author$project$DungeonMap$placeIcon = F5(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(x)) + 1)),
+										$elm$core$String$toFloat(x)))),
 								$elm$svg$Svg$Attributes$y(
 								$elm$core$String$fromFloat(
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$elm$core$String$toFloat(y)) + 2.5)),
+										$elm$core$String$toFloat(y)))),
 								$elm$svg$Svg$Attributes$dominantBaseline('middle')
 							]),
 						_List_fromArray(
