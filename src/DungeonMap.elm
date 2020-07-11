@@ -266,7 +266,7 @@ placeIcon iconType id x y color =
                 , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
                 , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
                 , SvgAtt.title "ObjectIcon"
-                , SvgAtt.xlinkHref ("res/icons/hero.png")
+                , SvgAtt.xlinkHref ("res/icons/Hero.svg")
                 ] []
             , Svg.text_ [ SvgAtt.textAnchor "middle"
                 , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) + 1))

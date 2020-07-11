@@ -17,6 +17,7 @@ html {
     text-align: left;
     padding: 10px;
     margin-bottom: 1%;
+    font-family: 'Fondamento', cursive;
   }
 
 .footer {
@@ -34,6 +35,10 @@ html {
 
 .colored-header-footer{
     background-color: #e4be9b;
+}
+
+.textFont {
+    font-family: 'Alegreya', serif;
 }
 
 .grid-container {
@@ -103,11 +108,11 @@ tr:nth-child(even) {background-color: white;}
 }
 
 .aboutText {
-    padding-left: 10%;
-    padding-right: 10%;
+    padding-left: 5%;
+    padding-right: 5%;
 }
 
 h1.about {
-    padding-top: 20px;
+    padding-top: 2%;
     font-variant: small-caps;
 }

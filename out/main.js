@@ -12425,7 +12425,7 @@ var $author$project$DungeonMap$placeIcon = F5(
 										0,
 										$elm$core$String$toFloat(y)) - 11.5)),
 								$elm$svg$Svg$Attributes$title('ObjectIcon'),
-								$elm$svg$Svg$Attributes$xlinkHref('res/icons/hero.png')
+								$elm$svg$Svg$Attributes$xlinkHref('res/icons/Hero.svg')
 							]),
 						_List_Nil),
 						A2(
@@ -14746,7 +14746,7 @@ var $author$project$Main$view = function (model) {
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('wrapper'),
+				$elm$html$Html$Attributes$class('wrapper textFont'),
 				A2($elm$html$Html$Attributes$style, 'height', '100%')
 			]),
 		_List_fromArray(
