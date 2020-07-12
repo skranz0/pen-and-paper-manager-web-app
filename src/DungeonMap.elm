@@ -11,6 +11,7 @@ import Svg.Events
 import Json.Decode
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
+import Bootstrap.Grid.Row as Row
 import Bootstrap.Table as Table
 import Bootstrap.Button as Button
 import Bootstrap.Modal as Modal
@@ -29,50 +30,42 @@ dungeonMapView : Model -> Html Msg
 dungeonMapView model =
     Html.section [ class "content-box is-widescreen" ]
             [ div [ class "section" ]
-                  [ Grid.row []
-                             [ Grid.col []
-                                        [ Html.br [] []
-                                        ,Textarea.textarea
-                                            [ Textarea.rows 1
-                                            , Textarea.disabled
-                                            , Textarea.value model.activeTooltip
-                                            , Textarea.attrs [ class "text-area" ]
-                                            ]
-                                        , Html.br [] []
-                                        , dungeonMap_Svg model
-                                        ]
-                             , Grid.col [ Col.xs5 ]
-                                        [ Grid.row []
-                                            [ Grid.col []
-                                                [ Html.br [] []
-                                                , dungeonMap_MonsterList model
-                                                ]
-                                             , Grid.col [ Col.xs4 ]
-                                                [ Html.br [] []
-                                                , Button.button
-                                                    [ Button.attrs [ class "metalButton map-buttons"]
-                                                    , Button.onClick Pick ]
-                                                    [ text "Upload Map" ]
-                                                , Button.button
-                                                    [ Button.attrs [ class "metalButton map-buttons", style "margin-top" "5px" ]
-                                                    , Button.onClick ClearCharacterList ] 
-                                                    [ text "Clear Map" ]
-                                                ]
-                                             ]
-                                        ]
-                             ]
-                  ]
-                  , newObjectIconModal model
+                [ Grid.row [ Row.attrs <| [style "margin-bottom" "2%"] ]
+                    [ Grid.col [ Col.xs8 ]
+                        [ Textarea.textarea
+                            [ Textarea.rows 1
+                            , Textarea.disabled
+                            , Textarea.value model.activeTooltip
+                            , Textarea.attrs [ class "text-area" ]
+                            ]
+                        ]
+                    , Grid.col [ ]
+                        [ Button.button
+                            [ Button.attrs [ class "metalButton", style "height" "52px", style "margin-right" "2%" ]
+                            , Button.onClick Pick ]
+                            [ text "Upload Map" ]
+                        , Button.button
+                            [ Button.attrs [ class "metalButton", style "height" "52px" ]
+                            , Button.onClick ClearCharacterList ] 
+                            [ text "Clear Map" ]
+                        ]
+                    ]
+                , Grid.row [ ]
+                    [ Grid.col [ Col.xs8 ] [ dungeonMap_Svg model ]
+                    , Grid.col [] [ dungeonMap_MonsterList model]
+                    ]
+                ]
+                , newObjectIconModal model
             ]
 
 dungeonMap_MonsterList : Model -> Html Msg
 dungeonMap_MonsterList model =
-    div [ class "container" ]
-        [ Table.table { options = [ Table.hover, Table.bordered, Table.attr (class "map-table") ]
+    div [ ]
+        [ Table.table { options = [ Table.hover, Table.bordered ]
                       , thead =  Table.simpleThead
-                          [ Table.th [Table.cellAttr <| class "th"] [ Html.text "ID" ]
-                          , Table.th [Table.cellAttr <| class "th"] [ Html.text "Name" ]
-                          , Table.th [Table.cellAttr <| class "th"] [ Html.text "LeP" ]
+                          [ Table.th [Table.cellAttr <| class "mediumCopper"] [ Html.text "ID" ]
+                          , Table.th [Table.cellAttr <| class "mediumCopper"] [ Html.text "Name" ]
+                          , Table.th [Table.cellAttr <| class "mediumCopper"] [ Html.text "LeP" ]
                           ]
                       , tbody =
                           Table.tbody []
@@ -87,7 +80,7 @@ characters2rows chars highlighted =
         (\i c ->
             case c of
                 Enemy name health _ _ _ ->
-                    Table.tr ([ Table.rowAttr <| class "tr", Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon (i+1) "-100" "-100" name)))) ]
+                    Table.tr ([ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon (i+1) "-100" "-100" name)))) ]
                              ++ if highlighted==i+1 then [ Table.rowSecondary ] else [])
                         [ Table.td [] [Html.text <| String.fromInt (i+1)]
                         , Table.td [] [Html.text name]
@@ -95,7 +88,7 @@ characters2rows chars highlighted =
                         ]
 
                 Hero name health ->
-                    Table.tr ([ Table.rowAttr <| class "tr", Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon (i+1) "-100" "-100" name)))) ]
+                    Table.tr ([ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon (i+1) "-100" "-100" name)))) ]
                              ++ if highlighted==i+1 then [ Table.rowSecondary ] else [])
                         [ Table.td [] [Html.text <| String.fromInt (i+1)]
                         , Table.td [] [Html.text name]
@@ -108,19 +101,24 @@ characters2rows chars highlighted =
 
 dungeonMap_Svg : Model -> Html Msg
 dungeonMap_Svg model =
-    div [ class "container"
-        , style "border" (if model.hover then "6px dashed purple" else "6px dashed #bfbfbf")
+    div [ style "border" (if model.hover then "6px dashed #b87333" else "6px dashed #bfbfbf")
         , hijackOn "dragenter" (Json.Decode.succeed DragEnter)
         , hijackOn "dragover" (Json.Decode.succeed DragEnter)
         , hijackOn "dragleave" (Json.Decode.succeed DragLeave)
         , hijackOn "drop" dropDecoder
         ]
-        [ Html.figure [ class "image" ]
+        [ Html.figure [ ]
            [ Svg.svg
-                ([ SvgAtt.width "100%", SvgAtt.viewBox "0 0 800 600", SvgAtt.version "1.1" ]
+                ([ SvgAtt.width "100%", SvgAtt.viewBox "0 0 800 550", SvgAtt.version "1.1" ]
                     ++ mouseDrawEvents model.addCharacterIcon
                 )
-                ([ Svg.image [ SvgAtt.width "800", SvgAtt.height "600", SvgAtt.title "DungeonMap", SvgAtt.xlinkHref (Maybe.withDefault "" (List.head model.previews)) ] [] ]
+                ([ Svg.image 
+                    [ SvgAtt.width "800"
+                    , SvgAtt.height "550"
+                    , SvgAtt.title "DungeonMap"
+                    , SvgAtt.xlinkHref (Maybe.withDefault "" (List.head model.previews)) 
+                    ] [] 
+                ]
                     ++ svgIconList model
                     ++ newIconsView model.addCharacterIcon
                 )
@@ -131,7 +129,7 @@ newObjectIconModal : Model -> Html Msg
 newObjectIconModal model =
     Modal.config (CloseModal ObjectIconModal)
         |> Modal.hideOnBackdropClick True
-        |> Modal.header [class "colored-header-footer"]
+        |> Modal.header [class "mediumCopper"]
                 [ Html.h3 [][text "Neues Icon"]
                 ]
         |> Modal.body [class "body"]
@@ -160,9 +158,9 @@ newObjectIconModal model =
                     )
                 ]
             ]
-            |> Modal.footer [class "colored-header-footer"]
+            |> Modal.footer [class "mediumCopper"]
                 [ Button.button
-                    [ Button.attrs [onClick <| AddCharacterIcon (MouseClick (getCharIcon model.addCharacterIcon)), class "metalButton map-buttons", style "margin-top" "5px", style "width" "140px" ]
+                    [ Button.attrs [onClick <| AddCharacterIcon (MouseClick (getCharIcon model.addCharacterIcon)), class "metalButton", style "margin-top" "5px" ]
                     , Button.disabled (model.radioCheckedID==0)
                     ]
                     [ text "Icon hinzufügen" ]
