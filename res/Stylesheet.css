@@ -54,10 +54,26 @@ html {
     background-color: #e4be9b
 }
 
+.btn:focus, .btn.focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem #d9a473;
+}
+
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
-  background-color: #e4be9b;
+  background-color: #deb187;
   border-color: #dee2e6 #dee2e6 #fff;
+  color: black;
+}
+
+.btn-link {
+    font-weight: 400;
+    color: #495057;;
+    text-decoration: none;
+}
+
+.btn {
+    background-color: #e4be9b;
 }
 
 tr:nth-child(even) {background-color: white;}

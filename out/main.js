@@ -5649,11 +5649,8 @@ var $author$project$Model$init = function (_v0) {
 			hover: false,
 			iconText: '',
 			maxFace: 6,
-<<<<<<< HEAD
-			mouseInIcon: false,
-=======
 			modalTabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState,
->>>>>>> style
+			mouseInIcon: false,
 			myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState,
 			objectIconList: _List_Nil,
 			previews: _List_Nil,
@@ -11664,7 +11661,6 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$activeTabAttributes = F2(
 						]),
 					$rundis$elm_bootstrap$Bootstrap$Tab$transitionStyles(1));
 		}
-<<<<<<< Updated upstream
 	});
 var $rundis$elm_bootstrap$Bootstrap$Tab$renderTabPane = F5(
 	function (id, active, _v0, state, configRec) {
@@ -11677,21 +11673,6 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$renderTabPane = F5(
 		return A2(
 			$elm$html$Html$div,
 			_Utils_ap(
-=======
-	}();
-	return A2(
-		$rundis$elm_bootstrap$Bootstrap$Modal$view,
-		model.showCustomEnemy,
-		A3(
-			$rundis$elm_bootstrap$Bootstrap$Modal$footer,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('mediumCopper')
-				]),
-			_List_Nil,
-			A3(
-				$rundis$elm_bootstrap$Bootstrap$Modal$body,
->>>>>>> Stashed changes
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$id(id),
@@ -13098,40 +13079,6 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Radio$OnClick = function (a) {
 var $rundis$elm_bootstrap$Bootstrap$Form$Radio$onClick = function (toMsg) {
 	return $rundis$elm_bootstrap$Bootstrap$Form$Radio$OnClick(toMsg);
 };
-<<<<<<< HEAD
-var $simonh1000$elm_colorpicker$ColorPicker$HueSlider = {$: 'HueSlider'};
-var $simonh1000$elm_colorpicker$ColorPicker$OnMouseMove = F2(
-	function (a, b) {
-		return {$: 'OnMouseMove', a: a, b: b};
-	});
-var $elm$svg$Svg$defs = $elm$svg$Svg$trustedNode('defs');
-var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
-var $elm$svg$Svg$linearGradient = $elm$svg$Svg$trustedNode('linearGradient');
-var $elm$svg$Svg$Attributes$offset = _VirtualDom_attribute('offset');
-var $elm$svg$Svg$Attributes$display = _VirtualDom_attribute('display');
-var $simonh1000$elm_colorpicker$ColorPicker$sliderStyles = _List_fromArray(
-	[
-		$elm$svg$Svg$Attributes$width(
-		$elm$core$String$fromInt($simonh1000$elm_colorpicker$ColorPicker$widgetWidth)),
-		$elm$svg$Svg$Attributes$height('100%'),
-		$elm$svg$Svg$Attributes$display('block')
-	]);
-var $elm$svg$Svg$stop = $elm$svg$Svg$trustedNode('stop');
-var $elm$svg$Svg$Attributes$stopColor = _VirtualDom_attribute('stop-color');
-var $elm$svg$Svg$Attributes$stopOpacity = _VirtualDom_attribute('stop-opacity');
-var $simonh1000$elm_colorpicker$ColorPicker$OnClick = F2(
-	function (a, b) {
-		return {$: 'OnClick', a: a, b: b};
-	});
-var $simonh1000$elm_colorpicker$ColorPicker$OnMouseDown = F2(
-	function (a, b) {
-		return {$: 'OnMouseDown', a: a, b: b};
-	});
-var $simonh1000$elm_colorpicker$ColorPicker$OnMouseUp = {$: 'OnMouseUp'};
-var $simonh1000$elm_colorpicker$ColorPicker$MouseInfo = F3(
-	function (x, y, mousePressed) {
-		return {mousePressed: mousePressed, x: x, y: y};
-=======
 var $rundis$elm_bootstrap$Bootstrap$Form$Radio$addOption = F2(
 	function (opt, _v0) {
 		var radio_ = _v0.a;
@@ -13142,7 +13089,6 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Radio$addOption = F2(
 				{
 					options: A2($elm$core$List$cons, opt, options)
 				}));
->>>>>>> style
 	});
 var $rundis$elm_bootstrap$Bootstrap$Form$Radio$Name = function (a) {
 	return {$: 'Name', a: a};
@@ -13361,7 +13307,6 @@ var $simonh1000$elm_colorpicker$ColorPicker$OnMouseMove = F2(
 	function (a, b) {
 		return {$: 'OnMouseMove', a: a, b: b};
 	});
-var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
 var $elm$svg$Svg$defs = $elm$svg$Svg$trustedNode('defs');
 var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var $elm$svg$Svg$linearGradient = $elm$svg$Svg$trustedNode('linearGradient');
