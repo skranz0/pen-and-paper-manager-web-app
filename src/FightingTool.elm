@@ -45,12 +45,11 @@ body model =
                         (displayCharacters model.enemy ++ 
                         [Table.tr [] 
                             [ Table.td[Table.cellAttr <| Attr.colspan 10] -- naja um sicher zu gehen
-                                [ Button.button
-                                    [ Button.light
-                                    , Button.block
-                                    , Button.attrs [onClick <| ShowModal CustomEnemy ]
-                                    ]
-                                    [ text "+"]
+                                [ Html.button 
+                                    [ class "metalButton"
+                                    , onClick <| ShowModal CustomEnemy
+                                    , style "width" "100%"
+                                    ][text "+"]
                                 ]
                             ]
                         ]
@@ -64,14 +63,14 @@ body model =
 
 header : Html Msg
 header =
-  Html.header [class "header animate__animated animate__fadeInDown"]
+  Html.header [class "header animate__animated animate__fadeInDown", style "height" "80%"]
                 [ div [class "grid-container"]
                     [ Html.figure [ class "image animate__animated animate__rollIn"]
                         [ Svg.svg
                             [ SvgAtt.width "100%", style "margin-top" "-18%", style "margin-left" "10%"]                
                             [ Svg.image [ SvgAtt.width "100%", SvgAtt.height "100%", SvgAtt.title "Logo", SvgAtt.xlinkHref "res/P&P Manager Logo 512x512px noBG.png" ] [] ]
                         ]
-                    , div [class "item1"]
+                    , div [class "item1", style "height" "80%"]
                         [ h1 [class "title", style "margin-left" "2%", style "margin-top" "4px"] [text "Pen & Paper Manager"]
                         , h2 [class "subtitle", style "margin-left" "2%"] [text "Für \"Das schwarze Auge\" Version 5"]
                         ]
@@ -150,14 +149,14 @@ viewCustomEnemyModal model =
                         { id = "enemy"
                         , link = Tab.link [] [ text "Gegner" ]
                         , pane =
-                            Tab.pane [ Spacing.mt3 ]
+                            Tab.pane [ class "lightCopper" , style "padding" "2%"]
                                 [ customEnemy model ]
                         }
                     , Tab.item
                         { id = "hero"
                         , link = Tab.link [] [ text "Held" ]
                         , pane =
-                            Tab.pane [ Spacing.mt3 ]
+                            Tab.pane [ class "lightCopper" , style "padding" "2%"]
                                 [ customHero model ]
                         }
                     ]
@@ -334,7 +333,7 @@ customEnemy model =
                 Hero _ _ -> (Input.placeholder "", Input.placeholder "", Input.placeholder "")
 
     in
-        div []
+        div [style "margin-left" "5%", style "margin-right" "5%"]
             [ Form.label [] [text "Name:"]
             , Input.text [Input.onInput 
                 (\n -> 
@@ -405,7 +404,7 @@ customEnemy model =
 
 customHero : Model -> Html Msg
 customHero model =
-    div []
+    div [style "margin-left" "5%", style "margin-right" "5%"]
         [ Form.label [] [text "Name"]
         , Input.text [Input.onInput
             (\n ->
