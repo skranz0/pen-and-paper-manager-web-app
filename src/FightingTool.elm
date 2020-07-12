@@ -101,13 +101,15 @@ viewAttackModal model =
                 ]
             |> Modal.body [class "body"]
                 [ Input.text
-                    [ Input.value model.dice
-                    , Input.placeholder "1W6+0"
+                    [ Input.placeholder model.dice
                     , Input.onInput ChangeTmpDice
                     ]
                 , Html.button
                     [ class "metalButton"
                     , onClick (DiceAndSlice model.tmpdice)
+                    , style "width" "100%"
+                    , style "margin-top" "2%"
+                    , style "margin-bottom" "2%"
                     ] [ text "Schaden würfeln" ]
                 , Input.number
                     [ insideInput
@@ -256,7 +258,7 @@ attack model id damage =
 
 setDice : String -> List String
 setDice set =
-    List.take 1  (String.split "W" set) ++ String.split "+" (Maybe.withDefault "6+0" <| List.head (List.drop 1 (String.split "W" set)))
+    List.take 1  (String.split "W" <| String.toUpper set) ++ String.split "+" (Maybe.withDefault "6+0" <| List.head (List.drop 1 (String.split "W" <| String.toUpper set)))
 
 damageCalc : (List Int) -> Int -> Int
 damageCalc randValues bd =

@@ -7793,6 +7793,7 @@ var $elm$core$List$take = F2(
 	function (n, list) {
 		return A3($elm$core$List$takeFast, 0, n, list);
 	});
+var $elm$core$String$toUpper = _String_toUpper;
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -7807,7 +7808,10 @@ var $author$project$FightingTool$setDice = function (set) {
 		A2(
 			$elm$core$List$take,
 			1,
-			A2($elm$core$String$split, 'W', set)),
+			A2(
+				$elm$core$String$split,
+				'W',
+				$elm$core$String$toUpper(set))),
 		A2(
 			$elm$core$String$split,
 			'+',
@@ -7818,7 +7822,10 @@ var $author$project$FightingTool$setDice = function (set) {
 					A2(
 						$elm$core$List$drop,
 						1,
-						A2($elm$core$String$split, 'W', set))))));
+						A2(
+							$elm$core$String$split,
+							'W',
+							$elm$core$String$toUpper(set)))))));
 };
 var $rundis$elm_bootstrap$Bootstrap$Modal$Show = {$: 'Show'};
 var $rundis$elm_bootstrap$Bootstrap$Modal$shown = $rundis$elm_bootstrap$Bootstrap$Modal$Show;
@@ -10534,8 +10541,7 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 								$rundis$elm_bootstrap$Bootstrap$Form$Input$text(
 								_List_fromArray(
 									[
-										$rundis$elm_bootstrap$Bootstrap$Form$Input$value(model.dice),
-										$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder('1W6+0'),
+										$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder(model.dice),
 										$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput($author$project$Model$ChangeTmpDice)
 									])),
 								A2(
@@ -10544,7 +10550,10 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 									[
 										$elm$html$Html$Attributes$class('metalButton'),
 										$elm$html$Html$Events$onClick(
-										$author$project$Model$DiceAndSlice(model.tmpdice))
+										$author$project$Model$DiceAndSlice(model.tmpdice)),
+										A2($elm$html$Html$Attributes$style, 'width', '100%'),
+										A2($elm$html$Html$Attributes$style, 'margin-top', '2%'),
+										A2($elm$html$Html$Attributes$style, 'margin-bottom', '2%')
 									]),
 								_List_fromArray(
 									[
