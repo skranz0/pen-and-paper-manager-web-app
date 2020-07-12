@@ -12119,6 +12119,8 @@ var $author$project$DungeonMap$characters2rows = F2(
 								_List_fromArray(
 									[
 										$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
+										$elm$html$Html$Attributes$class('tr')),
+										$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
 										$author$project$DungeonMap$stopBubbling(
 											$author$project$Model$AddCharacterIcon(
 												$author$project$Model$MouseDraw(
@@ -12160,6 +12162,8 @@ var $author$project$DungeonMap$characters2rows = F2(
 							_Utils_ap(
 								_List_fromArray(
 									[
+										$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
+										$elm$html$Html$Attributes$class('tr')),
 										$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
 										$author$project$DungeonMap$stopBubbling(
 											$author$project$Model$AddCharacterIcon(
@@ -12225,21 +12229,33 @@ var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 							[
 								A2(
 								$rundis$elm_bootstrap$Bootstrap$Table$th,
-								_List_Nil,
+								_List_fromArray(
+									[
+										$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+										$elm$html$Html$Attributes$class('th'))
+									]),
 								_List_fromArray(
 									[
 										$elm$html$Html$text('ID')
 									])),
 								A2(
 								$rundis$elm_bootstrap$Bootstrap$Table$th,
-								_List_Nil,
+								_List_fromArray(
+									[
+										$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+										$elm$html$Html$Attributes$class('th'))
+									]),
 								_List_fromArray(
 									[
 										$elm$html$Html$text('Name')
 									])),
 								A2(
 								$rundis$elm_bootstrap$Bootstrap$Table$th,
-								_List_Nil,
+								_List_fromArray(
+									[
+										$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+										$elm$html$Html$Attributes$class('th'))
+									]),
 								_List_fromArray(
 									[
 										$elm$html$Html$text('LeP')
@@ -13240,9 +13256,6 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Radio$radioList = F2(
 					$rundis$elm_bootstrap$Bootstrap$Form$Radio$name(groupName))),
 			radios);
 	});
-var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Success = {$: 'Success'};
-var $rundis$elm_bootstrap$Bootstrap$Button$success = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
-	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Success));
 var $simonh1000$elm_colorpicker$ColorPicker$markerAttrs = _List_fromArray(
 	[
 		A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
@@ -13754,7 +13767,10 @@ var $author$project$DungeonMap$newObjectIconModal = function (model) {
 		model.showObjectIconModal,
 		A3(
 			$rundis$elm_bootstrap$Bootstrap$Modal$footer,
-			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('colored-header-footer')
+				]),
 			_List_fromArray(
 				[
 					A2(
@@ -13767,9 +13783,11 @@ var $author$project$DungeonMap$newObjectIconModal = function (model) {
 									$elm$html$Html$Events$onClick(
 									$author$project$Model$AddCharacterIcon(
 										$author$project$Model$MouseClick(
-											$author$project$DungeonMap$getCharIcon(model.addCharacterIcon))))
+											$author$project$DungeonMap$getCharIcon(model.addCharacterIcon)))),
+									$elm$html$Html$Attributes$class('metalButton map-buttons'),
+									A2($elm$html$Html$Attributes$style, 'margin-top', '5px'),
+									A2($elm$html$Html$Attributes$style, 'width', '140px')
 								])),
-							$rundis$elm_bootstrap$Bootstrap$Button$success,
 							$rundis$elm_bootstrap$Bootstrap$Button$disabled(!model.radioCheckedID)
 						]),
 					_List_fromArray(
@@ -13779,7 +13797,10 @@ var $author$project$DungeonMap$newObjectIconModal = function (model) {
 				]),
 			A3(
 				$rundis$elm_bootstrap$Bootstrap$Modal$body,
-				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('body')
+					]),
 				_List_fromArray(
 					[
 						A2(
@@ -13862,11 +13883,20 @@ var $author$project$DungeonMap$newObjectIconModal = function (model) {
 							]))
 					]),
 				A3(
-					$rundis$elm_bootstrap$Bootstrap$Modal$h3,
-					_List_Nil,
+					$rundis$elm_bootstrap$Bootstrap$Modal$header,
 					_List_fromArray(
 						[
-							$elm$html$Html$text('Neues Icon')
+							$elm$html$Html$Attributes$class('colored-header-footer')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$h3,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Neues Icon')
+								]))
 						]),
 					A2(
 						$rundis$elm_bootstrap$Bootstrap$Modal$hideOnBackdropClick,

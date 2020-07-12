@@ -69,7 +69,7 @@ tr:nth-child(even) {background-color: white;}
     background-image: repeating-linear-gradient(to right bottom, #acacac , #bfbfbf , #acacac 40% );
     border-radius: 8px;
     padding: 8px 28px;
-    color: white;
+    color: white !important;
     text-align: center;
     text-decoration: none;
     text-shadow: 2px 2px 5px #404040;

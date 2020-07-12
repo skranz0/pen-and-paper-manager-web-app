@@ -70,9 +70,9 @@ dungeonMap_MonsterList model =
     div [ class "container" ]
         [ Table.table { options = [ Table.hover, Table.bordered, Table.attr (class "map-table") ]
                       , thead =  Table.simpleThead
-                          [ Table.th [] [ Html.text "ID" ]
-                          , Table.th [] [ Html.text "Name" ]
-                          , Table.th [] [ Html.text "LeP" ]
+                          [ Table.th [Table.cellAttr <| class "th"] [ Html.text "ID" ]
+                          , Table.th [Table.cellAttr <| class "th"] [ Html.text "Name" ]
+                          , Table.th [Table.cellAttr <| class "th"] [ Html.text "LeP" ]
                           ]
                       , tbody =
                           Table.tbody []
@@ -87,7 +87,7 @@ characters2rows chars highlighted =
         (\i c ->
             case c of
                 Enemy name health _ _ _ ->
-                    Table.tr ([ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon (i+1) "-100" "-100" name)))) ]
+                    Table.tr ([ Table.rowAttr <| class "tr", Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (MonsterIcon (i+1) "-100" "-100" name)))) ]
                              ++ if highlighted==i+1 then [ Table.rowSecondary ] else [])
                         [ Table.td [] [Html.text <| String.fromInt (i+1)]
                         , Table.td [] [Html.text name]
@@ -95,7 +95,7 @@ characters2rows chars highlighted =
                         ]
 
                 Hero name health ->
-                    Table.tr ([ Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon (i+1) "-100" "-100" name)))) ]
+                    Table.tr ([ Table.rowAttr <| class "tr", Table.rowAttr (stopBubbling (AddCharacterIcon (MouseDraw (PlayerIcon (i+1) "-100" "-100" name)))) ]
                              ++ if highlighted==i+1 then [ Table.rowSecondary ] else [])
                         [ Table.td [] [Html.text <| String.fromInt (i+1)]
                         , Table.td [] [Html.text name]
@@ -131,8 +131,10 @@ newObjectIconModal : Model -> Html Msg
 newObjectIconModal model =
     Modal.config (CloseModal ObjectIconModal)
         |> Modal.hideOnBackdropClick True
-        |> Modal.h3 [] [ text "Neues Icon" ]
-        |> Modal.body []
+        |> Modal.header [class "colored-header-footer"]
+                [ Html.h3 [][text "Neues Icon"]
+                ]
+        |> Modal.body [class "body"]
             [ div []
                 [ div []
                     ( Radio.radioList "customradiogroup"
@@ -158,10 +160,9 @@ newObjectIconModal model =
                     )
                 ]
             ]
-            |> Modal.footer []
+            |> Modal.footer [class "colored-header-footer"]
                 [ Button.button
-                    [ Button.attrs [onClick <| AddCharacterIcon (MouseClick (getCharIcon model.addCharacterIcon)) ]
-                    , Button.success
+                    [ Button.attrs [onClick <| AddCharacterIcon (MouseClick (getCharIcon model.addCharacterIcon)), class "metalButton map-buttons", style "margin-top" "5px", style "width" "140px" ]
                     , Button.disabled (model.radioCheckedID==0)
                     ]
                     [ text "Icon hinzufügen" ]
