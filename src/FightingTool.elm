@@ -227,10 +227,10 @@ displayCharacters chars =
                             [
                             ]
                         , Table.td[]
-                            [ Button.button
-                                [ Button.danger
-                                , Button.attrs [onClick <| RemoveEnemy i ] ]
-                                [ text "Löschen"]
+                            [ Html.i 
+                                [class "fas fa-trash-alt"
+                                , onClick <| RemoveEnemy i 
+                                ] []
                             ]
                         ]
         )
