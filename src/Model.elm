@@ -78,7 +78,7 @@ init _ =
         , colorPicker = ColorPicker.empty
         , colour = Color.rgb 255 0 0
         , radioCheckedID = 0
-        , activeTooltip = "Tooltip"
+        , activeTooltip = ""
         , highlightedTableRow = 0
         , mouseInIcon = False
         }

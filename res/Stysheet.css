@@ -20,6 +20,11 @@
     max-width: 100%;
 }
 
+.body-fix {
+    display:flex; 
+    flex-direction:column; 
+}
+
 .grid-container {
     display: grid;
     grid-gap: 2%;
@@ -32,7 +37,7 @@
     border-left-style: double; 
     border-width: 5px;
     height: 75%;
-    width: 120%;
+    width: 100%;
 }
 
 .th {
@@ -49,7 +54,7 @@ tr:nth-child(even) {background-color: white;}
     background-image: repeating-linear-gradient(to right bottom, #acacac , #bfbfbf , #acacac 40% );
     border-radius: 8px;
     padding: 8px 28px;
-    color: white;
+    color: white !important;
     align-self: flex-end;
     text-align: center;
     text-decoration: none;
@@ -61,28 +66,47 @@ tr:nth-child(even) {background-color: white;}
     background-image: repeating-linear-gradient(to right bottom, #acacac , #bfbfbf 10%, #acacac 40% );
 }
 
-.PlayerIcon {
-    fill: black;
-    stroke: red;
-    stroke-width: 2;
-    fill-opacity:0;
-}
-
-.MonsterIcon {
-    fill: black;
-    stroke: red;
-    stroke-width: 2;
-    fill-opacity:0;
-}
-
-.PlayerIcon:hover {
-    fill: grey-darker;
-    opacity:0.5;
-    fill-opacity:0.5;
-}
 
 .MonsterIcon:hover {
     fill: grey-darker;
     opacity:0.5;
     fill-opacity:0.5;
+    width:30px;
+    height:30px;
+    cursor: pointer;
+}
+.PlayerIcon:hover {
+    fill: grey-darker;
+    opacity:0.5;
+    fill-opacity:0.5;
+    width:25px;
+    height:25px;
+    cursor: pointer;
+}
+.ObjectIcon:hover {
+    fill: grey-darker;
+    opacity:0.5;
+    fill-opacity:0.5;
+    width:25px;
+    height:25px;
+    cursor: pointer;
+}
+
+.content-box {
+    margin-right: 20px;
+    margin-left: 20px;
+    padding: 15px;
+}
+
+.text-area {
+    color: #666666 !important;
+    background-color: #e4be9b !important;
+}
+
+.map-buttons {
+    width: 120px;
+}
+
+.map-table {
+    border: 2px solid #bfbfbf !important;
 }

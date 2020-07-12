@@ -5632,7 +5632,7 @@ var $avh4$elm_color$Color$rgb = F3(
 var $author$project$Model$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
-			activeTooltip: 'Tooltip',
+			activeTooltip: '',
 			addCharacterIcon: $author$project$Model$DrawingInactive,
 			bonusDamage: 0,
 			characterId: 0,
@@ -8572,8 +8572,8 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								activeTooltip: 'Beschreibung',
-								mouseInIcon: (tooltip === 'Beschreibung') ? false : true
+								activeTooltip: '',
+								mouseInIcon: (tooltip === '') ? false : true
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -8582,7 +8582,7 @@ var $author$project$Main$update = F2(
 							model,
 							{
 								activeTooltip: tooltip,
-								mouseInIcon: (tooltip === 'Beschreibung') ? false : true
+								mouseInIcon: (tooltip === '') ? false : true
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
@@ -8606,7 +8606,7 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								activeTooltip: 'Beschreibung',
+								activeTooltip: '',
 								objectIconList: A2(
 									$elm$core$List$filter,
 									$author$project$Main$isNotId(id),
@@ -8618,7 +8618,7 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								activeTooltip: 'Beschreibung',
+								activeTooltip: '',
 								characterList: A2(
 									$elm$core$List$filter,
 									$author$project$Main$isNotId(id),
@@ -11999,6 +11999,13 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$config = function (toMsg) {
 		{attributes: _List_Nil, isPill: false, items: _List_Nil, layout: $elm$core$Maybe$Nothing, toMsg: toMsg, useHash: false, withAnimation: false});
 };
 var $author$project$Model$ClearCharacterList = {$: 'ClearCharacterList'};
+var $author$project$Model$Pick = {$: 'Pick'};
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Attrs = function (a) {
+	return {$: 'Attrs', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$attrs = function (attrs_) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Attrs(attrs_);
+};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Column = function (a) {
 	return {$: 'Column', a: a};
 };
@@ -12009,6 +12016,12 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$col = F2(
 	});
 var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Disabled = {$: 'Disabled'};
 var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$disabled = $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Disabled;
+var $rundis$elm_bootstrap$Bootstrap$Table$TableAttr = function (a) {
+	return {$: 'TableAttr', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$attr = function (attr_) {
+	return $rundis$elm_bootstrap$Bootstrap$Table$TableAttr(attr_);
+};
 var $rundis$elm_bootstrap$Bootstrap$Table$Bordered = {$: 'Bordered'};
 var $rundis$elm_bootstrap$Bootstrap$Table$bordered = $rundis$elm_bootstrap$Bootstrap$Table$Bordered;
 var $author$project$Model$AddCharacterIcon = function (a) {
@@ -12137,10 +12150,6 @@ var $author$project$DungeonMap$characters2rows = F2(
 				}),
 			$elm$core$Array$toList(chars));
 	});
-var $rundis$elm_bootstrap$Bootstrap$Table$Responsive = function (a) {
-	return {$: 'Responsive', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Table$responsive = $rundis$elm_bootstrap$Bootstrap$Table$Responsive($elm$core$Maybe$Nothing);
 var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -12153,7 +12162,12 @@ var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 				$rundis$elm_bootstrap$Bootstrap$Table$table(
 				{
 					options: _List_fromArray(
-						[$rundis$elm_bootstrap$Bootstrap$Table$hover, $rundis$elm_bootstrap$Bootstrap$Table$bordered, $rundis$elm_bootstrap$Bootstrap$Table$responsive]),
+						[
+							$rundis$elm_bootstrap$Bootstrap$Table$hover,
+							$rundis$elm_bootstrap$Bootstrap$Table$bordered,
+							$rundis$elm_bootstrap$Bootstrap$Table$attr(
+							$elm$html$Html$Attributes$class('map-table'))
+						]),
 					tbody: A2(
 						$rundis$elm_bootstrap$Bootstrap$Table$tbody,
 						_List_Nil,
@@ -12188,7 +12202,6 @@ var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 };
 var $author$project$Model$DragEnter = {$: 'DragEnter'};
 var $author$project$Model$DragLeave = {$: 'DragLeave'};
-var $author$project$Model$Pick = {$: 'Pick'};
 var $elm$file$File$decoder = _File_decoder;
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$json$Json$Decode$oneOrMoreHelp = F2(
@@ -12663,7 +12676,7 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 							$elm$svg$Svg$Events$onMouseOver(
 							A2($author$project$Model$HighlightTableRow, id, text)),
 							$elm$svg$Svg$Events$onMouseOut(
-							A2($author$project$Model$HighlightTableRow, 0, 'Beschreibung')),
+							A2($author$project$Model$HighlightTableRow, 0, '')),
 							$elm$svg$Svg$Events$onClick(
 							A2($author$project$Model$DeleteIcon, iconType, id))
 						]),
@@ -12718,7 +12731,7 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 							$elm$svg$Svg$Events$onMouseOver(
 							A2($author$project$Model$HighlightTableRow, id, text)),
 							$elm$svg$Svg$Events$onMouseOut(
-							A2($author$project$Model$HighlightTableRow, 0, 'Beschreibung')),
+							A2($author$project$Model$HighlightTableRow, 0, '')),
 							$elm$svg$Svg$Events$onClick(
 							A2($author$project$Model$DeleteIcon, iconType, id))
 						]),
@@ -12743,7 +12756,7 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 								$elm$svg$Svg$Events$onMouseOver(
 								$author$project$Model$ToolTipMsg(text)),
 								$elm$svg$Svg$Events$onMouseOut(
-								$author$project$Model$ToolTipMsg('Beschreibung')),
+								$author$project$Model$ToolTipMsg('')),
 								$elm$svg$Svg$Attributes$class('ObjectIcon'),
 								$elm$svg$Svg$Events$onClick(
 								A2($author$project$Model$DeleteIcon, iconType, id))
@@ -12775,7 +12788,7 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 								$elm$svg$Svg$Events$onMouseOver(
 								$author$project$Model$ToolTipMsg(text)),
 								$elm$svg$Svg$Events$onMouseOut(
-								$author$project$Model$ToolTipMsg('Beschreibung')),
+								$author$project$Model$ToolTipMsg('')),
 								$elm$svg$Svg$Attributes$class('ObjectIcon'),
 								$elm$svg$Svg$Events$onClick(
 								A2($author$project$Model$DeleteIcon, iconType, id))
@@ -12848,17 +12861,6 @@ var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 		return _List_Nil;
 	}
 };
-var $rundis$elm_bootstrap$Bootstrap$Button$onClick = function (message) {
-	return $rundis$elm_bootstrap$Bootstrap$Button$attrs(
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$Events$preventDefaultOn,
-				'click',
-				$elm$json$Json$Decode$succeed(
-					_Utils_Tuple2(message, true)))
-			]));
-};
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $author$project$DungeonMap$svgIconList = function (model) {
 	return A3(
@@ -12882,7 +12884,7 @@ var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 				A2(
 				$elm$html$Html$Attributes$style,
 				'border',
-				model.hover ? '6px dashed purple' : '6px dashed #ccc'),
+				model.hover ? '6px dashed purple' : '6px dashed #bfbfbf'),
 				A2(
 				$author$project$DungeonMap$hijackOn,
 				'dragenter',
@@ -12899,16 +12901,6 @@ var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
 			]),
 		_List_fromArray(
 			[
-				A2(
-				$rundis$elm_bootstrap$Bootstrap$Button$button,
-				_List_fromArray(
-					[
-						$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Model$Pick)
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Upload Map')
-					])),
 				A2(
 				$elm$html$Html$figure,
 				_List_fromArray(
@@ -13613,6 +13605,17 @@ var $author$project$DungeonMap$newObjectIconModal = function (model) {
 						true,
 						$rundis$elm_bootstrap$Bootstrap$Modal$config(
 							$author$project$Model$CloseModal($author$project$Model$ObjectIconModal)))))));
+};
+var $rundis$elm_bootstrap$Bootstrap$Button$onClick = function (message) {
+	return $rundis$elm_bootstrap$Bootstrap$Button$attrs(
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$Events$preventDefaultOn,
+				'click',
+				$elm$json$Json$Decode$succeed(
+					_Utils_Tuple2(message, true)))
+			]));
 };
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col = {$: 'Col'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width = F2(
@@ -14530,7 +14533,7 @@ var $author$project$DungeonMap$dungeonMapView = function (model) {
 		$elm$html$Html$section,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('container is-widescreen')
+				$elm$html$Html$Attributes$class('content-box is-widescreen')
 			]),
 		_List_fromArray(
 			[
@@ -14558,7 +14561,12 @@ var $author$project$DungeonMap$dungeonMapView = function (model) {
 											[
 												$rundis$elm_bootstrap$Bootstrap$Form$Textarea$rows(1),
 												$rundis$elm_bootstrap$Bootstrap$Form$Textarea$disabled,
-												$rundis$elm_bootstrap$Bootstrap$Form$Textarea$value(model.activeTooltip)
+												$rundis$elm_bootstrap$Bootstrap$Form$Textarea$value(model.activeTooltip),
+												$rundis$elm_bootstrap$Bootstrap$Form$Textarea$attrs(
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('text-area')
+													]))
 											])),
 										A2($elm$html$Html$br, _List_Nil, _List_Nil),
 										$author$project$DungeonMap$dungeonMap_Svg(model)
@@ -14590,11 +14598,31 @@ var $author$project$DungeonMap$dungeonMapView = function (model) {
 													[
 														A2($elm$html$Html$br, _List_Nil, _List_Nil),
 														A2(
-														$elm$html$Html$button,
+														$rundis$elm_bootstrap$Bootstrap$Button$button,
 														_List_fromArray(
 															[
-																$elm$html$Html$Attributes$class('metalButton'),
-																$elm$html$Html$Events$onClick($author$project$Model$ClearCharacterList)
+																$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+																_List_fromArray(
+																	[
+																		$elm$html$Html$Attributes$class('metalButton map-buttons')
+																	])),
+																$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Model$Pick)
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Upload Map')
+															])),
+														A2(
+														$rundis$elm_bootstrap$Bootstrap$Button$button,
+														_List_fromArray(
+															[
+																$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+																_List_fromArray(
+																	[
+																		$elm$html$Html$Attributes$class('metalButton map-buttons'),
+																		A2($elm$html$Html$Attributes$style, 'margin-top', '5px')
+																	])),
+																$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Model$ClearCharacterList)
 															]),
 														_List_fromArray(
 															[
