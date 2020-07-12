@@ -398,6 +398,7 @@ customEnemy model =
             , Html.br [] []
             , Html.button 
                 [ class "metalButton"
+                , style "position" "right"
                 , onClick <| AddEnemy model.tmpEnemy ]
                 [ text "Hinzufügen"]
             ]

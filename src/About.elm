@@ -7,8 +7,7 @@ import Model exposing (..)
 aboutView : Html Msg
 aboutView =
     div[ class "aboutText" ]
-    [ Html.h1 [ class "about" ] [ text "Das schwarze Auge Edition 5" ]
-    , Html.h3 [] [ text "Übersicht der Kampfesregeln"]
+    [ Html.h1 [class "about"] [ text "Übersicht der Kampfesregeln"]
     , Html.p [] 
         [ text
             """

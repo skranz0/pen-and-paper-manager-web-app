@@ -8653,7 +8653,6 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$Attributes$href = function (url) {
 	return A2(
 		$elm$html$Html$Attributes$stringProperty,
@@ -8677,13 +8676,6 @@ var $author$project$About$aboutView = A2(
 				[
 					$elm$html$Html$Attributes$class('about')
 				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('Das schwarze Auge Edition 5')
-				])),
-			A2(
-			$elm$html$Html$h3,
-			_List_Nil,
 			_List_fromArray(
 				[
 					$elm$html$Html$text('Übersicht der Kampfesregeln')
@@ -8794,6 +8786,7 @@ var $rundis$elm_bootstrap$Bootstrap$Modal$footer = F3(
 							{attributes: attributes, children: children}))
 				}));
 	});
+var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $rundis$elm_bootstrap$Bootstrap$Modal$Header = function (a) {
 	return {$: 'Header', a: a};
 };
@@ -10779,6 +10772,7 @@ var $author$project$FightingTool$customEnemy = function (model) {
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$class('metalButton'),
+						A2($elm$html$Html$Attributes$style, 'position', 'right'),
 						$elm$html$Html$Events$onClick(
 						$author$project$Model$AddEnemy(model.tmpEnemy))
 					]),

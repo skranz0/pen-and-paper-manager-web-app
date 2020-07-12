@@ -70,7 +70,7 @@ html {
 
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
-  background-color: #e4be9b;
+  background-color: #efd8c3;
   border-color: #dee2e6 #dee2e6 #fff;
   color: black;
 }
@@ -86,7 +86,7 @@ html {
 }
 
 .btn {
-    background-color: #deb187;
+    background-color: #e4be9b;
 }
 
 tr:nth-child(even) {background-color: white;}
