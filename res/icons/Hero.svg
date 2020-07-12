@@ -8,7 +8,7 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    sodipodi:docname="Hero.svg"
-   inkscape:version="1.0 (6e3e5246a0, 2020-05-07)"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
    id="svg8"
    version="1.1"
    viewBox="0 0 210 297"
@@ -131,16 +131,16 @@
   </defs>
   <sodipodi:namedview
      inkscape:window-maximized="1"
-     inkscape:window-y="27"
-     inkscape:window-x="72"
-     inkscape:window-height="704"
-     inkscape:window-width="1294"
+     inkscape:window-y="0"
+     inkscape:window-x="0"
+     inkscape:window-height="994"
+     inkscape:window-width="1680"
      showgrid="false"
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
      inkscape:cy="562.58602"
-     inkscape:cx="400"
+     inkscape:cx="-52.857143"
      inkscape:zoom="0.35"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
@@ -160,7 +160,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -169,8 +169,9 @@
      inkscape:groupmode="layer"
      inkscape:label="Ebene 1">
     <path
-       d="M 68.806218,35.482623 A 39.999999,39.999999 0 0 1 28.806076,75.482765 v 69.999865 a 39.999999,39.999999 0 0 1 40.000142,40.00014 h 69.999862 a 39.999999,39.999999 0 0 1 40.00014,-40.00014 V 75.482765 A 39.999999,39.999999 0 0 1 138.80608,35.482623 Z"
-       style="fill:none;stroke-width:10;opacity:1;stroke:black;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
-       id="rect1039" />
+       d="M 70.00007,73.499927 A 39.999999,39.999999 0 0 1 29.999928,113.50007 v 69.99986 a 39.999999,39.999999 0 0 1 40.000142,40.00014 h 69.99986 a 39.999999,39.999999 0 0 1 40.00014,-40.00014 V 113.50007 A 39.999999,39.999999 0 0 1 139.99993,73.499927 Z"
+       style="opacity:1;fill:none;stroke:#000000;stroke-width:10;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1039"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>

@@ -144,6 +144,11 @@ update msg model =
             , Cmd.none
             )
 
+        ModalTabMsg state ->
+            ( { model | modalTabState = state }
+            , Cmd.none
+            )
+
         AddCharacterIcon addCharacterIconMsg ->
             case addCharacterIconMsg of
                 MouseClick characterIcon ->
@@ -301,7 +306,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [Html.Attributes.class "body"]
+    div [Html.Attributes.class "wrapper textFont", Html.Attributes.style "height" "100%"]
         [ header
         , Tab.config TabMsg
             |> Tab.items

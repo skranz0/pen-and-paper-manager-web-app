@@ -16,6 +16,8 @@ import Bootstrap.Form as Form
 import Bootstrap.Form.Radio as Radio
 import Bootstrap.Form.Fieldset as Fieldset
 import Bootstrap.Form.Input as Input
+import Bootstrap.Tab as Tab
+import Bootstrap.Utilities.Spacing as Spacing
 import Array
 import Array.Extra as Array
 import Random
@@ -31,17 +33,17 @@ body model =
             [ Table.table
                 { options = [Table.hover ]
                 , thead =  Table.simpleThead
-                    [ Table.th [] [ text "ID" ]
-                    , Table.th [ Table.cellAttr <| Attr.colspan 2 ] [ text "Name" ]
-                    , Table.th [] [ text "RS" ]
-                    , Table.th [] [ text "LeP"]
-                    , Table.th [] [ text " "]
-                    , Table.th [] [ text " "]
+                    [ Table.th [Table.cellAttr <| class "th"] [ text "ID" ]
+                    , Table.th [ Table.cellAttr <| Attr.colspan 2 , Table.cellAttr <| class "th"] [ text "Name" ]
+                    , Table.th [Table.cellAttr <| class "th"] [ text "RS" ]
+                    , Table.th [Table.cellAttr <| class "th"] [ text "LeP"]
+                    , Table.th [Table.cellAttr <| class "th"] [ text " "]
+                    , Table.th [Table.cellAttr <| class "th"] [ text " "]
                     ]
                 , tbody =
                     Table.tbody []
                         (displayCharacters model.enemy ++ 
-                        [Table.tr [] 
+                        [Table.tr [Table.rowAttr <| class "tr"] 
                             [ Table.td[Table.cellAttr <| Attr.colspan 10] -- naja um sicher zu gehen
                                 [ Button.button
                                     [ Button.light
@@ -62,7 +64,7 @@ body model =
 
 header : Html Msg
 header =
-  Html.header [class "header is-bold animate__animated animate__fadeInDown"]
+  Html.header [class "header animate__animated animate__fadeInDown"]
                 [ div [class "grid-container"]
                     [ Html.figure [ class "image animate__animated animate__rollIn"]
                         [ Svg.svg
@@ -78,7 +80,7 @@ header =
 
 footer : Html Msg
 footer =
-    Html.footer [class "footer animate__animated animate__fadeInUp"]
+    Html.footer [class "footer animate__animated animate__fadeInUp page-footer"]
             [ div []
                 [ Html.p [] [ text "Entwickelt von Laura Spilling, Stefan Kranz, Marcus Gagelmann und Alexander Kampf" ]
                 , Html.p [] [ text "Einführung in das World Wide Web" ]
@@ -97,29 +99,29 @@ viewAttackModal model =
     div []
         [ Modal.config (CloseModal AttackModal)
             |> Modal.hideOnBackdropClick True
-            |> Modal.h3 [] [ text "Angriff" ]
-            |> Modal.body []
+            |> Modal.header [class "colored-header-footer"]
+                [ Html.h3 [][text "Angriff"]
+                ]
+            |> Modal.body [class "body"]
                 [ Input.text
                     [ Input.value model.dice
                     , Input.placeholder "1W6+0"
                     , Input.onInput ChangeTmpDice
                     ]
-                , Button.button
-                    [ Button.attrs [onClick (DiceAndSlice model.tmpdice) ]
-                    , Button.outlineDark
-                    ]
-                    [ text "Schaden würfeln" ]
+                , Html.button
+                    [ class "metalButton"
+                    , onClick (DiceAndSlice model.tmpdice)
+                    ] [ text "Schaden würfeln" ]
                 , Input.number
                     [ insideInput
                     , Input.onInput ChangeDamage
                     ]
                 ]
-            |> Modal.footer []
-                [ Button.button
-                    [ Button.attrs [onClick <| attack model model.characterId model.damage]
-                    , Button.success
-                    ]
-                    [ text "Schaden zufügen" ]
+            |> Modal.footer [class "colored-header-footer"]
+                [ Html.button
+                    [ class "metalButton"
+                    , onClick <| attack model model.characterId model.damage
+                    ] [ text "Schaden zufügen" ]
                 ]
             |> Modal.view model.showAttackModal
         ]
@@ -132,53 +134,38 @@ viewCustomEnemyModal model =
     just works the way it is.
     It will probably be put in a modal in the future.
 -}
-    let
-        enemybool =
-            case model.enemyHero of
-               "Enemy" ->  True
-               _ -> False
-        herobool =
-            case model.enemyHero of
-               "Hero" ->  True
-               _ -> False
-
-
-    in
-        Modal.config (CloseModal CustomEnemy)
-            |> Modal.hideOnBackdropClick True
-            |> Modal.h3 [] [ text "Charakter hinzufügen" ]
-            |> Modal.body [] [
-                div []
-                    [ dropdownMenu model
-                    , Html.br [] []
-                    , Fieldset.config
-                        |> Fieldset.asGroup
-                        |> Fieldset.legend [] [ text "Benutzerdefiniert: " ]
-                        |> Fieldset.children
-                            ( Radio.radioList "EnemyHero"
-                                [ Radio.create
-                                    [ Radio.id "enemy"
-                                    , Radio.onClick <| SwitchEnemyHero "Enemy"
-                                    , Radio.checked enemybool
-                                    ] "Gegner"
-                                , Radio.create
-                                    [ Radio.id "hero"
-                                    , Radio.onClick <| SwitchEnemyHero "Hero"
-                                    , Radio.checked herobool
-                                    ] "Held"
-                                ]
-                            )
-                        |> Fieldset.view
-                    , if model.enemyHero == "Hero"
-                        then customHero model
-                        else if model.enemyHero == "Enemy"
-                            then customEnemy model
-                            else p [][]
+    Modal.config (CloseModal CustomEnemy)
+    |> Modal.hideOnBackdropClick True
+    |> Modal.header [class "colored-header-footer"]
+        [ Html.h3 [][text "Charakter hinzufügen"] ]
+    |> Modal.body [ class "body"]
+        [ div []
+            [ Html.h5 [][text "Vordefiniert"] 
+            , dropdownMenu model
+            , Html.br [] []
+            , Html.h5 [][text "Benutzerdefiniert"]
+            , Tab.config ModalTabMsg
+                |> Tab.items
+                    [ Tab.item
+                        { id = "enemy"
+                        , link = Tab.link [] [ text "Gegner" ]
+                        , pane =
+                            Tab.pane [ Spacing.mt3 ]
+                                [ customEnemy model ]
+                        }
+                    , Tab.item
+                        { id = "hero"
+                        , link = Tab.link [] [ text "Held" ]
+                        , pane =
+                            Tab.pane [ Spacing.mt3 ]
+                                [ customHero model ]
+                        }
                     ]
+                |> Tab.view model.modalTabState
             ]
-            |> Modal.footer [] []
-            |> Modal.view model.showCustomEnemy
-
+        ]
+    |> Modal.footer [class "colored-header-footer"] []
+    |> Modal.view model.showCustomEnemy
 
 parseEnemy : Json.Decode.Decoder Character
 parseEnemy =
@@ -303,7 +290,7 @@ dropdownMenu model =
             { options = [ Dropdown.dropRight ]
             , toggleMsg = MyDrop1Msg
             , toggleButton =
-                Dropdown.toggle [ Button.primary ] [ text "Gegner" ]
+                Dropdown.toggle [ Button.primary ] [ text "Monster" ]
             , items =
                 -- give a name to the LoadEnemy method and it will pull up the corresponding JSON
                 [ Dropdown.header [ text "Kulturschaffender"]
@@ -409,10 +396,10 @@ customEnemy model =
                 , ddArmor
                 ]
             , Html.br [] []
-            , Button.button
-                [ Button.success
-                , Button.attrs [ onClick <| AddEnemy model.tmpEnemy  ]
-                ] [ text "Hinzufügen"]
+            , Html.button 
+                [ class "metalButton"
+                , onClick <| AddEnemy model.tmpEnemy ]
+                [ text "Hinzufügen"]
             ]
 
 customHero : Model -> Html Msg
@@ -442,8 +429,8 @@ customHero model =
                     UpdateTmp <| Hero name (Maybe.withDefault 0 <| String.toInt a)
             )]
         , Html.br [] []
-        , Button.button
-            [ Button.success
-            , Button.attrs [ onClick <| AddEnemy model.tmpHero  ]
-            ] [ text "Hinzufügen"]
+        , Html.button
+            [class "metalButton"
+            , onClick <| AddEnemy model.tmpHero ]
+            [text "Hinzufügen"]
         ]

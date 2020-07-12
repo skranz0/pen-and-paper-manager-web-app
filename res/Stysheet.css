@@ -1,3 +1,15 @@
+html {
+    background-color: #faf2eb;
+}
+
+.wrapper {
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background-color: #faf2eb;
+}
+
+
 .header {
     background-image: repeating-linear-gradient(to right bottom, #b87333 , #ce8a4b , #b87333 40% );
     color: white;
@@ -5,6 +17,7 @@
     text-align: left;
     padding: 10px;
     margin-bottom: 1%;
+    font-family: 'Fondamento', cursive;
   }
 
 .footer {
@@ -19,10 +32,12 @@
     background-color: #faf2eb;
     max-width: 100%;
 }
+.colored-header-footer{
+    background-color: #e4be9b;
+}
 
-.body-fix {
-    display:flex; 
-    flex-direction:column; 
+.textFont {
+    font-family: 'Alegreya', serif;
 }
 
 .grid-container {
@@ -54,8 +69,7 @@ tr:nth-child(even) {background-color: white;}
     background-image: repeating-linear-gradient(to right bottom, #acacac , #bfbfbf , #acacac 40% );
     border-radius: 8px;
     padding: 8px 28px;
-    color: white !important;
-    align-self: flex-end;
+    color: white;
     text-align: center;
     text-decoration: none;
     text-shadow: 2px 2px 5px #404040;
@@ -109,4 +123,14 @@ tr:nth-child(even) {background-color: white;}
 
 .map-table {
     border: 2px solid #bfbfbf !important;
+}
+
+.aboutText {
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+h1.about {
+    padding-top: 2%;
+    font-variant: small-caps;
 }
