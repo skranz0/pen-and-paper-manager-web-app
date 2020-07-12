@@ -13,8 +13,6 @@ import Bootstrap.Button as Button
 import Bootstrap.Dropdown as Dropdown
 import Bootstrap.Table as Table
 import Bootstrap.Form as Form
-import Bootstrap.Form.Radio as Radio
-import Bootstrap.Form.Fieldset as Fieldset
 import Bootstrap.Form.Input as Input
 import Bootstrap.Tab as Tab
 import Bootstrap.Utilities.Spacing as Spacing
@@ -68,7 +66,7 @@ header =
                     [ Html.figure [ class "image animate__animated animate__rollIn"]
                         [ Svg.svg
                             [ SvgAtt.width "100%", style "margin-top" "-18%", style "margin-left" "10%"]                
-                            [ Svg.image [ SvgAtt.width "100%", SvgAtt.height "100%", SvgAtt.title "Logo", SvgAtt.xlinkHref "res/P&P Manager Logo 512x512px noBG.png" ] [] ]
+                            [ Svg.image [ SvgAtt.width "100%", SvgAtt.height "100%", SvgAtt.title "Logo", SvgAtt.xlinkHref "src/res/P&P Manager Logo 512x512px noBG.png" ] [] ]
                         ]
                     , div [class "item1", style "height" "80%"]
                         [ h1 [class "title", style "margin-left" "2%", style "margin-top" "4px"] [text "Pen & Paper Manager"]

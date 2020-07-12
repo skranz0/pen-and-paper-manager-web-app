@@ -8043,7 +8043,7 @@ var $author$project$Main$update = F2(
 					$elm$http$Http$get(
 						{
 							expect: A2($elm$http$Http$expectJson, $author$project$Model$EnemyLoaded, $author$project$FightingTool$parseEnemy),
-							url: './res/' + (enemy + '.json')
+							url: './src/res/enemies/' + (enemy + '.json')
 						}));
 			case 'EnemyLoaded':
 				if (msg.a.$ === 'Ok') {
@@ -12547,9 +12547,9 @@ var $author$project$DungeonMap$getID = function (object) {
 var $author$project$DungeonMap$getIconPath = function (id) {
 	switch (id) {
 		case 1:
-			return 'res/icons/chest.png';
+			return 'src/res/icons/chest.png';
 		case 2:
-			return 'res/icons/key.png';
+			return 'src/res/icons/key.png';
 		case 3:
 			return 'custom';
 		default:
@@ -12719,7 +12719,7 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 									0,
 									$elm$core$String$toFloat(y)) - 24.5)),
 							$elm$svg$Svg$Attributes$title('MonsterIcon'),
-							$elm$svg$Svg$Attributes$xlinkHref('res/icons/Enemy.svg'),
+							$elm$svg$Svg$Attributes$xlinkHref('src/res/icons/Enemy.svg'),
 							$elm$svg$Svg$Events$onMouseOver(
 							A2($author$project$Model$HighlightTableRow, id, text)),
 							$elm$svg$Svg$Events$onMouseOut(
@@ -12775,7 +12775,7 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 									0,
 									$elm$core$String$toFloat(y)) - 22)),
 							$elm$svg$Svg$Attributes$title('ObjectIcon'),
-							$elm$svg$Svg$Attributes$xlinkHref('res/icons/Hero.svg'),
+							$elm$svg$Svg$Attributes$xlinkHref('src/res/icons/Hero.svg'),
 							$elm$svg$Svg$Events$onMouseOver(
 							A2($author$project$Model$HighlightTableRow, id, text)),
 							$elm$svg$Svg$Events$onMouseOut(
@@ -14988,7 +14988,7 @@ var $author$project$FightingTool$header = A2(
 											$elm$svg$Svg$Attributes$width('100%'),
 											$elm$svg$Svg$Attributes$height('100%'),
 											$elm$svg$Svg$Attributes$title('Logo'),
-											$elm$svg$Svg$Attributes$xlinkHref('res/P&P Manager Logo 512x512px noBG.png')
+											$elm$svg$Svg$Attributes$xlinkHref('src/res/P&P Manager Logo 512x512px noBG.png')
 										]),
 									_List_Nil)
 								]))

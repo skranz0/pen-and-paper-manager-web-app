@@ -29,7 +29,7 @@ update msg model =
         LoadEnemy enemy ->
             ( model
             , Http.get
-                { url = "./res/"++enemy++".json" -- These are the files for the enemies from the DSA handbook
+                { url = "./src/res/enemies/"++enemy++".json" -- These are the files for the enemies from the DSA handbook
                 , expect =
                     Http.expectJson EnemyLoaded parseEnemy -- takes the necessary values from the JSON and writes it in model.enemy
                 }

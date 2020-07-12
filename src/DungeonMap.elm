@@ -210,7 +210,7 @@ placeIcon s =
                 , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 25.5))
                 , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 24.5))
                 , SvgAtt.title "MonsterIcon"
-                , SvgAtt.xlinkHref "res/icons/Enemy.svg"
+                , SvgAtt.xlinkHref "src/res/icons/Enemy.svg"
                 , Svg.Events.onMouseOver (HighlightTableRow id text)
                 , Svg.Events.onMouseOut (HighlightTableRow 0 "")
                 , Svg.Events.onClick (DeleteIcon iconType id)
@@ -230,7 +230,7 @@ placeIcon s =
                 , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 22.5))
                 , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 22))
                 , SvgAtt.title "ObjectIcon"
-                , SvgAtt.xlinkHref "res/icons/Hero.svg"
+                , SvgAtt.xlinkHref "src/res/icons/Hero.svg"
                 , Svg.Events.onMouseOver (HighlightTableRow id text)
                 , Svg.Events.onMouseOut (HighlightTableRow 0 "")
                 , Svg.Events.onClick (DeleteIcon iconType id)
@@ -283,8 +283,8 @@ getColor object =
 getIconPath : Int -> String
 getIconPath id =
     case id of
-        1 -> "res/icons/chest.png"
-        2 -> "res/icons/key.png"
+        1 -> "src/res/icons/chest.png"
+        2 -> "src/res/icons/key.png"
         3 -> "custom"   --a svg-shape rather than an .png file, see placeIcon function
         _ -> ""
 
