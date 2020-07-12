@@ -183,17 +183,18 @@ placeIcon s =
     case iconType of
         "monster" ->
             [ Svg.text_ [ SvgAtt.textAnchor "middle"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 3))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 0.5))
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x)))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y)))
                 , SvgAtt.dominantBaseline "middle"
                 ]
                 [ Svg.text (String.fromInt id) ]
             , Svg.image
-                [ SvgAtt.style "width:30px;height:30px;"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 17.5))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 17.5))
-                , SvgAtt.xlinkHref ("res/icons/enemy.png")
-                , SvgAtt.class "MonsterIcon"
+                [ SvgAtt.width "50"
+                , SvgAtt.height "50"
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 25.5))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 24.5))
+                , SvgAtt.title "MonsterIcon"
+                , SvgAtt.xlinkHref "res/icons/Enemy.svg"
                 , Svg.Events.onMouseOver (HighlightTableRow id text)
                 , Svg.Events.onMouseOut (HighlightTableRow 0 "Beschreibung")
                 , Svg.Events.onClick (DeleteIcon iconType id)
@@ -202,17 +203,18 @@ placeIcon s =
 
         "player" ->
             [ Svg.text_ [ SvgAtt.textAnchor "middle"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) + 1))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) + 2.5))
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x)))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y)))
                 , SvgAtt.dominantBaseline "middle"
                 ]
                 [ Svg.text (String.fromInt id) ]
             , Svg.image
-                [ SvgAtt.style "width:25px;height:25px;"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
-                , SvgAtt.xlinkHref ("res/icons/hero.png")
-                , SvgAtt.class "PlayerIcon"
+                [ SvgAtt.width "45"
+                , SvgAtt.height "45"
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 22.5))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 22))
+                , SvgAtt.title "ObjectIcon"
+                , SvgAtt.xlinkHref "res/icons/Hero.svg"
                 , Svg.Events.onMouseOver (HighlightTableRow id text)
                 , Svg.Events.onMouseOut (HighlightTableRow 0 "Beschreibung")
                 , Svg.Events.onClick (DeleteIcon iconType id)
@@ -320,70 +322,6 @@ getObjectText object =
             name
         ObjectIcon i x y t c ident ->
             t
-
-
-placeIcon : String -> Int -> String -> String -> Maybe Color.Color -> List (Svg.Svg Msg)
-placeIcon iconType id x y color =
-    case iconType of
-        "monster" ->
-            [ Svg.image
-                [ SvgAtt.width "50"
-                , SvgAtt.height "50"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 25.5))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 24.5))
-                , SvgAtt.title "MonsterIcon"
-                , SvgAtt.xlinkHref "res/icons/Enemy.svg"
-                ] []
-            , Svg.text_ [ SvgAtt.textAnchor "middle"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x)))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y)))
-                , SvgAtt.dominantBaseline "middle"
-                ]
-                [ Svg.text (String.fromInt id) ]
-            ]
-
-        "player" ->
-            [ Svg.image
-                [ SvgAtt.width "45"
-                , SvgAtt.height "45"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 22.5))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 22))
-                , SvgAtt.title "ObjectIcon"
-                , SvgAtt.xlinkHref "res/icons/Hero.svg"
-                ] []
-            , Svg.text_ [ SvgAtt.textAnchor "middle"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x)))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y)))
-                , SvgAtt.dominantBaseline "middle"
-                ]
-                [ Svg.text (String.fromInt id) ]
-            ]
-
-        "object" ->
-            case getIconPath id of
-                "custom" -> [ Svg.circle
-                                [ SvgAtt.id (String.fromInt id)
-                                , SvgAtt.cx x
-                                , SvgAtt.cy y
-                                , SvgAtt.r "10"
-                                , SvgAtt.style (buildCustomObjectIconStyle color)
-                                ]
-                                []
-                            ]
-
-
-                _ -> [ Svg.image
-                         [ SvgAtt.width "25"
-                         , SvgAtt.height "25"
-                         , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
-                         , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
-                         , SvgAtt.title "ObjectIcon"
-                         , SvgAtt.xlinkHref (getIconPath id)
-                         ] []
-                     ]
-
-        _ ->
-            []
 
 buildCustomObjectIconStyle : Maybe Color.Color -> String
 buildCustomObjectIconStyle color =

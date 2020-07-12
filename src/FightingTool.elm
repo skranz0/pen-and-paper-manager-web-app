@@ -33,17 +33,17 @@ body model =
             [ Table.table
                 { options = [Table.hover ]
                 , thead =  Table.simpleThead
-                    [ Table.th [Table.cellAttr <| class "th"] [ text "ID" ]
-                    , Table.th [ Table.cellAttr <| Attr.colspan 2 , Table.cellAttr <| class "th"] [ text "Name" ]
-                    , Table.th [Table.cellAttr <| class "th"] [ text "RS" ]
-                    , Table.th [Table.cellAttr <| class "th"] [ text "LeP"]
-                    , Table.th [Table.cellAttr <| class "th"] [ text " "]
-                    , Table.th [Table.cellAttr <| class "th"] [ text " "]
+                    [ Table.th [Table.cellAttr <| class "mediumCopper"] [ text "ID" ]
+                    , Table.th [Table.cellAttr <| Attr.colspan 2 , Table.cellAttr <| class "mediumCopper"] [ text "Name" ]
+                    , Table.th [Table.cellAttr <| class "mediumCopper"] [ text "RS" ]
+                    , Table.th [Table.cellAttr <| class "mediumCopper"] [ text "LeP"]
+                    , Table.th [Table.cellAttr <| class "mediumCopper"] [ text " "]
+                    , Table.th [Table.cellAttr <| class "mediumCopper"] [ text " "]
                     ]
                 , tbody =
                     Table.tbody []
                         (displayCharacters model.enemy ++ 
-                        [Table.tr [Table.rowAttr <| class "tr"] 
+                        [Table.tr [] 
                             [ Table.td[Table.cellAttr <| Attr.colspan 10] -- naja um sicher zu gehen
                                 [ Button.button
                                     [ Button.light
@@ -99,7 +99,7 @@ viewAttackModal model =
     div []
         [ Modal.config (CloseModal AttackModal)
             |> Modal.hideOnBackdropClick True
-            |> Modal.header [class "colored-header-footer"]
+            |> Modal.header [class "mediumCopper"]
                 [ Html.h3 [][text "Angriff"]
                 ]
             |> Modal.body [class "body"]
@@ -117,7 +117,7 @@ viewAttackModal model =
                     , Input.onInput ChangeDamage
                     ]
                 ]
-            |> Modal.footer [class "colored-header-footer"]
+            |> Modal.footer [class "mediumCopper"]
                 [ Html.button
                     [ class "metalButton"
                     , onClick <| attack model model.characterId model.damage
@@ -136,7 +136,7 @@ viewCustomEnemyModal model =
 -}
     Modal.config (CloseModal CustomEnemy)
     |> Modal.hideOnBackdropClick True
-    |> Modal.header [class "colored-header-footer"]
+            |> Modal.header [class "mediumCopper"]
         [ Html.h3 [][text "Charakter hinzufügen"] ]
     |> Modal.body [ class "body"]
         [ div []
@@ -164,8 +164,8 @@ viewCustomEnemyModal model =
                 |> Tab.view model.modalTabState
             ]
         ]
-    |> Modal.footer [class "colored-header-footer"] []
-    |> Modal.view model.showCustomEnemy
+            |> Modal.footer [class "mediumCopper"] []
+            |> Modal.view model.showCustomEnemy
 
 parseEnemy : Json.Decode.Decoder Character
 parseEnemy =

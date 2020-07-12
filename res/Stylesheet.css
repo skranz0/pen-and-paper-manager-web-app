@@ -30,12 +30,7 @@ html {
 
 .body {
     background-color: #faf2eb;
-    max-width: 100%;
-}
-
-.colored-header-footer{
-    background-color: #e4be9b;
-}
+} 
 
 .textFont {
     font-family: 'Alegreya', serif;
@@ -53,18 +48,20 @@ html {
     border-left-style: double; 
     border-width: 5px;
     height: 75%;
-    width: 100%;
 }
 
-.th {
+.mediumCopper {
     background-color: #e4be9b
 }
 
-.tr {
-    background-color: #faf2eb;
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+  background-color: #e4be9b;
+  border-color: #dee2e6 #dee2e6 #fff;
 }
 
 tr:nth-child(even) {background-color: white;}
+tr:nth-child(odd) {background-color: #faf2eb;}
 
 .metalButton {
     background-image: repeating-linear-gradient(to right bottom, #acacac , #bfbfbf , #acacac 40% );
@@ -95,16 +92,26 @@ tr:nth-child(even) {background-color: white;}
     fill-opacity:0;
 }
 
-.PlayerIcon:hover {
-    fill: grey-darker;
-    opacity:0.5;
-    fill-opacity:0.5;
-}
-
 .MonsterIcon:hover {
     fill: grey-darker;
     opacity:0.5;
     fill-opacity:0.5;
+    width:30px;
+    height:30px;
+}
+.PlayerIcon:hover {
+    fill: grey-darker;
+    opacity:0.5;
+    fill-opacity:0.5;
+    width:25px;
+    height:25px;
+}
+.ObjectIcon:hover {
+    fill: grey-darker;
+    opacity:0.5;
+    fill-opacity:0.5;
+    width:25px;
+    height:25px;
 }
 
 .aboutText {

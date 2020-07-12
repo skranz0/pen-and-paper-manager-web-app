@@ -9645,12 +9645,6 @@ var $rundis$elm_bootstrap$Bootstrap$Table$hover = $rundis$elm_bootstrap$Bootstra
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Light = {$: 'Light'};
 var $rundis$elm_bootstrap$Bootstrap$Button$light = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Light));
-var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
-	return {$: 'RowAttr', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Table$rowAttr = function (attr_) {
-	return $rundis$elm_bootstrap$Bootstrap$Table$RowAttr(attr_);
-};
 var $rundis$elm_bootstrap$Bootstrap$Table$THead = function (a) {
 	return {$: 'THead', a: a};
 };
@@ -10532,7 +10526,7 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 					$rundis$elm_bootstrap$Bootstrap$Modal$footer,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('colored-header-footer')
+							$elm$html$Html$Attributes$class('mediumCopper')
 						]),
 					_List_fromArray(
 						[
@@ -10587,7 +10581,7 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 							$rundis$elm_bootstrap$Bootstrap$Modal$header,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('colored-header-footer')
+									$elm$html$Html$Attributes$class('mediumCopper')
 								]),
 							_List_fromArray(
 								[
@@ -11670,6 +11664,7 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$activeTabAttributes = F2(
 						]),
 					$rundis$elm_bootstrap$Bootstrap$Tab$transitionStyles(1));
 		}
+<<<<<<< Updated upstream
 	});
 var $rundis$elm_bootstrap$Bootstrap$Tab$renderTabPane = F5(
 	function (id, active, _v0, state, configRec) {
@@ -11682,6 +11677,21 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$renderTabPane = F5(
 		return A2(
 			$elm$html$Html$div,
 			_Utils_ap(
+=======
+	}();
+	return A2(
+		$rundis$elm_bootstrap$Bootstrap$Modal$view,
+		model.showCustomEnemy,
+		A3(
+			$rundis$elm_bootstrap$Bootstrap$Modal$footer,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('mediumCopper')
+				]),
+			_List_Nil,
+			A3(
+				$rundis$elm_bootstrap$Bootstrap$Modal$body,
+>>>>>>> Stashed changes
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$id(id),
@@ -11813,7 +11823,7 @@ var $author$project$FightingTool$viewCustomEnemyModal = function (model) {
 			$rundis$elm_bootstrap$Bootstrap$Modal$footer,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('colored-header-footer')
+					$elm$html$Html$Attributes$class('mediumCopper')
 				]),
 			_List_Nil,
 			A3(
@@ -11898,7 +11908,7 @@ var $author$project$FightingTool$viewCustomEnemyModal = function (model) {
 					$rundis$elm_bootstrap$Bootstrap$Modal$header,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('colored-header-footer')
+							$elm$html$Html$Attributes$class('mediumCopper')
 						]),
 					_List_fromArray(
 						[
@@ -11940,11 +11950,7 @@ var $author$project$FightingTool$body = function (model) {
 										[
 											A2(
 											$rundis$elm_bootstrap$Bootstrap$Table$tr,
-											_List_fromArray(
-												[
-													$rundis$elm_bootstrap$Bootstrap$Table$rowAttr(
-													$elm$html$Html$Attributes$class('tr'))
-												]),
+											_List_Nil,
 											_List_fromArray(
 												[
 													A2(
@@ -11984,7 +11990,7 @@ var $author$project$FightingTool$body = function (model) {
 										_List_fromArray(
 											[
 												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
+												$elm$html$Html$Attributes$class('mediumCopper'))
 											]),
 										_List_fromArray(
 											[
@@ -11997,7 +12003,7 @@ var $author$project$FightingTool$body = function (model) {
 												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
 												$elm$html$Html$Attributes$colspan(2)),
 												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
+												$elm$html$Html$Attributes$class('mediumCopper'))
 											]),
 										_List_fromArray(
 											[
@@ -12008,7 +12014,7 @@ var $author$project$FightingTool$body = function (model) {
 										_List_fromArray(
 											[
 												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
+												$elm$html$Html$Attributes$class('mediumCopper'))
 											]),
 										_List_fromArray(
 											[
@@ -12019,7 +12025,7 @@ var $author$project$FightingTool$body = function (model) {
 										_List_fromArray(
 											[
 												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
+												$elm$html$Html$Attributes$class('mediumCopper'))
 											]),
 										_List_fromArray(
 											[
@@ -12030,7 +12036,7 @@ var $author$project$FightingTool$body = function (model) {
 										_List_fromArray(
 											[
 												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
+												$elm$html$Html$Attributes$class('mediumCopper'))
 											]),
 										_List_fromArray(
 											[
@@ -12041,7 +12047,7 @@ var $author$project$FightingTool$body = function (model) {
 										_List_fromArray(
 											[
 												$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
-												$elm$html$Html$Attributes$class('th'))
+												$elm$html$Html$Attributes$class('mediumCopper'))
 											]),
 										_List_fromArray(
 											[
@@ -12074,8 +12080,6 @@ var $author$project$Model$AddCharacterIcon = function (a) {
 var $author$project$Model$MouseDraw = function (a) {
 	return {$: 'MouseDraw', a: a};
 };
-<<<<<<< HEAD
-=======
 var $rundis$elm_bootstrap$Bootstrap$Table$RowAttr = function (a) {
 	return {$: 'RowAttr', a: a};
 };
@@ -12091,7 +12095,6 @@ var $rundis$elm_bootstrap$Bootstrap$Table$RoledRow = function (a) {
 var $rundis$elm_bootstrap$Bootstrap$Internal$Role$Secondary = {$: 'Secondary'};
 var $rundis$elm_bootstrap$Bootstrap$Table$rowSecondary = $rundis$elm_bootstrap$Bootstrap$Table$RoledRow(
 	$rundis$elm_bootstrap$Bootstrap$Table$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Role$Secondary));
->>>>>>> dev
 var $author$project$DungeonMap$stopBubbling = function (msg) {
 	return A2(
 		$elm$html$Html$Events$stopPropagationOn,
@@ -12201,8 +12204,6 @@ var $rundis$elm_bootstrap$Bootstrap$Table$Responsive = function (a) {
 	return {$: 'Responsive', a: a};
 };
 var $rundis$elm_bootstrap$Bootstrap$Table$responsive = $rundis$elm_bootstrap$Bootstrap$Table$Responsive($elm$core$Maybe$Nothing);
-var $rundis$elm_bootstrap$Bootstrap$Table$Striped = {$: 'Striped'};
-var $rundis$elm_bootstrap$Bootstrap$Table$striped = $rundis$elm_bootstrap$Bootstrap$Table$Striped;
 var $author$project$DungeonMap$dungeonMap_MonsterList = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -12492,275 +12493,12 @@ var $author$project$DungeonMap$getColor = function (object) {
 			var n = object.d;
 			return $elm$core$Maybe$Nothing;
 		default:
-<<<<<<< HEAD
-			return '';
-	}
-};
-var $elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
-var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
-var $elm$svg$Svg$Attributes$style = _VirtualDom_attribute('style');
-var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$svg$Svg$Attributes$textAnchor = _VirtualDom_attribute('text-anchor');
-var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
-var $elm$svg$Svg$Attributes$title = _VirtualDom_attribute('title');
-var $elm$core$String$toFloat = _String_toFloat;
-var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
-var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
-var $elm$svg$Svg$Attributes$xlinkHref = function (value) {
-	return A3(
-		_VirtualDom_attributeNS,
-		'http://www.w3.org/1999/xlink',
-		'xlink:href',
-		_VirtualDom_noJavaScriptUri(value));
-};
-var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var $author$project$DungeonMap$placeIcon = F5(
-	function (iconType, id, x, y, color) {
-		switch (iconType) {
-			case 'monster':
-				return _List_fromArray(
-					[
-						A2(
-						$elm$svg$Svg$image,
-						_List_fromArray(
-							[
-								$elm$svg$Svg$Attributes$width('50'),
-								$elm$svg$Svg$Attributes$height('50'),
-								$elm$svg$Svg$Attributes$x(
-								$elm$core$String$fromFloat(
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$elm$core$String$toFloat(x)) - 25.5)),
-								$elm$svg$Svg$Attributes$y(
-								$elm$core$String$fromFloat(
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$elm$core$String$toFloat(y)) - 24.5)),
-								$elm$svg$Svg$Attributes$title('MonsterIcon'),
-								$elm$svg$Svg$Attributes$xlinkHref('res/icons/Enemy.svg')
-							]),
-						_List_Nil),
-						A2(
-						$elm$svg$Svg$text_,
-						_List_fromArray(
-							[
-								$elm$svg$Svg$Attributes$textAnchor('middle'),
-								$elm$svg$Svg$Attributes$x(
-								$elm$core$String$fromFloat(
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$elm$core$String$toFloat(x)))),
-								$elm$svg$Svg$Attributes$y(
-								$elm$core$String$fromFloat(
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$elm$core$String$toFloat(y)))),
-								$elm$svg$Svg$Attributes$dominantBaseline('middle')
-							]),
-						_List_fromArray(
-							[
-								$elm$svg$Svg$text(
-								$elm$core$String$fromInt(id))
-							]))
-					]);
-			case 'player':
-				return _List_fromArray(
-					[
-						A2(
-						$elm$svg$Svg$image,
-						_List_fromArray(
-							[
-								$elm$svg$Svg$Attributes$width('45'),
-								$elm$svg$Svg$Attributes$height('45'),
-								$elm$svg$Svg$Attributes$x(
-								$elm$core$String$fromFloat(
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$elm$core$String$toFloat(x)) - 22.5)),
-								$elm$svg$Svg$Attributes$y(
-								$elm$core$String$fromFloat(
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$elm$core$String$toFloat(y)) - 22)),
-								$elm$svg$Svg$Attributes$title('ObjectIcon'),
-								$elm$svg$Svg$Attributes$xlinkHref('res/icons/Hero.svg')
-							]),
-						_List_Nil),
-						A2(
-						$elm$svg$Svg$text_,
-						_List_fromArray(
-							[
-								$elm$svg$Svg$Attributes$textAnchor('middle'),
-								$elm$svg$Svg$Attributes$x(
-								$elm$core$String$fromFloat(
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$elm$core$String$toFloat(x)))),
-								$elm$svg$Svg$Attributes$y(
-								$elm$core$String$fromFloat(
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$elm$core$String$toFloat(y)))),
-								$elm$svg$Svg$Attributes$dominantBaseline('middle')
-							]),
-						_List_fromArray(
-							[
-								$elm$svg$Svg$text(
-								$elm$core$String$fromInt(id))
-							]))
-					]);
-			case 'object':
-				var _v1 = $author$project$DungeonMap$getIconPath(id);
-				if (_v1 === 'custom') {
-					return _List_fromArray(
-						[
-							A2(
-							$elm$svg$Svg$circle,
-							_List_fromArray(
-								[
-									$elm$svg$Svg$Attributes$id(
-									$elm$core$String$fromInt(id)),
-									$elm$svg$Svg$Attributes$cx(x),
-									$elm$svg$Svg$Attributes$cy(y),
-									$elm$svg$Svg$Attributes$r('10'),
-									$elm$svg$Svg$Attributes$style(
-									$author$project$DungeonMap$buildCustomObjectIconStyle(color))
-								]),
-							_List_Nil)
-						]);
-				} else {
-					return _List_fromArray(
-						[
-							A2(
-							$elm$svg$Svg$image,
-							_List_fromArray(
-								[
-									$elm$svg$Svg$Attributes$width('25'),
-									$elm$svg$Svg$Attributes$height('25'),
-									$elm$svg$Svg$Attributes$x(
-									$elm$core$String$fromFloat(
-										A2(
-											$elm$core$Maybe$withDefault,
-											0,
-											$elm$core$String$toFloat(x)) - 11.5)),
-									$elm$svg$Svg$Attributes$y(
-									$elm$core$String$fromFloat(
-										A2(
-											$elm$core$Maybe$withDefault,
-											0,
-											$elm$core$String$toFloat(y)) - 11.5)),
-									$elm$svg$Svg$Attributes$title('ObjectIcon'),
-									$elm$svg$Svg$Attributes$xlinkHref(
-									$author$project$DungeonMap$getIconPath(id))
-								]),
-							_List_Nil)
-						]);
-				}
-			default:
-				return _List_Nil;
-		}
-	});
-var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
-var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
-	if (addCharacterIcon.$ === 'DrawIcon') {
-		var characterIcon = addCharacterIcon.a;
-		switch (characterIcon.$) {
-			case 'ObjectIcon':
-				var i = characterIcon.a;
-				var x = characterIcon.b;
-				var y = characterIcon.c;
-				var t = characterIcon.d;
-				var c = characterIcon.e;
-				return _List_Nil;
-			case 'PlayerIcon':
-				var i = characterIcon.a;
-				var x = characterIcon.b;
-				var y = characterIcon.c;
-				return _Utils_ap(
-					A5($author$project$DungeonMap$placeIcon, 'player', i, x, y, $elm$core$Maybe$Nothing),
-					_List_fromArray(
-						[
-							A2(
-							$elm$svg$Svg$rect,
-							_List_fromArray(
-								[
-									$elm$svg$Svg$Attributes$width('800'),
-									$elm$svg$Svg$Attributes$height('600'),
-									$elm$svg$Svg$Attributes$x('0'),
-									$elm$svg$Svg$Attributes$y('0'),
-									$elm$svg$Svg$Attributes$style('fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9')
-								]),
-							_List_Nil)
-						]));
-			default:
-				var i = characterIcon.a;
-				var x = characterIcon.b;
-				var y = characterIcon.c;
-				return _Utils_ap(
-					A5($author$project$DungeonMap$placeIcon, 'monster', i, x, y, $elm$core$Maybe$Nothing),
-					_List_fromArray(
-						[
-							A2(
-							$elm$svg$Svg$rect,
-							_List_fromArray(
-								[
-									$elm$svg$Svg$Attributes$width('800'),
-									$elm$svg$Svg$Attributes$height('600'),
-									$elm$svg$Svg$Attributes$x('0'),
-									$elm$svg$Svg$Attributes$y('0'),
-									$elm$svg$Svg$Attributes$style('fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9')
-								]),
-							_List_Nil)
-						]));
-		}
-	} else {
-		return _List_Nil;
-	}
-};
-var $rundis$elm_bootstrap$Bootstrap$Button$onClick = function (message) {
-	return $rundis$elm_bootstrap$Bootstrap$Button$attrs(
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$Events$preventDefaultOn,
-				'click',
-				$elm$json$Json$Decode$succeed(
-					_Utils_Tuple2(message, true)))
-			]));
-};
-var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
-var $author$project$DungeonMap$getColor = function (object) {
-	switch (object.$) {
-		case 'MonsterIcon':
-			var i = object.a;
-			var x = object.b;
-			var y = object.c;
-			return $elm$core$Maybe$Nothing;
-		case 'PlayerIcon':
-			var i = object.a;
-			var x = object.b;
-			var y = object.c;
-			return $elm$core$Maybe$Nothing;
-		default:
-=======
->>>>>>> dev
 			var i = object.a;
 			var x = object.b;
 			var y = object.c;
 			var t = object.d;
 			var c = object.e;
-<<<<<<< HEAD
-=======
 			var ident = object.f;
->>>>>>> dev
 			return c;
 	}
 };
@@ -12903,7 +12641,9 @@ var $elm$svg$Svg$Attributes$style = _VirtualDom_attribute('style');
 var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$svg$Svg$Attributes$textAnchor = _VirtualDom_attribute('text-anchor');
 var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
+var $elm$svg$Svg$Attributes$title = _VirtualDom_attribute('title');
 var $elm$core$String$toFloat = _String_toFloat;
+var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
 var $elm$svg$Svg$Attributes$xlinkHref = function (value) {
 	return A3(
@@ -12952,13 +12692,13 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 								A2(
 									$elm$core$Maybe$withDefault,
 									0,
-									$elm$core$String$toFloat(x)) - 3)),
+									$elm$core$String$toFloat(x)))),
 							$elm$svg$Svg$Attributes$y(
 							$elm$core$String$fromFloat(
 								A2(
 									$elm$core$Maybe$withDefault,
 									0,
-									$elm$core$String$toFloat(y)) - 0.5)),
+									$elm$core$String$toFloat(y)))),
 							$elm$svg$Svg$Attributes$dominantBaseline('middle')
 						]),
 					_List_fromArray(
@@ -12970,21 +12710,22 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 					$elm$svg$Svg$image,
 					_List_fromArray(
 						[
-							$elm$svg$Svg$Attributes$style('width:30px;height:30px;'),
+							$elm$svg$Svg$Attributes$width('50'),
+							$elm$svg$Svg$Attributes$height('50'),
 							$elm$svg$Svg$Attributes$x(
 							$elm$core$String$fromFloat(
 								A2(
 									$elm$core$Maybe$withDefault,
 									0,
-									$elm$core$String$toFloat(x)) - 17.5)),
+									$elm$core$String$toFloat(x)) - 25.5)),
 							$elm$svg$Svg$Attributes$y(
 							$elm$core$String$fromFloat(
 								A2(
 									$elm$core$Maybe$withDefault,
 									0,
-									$elm$core$String$toFloat(y)) - 17.5)),
-							$elm$svg$Svg$Attributes$xlinkHref('res/icons/enemy.png'),
-							$elm$svg$Svg$Attributes$class('MonsterIcon'),
+									$elm$core$String$toFloat(y)) - 24.5)),
+							$elm$svg$Svg$Attributes$title('MonsterIcon'),
+							$elm$svg$Svg$Attributes$xlinkHref('res/icons/Enemy.svg'),
 							$elm$svg$Svg$Events$onMouseOver(
 							A2($author$project$Model$HighlightTableRow, id, text)),
 							$elm$svg$Svg$Events$onMouseOut(
@@ -13007,13 +12748,13 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 								A2(
 									$elm$core$Maybe$withDefault,
 									0,
-									$elm$core$String$toFloat(x)) + 1)),
+									$elm$core$String$toFloat(x)))),
 							$elm$svg$Svg$Attributes$y(
 							$elm$core$String$fromFloat(
 								A2(
 									$elm$core$Maybe$withDefault,
 									0,
-									$elm$core$String$toFloat(y)) + 2.5)),
+									$elm$core$String$toFloat(y)))),
 							$elm$svg$Svg$Attributes$dominantBaseline('middle')
 						]),
 					_List_fromArray(
@@ -13025,21 +12766,22 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 					$elm$svg$Svg$image,
 					_List_fromArray(
 						[
-							$elm$svg$Svg$Attributes$style('width:25px;height:25px;'),
+							$elm$svg$Svg$Attributes$width('45'),
+							$elm$svg$Svg$Attributes$height('45'),
 							$elm$svg$Svg$Attributes$x(
 							$elm$core$String$fromFloat(
 								A2(
 									$elm$core$Maybe$withDefault,
 									0,
-									$elm$core$String$toFloat(x)) - 11.5)),
+									$elm$core$String$toFloat(x)) - 22.5)),
 							$elm$svg$Svg$Attributes$y(
 							$elm$core$String$fromFloat(
 								A2(
 									$elm$core$Maybe$withDefault,
 									0,
-									$elm$core$String$toFloat(y)) - 11.5)),
-							$elm$svg$Svg$Attributes$xlinkHref('res/icons/hero.png'),
-							$elm$svg$Svg$Attributes$class('PlayerIcon'),
+									$elm$core$String$toFloat(y)) - 22)),
+							$elm$svg$Svg$Attributes$title('ObjectIcon'),
+							$elm$svg$Svg$Attributes$xlinkHref('res/icons/Hero.svg'),
 							$elm$svg$Svg$Events$onMouseOver(
 							A2($author$project$Model$HighlightTableRow, id, text)),
 							$elm$svg$Svg$Events$onMouseOut(
@@ -13113,7 +12855,6 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 	}
 };
 var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
-var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 	if (addCharacterIcon.$ === 'DrawIcon') {
 		var characterIcon = addCharacterIcon.a;
@@ -13195,7 +12936,6 @@ var $author$project$DungeonMap$svgIconList = function (model) {
 			$author$project$DungeonMap$placeIcon,
 			_Utils_ap(model.characterList, model.objectIconList)));
 };
-var $elm$svg$Svg$Attributes$title = _VirtualDom_attribute('title');
 var $elm$svg$Svg$Attributes$version = _VirtualDom_attribute('version');
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $author$project$DungeonMap$dungeonMap_Svg = function (model) {
