@@ -1,0 +1,180 @@
+html {
+    background-color: #faf2eb;
+}
+
+.wrapper {
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background-color: #faf2eb;
+}
+
+
+.header {
+    background-image: repeating-linear-gradient(to right bottom, #b87333 , #ce8a4b , #b87333 40% );
+    color: white;
+    text-shadow: 3px 3px 6px #4d3319;
+    text-align: left;
+    padding: 10px;
+    margin-bottom: 1%;
+    font-family: 'Fondamento', cursive;
+  }
+
+.footer {
+    background-color: #e4be9b;
+    color: #666666;
+    text-align: center;
+    padding: 10px;
+    margin-top: 3%;
+}
+
+.body {
+    background-color: #faf2eb;
+} 
+
+.textFont {
+    font-family: 'Alegreya', serif;
+}
+
+.grid-container {
+    display: grid;
+    grid-gap: 2%;
+    grid-template-columns: 7% auto;
+    height: 15%;
+}
+
+.item1 {
+    border-left: #8c5826;
+    border-left-style: double; 
+    border-width: 5px;
+    height: 75%;
+}
+
+.mediumCopper {
+    background-color: #e4be9b
+}
+
+.lightCopper{
+    background-color: #efd8c3;
+}
+
+.fas:hover {
+    font-weight: 900;
+    color: #acacac;
+}
+
+.btn:focus, .btn.focus {
+    border: 0;
+    box-shadow: 0 0 0 0.1rem #acacac;
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+  background-color: #efd8c3;
+  border-color: #dee2e6 #dee2e6 #fff;
+  color: black;
+}
+
+.btn-link:hover {
+    color: black;
+}
+
+.btn-link {
+    font-weight: 400;
+    color: #495057;
+    text-decoration: none;
+}
+
+.btn {
+    background-color: #e4be9b;
+}
+
+tr:nth-child(even) {background-color: white;}
+tr:nth-child(odd) {background-color: #faf2eb;}
+
+.metalButton {
+    background-image: repeating-linear-gradient(to right bottom, #999999, #acacac  , #999999 40% );
+    border-radius: 8px;
+    padding: 8px 28px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: 2px 2px 5px #404040;
+    font-size: 1rem;
+  }
+
+.metalButton:hover{
+    background-image: repeating-linear-gradient(to right bottom, #acacac , #999999 10%, #acacac 40% );
+    color: black;
+}
+
+.metalButton:disabled {
+    background-color: #acacac;
+}
+
+.PlayerIcon {
+    fill: black;
+    stroke: red;
+    stroke-width: 2;
+    fill-opacity:0;
+}
+
+.PlayerIcon:hover {
+    fill: grey-darker;
+    opacity:0.5;
+    fill-opacity:0.5;
+    width:25px;
+    height:25px;
+}
+
+.MonsterIcon {
+    fill: black;
+    stroke: red;
+    stroke-width: 2;
+    fill-opacity:0;
+}
+
+.MonsterIcon:hover {
+    fill: grey-darker;
+    opacity:0.5;
+    fill-opacity:0.5;
+    width:30px;
+    height:30px;
+}
+
+.ObjectIcon:hover {
+    fill: grey-darker;
+    opacity:0.5;
+    fill-opacity:0.5;
+    width:25px;
+    height:25px;
+}
+
+.aboutText {
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+h1.about {
+    padding-top: 2%;
+    font-variant: small-caps;
+}
+
+.content-box {
+    margin-right: 20px;
+    margin-left: 20px;
+    padding: 15px;
+}
+
+.form-control:disabled, .form-control[readonly] {
+    color: black;
+    background-color: #e4be9b;
+}
+
+.map-table {
+    border: 2px solid #bfbfbf;
+}
+
+figure {
+    margin: 0 0 0 0;
+}
