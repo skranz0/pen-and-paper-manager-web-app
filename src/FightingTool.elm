@@ -211,10 +211,11 @@ displayCharacters chars =
                                 [ text "Angriff"]
                             ]
                         , Table.td[]
-                            [ Button.button
-                                [ Button.danger
-                                , Button.attrs [onClick <| RemoveEnemy i ] ]
-                                [ text "Löschen"]
+                            [ Html.i 
+                                [class "fas fa-trash-alt"
+                                , onClick <| RemoveEnemy i 
+                                , style "margin-top" "10%"
+                                ] []
                             ]
                         ]
                     Hero _ _ ->
@@ -290,7 +291,7 @@ dropdownMenu model =
             { options = [ Dropdown.dropRight ]
             , toggleMsg = MyDrop1Msg
             , toggleButton =
-                Dropdown.toggle [ Button.primary ] [ text "Monster" ]
+                Dropdown.toggle [Button.attrs [class "metalButton"]] [ text "Monster" ]
             , items =
                 -- give a name to the LoadEnemy method and it will pull up the corresponding JSON
                 [ Dropdown.header [ text "Kulturschaffender"]

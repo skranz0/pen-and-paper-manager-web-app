@@ -54,9 +54,14 @@ html {
     background-color: #e4be9b
 }
 
+.fas:hover {
+    font-weight: 900;
+    color: #acacac;
+}
+
 .btn:focus, .btn.focus {
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem #d9a473;
+    border: 0;
+    box-shadow: 0 0 0 0.1rem #acacac;
 }
 
 .nav-tabs .nav-link.active,
@@ -66,9 +71,13 @@ html {
   color: black;
 }
 
+.btn-link:hover {
+    color: black;
+}
+
 .btn-link {
     font-weight: 400;
-    color: #495057;;
+    color: #495057;
     text-decoration: none;
 }
 

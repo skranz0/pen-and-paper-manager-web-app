@@ -9446,6 +9446,7 @@ var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled = function (a) {
 };
 var $rundis$elm_bootstrap$Bootstrap$Button$danger = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Danger));
+var $elm$html$Html$i = _VirtualDom_node('i');
 var $rundis$elm_bootstrap$Bootstrap$Table$Td = function (a) {
 	return {$: 'Td', a: a};
 };
@@ -9552,21 +9553,15 @@ var $author$project$FightingTool$displayCharacters = function (chars) {
 								_List_fromArray(
 									[
 										A2(
-										$rundis$elm_bootstrap$Bootstrap$Button$button,
+										$elm$html$Html$i,
 										_List_fromArray(
 											[
-												$rundis$elm_bootstrap$Bootstrap$Button$danger,
-												$rundis$elm_bootstrap$Bootstrap$Button$attrs(
-												_List_fromArray(
-													[
-														$elm$html$Html$Events$onClick(
-														$author$project$Model$RemoveEnemy(i))
-													]))
+												$elm$html$Html$Attributes$class('fas fa-trash-alt'),
+												$elm$html$Html$Events$onClick(
+												$author$project$Model$RemoveEnemy(i)),
+												A2($elm$html$Html$Attributes$style, 'margin-top', '10%')
 											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Löschen')
-											]))
+										_List_Nil)
 									]))
 							]));
 				} else {
@@ -11115,9 +11110,6 @@ var $rundis$elm_bootstrap$Bootstrap$Dropdown$header = function (children) {
 				]),
 			children));
 };
-var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary = {$: 'Primary'};
-var $rundis$elm_bootstrap$Bootstrap$Button$primary = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
-	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary));
 var $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownToggle = function (a) {
 	return {$: 'DropdownToggle', a: a};
 };
@@ -11482,7 +11474,13 @@ var $author$project$FightingTool$dropdownMenu = function (model) {
 					toggleButton: A2(
 						$rundis$elm_bootstrap$Bootstrap$Dropdown$toggle,
 						_List_fromArray(
-							[$rundis$elm_bootstrap$Bootstrap$Button$primary]),
+							[
+								$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('metalButton')
+									]))
+							]),
 						_List_fromArray(
 							[
 								$elm$html$Html$text('Monster')
