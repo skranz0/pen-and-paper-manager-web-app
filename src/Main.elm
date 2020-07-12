@@ -5,6 +5,7 @@ module Main exposing (main)
 import Browser
 import Http
 import Html exposing (Html, div, text)
+import Html.Attributes
 import Bootstrap.Utilities.Spacing as Spacing exposing (mt3)
 import Bootstrap.Modal as Modal
 import Bootstrap.Tab as Tab
@@ -143,6 +144,11 @@ update msg model =
             , Cmd.none
             )
 
+        ModalTabMsg state ->
+            ( { model | modalTabState = state }
+            , Cmd.none
+            )
+
         AddCharacterIcon addCharacterIconMsg ->
             case addCharacterIconMsg of
                 MouseClick characterIcon ->
@@ -265,13 +271,13 @@ update msg model =
 
         ToolTipMsg tooltip ->
             case tooltip of
-                "" ->   ( { model | activeTooltip = "Beschreibung"
-                                  , mouseInIcon = (if tooltip=="Beschreibung" then False else True) }
+                "" ->   ( { model | activeTooltip = ""
+                                  , mouseInIcon = (if tooltip=="" then False else True) }
                         , Cmd.none
                         )
 
                 _ ->    ( { model | activeTooltip = tooltip
-                                  , mouseInIcon = (if tooltip=="Beschreibung" then False else True) }
+                                  , mouseInIcon = (if tooltip=="" then False else True) }
                         , Cmd.none
                         )
 
@@ -286,7 +292,7 @@ update msg model =
             case iconType of
                 "object" ->
                     ( { model | objectIconList = List.filter (isNotId id) model.objectIconList
-                              , activeTooltip = "Beschreibung" }
+                              , activeTooltip = "" }
                     , Cmd.none
                     )
 
@@ -294,13 +300,13 @@ update msg model =
                 _ ->
                     ( { model | characterList = List.filter (isNotId id) model.characterList
                               , highlightedTableRow = 0
-                              , activeTooltip = "Beschreibung" }
+                              , activeTooltip = "" }
                     , Cmd.none
                     )
 
 view : Model -> Html Msg
 view model =
-    div []
+    div [Html.Attributes.class "wrapper textFont", Html.Attributes.style "height" "100%"]
         [ header
         , Tab.config TabMsg
             |> Tab.items

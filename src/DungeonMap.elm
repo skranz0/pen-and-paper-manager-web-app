@@ -11,6 +11,7 @@ import Svg.Events
 import Json.Decode
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
+import Bootstrap.Grid.Row as Row
 import Bootstrap.Table as Table
 import Bootstrap.Button as Button
 import Bootstrap.Modal as Modal
@@ -27,40 +28,50 @@ import Model exposing (..)
 
 dungeonMapView : Model -> Html Msg
 dungeonMapView model =
-    Html.section [ class "container is-widescreen" ]
+    Html.section [ class "content-box is-widescreen" ]
             [ div [ class "section" ]
-                  [ Grid.row []
-                             [ Grid.col []
-                                        [ Textarea.textarea
-                                            [ Textarea.rows 1
-                                            , Textarea.disabled
-                                            , Textarea.value model.activeTooltip
-                                            ]
-                                        , Html.br [] []
-                                        , dungeonMap_Svg model
-                                        ]
-                             , Grid.col [ Col.xs4 ]
-                                        [ dungeonMap_MonsterList model
-                                        ]
-                             ]
-                  ]
-                  , Button.button [ Button.info, Button.onClick ClearCharacterList ] [ text "Clear Map" ]
-                  , newObjectIconModal model
+                [ Grid.row [ Row.attrs <| [style "margin-bottom" "2%"] ]
+                    [ Grid.col [ Col.xs8 ]
+                        [ Textarea.textarea
+                            [ Textarea.rows 1
+                            , Textarea.disabled
+                            , Textarea.value model.activeTooltip
+                            , Textarea.attrs [ class "text-area" ]
+                            ]
+                        ]
+                    , Grid.col [ ]
+                        [ Button.button
+                            [ Button.attrs [ class "metalButton", style "height" "52px", style "margin-right" "2%" ]
+                            , Button.onClick Pick ]
+                            [ text "Upload Map" ]
+                        , Button.button
+                            [ Button.attrs [ class "metalButton", style "height" "52px" ]
+                            , Button.onClick ClearCharacterList ] 
+                            [ text "Clear Map" ]
+                        ]
+                    ]
+                , Grid.row [ ]
+                    [ Grid.col [ Col.xs8 ] [ dungeonMap_Svg model ]
+                    , Grid.col [] [ dungeonMap_MonsterList model]
+                    ]
+                ]
+                , newObjectIconModal model
             ]
 
 dungeonMap_MonsterList : Model -> Html Msg
 dungeonMap_MonsterList model =
-    div [ class "container" ]
-        [ Table.table { options = [ Table.hover, Table.bordered, Table.responsive ]
+    div [ ]
+        [ Table.table { options = [ Table.hover, Table.bordered ]
                       , thead =  Table.simpleThead
-                          [ Table.th [] [ Html.text "ID" ]
-                          , Table.th [] [ Html.text "Name" ]
-                          , Table.th [] [ Html.text "LeP" ]
+                          [ Table.th [Table.cellAttr <| class "mediumCopper"] [ Html.text "ID" ]
+                          , Table.th [Table.cellAttr <| class "mediumCopper"] [ Html.text "Name" ]
+                          , Table.th [Table.cellAttr <| class "mediumCopper"] [ Html.text "LeP" ]
                           ]
                       , tbody =
                           Table.tbody []
                             <| characters2rows model.enemy model.highlightedTableRow
                       }
+        
         ]
 
 characters2rows : Array.Array Character -> Int -> List (Table.Row Msg)
@@ -90,20 +101,24 @@ characters2rows chars highlighted =
 
 dungeonMap_Svg : Model -> Html Msg
 dungeonMap_Svg model =
-    div [ class "container"
-        , style "border" (if model.hover then "6px dashed purple" else "6px dashed #ccc")
+    div [ style "border" (if model.hover then "6px dashed #b87333" else "6px dashed #bfbfbf")
         , hijackOn "dragenter" (Json.Decode.succeed DragEnter)
         , hijackOn "dragover" (Json.Decode.succeed DragEnter)
         , hijackOn "dragleave" (Json.Decode.succeed DragLeave)
         , hijackOn "drop" dropDecoder
         ]
-        [ Button.button [ Button.onClick Pick ] [ text "Upload Map" ]
-        , Html.figure [ class "image" ]
+        [ Html.figure [ ]
            [ Svg.svg
-                ([ SvgAtt.width "100%", SvgAtt.viewBox "0 0 800 600", SvgAtt.version "1.1" ]
+                ([ SvgAtt.width "100%", SvgAtt.viewBox "0 0 800 550", SvgAtt.version "1.1" ]
                     ++ mouseDrawEvents model.addCharacterIcon
                 )
-                ([ Svg.image [ SvgAtt.width "800", SvgAtt.height "600", SvgAtt.title "DungeonMap", SvgAtt.xlinkHref (Maybe.withDefault "" (List.head model.previews)) ] [] ]
+                ([ Svg.image 
+                    [ SvgAtt.width "800"
+                    , SvgAtt.height "550"
+                    , SvgAtt.title "DungeonMap"
+                    , SvgAtt.xlinkHref (Maybe.withDefault "" (List.head model.previews)) 
+                    ] [] 
+                ]
                     ++ svgIconList model
                     ++ newIconsView model.addCharacterIcon
                 )
@@ -114,8 +129,10 @@ newObjectIconModal : Model -> Html Msg
 newObjectIconModal model =
     Modal.config (CloseModal ObjectIconModal)
         |> Modal.hideOnBackdropClick True
-        |> Modal.h3 [] [ text "Neues Icon" ]
-        |> Modal.body []
+        |> Modal.header [class "mediumCopper"]
+                [ Html.h3 [][text "Neues Icon"]
+                ]
+        |> Modal.body [class "body"]
             [ div []
                 [ div []
                     ( Radio.radioList "customradiogroup"
@@ -141,10 +158,9 @@ newObjectIconModal model =
                     )
                 ]
             ]
-            |> Modal.footer []
+            |> Modal.footer [class "mediumCopper"]
                 [ Button.button
-                    [ Button.attrs [onClick <| AddCharacterIcon (MouseClick (getCharIcon model.addCharacterIcon)) ]
-                    , Button.success
+                    [ Button.attrs [onClick <| AddCharacterIcon (MouseClick (getCharIcon model.addCharacterIcon)), class "metalButton", style "margin-top" "5px" ]
                     , Button.disabled (model.radioCheckedID==0)
                     ]
                     [ text "Icon hinzufügen" ]
@@ -183,38 +199,40 @@ placeIcon s =
     case iconType of
         "monster" ->
             [ Svg.text_ [ SvgAtt.textAnchor "middle"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 3))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 0.5))
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x)))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y)))
                 , SvgAtt.dominantBaseline "middle"
                 ]
                 [ Svg.text (String.fromInt id) ]
             , Svg.image
-                [ SvgAtt.style "width:30px;height:30px;"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 17.5))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 17.5))
-                , SvgAtt.xlinkHref ("res/icons/enemy.png")
-                , SvgAtt.class "MonsterIcon"
+                [ SvgAtt.width "50"
+                , SvgAtt.height "50"
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 25.5))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 24.5))
+                , SvgAtt.title "MonsterIcon"
+                , SvgAtt.xlinkHref "res/icons/Enemy.svg"
                 , Svg.Events.onMouseOver (HighlightTableRow id text)
-                , Svg.Events.onMouseOut (HighlightTableRow 0 "Beschreibung")
+                , Svg.Events.onMouseOut (HighlightTableRow 0 "")
                 , Svg.Events.onClick (DeleteIcon iconType id)
                 ] []
             ]
 
         "player" ->
             [ Svg.text_ [ SvgAtt.textAnchor "middle"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) + 1))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) + 2.5))
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x)))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y)))
                 , SvgAtt.dominantBaseline "middle"
                 ]
                 [ Svg.text (String.fromInt id) ]
             , Svg.image
-                [ SvgAtt.style "width:25px;height:25px;"
-                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
-                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
-                , SvgAtt.xlinkHref ("res/icons/hero.png")
-                , SvgAtt.class "PlayerIcon"
+                [ SvgAtt.width "45"
+                , SvgAtt.height "45"
+                , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 22.5))
+                , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 22))
+                , SvgAtt.title "ObjectIcon"
+                , SvgAtt.xlinkHref "res/icons/Hero.svg"
                 , Svg.Events.onMouseOver (HighlightTableRow id text)
-                , Svg.Events.onMouseOut (HighlightTableRow 0 "Beschreibung")
+                , Svg.Events.onMouseOut (HighlightTableRow 0 "")
                 , Svg.Events.onClick (DeleteIcon iconType id)
                 ] []
             ]
@@ -228,7 +246,7 @@ placeIcon s =
                                 , SvgAtt.r "10"
                                 , SvgAtt.style (buildCustomObjectIconStyle color)
                                 , Svg.Events.onMouseOver (ToolTipMsg text)
-                                , Svg.Events.onMouseOut (ToolTipMsg "Beschreibung")
+                                , Svg.Events.onMouseOut (ToolTipMsg "")
                                 , SvgAtt.class "ObjectIcon"
                                 , Svg.Events.onClick (DeleteIcon iconType id)
                                 ]
@@ -242,7 +260,7 @@ placeIcon s =
                          , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
                          , SvgAtt.xlinkHref (getIconPath typeID)
                          , Svg.Events.onMouseOver (ToolTipMsg text)
-                         , Svg.Events.onMouseOut (ToolTipMsg "Beschreibung")
+                         , Svg.Events.onMouseOut (ToolTipMsg "")
                          , SvgAtt.class "ObjectIcon"
                          , Svg.Events.onClick (DeleteIcon iconType id)
                          ] []

@@ -26,6 +26,7 @@ type alias Model =
     , dieFace : Int
     , maxFace : Int
     , tabState : Tab.State
+    , modalTabState : Tab.State
     , characterList : List CharacterIcon
     , objectIconList : List CharacterIcon
     , addCharacterIcon : AddCharacterIconState
@@ -62,6 +63,7 @@ init _ =
         , dieFace = 0
         , maxFace = 6
         , tabState = Tab.initialState
+        , modalTabState = Tab.initialState
         , characterList = []
         , objectIconList = []
         , addCharacterIcon = DrawingInactive
@@ -78,7 +80,7 @@ init _ =
         , colorPicker = ColorPicker.empty
         , colour = Color.rgb 255 0 0
         , radioCheckedID = 0
-        , activeTooltip = "Tooltip"
+        , activeTooltip = ""
         , highlightedTableRow = 0
         , mouseInIcon = False
         }
@@ -105,6 +107,7 @@ type Msg
     | ChangeDamage String-- Will eventually be useless after refactor, I just have to get a better feel for let and in
     | DoNothing -- does nothing (yes, this IS necessary)
     | TabMsg Tab.State
+    | ModalTabMsg Tab.State
     | AddCharacterIcon AddCharacterIconMsg
     | ClearCharacterList
     | DiceAndSlice String
