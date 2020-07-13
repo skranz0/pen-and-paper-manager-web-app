@@ -43,11 +43,11 @@ dungeonMapView model =
                         [ Button.button
                             [ Button.attrs [ class "metalButton", style "height" "52px", style "margin-right" "2%" ]
                             , Button.onClick Pick ]
-                            [ text "Upload Map" ]
+                            [ text "Karte hochladen" ]
                         , Button.button
                             [ Button.attrs [ class "metalButton", style "height" "52px" ]
-                            , Button.onClick ClearCharacterList ]
-                            [ text "Clear Map" ]
+                            , Button.onClick ClearCharacterList ] 
+                            [ text "Karte leeren" ]
                         ]
                     ]
                 , Grid.row [ ]
