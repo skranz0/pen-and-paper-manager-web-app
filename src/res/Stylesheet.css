@@ -123,8 +123,6 @@ tr:nth-child(odd) {background-color: #faf2eb;}
     fill: grey-darker;
     opacity:0.5;
     fill-opacity:0.5;
-    width:25px;
-    height:25px;
 }
 
 .MonsterIcon {
@@ -138,16 +136,12 @@ tr:nth-child(odd) {background-color: #faf2eb;}
     fill: grey-darker;
     opacity:0.5;
     fill-opacity:0.5;
-    width:30px;
-    height:30px;
 }
 
 .ObjectIcon:hover {
     fill: grey-darker;
     opacity:0.5;
     fill-opacity:0.5;
-    width:25px;
-    height:25px;
 }
 
 .aboutText {
