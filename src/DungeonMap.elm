@@ -46,7 +46,7 @@ dungeonMapView model =
                             [ text "Upload Map" ]
                         , Button.button
                             [ Button.attrs [ class "metalButton", style "height" "52px" ]
-                            , Button.onClick ClearCharacterList ] 
+                            , Button.onClick ClearCharacterList ]
                             [ text "Clear Map" ]
                         ]
                     ]
@@ -71,7 +71,7 @@ dungeonMap_MonsterList model =
                           Table.tbody []
                             <| characters2rows model.enemy model.highlightedTableRow
                       }
-        
+
         ]
 
 characters2rows : Array.Array Character -> Int -> List (Table.Row Msg)
@@ -112,12 +112,12 @@ dungeonMap_Svg model =
                 ([ SvgAtt.width "100%", SvgAtt.viewBox "0 0 800 550", SvgAtt.version "1.1" ]
                     ++ mouseDrawEvents model.addCharacterIcon
                 )
-                ([ Svg.image 
+                ([ Svg.image
                     [ SvgAtt.width "800"
                     , SvgAtt.height "550"
                     , SvgAtt.title "DungeonMap"
-                    , SvgAtt.xlinkHref (Maybe.withDefault "" (List.head model.previews)) 
-                    ] [] 
+                    , SvgAtt.xlinkHref (Maybe.withDefault "" (List.head model.previews))
+                    ] []
                 ]
                     ++ svgIconList model
                     ++ newIconsView model.addCharacterIcon
@@ -214,6 +214,7 @@ placeIcon s =
                 , Svg.Events.onMouseOver (HighlightTableRow id text)
                 , Svg.Events.onMouseOut (HighlightTableRow 0 "")
                 , Svg.Events.onClick (DeleteIcon iconType id)
+                , SvgAtt.class "MonsterIcon"
                 ] []
             ]
 
@@ -234,6 +235,7 @@ placeIcon s =
                 , Svg.Events.onMouseOver (HighlightTableRow id text)
                 , Svg.Events.onMouseOut (HighlightTableRow 0 "")
                 , Svg.Events.onClick (DeleteIcon iconType id)
+                , SvgAtt.class "PlayerIcon"
                 ] []
             ]
 
@@ -245,8 +247,8 @@ placeIcon s =
                                 , SvgAtt.cy y
                                 , SvgAtt.r "10"
                                 , SvgAtt.style (buildCustomObjectIconStyle color)
-                                , Svg.Events.onMouseOver (ToolTipMsg text)
-                                , Svg.Events.onMouseOut (ToolTipMsg "")
+                                , Svg.Events.onMouseOver (ToolTipMsg text True)
+                                , Svg.Events.onMouseOut (ToolTipMsg "" False)
                                 , SvgAtt.class "ObjectIcon"
                                 , Svg.Events.onClick (DeleteIcon iconType id)
                                 ]
@@ -259,8 +261,8 @@ placeIcon s =
                          , SvgAtt.x (String.fromFloat (Maybe.withDefault 0 (String.toFloat x) - 11.5))
                          , SvgAtt.y (String.fromFloat (Maybe.withDefault 0 (String.toFloat y) - 11.5))
                          , SvgAtt.xlinkHref (getIconPath typeID)
-                         , Svg.Events.onMouseOver (ToolTipMsg text)
-                         , Svg.Events.onMouseOut (ToolTipMsg "")
+                         , Svg.Events.onMouseOver (ToolTipMsg text True)
+                         , Svg.Events.onMouseOut (ToolTipMsg "" False)
                          , SvgAtt.class "ObjectIcon"
                          , Svg.Events.onClick (DeleteIcon iconType id)
                          ] []

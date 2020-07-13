@@ -6817,21 +6817,32 @@ var $elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
-var $author$project$Main$generateObjectIdents = function (list) {
+var $author$project$Main$generateIconIdents = function (list) {
 	return A2(
 		$elm$core$List$indexedMap,
 		F2(
 			function (id, _char) {
-				if (_char.$ === 'ObjectIcon') {
-					var typeID = _char.a;
-					var x = _char.b;
-					var y = _char.c;
-					var t = _char.d;
-					var c = _char.e;
-					var ident = _char.f;
-					return A6($author$project$Model$ObjectIcon, typeID, x, y, t, c, id + 1);
-				} else {
-					return A6($author$project$Model$ObjectIcon, 0, '', '', '', $elm$core$Maybe$Nothing, 0);
+				switch (_char.$) {
+					case 'ObjectIcon':
+						var typeID = _char.a;
+						var x = _char.b;
+						var y = _char.c;
+						var t = _char.d;
+						var c = _char.e;
+						var ident = _char.f;
+						return A6($author$project$Model$ObjectIcon, typeID, x, y, t, c, id + 1);
+					case 'PlayerIcon':
+						var ident = _char.a;
+						var x = _char.b;
+						var y = _char.c;
+						var name = _char.d;
+						return A4($author$project$Model$PlayerIcon, id + 1, x, y, name);
+					default:
+						var ident = _char.a;
+						var x = _char.b;
+						var y = _char.c;
+						var name = _char.d;
+						return A4($author$project$Model$MonsterIcon, id + 1, x, y, name);
 				}
 			}),
 		list);
@@ -8119,7 +8130,14 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							enemy: A2($elm_community$array_extra$Array$Extra$removeAt, index, model.enemy)
+							activeTooltip: '',
+							characterList: $author$project$Main$generateIconIdents(
+								A2(
+									$elm$core$List$filter,
+									$author$project$Main$isNotId(index + 1),
+									model.characterList)),
+							enemy: A2($elm_community$array_extra$Array$Extra$removeAt, index, model.enemy),
+							highlightedTableRow: 0
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'CharacterDeath':
@@ -8335,7 +8353,7 @@ var $author$project$Main$update = F2(
 									{
 										addCharacterIcon: $author$project$Model$DrawingInactive,
 										iconText: '',
-										objectIconList: $author$project$Main$generateObjectIdents(
+										objectIconList: $author$project$Main$generateIconIdents(
 											_Utils_ap(
 												model.objectIconList,
 												_List_fromArray(
@@ -8582,23 +8600,18 @@ var $author$project$Main$update = F2(
 				}
 			case 'ToolTipMsg':
 				var tooltip = msg.a;
+				var mouseInObjectIcon = msg.b;
 				if (tooltip === '') {
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{
-								activeTooltip: '',
-								mouseInIcon: (tooltip === '') ? false : true
-							}),
+							{activeTooltip: '', mouseInIcon: mouseInObjectIcon}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{
-								activeTooltip: tooltip,
-								mouseInIcon: (tooltip === '') ? false : true
-							}),
+							{activeTooltip: tooltip, mouseInIcon: mouseInObjectIcon}),
 						$elm$core$Platform$Cmd$none);
 				}
 			case 'HighlightTableRow':
@@ -8692,22 +8705,22 @@ var $author$project$About$aboutView = A2(
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text('\n                Die wenigsten Geschichten im Pen & Paper Rollenspiel DSA kommen ohne einen Kampf aus.\n                Die Mechanik unterscheidet sich allerdings etwas vom normalen Spielgeschehen.\n            '),
+					$elm$html$Html$text('\r\n                Die wenigsten Geschichten im Pen & Paper Rollenspiel DSA kommen ohne einen Kampf aus.\r\n                Die Mechanik unterscheidet sich allerdings etwas vom normalen Spielgeschehen.\r\n            '),
 					A2($elm$html$Html$br, _List_Nil, _List_Nil),
-					$elm$html$Html$text('\n                Zur Vorbereitung wird die Reihenfolge der Kämpfenden bestimmt. Dazu wird der die Initiative (INI) ausgewürfelt.\n                Der Spielleiter würfelt für alle NSCs.\n            '),
+					$elm$html$Html$text('\r\n                Zur Vorbereitung wird die Reihenfolge der Kämpfenden bestimmt. Dazu wird der die Initiative (INI) ausgewürfelt.\r\n                Der Spielleiter würfelt für alle NSCs.\r\n            '),
 					A2($elm$html$Html$br, _List_Nil, _List_Nil),
-					$elm$html$Html$text('\n                Dieser Reihenfolge nach dürfen die Charaktere jetzt je einen Gegner angreifen.\n            ')
+					$elm$html$Html$text('\r\n                Dieser Reihenfolge nach dürfen die Charaktere jetzt je einen Gegner angreifen.\r\n            ')
 				])),
 			A2(
 			$elm$html$Html$p,
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text('\n                Um anzugreifen muss zunächst eine Probe mit einem W20 auf den AT-Wert bestanden werden.\n                Gleichzeitig wirft der Angegriffene auf PA oder AW. Gelingt die Probe bricht der Angriff an dieser Stelle ab.\n            '),
+					$elm$html$Html$text('\r\n                Um anzugreifen muss zunächst eine Probe mit einem W20 auf den AT-Wert bestanden werden.\r\n                Gleichzeitig wirft der Angegriffene auf PA oder AW. Gelingt die Probe bricht der Angriff an dieser Stelle ab.\r\n            '),
 					A2($elm$html$Html$br, _List_Nil, _List_Nil),
-					$elm$html$Html$text('\n                War der Angriff erfolgreich und die Verteidigung ein Fehlschlag wird der Schaden berechnet.\n                Das ist die Gelegenheit den \"Angriff\"-Button zu klicken.\n                Entsprechend der Angabe der Waffe (z.B 1W6+4) wird der Angriffswert erwürfelt.\n                Von diesem wird der RS-Wert des Angegriffenen subtrahiert und das Ergebnis von den LeP abgezogen.\n            '),
+					$elm$html$Html$text('\r\n                War der Angriff erfolgreich und die Verteidigung ein Fehlschlag wird der Schaden berechnet.\r\n                Das ist die Gelegenheit den \"Angriff\"-Button zu klicken.\r\n                Entsprechend der Angabe der Waffe (z.B 1W6+4) wird der Angriffswert erwürfelt.\r\n                Von diesem wird der RS-Wert des Angegriffenen subtrahiert und das Ergebnis von den LeP abgezogen.\r\n            '),
 					A2($elm$html$Html$br, _List_Nil, _List_Nil),
-					$elm$html$Html$text('\n                Die Berechnung übernimmt der Manager vollständig!\n            ')
+					$elm$html$Html$text('\r\n                Die Berechnung übernimmt der Manager vollständig!\r\n            ')
 				])),
 			A2(
 			$elm$html$Html$p,
@@ -12419,9 +12432,10 @@ var $author$project$Model$HighlightTableRow = F2(
 	function (a, b) {
 		return {$: 'HighlightTableRow', a: a, b: b};
 	});
-var $author$project$Model$ToolTipMsg = function (a) {
-	return {$: 'ToolTipMsg', a: a};
-};
+var $author$project$Model$ToolTipMsg = F2(
+	function (a, b) {
+		return {$: 'ToolTipMsg', a: a, b: b};
+	});
 var $avh4$elm_color$Color$black = A4($avh4$elm_color$Color$RgbaSpace, 0 / 255, 0 / 255, 0 / 255, 1.0);
 var $elm$core$String$concat = function (strings) {
 	return A2($elm$core$String$join, '', strings);
@@ -12718,7 +12732,8 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 							$elm$svg$Svg$Events$onMouseOut(
 							A2($author$project$Model$HighlightTableRow, 0, '')),
 							$elm$svg$Svg$Events$onClick(
-							A2($author$project$Model$DeleteIcon, iconType, id))
+							A2($author$project$Model$DeleteIcon, iconType, id)),
+							$elm$svg$Svg$Attributes$class('MonsterIcon')
 						]),
 					_List_Nil)
 				]);
@@ -12774,7 +12789,8 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 							$elm$svg$Svg$Events$onMouseOut(
 							A2($author$project$Model$HighlightTableRow, 0, '')),
 							$elm$svg$Svg$Events$onClick(
-							A2($author$project$Model$DeleteIcon, iconType, id))
+							A2($author$project$Model$DeleteIcon, iconType, id)),
+							$elm$svg$Svg$Attributes$class('PlayerIcon')
 						]),
 					_List_Nil)
 				]);
@@ -12795,9 +12811,9 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 								$elm$svg$Svg$Attributes$style(
 								$author$project$DungeonMap$buildCustomObjectIconStyle(color)),
 								$elm$svg$Svg$Events$onMouseOver(
-								$author$project$Model$ToolTipMsg(text)),
+								A2($author$project$Model$ToolTipMsg, text, true)),
 								$elm$svg$Svg$Events$onMouseOut(
-								$author$project$Model$ToolTipMsg('')),
+								A2($author$project$Model$ToolTipMsg, '', false)),
 								$elm$svg$Svg$Attributes$class('ObjectIcon'),
 								$elm$svg$Svg$Events$onClick(
 								A2($author$project$Model$DeleteIcon, iconType, id))
@@ -12827,9 +12843,9 @@ var $author$project$DungeonMap$placeIcon = function (s) {
 								$elm$svg$Svg$Attributes$xlinkHref(
 								$author$project$DungeonMap$getIconPath(typeID)),
 								$elm$svg$Svg$Events$onMouseOver(
-								$author$project$Model$ToolTipMsg(text)),
+								A2($author$project$Model$ToolTipMsg, text, true)),
 								$elm$svg$Svg$Events$onMouseOut(
-								$author$project$Model$ToolTipMsg('')),
+								A2($author$project$Model$ToolTipMsg, '', false)),
 								$elm$svg$Svg$Attributes$class('ObjectIcon'),
 								$elm$svg$Svg$Events$onClick(
 								A2($author$project$Model$DeleteIcon, iconType, id))
