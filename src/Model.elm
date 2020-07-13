@@ -125,7 +125,7 @@ type Msg
     | ChangeIconText String
     | ChangeIcon Int
     | ColorPickerMsg ColorPicker.Msg
-    | ToolTipMsg String
+    | ToolTipMsg String Bool
     | HighlightTableRow Int String
     | DeleteIcon String Int
 

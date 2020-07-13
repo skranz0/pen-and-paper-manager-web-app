@@ -68,7 +68,10 @@ update msg model =
             )
 
         RemoveEnemy index ->
-            ( { model | enemy = Array.removeAt index model.enemy }
+            ( { model | enemy = Array.removeAt index model.enemy
+                      , characterList = generateIconIdents (List.filter (isNotId (index+1)) model.characterList)
+                      , highlightedTableRow = 0
+                      , activeTooltip = "" }
             , Cmd.none
             )
 
@@ -164,7 +167,7 @@ update msg model =
                             else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
                         ObjectIcon i x y t c ident ->
-                            ( { model | objectIconList = (generateObjectIdents (model.objectIconList ++ [ ObjectIcon i x y model.iconText (Just model.colour) ident ]))
+                            ( { model | objectIconList = (generateIconIdents (model.objectIconList ++ [ ObjectIcon i x y model.iconText (Just model.colour) ident ]))
                                       , addCharacterIcon = DrawingInactive
                                       , showObjectIconModal = Modal.hidden
                                       , iconText = ""
@@ -269,15 +272,15 @@ update msg model =
 
                 _ -> ( model, Cmd.none )
 
-        ToolTipMsg tooltip ->
+        ToolTipMsg tooltip mouseInObjectIcon ->
             case tooltip of
                 "" ->   ( { model | activeTooltip = ""
-                                  , mouseInIcon = (if tooltip=="" then False else True) }
+                                  , mouseInIcon = mouseInObjectIcon }
                         , Cmd.none
                         )
 
                 _ ->    ( { model | activeTooltip = tooltip
-                                  , mouseInIcon = (if tooltip=="" then False else True) }
+                                  , mouseInIcon = mouseInObjectIcon }
                         , Cmd.none
                         )
 
@@ -312,14 +315,14 @@ view model =
             |> Tab.items
                 [ Tab.item
                     { id = "tabOverview"
-                    , link = Tab.link [ Spacing.mt3 ] [ text "Overview" ]
+                    , link = Tab.link [ Spacing.mt3 ] [ text "Übersicht" ]
                     , pane =
                         Tab.pane []
                             [ body model ]
                     }
                 , Tab.item
                     { id = "tabMap"
-                    , link = Tab.link [ Spacing.mt3 ] [ text "Map" ]
+                    , link = Tab.link [ Spacing.mt3 ] [ text "Karte" ]
                     , pane =
                         Tab.pane []
                             [ dungeonMapView model ] -- Map
@@ -373,14 +376,17 @@ isNotId id s =
         ObjectIcon _ _ _ _ _ ident ->
             id/=ident
 
-generateObjectIdents : List CharacterIcon -> List CharacterIcon
-generateObjectIdents list =
+generateIconIdents : List CharacterIcon -> List CharacterIcon
+generateIconIdents list =
     List.indexedMap
         (\id char ->
             case char of
                 ObjectIcon typeID x y t c ident ->
                     ObjectIcon typeID x y t c (id+1)
 
-                _ ->
-                    ObjectIcon 0 "" "" "" Nothing 0
+                PlayerIcon ident x y name ->
+                    PlayerIcon (id+1) x y name
+
+                MonsterIcon ident x y name ->
+                    MonsterIcon (id+1) x y name
         ) list
