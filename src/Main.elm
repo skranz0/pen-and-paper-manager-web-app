@@ -312,14 +312,14 @@ view model =
             |> Tab.items
                 [ Tab.item
                     { id = "tabOverview"
-                    , link = Tab.link [ Spacing.mt3 ] [ text "Overview" ]
+                    , link = Tab.link [ Spacing.mt3 ] [ text "Übersicht" ]
                     , pane =
                         Tab.pane []
                             [ body model ]
                     }
                 , Tab.item
                     { id = "tabMap"
-                    , link = Tab.link [ Spacing.mt3 ] [ text "Map" ]
+                    , link = Tab.link [ Spacing.mt3 ] [ text "Karte" ]
                     , pane =
                         Tab.pane []
                             [ dungeonMapView model ] -- Map

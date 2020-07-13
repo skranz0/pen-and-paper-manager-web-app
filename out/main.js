@@ -14862,7 +14862,7 @@ var $author$project$DungeonMap$dungeonMapView = function (model) {
 											]),
 										_List_fromArray(
 											[
-												$elm$html$Html$text('Upload Map')
+												$elm$html$Html$text('Karte hochladen')
 											])),
 										A2(
 										$rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -14878,7 +14878,7 @@ var $author$project$DungeonMap$dungeonMapView = function (model) {
 											]),
 										_List_fromArray(
 											[
-												$elm$html$Html$text('Clear Map')
+												$elm$html$Html$text('Karte leeren')
 											]))
 									]))
 							])),
@@ -15049,7 +15049,7 @@ var $author$project$Main$view = function (model) {
 										[$rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$mt3]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text('Overview')
+											$elm$html$Html$text('Übersicht')
 										])),
 								pane: A2(
 									$rundis$elm_bootstrap$Bootstrap$Tab$pane,
@@ -15068,7 +15068,7 @@ var $author$project$Main$view = function (model) {
 										[$rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$mt3]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text('Map')
+											$elm$html$Html$text('Karte')
 										])),
 								pane: A2(
 									$rundis$elm_bootstrap$Bootstrap$Tab$pane,
