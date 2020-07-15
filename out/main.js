@@ -8146,7 +8146,14 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
+							activeTooltip: '',
+							characterList: $author$project$Main$generateIconIdents(
+								A2(
+									$elm$core$List$filter,
+									$author$project$Main$isNotId(index + 1),
+									model.characterList)),
 							enemy: A2($elm_community$array_extra$Array$Extra$removeAt, index, model.enemy),
+							highlightedTableRow: 0,
 							showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden,
 							showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$shown
 						}),

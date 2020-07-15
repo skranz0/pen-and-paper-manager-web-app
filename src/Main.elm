@@ -76,12 +76,13 @@ update msg model =
             )
 
         CharacterDeath index ->
-            (
-                { model | showDeathAlert = Modal.shown
-                , enemy = Array.removeAt index model.enemy
-                , showAttackModal = Modal.hidden
-                }
-                , Cmd.none
+            ( { model | showDeathAlert = Modal.shown
+                      , enemy = Array.removeAt index model.enemy
+                      , showAttackModal = Modal.hidden
+                      , characterList = generateIconIdents (List.filter (isNotId (index+1)) model.characterList)
+                      , highlightedTableRow = 0
+                      , activeTooltip = "" }
+            , Cmd.none
             )
 
         MyDrop1Msg state ->
