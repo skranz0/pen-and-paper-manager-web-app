@@ -172,3 +172,10 @@ h1.about {
 figure {
     margin: 0 0 0 0;
 }
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
