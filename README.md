@@ -8,13 +8,13 @@ Für Aktionen aller Art gibt es festgelegte Fähigkeiten. Der Erfolg oder Misser
 
 ## Wozu der Manager
 
-Als Spielleiter in Pen and Paper Rollenspielen ist es oft nötig meherere Charaktere zur gleichen Zeit zu handhaben. Aus eigener Ehrfahrung weiß ich, dass beispielweise Rüstung in Kämpfen gerne vergessen wird.
+Als Spielleiter in Pen and Paper Rollenspielen ist es oft nötig meherere Charaktere zur gleichen Zeit zu handhaben. Aus eigener Erfahrung weiß ich, dass beispielweise Rüstung in Kämpfen gerne vergessen wird.
 
 Diese Web App soll das verhindern, indem die Berechnungen automatisiert werden.
 
 Außerdem ist es schön eine Übersicht zu haben.
 
-Parallel läuft die Entwicklung einer [Android App](https://github.com/skranz27/PnPManager) mit den gleichen Funktionen
+Parallel läuft die Entwicklung einer [Android App](https://github.com/skranz27/PnPManager) mit den gleichen Funktionen.
 
 ## geplante Funktionen
 
