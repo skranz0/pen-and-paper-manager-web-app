@@ -52,4 +52,29 @@ aboutView =
         , Html.a [ Attr.href "http://ulisses-regelwiki.de/index.php/Kampfregeln.html" ] [ text "DSA Regelwiki" ]
         , text " nachgelesen werden."
         ]
+    
+    , Html.h3 [] [ text "Rechtliche Hinweise" ]
+    , Html.p []
+        [ text 
+            """
+                Dieses Produkt wurde unter Lizenz erstellt.
+                Das Schwarze Auge und sein Logo sowie Aventuria, Dere, Myranor, Riesland, Tharun, Uthuria, The Dark Eye und 
+                ihre Logos sind eingetragene Marken von Ulisses Medien und Spiele Distribution GmbH in Deutschland, den U.S.A. und anderen Ländern.
+                Ulisses Spiele und sein Logo sind eingetragene Marken der Ulisses Medien und Spiele Distribution GmbH.
+            """
+        ]
+    , Html.p []
+        [ text
+            """
+                Dieses Werk enthält Material, das durch Ulisses Spiele und/oder andere Autoren urheberrechtlich geschützt ist.
+                Solches Material wird mit Erlaubnis im Rahmen der Vereinbarung über Gemeinschaftsinhalte für SCRIPTORIUM AVENTURIS verwendet.
+            """
+        ]
+    , Html.p []
+        [ text
+            """
+                Alle anderen Originalmaterialien in diesem Werk sind Copyright 2020 von Stefan Kranz, Laura Spilling, Markus Gagelmann und Alexander Kampf
+                und werden im Rahmen der Vereinbarung über Gemeinschaftsinhalte für SCRIPTORIUM AVENTURIS veröffentlicht.
+            """
+        ]
     ]
