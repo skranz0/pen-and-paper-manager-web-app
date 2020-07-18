@@ -3,17 +3,19 @@ module FightingTool exposing (..)
 
 --elm Packages
 import Html exposing (Html, div, text, h1, h2, p)
-import Html.Attributes as Attr exposing (class)
+import Html.Attributes as Attr exposing (class,style)
 import Html.Events exposing (onClick)
+import Svg
+import Svg.Attributes as SvgAtt
 import Json.Decode
 import Bootstrap.Modal as Modal
 import Bootstrap.Button as Button
 import Bootstrap.Dropdown as Dropdown
 import Bootstrap.Table as Table
 import Bootstrap.Form as Form
-import Bootstrap.Form.Radio as Radio
-import Bootstrap.Form.Fieldset as Fieldset
 import Bootstrap.Form.Input as Input
+import Bootstrap.Tab as Tab
+import Bootstrap.Utilities.Spacing as Spacing
 import Array
 import Array.Extra as Array
 import Random
@@ -27,26 +29,25 @@ body model =
     div []
         [ div []
             [ Table.table
-                { options = [ Table.striped, Table.hover ]
+                { options = [Table.hover ]
                 , thead =  Table.simpleThead
-                    [ Table.th [] [ text "ID" ]
-                    , Table.th [ Table.cellAttr <| Attr.colspan 2 ] [ text "Name" ]
-                    , Table.th [] [ text "RS" ]
-                    , Table.th [] [ text "LeP"]
-                    , Table.th [] [ text " "]
-                    , Table.th [] [ text " "]
+                    [ Table.th [Table.cellAttr <| class "mediumCopper"] [ text "ID" ]
+                    , Table.th [Table.cellAttr <| Attr.colspan 2 , Table.cellAttr <| class "mediumCopper"] [ text "Name" ]
+                    , Table.th [Table.cellAttr <| class "mediumCopper"] [ text "RS" ]
+                    , Table.th [Table.cellAttr <| class "mediumCopper"] [ text "LeP"]
+                    , Table.th [Table.cellAttr <| class "mediumCopper"] [ text " "]
+                    , Table.th [Table.cellAttr <| class "mediumCopper"] [ text " "]
                     ]
                 , tbody =
                     Table.tbody []
                         (displayCharacters model.enemy ++ 
                         [Table.tr [] 
                             [ Table.td[Table.cellAttr <| Attr.colspan 10] -- naja um sicher zu gehen
-                                [ Button.button
-                                    [ Button.light
-                                    , Button.block
-                                    , Button.attrs [onClick <| ShowModal CustomEnemy ]
-                                    ]
-                                    [ text "+"]
+                                [ Html.button 
+                                    [ class "metalButton"
+                                    , onClick <| ShowModal CustomEnemy
+                                    , style "width" "100%"
+                                    ][text "+"]
                                 ]
                             ]
                         ]
@@ -60,19 +61,24 @@ body model =
 
 header : Html Msg
 header =
-    Html.section [class "hero is-primary is-bold animate__animated animate__fadeInDown"]
-            [ div [class "hero-body"]
-                [ div [class "container"]
-                    [ h1 [class "title"] [text "Pen & Paper Manager"]
-                    , h2 [class "subtitle"] [text "Für \"Das schwarze Auge\" Version 5"]
+  Html.header [class "header animate__animated animate__fadeInDown", style "height" "80%"]
+                [ div [class "grid-container"]
+                    [ Html.figure [ class "image animate__animated animate__rollIn"]
+                        [ Svg.svg
+                            [ SvgAtt.width "100%", style "margin-top" "-18%", style "margin-left" "10%"]                
+                            [ Svg.image [ SvgAtt.width "100%", SvgAtt.height "100%", SvgAtt.title "Logo", SvgAtt.xlinkHref "src/res/P&P Manager Logo 512x512px noBG.png" ] [] ]
+                        ]
+                    , div [class "item1", style "height" "80%"]
+                        [ h1 [class "title", style "margin-left" "2%", style "margin-top" "4px"] [text "Pen & Paper Manager"]
+                        , h2 [class "subtitle", style "margin-left" "2%"] [text "Für \"Das schwarze Auge\" Version 5"]
+                        ]
                     ]
                 ]
-            ]
 
 footer : Html Msg
 footer =
-    Html.footer [class "footer animate__animated animate__fadeInUp"]
-            [ div [class "content has-text-centered"]
+    Html.footer [class "footer animate__animated animate__fadeInUp page-footer"]
+            [ div []
                 [ Html.p [] [ text "Entwickelt von Laura Spilling, Stefan Kranz, Marcus Gagelmann und Alexander Kampf" ]
                 , Html.p [] [ text "Einführung in das World Wide Web" ]
                 ]
@@ -90,29 +96,31 @@ viewAttackModal model =
     div []
         [ Modal.config (CloseModal AttackModal)
             |> Modal.hideOnBackdropClick True
-            |> Modal.h3 [] [ text "Angriff" ]
-            |> Modal.body []
+            |> Modal.header [class "mediumCopper"]
+                [ Html.h3 [][text "Angriff"]
+                ]
+            |> Modal.body [class "body"]
                 [ Input.text
-                    [ Input.value model.dice
-                    , Input.placeholder "1W6+0"
+                    [ Input.placeholder model.dice
                     , Input.onInput ChangeTmpDice
                     ]
-                , Button.button
-                    [ Button.attrs [onClick (DiceAndSlice model.tmpdice) ]
-                    , Button.outlineDark
-                    ]
-                    [ text "Schaden würfeln" ]
+                , Html.button
+                    [ class "metalButton"
+                    , onClick (DiceAndSlice model.tmpdice)
+                    , style "width" "100%"
+                    , style "margin-top" "2%"
+                    , style "margin-bottom" "2%"
+                    ] [ text "Schaden würfeln" ]
                 , Input.number
                     [ insideInput
                     , Input.onInput ChangeDamage
                     ]
                 ]
-            |> Modal.footer []
-                [ Button.button
-                    [ Button.attrs [onClick <| attack model model.characterId model.damage]
-                    , Button.success
-                    ]
-                    [ text "Schaden zufügen" ]
+            |> Modal.footer [class "mediumCopper"]
+                [ Html.button
+                    [ class "metalButton"
+                    , onClick <| attack model model.characterId model.damage
+                    ] [ text "Schaden zufügen" ]
                 ]
             |> Modal.view model.showAttackModal
         ]
@@ -125,53 +133,38 @@ viewCustomEnemyModal model =
     just works the way it is.
     It will probably be put in a modal in the future.
 -}
-    let
-        enemybool =
-            case model.enemyHero of
-               "Enemy" ->  True
-               _ -> False
-        herobool =
-            case model.enemyHero of
-               "Hero" ->  True
-               _ -> False
-
-
-    in
-        Modal.config (CloseModal CustomEnemy)
-            |> Modal.hideOnBackdropClick True
-            |> Modal.h3 [] [ text "Charakter hinzufügen" ]
-            |> Modal.body [] [
-                div []
-                    [ dropdownMenu model
-                    , Html.br [] []
-                    , Fieldset.config
-                        |> Fieldset.asGroup
-                        |> Fieldset.legend [] [ text "Benutzerdefiniert: " ]
-                        |> Fieldset.children
-                            ( Radio.radioList "EnemyHero"
-                                [ Radio.create
-                                    [ Radio.id "enemy"
-                                    , Radio.onClick <| SwitchEnemyHero "Enemy"
-                                    , Radio.checked enemybool
-                                    ] "Gegner"
-                                , Radio.create
-                                    [ Radio.id "hero"
-                                    , Radio.onClick <| SwitchEnemyHero "Hero"
-                                    , Radio.checked herobool
-                                    ] "Held"
-                                ]
-                            )
-                        |> Fieldset.view
-                    , if model.enemyHero == "Hero"
-                        then customHero model
-                        else if model.enemyHero == "Enemy"
-                            then customEnemy model
-                            else p [][]
+    Modal.config (CloseModal CustomEnemy)
+    |> Modal.hideOnBackdropClick True
+            |> Modal.header [class "mediumCopper"]
+        [ Html.h3 [][text "Charakter hinzufügen"] ]
+    |> Modal.body [ class "body"]
+        [ div []
+            [ Html.h5 [][text "Vordefiniert"] 
+            , dropdownMenu model
+            , Html.br [] []
+            , Html.h5 [][text "Benutzerdefiniert"]
+            , Tab.config ModalTabMsg
+                |> Tab.items
+                    [ Tab.item
+                        { id = "enemy"
+                        , link = Tab.link [] [ text "Gegner" ]
+                        , pane =
+                            Tab.pane [ class "lightCopper" , style "padding" "2%"]
+                                [ customEnemy model ]
+                        }
+                    , Tab.item
+                        { id = "hero"
+                        , link = Tab.link [] [ text "Held" ]
+                        , pane =
+                            Tab.pane [ class "lightCopper" , style "padding" "2%"]
+                                [ customHero model ]
+                        }
                     ]
+                |> Tab.view model.modalTabState
             ]
-            |> Modal.footer [] []
+        ]
+            |> Modal.footer [class "mediumCopper"] []
             |> Modal.view model.showCustomEnemy
-
 
 parseEnemy : Json.Decode.Decoder Character
 parseEnemy =
@@ -211,16 +204,17 @@ displayCharacters chars =
                         , Table.td[][text <| String.fromInt armor]
                         , Table.td[][text <| String.fromInt health]
                         , Table.td[]
-                            [ Button.button
-                                [ Button.success
-                                , Button.attrs [onClick <| ShowAttackModal i]]
+                            [ Html.button 
+                                [ class "metalButton"
+                                , onClick <| ShowAttackModal i]
                                 [ text "Angriff"]
                             ]
                         , Table.td[]
-                            [ Button.button
-                                [ Button.danger
-                                , Button.attrs [onClick <| RemoveEnemy i ] ]
-                                [ text "Löschen"]
+                            [ Html.i 
+                                [class "fas fa-trash-alt"
+                                , onClick <| RemoveEnemy i 
+                                , style "margin-top" "10%"
+                                ] []
                             ]
                         ]
                     Hero _ _ ->
@@ -233,10 +227,10 @@ displayCharacters chars =
                             [
                             ]
                         , Table.td[]
-                            [ Button.button
-                                [ Button.danger
-                                , Button.attrs [onClick <| RemoveEnemy i ] ]
-                                [ text "Löschen"]
+                            [ Html.i 
+                                [class "fas fa-trash-alt"
+                                , onClick <| RemoveEnemy i 
+                                ] []
                             ]
                         ]
         )
@@ -264,7 +258,7 @@ attack model id damage =
 
 setDice : String -> List String
 setDice set =
-    List.take 1  (String.split "W" set) ++ String.split "+" (Maybe.withDefault "6+0" <| List.head (List.drop 1 (String.split "W" set)))
+    List.take 1  (String.split "W" <| String.toUpper set) ++ String.split "+" (Maybe.withDefault "6+0" <| List.head (List.drop 1 (String.split "W" <| String.toUpper set)))
 
 damageCalc : (List Int) -> Int -> Int
 damageCalc randValues bd =
@@ -296,7 +290,7 @@ dropdownMenu model =
             { options = [ Dropdown.dropRight ]
             , toggleMsg = MyDrop1Msg
             , toggleButton =
-                Dropdown.toggle [ Button.primary ] [ text "Gegner" ]
+                Dropdown.toggle [Button.attrs [class "metalButton"]] [ text "Monster" ]
             , items =
                 -- give a name to the LoadEnemy method and it will pull up the corresponding JSON
                 [ Dropdown.header [ text "Kulturschaffender"]
@@ -339,7 +333,7 @@ customEnemy model =
                 Hero _ _ -> (Input.placeholder "", Input.placeholder "", Input.placeholder "")
 
     in
-        div []
+        div [style "margin-left" "5%", style "margin-right" "5%"]
             [ Form.label [] [text "Name:"]
             , Input.text [Input.onInput 
                 (\n -> 
@@ -402,15 +396,16 @@ customEnemy model =
                 , ddArmor
                 ]
             , Html.br [] []
-            , Button.button
-                [ Button.success
-                , Button.attrs [ onClick <| AddEnemy model.tmpEnemy  ]
-                ] [ text "Hinzufügen"]
+            , Html.button 
+                [ class "metalButton"
+                , style "position" "right"
+                , onClick <| AddEnemy model.tmpEnemy ]
+                [ text "Hinzufügen"]
             ]
 
 customHero : Model -> Html Msg
 customHero model =
-    div []
+    div [style "margin-left" "5%", style "margin-right" "5%"]
         [ Form.label [] [text "Name"]
         , Input.text [Input.onInput
             (\n ->
@@ -435,8 +430,8 @@ customHero model =
                     UpdateTmp <| Hero name (Maybe.withDefault 0 <| String.toInt a)
             )]
         , Html.br [] []
-        , Button.button
-            [ Button.success
-            , Button.attrs [ onClick <| AddEnemy model.tmpHero  ]
-            ] [ text "Hinzufügen"]
+        , Html.button
+            [class "metalButton"
+            , onClick <| AddEnemy model.tmpHero ]
+            [text "Hinzufügen"]
         ]

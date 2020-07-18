@@ -5,6 +5,7 @@ module Model exposing (..)
 import Bootstrap.Tab as Tab
 import Bootstrap.Dropdown as Dropdown
 import Bootstrap.Modal as Modal
+import Bootstrap.Form.Textarea as Textarea
 import Http
 import Array
 import Array.Extra as Array
@@ -25,6 +26,7 @@ type alias Model =
     , dieFace : Int
     , maxFace : Int
     , tabState : Tab.State
+    , modalTabState : Tab.State
     , characterList : List CharacterIcon
     , objectIconList : List CharacterIcon
     , addCharacterIcon : AddCharacterIconState
@@ -41,6 +43,9 @@ type alias Model =
     , colorPicker : ColorPicker.State
     , colour : Color.Color
     , radioCheckedID : Int
+    , activeTooltip : String
+    , highlightedTableRow : Int
+    , mouseInIcon : Bool
     }
 
 init : () -> (Model, Cmd Msg)
@@ -58,6 +63,7 @@ init _ =
         , dieFace = 0
         , maxFace = 6
         , tabState = Tab.initialState
+        , modalTabState = Tab.initialState
         , characterList = []
         , objectIconList = []
         , addCharacterIcon = DrawingInactive
@@ -74,6 +80,9 @@ init _ =
         , colorPicker = ColorPicker.empty
         , colour = Color.rgb 255 0 0
         , radioCheckedID = 0
+        , activeTooltip = ""
+        , highlightedTableRow = 0
+        , mouseInIcon = False
         }
     , Cmd.none
     )
@@ -98,6 +107,7 @@ type Msg
     | ChangeDamage String-- Will eventually be useless after refactor, I just have to get a better feel for let and in
     | DoNothing -- does nothing (yes, this IS necessary)
     | TabMsg Tab.State
+    | ModalTabMsg Tab.State
     | AddCharacterIcon AddCharacterIconMsg
     | ClearCharacterList
     | DiceAndSlice String
@@ -115,6 +125,9 @@ type Msg
     | ChangeIconText String
     | ChangeIcon Int
     | ColorPickerMsg ColorPicker.Msg
+    | ToolTipMsg String Bool
+    | HighlightTableRow Int String
+    | DeleteIcon String Int
 
 type ModalType
     = AttackModal
@@ -143,10 +156,11 @@ type AddCharacterIconMsg
     | MouseClick CharacterIcon
 
 type CharacterIcon
-    = PlayerIcon Int String String
-    | MonsterIcon Int String String
-    | ObjectIcon Int String String String (Maybe Color.Color)
-    --       type-ID x-coord y-coord Text custom-color
+    = PlayerIcon Int String String String
+    | MonsterIcon Int String String String
+    --            ID  x-coord y-coord name
+    | ObjectIcon Int     String  String  String (Maybe Color.Color) Int
+    --           type-ID x-coord y-coord Text custom-color          ident
     -- ID in ObjectIcon type is not an identifier for a concrete ObjectIcon, its an identifier for the used png
 
 type alias MousePosition =

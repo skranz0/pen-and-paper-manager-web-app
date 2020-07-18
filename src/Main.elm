@@ -5,6 +5,7 @@ module Main exposing (main)
 import Browser
 import Http
 import Html exposing (Html, div, text)
+import Html.Attributes
 import Bootstrap.Utilities.Spacing as Spacing exposing (mt3)
 import Bootstrap.Modal as Modal
 import Bootstrap.Tab as Tab
@@ -28,7 +29,7 @@ update msg model =
         LoadEnemy enemy ->
             ( model
             , Http.get
-                { url = "./res/"++enemy++".json" -- These are the files for the enemies from the DSA handbook
+                { url = "./src/res/enemies/"++enemy++".json" -- These are the files for the enemies from the DSA handbook
                 , expect =
                     Http.expectJson EnemyLoaded parseEnemy -- takes the necessary values from the JSON and writes it in model.enemy
                 }
@@ -67,7 +68,10 @@ update msg model =
             )
 
         RemoveEnemy index ->
-            ( { model | enemy = Array.removeAt index model.enemy }
+            ( { model | enemy = Array.removeAt index model.enemy
+                      , characterList = generateIconIdents (List.filter (isNotId (index+1)) model.characterList)
+                      , highlightedTableRow = 0
+                      , activeTooltip = "" }
             , Cmd.none
             )
 
@@ -102,14 +106,14 @@ update msg model =
 
         ChangeIcon id ->
             case model.addCharacterIcon of
-                DrawIcon (ObjectIcon i x y t c) ->
+                DrawIcon (ObjectIcon i x y t c ident) ->
                     case id of
-                        3 -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t c)
+                        3 -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t c ident)
                                        , radioCheckedID = id }
                              , Cmd.none
                              )
 
-                        _ -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t Nothing)
+                        _ -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t Nothing ident)
                                        , radioCheckedID = id }
                              , Cmd.none
                              )
@@ -143,22 +147,27 @@ update msg model =
             , Cmd.none
             )
 
+        ModalTabMsg state ->
+            ( { model | modalTabState = state }
+            , Cmd.none
+            )
+
         AddCharacterIcon addCharacterIconMsg ->
             case addCharacterIconMsg of
                 MouseClick characterIcon ->
                     case characterIcon of
-                        PlayerIcon i x y ->
+                        PlayerIcon i x y n ->
                             if List.length model.characterList == List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID noch nicht in Liste
                             then    ( { model | characterList = model.characterList ++ [ characterIcon ], addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
-                        MonsterIcon i x y ->
+                        MonsterIcon i x y n ->
                             if List.length model.characterList == List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID noch nicht in Liste
                             then    ( { model | characterList = model.characterList ++ [ characterIcon ], addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
-                        ObjectIcon i x y t c ->
-                            ( { model | objectIconList = model.objectIconList ++ [ ObjectIcon i x y model.iconText (Just model.colour) ]
+                        ObjectIcon i x y t c ident ->
+                            ( { model | objectIconList = (generateIconIdents (model.objectIconList ++ [ ObjectIcon i x y model.iconText (Just model.colour) ident ]))
                                       , addCharacterIcon = DrawingInactive
                                       , showObjectIconModal = Modal.hidden
                                       , iconText = ""
@@ -167,18 +176,18 @@ update msg model =
 
                 MouseDraw characterIcon ->
                     case characterIcon of
-                        PlayerIcon i x y ->
+                        PlayerIcon i x y name ->
                             if List.length model.characterList > List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID bereits in Liste
                             then    ( { model | characterList = List.filter (isNotId i) model.characterList, addCharacterIcon = DrawingInactive }, Cmd.none )
-                            else    ( { model | addCharacterIcon = DrawIcon (PlayerIcon i x y) }, Cmd.none )
+                            else    ( { model | addCharacterIcon = DrawIcon (PlayerIcon i x y name) }, Cmd.none )
 
-                        MonsterIcon i x y ->
+                        MonsterIcon i x y name ->
                             if List.length model.characterList > List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID bereits in Liste
                             then    ( { model | characterList = List.filter (isNotId i) model.characterList, addCharacterIcon = DrawingInactive }, Cmd.none )
-                            else    ( { model | addCharacterIcon = DrawIcon (MonsterIcon i x y) }, Cmd.none )
+                            else    ( { model | addCharacterIcon = DrawIcon (MonsterIcon i x y name) }, Cmd.none )
 
-                        ObjectIcon i x y t c ->
-                            ( { model | addCharacterIcon = DrawIcon (ObjectIcon i x y t c) }, Cmd.none )
+                        ObjectIcon i x y t c ident ->
+                            ( { model | addCharacterIcon = DrawIcon (ObjectIcon i x y t c ident) }, Cmd.none )
 
                     --( { model | addCharacterIcon = DrawIcon s, characterList = (giveDungeonMap_CharacterIds model.characterList) }, Cmd.none )
 
@@ -213,7 +222,9 @@ update msg model =
                     ( { model | showCustomEnemy = Modal.shown } , Cmd.none )
 
                 ObjectIconModal ->
-                    ( { model | showObjectIconModal = Modal.shown } , Cmd.none )
+                    ( { model | showObjectIconModal =   if model.mouseInIcon then Modal.hidden else Modal.shown
+                              , mouseInIcon = False }
+                    , Cmd.none )
 
         ShowAttackModal id->
             ( { model | showAttackModal = Modal.shown , characterId = id} , Cmd.none )
@@ -250,33 +261,68 @@ update msg model =
 
         ColorPickerMsg cpMsg ->
             case model.addCharacterIcon of
-                DrawIcon (ObjectIcon i x y t c) ->  let
-                                                        ( m, colour ) = ColorPicker.update cpMsg model.colour model.colorPicker
-                                                    in
-                                                        ( { model | colorPicker = m
-                                                                  , colour = colour |> Maybe.withDefault model.colour
-                                                          }
-                                                        , Cmd.none
-                                                        )
+                DrawIcon (ObjectIcon i x y t c ident) ->    let
+                                                                ( m, colour ) = ColorPicker.update cpMsg model.colour model.colorPicker
+                                                            in
+                                                            ( { model | colorPicker = m
+                                                                      , colour = colour |> Maybe.withDefault model.colour
+                                                              }
+                                                            , Cmd.none
+                                                            )
 
                 _ -> ( model, Cmd.none )
 
+        ToolTipMsg tooltip mouseInObjectIcon ->
+            case tooltip of
+                "" ->   ( { model | activeTooltip = ""
+                                  , mouseInIcon = mouseInObjectIcon }
+                        , Cmd.none
+                        )
+
+                _ ->    ( { model | activeTooltip = tooltip
+                                  , mouseInIcon = mouseInObjectIcon }
+                        , Cmd.none
+                        )
+
+        HighlightTableRow id name ->
+            ( { model | highlightedTableRow = id
+                      , activeTooltip = name
+                      , mouseInIcon = (if id==0 then False else True) }
+            , Cmd.none
+            )
+
+        DeleteIcon iconType id ->
+            case iconType of
+                "object" ->
+                    ( { model | objectIconList = List.filter (isNotId id) model.objectIconList
+                              , activeTooltip = "" }
+                    , Cmd.none
+                    )
+
+
+                _ ->
+                    ( { model | characterList = List.filter (isNotId id) model.characterList
+                              , highlightedTableRow = 0
+                              , activeTooltip = "" }
+                    , Cmd.none
+                    )
+
 view : Model -> Html Msg
 view model =
-    div []
+    div [Html.Attributes.class "wrapper textFont", Html.Attributes.style "height" "100%"]
         [ header
         , Tab.config TabMsg
             |> Tab.items
                 [ Tab.item
                     { id = "tabOverview"
-                    , link = Tab.link [ Spacing.mt3 ] [ text "Overview" ]
+                    , link = Tab.link [ Spacing.mt3 ] [ text "Übersicht" ]
                     , pane =
                         Tab.pane []
                             [ body model ]
                     }
                 , Tab.item
                     { id = "tabMap"
-                    , link = Tab.link [ Spacing.mt3 ] [ text "Map" ]
+                    , link = Tab.link [ Spacing.mt3 ] [ text "Karte" ]
                     , pane =
                         Tab.pane []
                             [ dungeonMapView model ] -- Map
@@ -314,18 +360,33 @@ giveDungeonMap_CharacterIds charList =
 putIdInCharIcon : Int -> CharacterIcon -> CharacterIcon
 putIdInCharIcon id charIcon =
     case charIcon of
-        PlayerIcon _ x y -> PlayerIcon (id+1) x y
-        MonsterIcon _ x y -> MonsterIcon (id+1) x y
-        ObjectIcon _ x y t c -> ObjectIcon (id+1) x y t c
+        PlayerIcon _ x y n -> PlayerIcon (id+1) x y n
+        MonsterIcon _ x y n -> MonsterIcon (id+1) x y n
+        ObjectIcon _ x y t c ident -> ObjectIcon (id+1) x y t c ident
 
 isNotId : Int -> CharacterIcon -> Bool
 isNotId id s =
     case s of
-        MonsterIcon i _ _ ->
+        MonsterIcon i _ _ _ ->
             id/=i
 
-        PlayerIcon i _ _ ->
+        PlayerIcon i _ _ _ ->
             id/=i
 
-        ObjectIcon i _ _ _ _->
-            id/=i
+        ObjectIcon _ _ _ _ _ ident ->
+            id/=ident
+
+generateIconIdents : List CharacterIcon -> List CharacterIcon
+generateIconIdents list =
+    List.indexedMap
+        (\id char ->
+            case char of
+                ObjectIcon typeID x y t c ident ->
+                    ObjectIcon typeID x y t c (id+1)
+
+                PlayerIcon ident x y name ->
+                    PlayerIcon (id+1) x y name
+
+                MonsterIcon ident x y name ->
+                    MonsterIcon (id+1) x y name
+        ) list
