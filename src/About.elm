@@ -76,4 +76,10 @@ aboutView =
                 und werden im Rahmen der Vereinbarung über Gemeinschaftsinhalte für SCRIPTORIUM AVENTURIS veröffentlicht.
             """
         ]
+    , Html.img 
+        [ Attr.src "src/res/DSA5_Scriptorium Aventuris_Logo_DriveThru.jpg"
+        , Attr.alt "Scriptorium Aventuris Logo"
+        , Attr.style "width" "50%"
+        , class "center"
+        ] []
     ]
