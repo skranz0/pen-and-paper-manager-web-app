@@ -15,7 +15,6 @@ import Bootstrap.Table as Table
 import Bootstrap.Form as Form
 import Bootstrap.Form.Input as Input
 import Bootstrap.Tab as Tab
-import Bootstrap.Utilities.Spacing as Spacing
 import Array
 import Array.Extra as Array
 import Random

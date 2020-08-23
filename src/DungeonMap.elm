@@ -1,4 +1,3 @@
---DungeonMap view and functions
 module DungeonMap exposing (..)
 
 --elm Packages
@@ -18,7 +17,7 @@ import Bootstrap.Modal as Modal
 import Bootstrap.Form.Input as Input
 import Bootstrap.Form.Radio as Radio
 import Bootstrap.Form.Textarea as Textarea
-import Array exposing (Array)
+import Array
 import File
 import ColorPicker
 import Color
@@ -271,15 +270,16 @@ placeIcon s =
         _ ->
             []
 
-getColor object =
+getColor : CharacterIcon -> (Maybe Color.Color)
+getColor object = 
     case object of
-        MonsterIcon i x y n ->
+        MonsterIcon _ _ _ _ ->
             Nothing
 
-        PlayerIcon i x y n ->
+        PlayerIcon _ _ _ _ ->
             Nothing
 
-        ObjectIcon i x y t c ident ->
+        ObjectIcon _ _ _ _ c _ ->
             c
 
 getIconPath : Int -> String
@@ -290,77 +290,82 @@ getIconPath id =
         3 -> "custom"   --a svg-shape rather than an .png file, see placeIcon function
         _ -> ""
 
+getIconType : CharacterIcon -> String
 getIconType object =
     case object of
-        MonsterIcon i x y n ->
+        MonsterIcon _ _ _ _ ->
             "monster"
 
-        PlayerIcon i x y n ->
+        PlayerIcon _ _ _ _ ->
             "player"
 
-        ObjectIcon i x y t c ident ->
+        ObjectIcon _ _ _ _ _ _ ->
             "object"
 
+getCoord : CharacterIcon -> String
 getCoord object =
     case object of
-        MonsterIcon i x y n ->
+        MonsterIcon _ x y _ ->
             x ++ "," ++ y
 
-        PlayerIcon i x y n ->
+        PlayerIcon _ x y _ ->
             x ++ "," ++ y
 
-        ObjectIcon i x y t c ident ->
+        ObjectIcon _ x y _ _ _ ->
             x ++ "," ++ y
 
+getID : CharacterIcon -> Int
 getID object =
     case object of
-        MonsterIcon i x y n ->
+        MonsterIcon i _ _ _ -> 
             i
 
-        PlayerIcon i x y n ->
+        PlayerIcon i _ _ _ ->
             i
 
-        ObjectIcon i x y t c ident ->
+        ObjectIcon _ _ _ _ _ ident ->
             ident
 
+getTypeID : CharacterIcon -> Int
 getTypeID object =
     case object of
-        ObjectIcon i x y t c ident ->
+        ObjectIcon i _ _ _ _ _ ->
             i
 
         _ ->
             0
 
+getObjectText : CharacterIcon -> String
 getObjectText object =
     case object of
-        MonsterIcon i x y name ->
+        MonsterIcon _ _ _ name ->
             name
 
-        PlayerIcon i x y name ->
+        PlayerIcon _ _ _ name ->
             name
-        ObjectIcon i x y t c ident ->
+        ObjectIcon _ _ _ t _ _ ->
             t
 
 buildCustomObjectIconStyle : Maybe Color.Color -> String
 buildCustomObjectIconStyle color =
-    "stroke:black;stroke-width:4;fill:" ++ (Color.toCssString (Maybe.withDefault Color.black color))
+    "stroke:black;stroke-width:4;fill:" ++ Color.toCssString (Maybe.withDefault Color.black color)
 
 mouseDrawEvents : AddCharacterIconState -> List (Svg.Attribute Msg)
 mouseDrawEvents addCharacterIcon =
     case addCharacterIcon of
         DrawIcon characterIcon ->
             case characterIcon of
-                PlayerIcon i x y n ->
+                PlayerIcon i _ _ n ->
                     [ Svg.Events.onClick (AddCharacterIcon (MouseClick characterIcon))
                     , onMouseMove (positionToIconCenter "player" n i)
                     ]
 
-                MonsterIcon i x y n ->
+                MonsterIcon i _ _ n ->
                     [ Svg.Events.onClick (AddCharacterIcon (MouseClick characterIcon))
                     , onMouseMove (positionToIconCenter "monster" n i)
                     ]
 
-                ObjectIcon i x y t c ident ->
+                ObjectIcon i _ _ _ _ _ ->
                     [ Svg.Events.onClick (ShowModal ObjectIconModal)
                     , onMouseMove (positionToIconCenter "object" "" i)
                     ]
@@ -401,11 +406,11 @@ newIconsView addCharacterIcon =
     case addCharacterIcon of
         DrawIcon characterIcon ->
             case characterIcon of
-                ObjectIcon i x y t c ident ->
+                ObjectIcon _ _ _ _ _ _ ->
                     []
 
-                PlayerIcon i x y n ->
-                    (placeIcon characterIcon)
+                PlayerIcon _ x y _ ->
+                    placeIcon characterIcon
                         ++  [ Svg.rect
                                 [ SvgAtt.width "800"
                                 , SvgAtt.height "600"
@@ -416,8 +421,8 @@ newIconsView addCharacterIcon =
                                 []
                             ]
 
-                MonsterIcon i x y n ->
-                    (placeIcon characterIcon)
+                MonsterIcon _ x y _ ->
+                    placeIcon characterIcon
                         ++  [ Svg.rect
                                 [ SvgAtt.width "800"
                                 , SvgAtt.height "600"
