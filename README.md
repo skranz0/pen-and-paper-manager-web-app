@@ -18,11 +18,11 @@ Parallel läuft die Entwicklung einer [Android App](https://github.com/skranz27/
 
 ## geplante Funktionen
 
--[x] Gegner mit den Parametern *Name*, *Rüstung* und *Lebenspunkte* anlegen
-  -[x] ein Gegner
-  -[x] mehrere Gegner
--[x] Button um anzugreifen und Lebenspunkte unter Berücksichtigung der Rüstung abzuziehen
--[x] Meldung beim Tod
--[] Implementierung von Statuseffekten nach dem Regelwerk von [Das schwarze Auge](https://ulisses-spiele.de/spielsysteme/das-schwarze-auge/) Edition 5
--[x] Vorlagen für häufig genutzte Gegner
--[x] Würfel und Modifikatoren
+- [x] Gegner mit den Parametern *Name*, *Rüstung* und *Lebenspunkte* anlegen
+  - [x] ein Gegner
+  - [x] mehrere Gegner
+- [x] Button um anzugreifen und Lebenspunkte unter Berücksichtigung der Rüstung abzuziehen
+- [x] Meldung beim Tod
+- [ ] Implementierung von Statuseffekten nach dem Regelwerk von [Das schwarze Auge](https://ulisses-spiele.de/spielsysteme/das-schwarze-auge/) Edition 5
+- [x] Vorlagen für häufig genutzte Gegner
+- [x] Würfel und Modifikatoren
