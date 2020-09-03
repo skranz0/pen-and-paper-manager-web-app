@@ -17,7 +17,8 @@ type alias Model =
     , tmpEnemy : Character -- Will eventually be useless after refactor, I just have to get a better feel for let and in
     , tmpHero : Character
     , showString : String
-    , myDrop1State : Dropdown.State
+    , monsterDropdownState : Dropdown.State
+    , encounterDropdownState : Dropdown.State
     , damage : Int
     , bonusDamage : Int
     , dice : String
@@ -54,7 +55,8 @@ init _ =
         , tmpEnemy = initEnemy
         , tmpHero = initHero
         , showString = ""
-        , myDrop1State = Dropdown.initialState
+        , monsterDropdownState = Dropdown.initialState
+        , encounterDropdownState = Dropdown.initialState
         , damage = 0
         , bonusDamage = 0
         , dice = "1W6+0"
@@ -102,7 +104,8 @@ type Msg
     | AddEnemy Character
     | RemoveEnemy Int
     | CharacterDeath Int
-    | MyDrop1Msg Dropdown.State
+    | MonsterDropdownMsg Dropdown.State
+    | EncounterDropdownMsg Dropdown.State
     | ChangeDamage String-- Will eventually be useless after refactor, I just have to get a better feel for let and in
     | DoNothing -- does nothing (yes, this IS necessary)
     | TabMsg Tab.State

@@ -5643,6 +5643,7 @@ var $author$project$Model$init = function (_v0) {
 			dice: '1W6+0',
 			dieFace: 0,
 			dieFaces: _List_Nil,
+			encounterDropdownState: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState,
 			enemy: $elm$core$Array$empty,
 			enemyHero: 'Enemy',
 			highlightedTableRow: 0,
@@ -5650,8 +5651,8 @@ var $author$project$Model$init = function (_v0) {
 			iconText: '',
 			maxFace: 6,
 			modalTabState: $rundis$elm_bootstrap$Bootstrap$Tab$initialState,
+			monsterDropdownState: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState,
 			mouseInIcon: false,
-			myDrop1State: $rundis$elm_bootstrap$Bootstrap$Dropdown$initialState,
 			objectIconList: _List_Nil,
 			previews: _List_Nil,
 			radioCheckedID: 0,
@@ -5667,8 +5668,11 @@ var $author$project$Model$init = function (_v0) {
 		},
 		$elm$core$Platform$Cmd$none);
 };
-var $author$project$Model$MyDrop1Msg = function (a) {
-	return {$: 'MyDrop1Msg', a: a};
+var $author$project$Model$EncounterDropdownMsg = function (a) {
+	return {$: 'EncounterDropdownMsg', a: a};
+};
+var $author$project$Model$MonsterDropdownMsg = function (a) {
+	return {$: 'MonsterDropdownMsg', a: a};
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $rundis$elm_bootstrap$Bootstrap$Dropdown$ListenClicks = {$: 'ListenClicks'};
@@ -6237,7 +6241,8 @@ var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$batch(
 		_List_fromArray(
 			[
-				A2($rundis$elm_bootstrap$Bootstrap$Dropdown$subscriptions, model.myDrop1State, $author$project$Model$MyDrop1Msg)
+				A2($rundis$elm_bootstrap$Bootstrap$Dropdown$subscriptions, model.monsterDropdownState, $author$project$Model$MonsterDropdownMsg),
+				A2($rundis$elm_bootstrap$Bootstrap$Dropdown$subscriptions, model.encounterDropdownState, $author$project$Model$EncounterDropdownMsg)
 			]));
 };
 var $author$project$Model$DrawIcon = function (a) {
@@ -8155,12 +8160,19 @@ var $author$project$Main$update = F2(
 							showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$shown
 						}),
 					$elm$core$Platform$Cmd$none);
-			case 'MyDrop1Msg':
+			case 'MonsterDropdownMsg':
 				var state = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{myDrop1State: state}),
+						{monsterDropdownState: state}),
+					$elm$core$Platform$Cmd$none);
+			case 'EncounterDropdownMsg':
+				var state = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{encounterDropdownState: state}),
 					$elm$core$Platform$Cmd$none);
 			case 'ChangeDamage':
 				var newDamage = msg.a;
@@ -10497,6 +10509,14 @@ var $author$project$FightingTool$viewAttackModal = function (model) {
 var $author$project$Model$ModalTabMsg = function (a) {
 	return {$: 'ModalTabMsg', a: a};
 };
+var $rundis$elm_bootstrap$Bootstrap$Grid$Column = function (a) {
+	return {$: 'Column', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$col = F2(
+	function (options, children) {
+		return $rundis$elm_bootstrap$Bootstrap$Grid$Column(
+			{children: children, options: options});
+	});
 var $rundis$elm_bootstrap$Bootstrap$Tab$Config = function (a) {
 	return {$: 'Config', a: a};
 };
@@ -10504,6 +10524,18 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$config = function (toMsg) {
 	return $rundis$elm_bootstrap$Bootstrap$Tab$Config(
 		{attributes: _List_Nil, isPill: false, items: _List_Nil, layout: $elm$core$Maybe$Nothing, toMsg: toMsg, useHash: false, withAnimation: false});
 };
+var $rundis$elm_bootstrap$Bootstrap$Grid$container = F2(
+	function (attributes, children) {
+		return A2(
+			$elm$html$Html$div,
+			_Utils_ap(
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container')
+					]),
+				attributes),
+			children);
+	});
 var $author$project$Model$AddEnemy = function (a) {
 	return {$: 'AddEnemy', a: a};
 };
@@ -10778,9 +10810,6 @@ var $author$project$FightingTool$customHero = function (model) {
 					]))
 			]));
 };
-var $author$project$Model$LoadEnemy = function (a) {
-	return {$: 'LoadEnemy', a: a};
-};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
 	return {$: 'Attrs', a: a};
 };
@@ -11016,17 +11045,6 @@ var $rundis$elm_bootstrap$Bootstrap$Dropdown$dropdown = F2(
 					A3($rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownMenu, state, config, items)
 				]));
 	});
-var $elm$html$Html$h6 = _VirtualDom_node('h6');
-var $rundis$elm_bootstrap$Bootstrap$Dropdown$header = function (children) {
-	return $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem(
-		A2(
-			$elm$html$Html$h6,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('dropdown-header')
-				]),
-			children));
-};
 var $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownToggle = function (a) {
 	return {$: 'DropdownToggle', a: a};
 };
@@ -11315,7 +11333,7 @@ var $rundis$elm_bootstrap$Bootstrap$Dropdown$toggle = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownToggle(
 			A2($rundis$elm_bootstrap$Bootstrap$Dropdown$togglePrivate, buttonOptions, children));
 	});
-var $author$project$FightingTool$dropdownMenu = function (model) {
+var $author$project$FightingTool$dropdownMenuEncounters = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
@@ -11323,7 +11341,75 @@ var $author$project$FightingTool$dropdownMenu = function (model) {
 			[
 				A2(
 				$rundis$elm_bootstrap$Bootstrap$Dropdown$dropdown,
-				model.myDrop1State,
+				model.encounterDropdownState,
+				{
+					items: _List_fromArray(
+						[
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Wald')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Wüste')
+								])),
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Stadt')
+								]))
+						]),
+					options: _List_fromArray(
+						[$rundis$elm_bootstrap$Bootstrap$Dropdown$dropRight]),
+					toggleButton: A2(
+						$rundis$elm_bootstrap$Bootstrap$Dropdown$toggle,
+						_List_fromArray(
+							[
+								$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('metalButton')
+									]))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('zufällige Begegnung')
+							])),
+					toggleMsg: $author$project$Model$EncounterDropdownMsg
+				})
+			]));
+};
+var $author$project$Model$LoadEnemy = function (a) {
+	return {$: 'LoadEnemy', a: a};
+};
+var $elm$html$Html$h6 = _VirtualDom_node('h6');
+var $rundis$elm_bootstrap$Bootstrap$Dropdown$header = function (children) {
+	return $rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem(
+		A2(
+			$elm$html$Html$h6,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('dropdown-header')
+				]),
+			children));
+};
+var $author$project$FightingTool$dropdownMenuMonsters = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$rundis$elm_bootstrap$Bootstrap$Dropdown$dropdown,
+				model.monsterDropdownState,
 				{
 					items: _List_fromArray(
 						[
@@ -11512,7 +11598,7 @@ var $author$project$FightingTool$dropdownMenu = function (model) {
 							[
 								$elm$html$Html$text('Monster')
 							])),
-					toggleMsg: $author$project$Model$MyDrop1Msg
+					toggleMsg: $author$project$Model$MonsterDropdownMsg
 				})
 			]));
 };
@@ -11548,6 +11634,795 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$pane = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Tab$Pane(
 			{attributes: attributes, children: children});
 	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col = {$: 'Col'};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width = F2(
+	function (screenSize, columnCount) {
+		return {columnCount: columnCount, screenSize: screenSize};
+	});
+var $rundis$elm_bootstrap$Bootstrap$General$Internal$XS = {$: 'XS'};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColAlign = F2(
+	function (align_, options) {
+		var _v0 = align_.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						alignXs: $elm$core$Maybe$Just(align_)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						alignSm: $elm$core$Maybe$Just(align_)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						alignMd: $elm$core$Maybe$Just(align_)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						alignLg: $elm$core$Maybe$Just(align_)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						alignXl: $elm$core$Maybe$Just(align_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOffset = F2(
+	function (offset_, options) {
+		var _v0 = offset_.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						offsetXs: $elm$core$Maybe$Just(offset_)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						offsetSm: $elm$core$Maybe$Just(offset_)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						offsetMd: $elm$core$Maybe$Just(offset_)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						offsetLg: $elm$core$Maybe$Just(offset_)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						offsetXl: $elm$core$Maybe$Just(offset_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOrder = F2(
+	function (order_, options) {
+		var _v0 = order_.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						orderXs: $elm$core$Maybe$Just(order_)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						orderSm: $elm$core$Maybe$Just(order_)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						orderMd: $elm$core$Maybe$Just(order_)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						orderLg: $elm$core$Maybe$Just(order_)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						orderXl: $elm$core$Maybe$Just(order_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColPull = F2(
+	function (pull_, options) {
+		var _v0 = pull_.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						pullXs: $elm$core$Maybe$Just(pull_)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						pullSm: $elm$core$Maybe$Just(pull_)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						pullMd: $elm$core$Maybe$Just(pull_)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						pullLg: $elm$core$Maybe$Just(pull_)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						pullXl: $elm$core$Maybe$Just(pull_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColPush = F2(
+	function (push_, options) {
+		var _v0 = push_.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						pushXs: $elm$core$Maybe$Just(push_)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						pushSm: $elm$core$Maybe$Just(push_)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						pushMd: $elm$core$Maybe$Just(push_)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						pushLg: $elm$core$Maybe$Just(push_)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						pushXl: $elm$core$Maybe$Just(push_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColWidth = F2(
+	function (width_, options) {
+		var _v0 = width_.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						widthXs: $elm$core$Maybe$Just(width_)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						widthSm: $elm$core$Maybe$Just(width_)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						widthMd: $elm$core$Maybe$Just(width_)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						widthLg: $elm$core$Maybe$Just(width_)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						widthXl: $elm$core$Maybe$Just(width_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOption = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'ColAttrs':
+				var attrs = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs)
+					});
+			case 'ColWidth':
+				var width_ = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColWidth, width_, options);
+			case 'ColOffset':
+				var offset_ = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOffset, offset_, options);
+			case 'ColPull':
+				var pull_ = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColPull, pull_, options);
+			case 'ColPush':
+				var push_ = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColPush, push_, options);
+			case 'ColOrder':
+				var order_ = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOrder, order_, options);
+			case 'ColAlign':
+				var align = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColAlign, align, options);
+			default:
+				var align = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						textAlign: $elm$core$Maybe$Just(align)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$columnCountOption = function (size) {
+	switch (size.$) {
+		case 'Col':
+			return $elm$core$Maybe$Nothing;
+		case 'Col1':
+			return $elm$core$Maybe$Just('1');
+		case 'Col2':
+			return $elm$core$Maybe$Just('2');
+		case 'Col3':
+			return $elm$core$Maybe$Just('3');
+		case 'Col4':
+			return $elm$core$Maybe$Just('4');
+		case 'Col5':
+			return $elm$core$Maybe$Just('5');
+		case 'Col6':
+			return $elm$core$Maybe$Just('6');
+		case 'Col7':
+			return $elm$core$Maybe$Just('7');
+		case 'Col8':
+			return $elm$core$Maybe$Just('8');
+		case 'Col9':
+			return $elm$core$Maybe$Just('9');
+		case 'Col10':
+			return $elm$core$Maybe$Just('10');
+		case 'Col11':
+			return $elm$core$Maybe$Just('11');
+		case 'Col12':
+			return $elm$core$Maybe$Just('12');
+		default:
+			return $elm$core$Maybe$Just('auto');
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$colWidthClass = function (_v0) {
+	var screenSize = _v0.screenSize;
+	var columnCount = _v0.columnCount;
+	return $elm$html$Html$Attributes$class(
+		'col' + (A2(
+			$elm$core$Maybe$withDefault,
+			'',
+			A2(
+				$elm$core$Maybe$map,
+				function (v) {
+					return '-' + v;
+				},
+				$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(screenSize))) + A2(
+			$elm$core$Maybe$withDefault,
+			'',
+			A2(
+				$elm$core$Maybe$map,
+				function (v) {
+					return '-' + v;
+				},
+				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$columnCountOption(columnCount)))));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$colWidthsToAttributes = function (widths) {
+	var width_ = function (w) {
+		return A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$colWidthClass, w);
+	};
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$Basics$identity,
+		A2($elm$core$List$map, width_, widths));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$defaultColOptions = {alignLg: $elm$core$Maybe$Nothing, alignMd: $elm$core$Maybe$Nothing, alignSm: $elm$core$Maybe$Nothing, alignXl: $elm$core$Maybe$Nothing, alignXs: $elm$core$Maybe$Nothing, attributes: _List_Nil, offsetLg: $elm$core$Maybe$Nothing, offsetMd: $elm$core$Maybe$Nothing, offsetSm: $elm$core$Maybe$Nothing, offsetXl: $elm$core$Maybe$Nothing, offsetXs: $elm$core$Maybe$Nothing, orderLg: $elm$core$Maybe$Nothing, orderMd: $elm$core$Maybe$Nothing, orderSm: $elm$core$Maybe$Nothing, orderXl: $elm$core$Maybe$Nothing, orderXs: $elm$core$Maybe$Nothing, pullLg: $elm$core$Maybe$Nothing, pullMd: $elm$core$Maybe$Nothing, pullSm: $elm$core$Maybe$Nothing, pullXl: $elm$core$Maybe$Nothing, pullXs: $elm$core$Maybe$Nothing, pushLg: $elm$core$Maybe$Nothing, pushMd: $elm$core$Maybe$Nothing, pushSm: $elm$core$Maybe$Nothing, pushXl: $elm$core$Maybe$Nothing, pushXs: $elm$core$Maybe$Nothing, textAlign: $elm$core$Maybe$Nothing, widthLg: $elm$core$Maybe$Nothing, widthMd: $elm$core$Maybe$Nothing, widthSm: $elm$core$Maybe$Nothing, widthXl: $elm$core$Maybe$Nothing, widthXs: $elm$core$Maybe$Nothing};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetCountOption = function (size) {
+	switch (size.$) {
+		case 'Offset0':
+			return '0';
+		case 'Offset1':
+			return '1';
+		case 'Offset2':
+			return '2';
+		case 'Offset3':
+			return '3';
+		case 'Offset4':
+			return '4';
+		case 'Offset5':
+			return '5';
+		case 'Offset6':
+			return '6';
+		case 'Offset7':
+			return '7';
+		case 'Offset8':
+			return '8';
+		case 'Offset9':
+			return '9';
+		case 'Offset10':
+			return '10';
+		default:
+			return '11';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString = function (screenSize) {
+	var _v0 = $rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(screenSize);
+	if (_v0.$ === 'Just') {
+		var s = _v0.a;
+		return '-' + (s + '-');
+	} else {
+		return '-';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetClass = function (_v0) {
+	var screenSize = _v0.screenSize;
+	var offsetCount = _v0.offsetCount;
+	return $elm$html$Html$Attributes$class(
+		'offset' + ($rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString(screenSize) + $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetCountOption(offsetCount)));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetsToAttributes = function (offsets) {
+	var offset_ = function (m) {
+		return A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetClass, m);
+	};
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$Basics$identity,
+		A2($elm$core$List$map, offset_, offsets));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$orderColOption = function (size) {
+	switch (size.$) {
+		case 'OrderFirst':
+			return 'first';
+		case 'Order1':
+			return '1';
+		case 'Order2':
+			return '2';
+		case 'Order3':
+			return '3';
+		case 'Order4':
+			return '4';
+		case 'Order5':
+			return '5';
+		case 'Order6':
+			return '6';
+		case 'Order7':
+			return '7';
+		case 'Order8':
+			return '8';
+		case 'Order9':
+			return '9';
+		case 'Order10':
+			return '10';
+		case 'Order11':
+			return '11';
+		case 'Order12':
+			return '12';
+		default:
+			return 'last';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$orderToAttributes = function (orders) {
+	var order_ = function (m) {
+		if (m.$ === 'Just') {
+			var screenSize = m.a.screenSize;
+			var moveCount = m.a.moveCount;
+			return $elm$core$Maybe$Just(
+				$elm$html$Html$Attributes$class(
+					'order' + ($rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString(screenSize) + $rundis$elm_bootstrap$Bootstrap$Grid$Internal$orderColOption(moveCount))));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	};
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$Basics$identity,
+		A2($elm$core$List$map, order_, orders));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$moveCountOption = function (size) {
+	switch (size.$) {
+		case 'Move0':
+			return '0';
+		case 'Move1':
+			return '1';
+		case 'Move2':
+			return '2';
+		case 'Move3':
+			return '3';
+		case 'Move4':
+			return '4';
+		case 'Move5':
+			return '5';
+		case 'Move6':
+			return '6';
+		case 'Move7':
+			return '7';
+		case 'Move8':
+			return '8';
+		case 'Move9':
+			return '9';
+		case 'Move10':
+			return '10';
+		case 'Move11':
+			return '11';
+		default:
+			return '12';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$pullsToAttributes = function (pulls) {
+	var pull_ = function (m) {
+		if (m.$ === 'Just') {
+			var screenSize = m.a.screenSize;
+			var moveCount = m.a.moveCount;
+			return $elm$core$Maybe$Just(
+				$elm$html$Html$Attributes$class(
+					'pull' + ($rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString(screenSize) + $rundis$elm_bootstrap$Bootstrap$Grid$Internal$moveCountOption(moveCount))));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	};
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$Basics$identity,
+		A2($elm$core$List$map, pull_, pulls));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$pushesToAttributes = function (pushes) {
+	var push_ = function (m) {
+		if (m.$ === 'Just') {
+			var screenSize = m.a.screenSize;
+			var moveCount = m.a.moveCount;
+			return $elm$core$Maybe$Just(
+				$elm$html$Html$Attributes$class(
+					'push' + ($rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString(screenSize) + $rundis$elm_bootstrap$Bootstrap$Grid$Internal$moveCountOption(moveCount))));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	};
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$Basics$identity,
+		A2($elm$core$List$map, push_, pushes));
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Text$textAlignDirOption = function (dir) {
+	switch (dir.$) {
+		case 'Center':
+			return 'center';
+		case 'Left':
+			return 'left';
+		default:
+			return 'right';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Text$textAlignClass = function (_v0) {
+	var dir = _v0.dir;
+	var size = _v0.size;
+	return $elm$html$Html$Attributes$class(
+		'text' + (A2(
+			$elm$core$Maybe$withDefault,
+			'-',
+			A2(
+				$elm$core$Maybe$map,
+				function (s) {
+					return '-' + (s + '-');
+				},
+				$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(size))) + $rundis$elm_bootstrap$Bootstrap$Internal$Text$textAlignDirOption(dir)));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$verticalAlignOption = function (align) {
+	switch (align.$) {
+		case 'Top':
+			return 'start';
+		case 'Middle':
+			return 'center';
+		default:
+			return 'end';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignClass = F2(
+	function (prefix, _v0) {
+		var align = _v0.align;
+		var screenSize = _v0.screenSize;
+		return $elm$html$Html$Attributes$class(
+			_Utils_ap(
+				prefix,
+				_Utils_ap(
+					A2(
+						$elm$core$Maybe$withDefault,
+						'',
+						A2(
+							$elm$core$Maybe$map,
+							function (v) {
+								return v + '-';
+							},
+							$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(screenSize))),
+					$rundis$elm_bootstrap$Bootstrap$Grid$Internal$verticalAlignOption(align))));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignsToAttributes = F2(
+	function (prefix, aligns) {
+		var align = function (a) {
+			return A2(
+				$elm$core$Maybe$map,
+				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignClass(prefix),
+				a);
+		};
+		return A2(
+			$elm$core$List$filterMap,
+			$elm$core$Basics$identity,
+			A2($elm$core$List$map, align, aligns));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$colAttributes = function (modifiers) {
+	var options = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOption, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$defaultColOptions, modifiers);
+	var shouldAddDefaultXs = !$elm$core$List$length(
+		A2(
+			$elm$core$List$filterMap,
+			$elm$core$Basics$identity,
+			_List_fromArray(
+				[options.widthXs, options.widthSm, options.widthMd, options.widthLg, options.widthXl])));
+	return _Utils_ap(
+		$rundis$elm_bootstrap$Bootstrap$Grid$Internal$colWidthsToAttributes(
+			_List_fromArray(
+				[
+					shouldAddDefaultXs ? $elm$core$Maybe$Just(
+					A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width, $rundis$elm_bootstrap$Bootstrap$General$Internal$XS, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col)) : options.widthXs,
+					options.widthSm,
+					options.widthMd,
+					options.widthLg,
+					options.widthXl
+				])),
+		_Utils_ap(
+			$rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetsToAttributes(
+				_List_fromArray(
+					[options.offsetXs, options.offsetSm, options.offsetMd, options.offsetLg, options.offsetXl])),
+			_Utils_ap(
+				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$pullsToAttributes(
+					_List_fromArray(
+						[options.pullXs, options.pullSm, options.pullMd, options.pullLg, options.pullXl])),
+				_Utils_ap(
+					$rundis$elm_bootstrap$Bootstrap$Grid$Internal$pushesToAttributes(
+						_List_fromArray(
+							[options.pushXs, options.pushSm, options.pushMd, options.pushLg, options.pushXl])),
+					_Utils_ap(
+						$rundis$elm_bootstrap$Bootstrap$Grid$Internal$orderToAttributes(
+							_List_fromArray(
+								[options.orderXs, options.orderSm, options.orderMd, options.orderLg, options.orderXl])),
+						_Utils_ap(
+							A2(
+								$rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignsToAttributes,
+								'align-self-',
+								_List_fromArray(
+									[options.alignXs, options.alignSm, options.alignMd, options.alignLg, options.alignXl])),
+							_Utils_ap(
+								function () {
+									var _v0 = options.textAlign;
+									if (_v0.$ === 'Just') {
+										var a = _v0.a;
+										return _List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Internal$Text$textAlignClass(a)
+											]);
+									} else {
+										return _List_Nil;
+									}
+								}(),
+								options.attributes)))))));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$renderCol = function (column) {
+	switch (column.$) {
+		case 'Column':
+			var options = column.a.options;
+			var children = column.a.children;
+			return A2(
+				$elm$html$Html$div,
+				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$colAttributes(options),
+				children);
+		case 'ColBreak':
+			var e = column.a;
+			return e;
+		default:
+			var options = column.a.options;
+			var children = column.a.children;
+			return A3(
+				$elm$html$Html$Keyed$node,
+				'div',
+				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$colAttributes(options),
+				children);
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowHAlign = F2(
+	function (align, options) {
+		var _v0 = align.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						hAlignXs: $elm$core$Maybe$Just(align)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						hAlignSm: $elm$core$Maybe$Just(align)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						hAlignMd: $elm$core$Maybe$Just(align)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						hAlignLg: $elm$core$Maybe$Just(align)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						hAlignXl: $elm$core$Maybe$Just(align)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowVAlign = F2(
+	function (align_, options) {
+		var _v0 = align_.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						vAlignXs: $elm$core$Maybe$Just(align_)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						vAlignSm: $elm$core$Maybe$Just(align_)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						vAlignMd: $elm$core$Maybe$Just(align_)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						vAlignLg: $elm$core$Maybe$Just(align_)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						vAlignXl: $elm$core$Maybe$Just(align_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowOption = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'RowAttrs':
+				var attrs = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs)
+					});
+			case 'RowVAlign':
+				var align = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowVAlign, align, options);
+			default:
+				var align = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowHAlign, align, options);
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$defaultRowOptions = {attributes: _List_Nil, hAlignLg: $elm$core$Maybe$Nothing, hAlignMd: $elm$core$Maybe$Nothing, hAlignSm: $elm$core$Maybe$Nothing, hAlignXl: $elm$core$Maybe$Nothing, hAlignXs: $elm$core$Maybe$Nothing, vAlignLg: $elm$core$Maybe$Nothing, vAlignMd: $elm$core$Maybe$Nothing, vAlignSm: $elm$core$Maybe$Nothing, vAlignXl: $elm$core$Maybe$Nothing, vAlignXs: $elm$core$Maybe$Nothing};
+var $rundis$elm_bootstrap$Bootstrap$General$Internal$horizontalAlignOption = function (align) {
+	switch (align.$) {
+		case 'Left':
+			return 'start';
+		case 'Center':
+			return 'center';
+		case 'Right':
+			return 'end';
+		case 'Around':
+			return 'around';
+		default:
+			return 'between';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$General$Internal$hAlignClass = function (_v0) {
+	var align = _v0.align;
+	var screenSize = _v0.screenSize;
+	return $elm$html$Html$Attributes$class(
+		'justify-content-' + (A2(
+			$elm$core$Maybe$withDefault,
+			'',
+			A2(
+				$elm$core$Maybe$map,
+				function (v) {
+					return v + '-';
+				},
+				$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(screenSize))) + $rundis$elm_bootstrap$Bootstrap$General$Internal$horizontalAlignOption(align)));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$hAlignsToAttributes = function (aligns) {
+	var align = function (a) {
+		return A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$General$Internal$hAlignClass, a);
+	};
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$Basics$identity,
+		A2($elm$core$List$map, align, aligns));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$rowAttributes = function (modifiers) {
+	var options = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowOption, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$defaultRowOptions, modifiers);
+	return _Utils_ap(
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('row')
+			]),
+		_Utils_ap(
+			A2(
+				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignsToAttributes,
+				'align-items-',
+				_List_fromArray(
+					[options.vAlignXs, options.vAlignSm, options.vAlignMd, options.vAlignLg, options.vAlignXl])),
+			_Utils_ap(
+				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$hAlignsToAttributes(
+					_List_fromArray(
+						[options.hAlignXs, options.hAlignSm, options.hAlignMd, options.hAlignLg, options.hAlignXl])),
+				options.attributes)));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$row = F2(
+	function (options, cols) {
+		return A2(
+			$elm$html$Html$div,
+			$rundis$elm_bootstrap$Bootstrap$Grid$Internal$rowAttributes(options),
+			A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Grid$renderCol, cols));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$simpleRow = function (cols) {
+	return A2($rundis$elm_bootstrap$Bootstrap$Grid$row, _List_Nil, cols);
+};
 var $rundis$elm_bootstrap$Bootstrap$Tab$getActiveItem = F2(
 	function (_v0, configRec) {
 		var activeTab = _v0.a.activeTab;
@@ -11820,6 +12695,16 @@ var $rundis$elm_bootstrap$Bootstrap$Tab$view = F2(
 					]));
 		}
 	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$ColAuto = {$: 'ColAuto'};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$ColWidth = function (a) {
+	return {$: 'ColWidth', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$width = F2(
+	function (size, count) {
+		return $rundis$elm_bootstrap$Bootstrap$Grid$Internal$ColWidth(
+			A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width, size, count));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Col$xsAuto = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$XS, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$ColAuto);
 var $author$project$FightingTool$viewCustomEnemyModal = function (model) {
 	return A2(
 		$rundis$elm_bootstrap$Bootstrap$Modal$view,
@@ -11851,7 +12736,32 @@ var $author$project$FightingTool$viewCustomEnemyModal = function (model) {
 									[
 										$elm$html$Html$text('Vordefiniert')
 									])),
-								$author$project$FightingTool$dropdownMenu(model),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Grid$container,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$rundis$elm_bootstrap$Bootstrap$Grid$simpleRow(
+										_List_fromArray(
+											[
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Grid$col,
+												_List_fromArray(
+													[$rundis$elm_bootstrap$Bootstrap$Grid$Col$xsAuto]),
+												_List_fromArray(
+													[
+														$author$project$FightingTool$dropdownMenuMonsters(model)
+													])),
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Grid$col,
+												_List_fromArray(
+													[$rundis$elm_bootstrap$Bootstrap$Grid$Col$xsAuto]),
+												_List_fromArray(
+													[
+														$author$project$FightingTool$dropdownMenuEncounters(model)
+													]))
+											]))
+									])),
 								A2($elm$html$Html$br, _List_Nil, _List_Nil),
 								A2(
 								$elm$html$Html$h5,
@@ -12088,14 +12998,6 @@ var $rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 			$elm$html$Html$button,
 			$rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(options),
 			children);
-	});
-var $rundis$elm_bootstrap$Bootstrap$Grid$Column = function (a) {
-	return {$: 'Column', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$col = F2(
-	function (options, children) {
-		return $rundis$elm_bootstrap$Bootstrap$Grid$Column(
-			{children: children, options: options});
 	});
 var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Disabled = {$: 'Disabled'};
 var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$disabled = $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Disabled;
@@ -12408,8 +13310,6 @@ var $author$project$DungeonMap$mouseDrawEvents = function (addCharacterIcon) {
 		switch (characterIcon.$) {
 			case 'PlayerIcon':
 				var i = characterIcon.a;
-				var x = characterIcon.b;
-				var y = characterIcon.c;
 				var n = characterIcon.d;
 				return _List_fromArray(
 					[
@@ -12421,8 +13321,6 @@ var $author$project$DungeonMap$mouseDrawEvents = function (addCharacterIcon) {
 					]);
 			case 'MonsterIcon':
 				var i = characterIcon.a;
-				var x = characterIcon.b;
-				var y = characterIcon.c;
 				var n = characterIcon.d;
 				return _List_fromArray(
 					[
@@ -12434,11 +13332,6 @@ var $author$project$DungeonMap$mouseDrawEvents = function (addCharacterIcon) {
 					]);
 			default:
 				var i = characterIcon.a;
-				var x = characterIcon.b;
-				var y = characterIcon.c;
-				var t = characterIcon.d;
-				var c = characterIcon.e;
-				var ident = characterIcon.f;
 				return _List_fromArray(
 					[
 						$elm$svg$Svg$Events$onClick(
@@ -12513,48 +13406,27 @@ var $elm$svg$Svg$Attributes$dominantBaseline = _VirtualDom_attribute('dominant-b
 var $author$project$DungeonMap$getColor = function (object) {
 	switch (object.$) {
 		case 'MonsterIcon':
-			var i = object.a;
-			var x = object.b;
-			var y = object.c;
-			var n = object.d;
 			return $elm$core$Maybe$Nothing;
 		case 'PlayerIcon':
-			var i = object.a;
-			var x = object.b;
-			var y = object.c;
-			var n = object.d;
 			return $elm$core$Maybe$Nothing;
 		default:
-			var i = object.a;
-			var x = object.b;
-			var y = object.c;
-			var t = object.d;
 			var c = object.e;
-			var ident = object.f;
 			return c;
 	}
 };
 var $author$project$DungeonMap$getCoord = function (object) {
 	switch (object.$) {
 		case 'MonsterIcon':
-			var i = object.a;
 			var x = object.b;
 			var y = object.c;
-			var n = object.d;
 			return x + (',' + y);
 		case 'PlayerIcon':
-			var i = object.a;
 			var x = object.b;
 			var y = object.c;
-			var n = object.d;
 			return x + (',' + y);
 		default:
-			var i = object.a;
 			var x = object.b;
 			var y = object.c;
-			var t = object.d;
-			var c = object.e;
-			var ident = object.f;
 			return x + (',' + y);
 	}
 };
@@ -12562,22 +13434,11 @@ var $author$project$DungeonMap$getID = function (object) {
 	switch (object.$) {
 		case 'MonsterIcon':
 			var i = object.a;
-			var x = object.b;
-			var y = object.c;
-			var n = object.d;
 			return i;
 		case 'PlayerIcon':
 			var i = object.a;
-			var x = object.b;
-			var y = object.c;
-			var n = object.d;
 			return i;
 		default:
-			var i = object.a;
-			var x = object.b;
-			var y = object.c;
-			var t = object.d;
-			var c = object.e;
 			var ident = object.f;
 			return ident;
 	}
@@ -12597,59 +13458,29 @@ var $author$project$DungeonMap$getIconPath = function (id) {
 var $author$project$DungeonMap$getIconType = function (object) {
 	switch (object.$) {
 		case 'MonsterIcon':
-			var i = object.a;
-			var x = object.b;
-			var y = object.c;
-			var n = object.d;
 			return 'monster';
 		case 'PlayerIcon':
-			var i = object.a;
-			var x = object.b;
-			var y = object.c;
-			var n = object.d;
 			return 'player';
 		default:
-			var i = object.a;
-			var x = object.b;
-			var y = object.c;
-			var t = object.d;
-			var c = object.e;
-			var ident = object.f;
 			return 'object';
 	}
 };
 var $author$project$DungeonMap$getObjectText = function (object) {
 	switch (object.$) {
 		case 'MonsterIcon':
-			var i = object.a;
-			var x = object.b;
-			var y = object.c;
 			var name = object.d;
 			return name;
 		case 'PlayerIcon':
-			var i = object.a;
-			var x = object.b;
-			var y = object.c;
 			var name = object.d;
 			return name;
 		default:
-			var i = object.a;
-			var x = object.b;
-			var y = object.c;
 			var t = object.d;
-			var c = object.e;
-			var ident = object.f;
 			return t;
 	}
 };
 var $author$project$DungeonMap$getTypeID = function (object) {
 	if (object.$ === 'ObjectIcon') {
 		var i = object.a;
-		var x = object.b;
-		var y = object.c;
-		var t = object.d;
-		var c = object.e;
-		var ident = object.f;
 		return i;
 	} else {
 		return 0;
@@ -12894,18 +13725,10 @@ var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 		var characterIcon = addCharacterIcon.a;
 		switch (characterIcon.$) {
 			case 'ObjectIcon':
-				var i = characterIcon.a;
-				var x = characterIcon.b;
-				var y = characterIcon.c;
-				var t = characterIcon.d;
-				var c = characterIcon.e;
-				var ident = characterIcon.f;
 				return _List_Nil;
 			case 'PlayerIcon':
-				var i = characterIcon.a;
 				var x = characterIcon.b;
 				var y = characterIcon.c;
-				var n = characterIcon.d;
 				return _Utils_ap(
 					$author$project$DungeonMap$placeIcon(characterIcon),
 					_List_fromArray(
@@ -12923,10 +13746,8 @@ var $author$project$DungeonMap$newIconsView = function (addCharacterIcon) {
 							_List_Nil)
 						]));
 			default:
-				var i = characterIcon.a;
 				var x = characterIcon.b;
 				var y = characterIcon.c;
-				var n = characterIcon.d;
 				return _Utils_ap(
 					$author$project$DungeonMap$placeIcon(characterIcon),
 					_List_fromArray(
@@ -13932,792 +14753,6 @@ var $rundis$elm_bootstrap$Bootstrap$Button$onClick = function (message) {
 					_Utils_Tuple2(message, true)))
 			]));
 };
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col = {$: 'Col'};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width = F2(
-	function (screenSize, columnCount) {
-		return {columnCount: columnCount, screenSize: screenSize};
-	});
-var $rundis$elm_bootstrap$Bootstrap$General$Internal$XS = {$: 'XS'};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColAlign = F2(
-	function (align_, options) {
-		var _v0 = align_.screenSize;
-		switch (_v0.$) {
-			case 'XS':
-				return _Utils_update(
-					options,
-					{
-						alignXs: $elm$core$Maybe$Just(align_)
-					});
-			case 'SM':
-				return _Utils_update(
-					options,
-					{
-						alignSm: $elm$core$Maybe$Just(align_)
-					});
-			case 'MD':
-				return _Utils_update(
-					options,
-					{
-						alignMd: $elm$core$Maybe$Just(align_)
-					});
-			case 'LG':
-				return _Utils_update(
-					options,
-					{
-						alignLg: $elm$core$Maybe$Just(align_)
-					});
-			default:
-				return _Utils_update(
-					options,
-					{
-						alignXl: $elm$core$Maybe$Just(align_)
-					});
-		}
-	});
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOffset = F2(
-	function (offset_, options) {
-		var _v0 = offset_.screenSize;
-		switch (_v0.$) {
-			case 'XS':
-				return _Utils_update(
-					options,
-					{
-						offsetXs: $elm$core$Maybe$Just(offset_)
-					});
-			case 'SM':
-				return _Utils_update(
-					options,
-					{
-						offsetSm: $elm$core$Maybe$Just(offset_)
-					});
-			case 'MD':
-				return _Utils_update(
-					options,
-					{
-						offsetMd: $elm$core$Maybe$Just(offset_)
-					});
-			case 'LG':
-				return _Utils_update(
-					options,
-					{
-						offsetLg: $elm$core$Maybe$Just(offset_)
-					});
-			default:
-				return _Utils_update(
-					options,
-					{
-						offsetXl: $elm$core$Maybe$Just(offset_)
-					});
-		}
-	});
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOrder = F2(
-	function (order_, options) {
-		var _v0 = order_.screenSize;
-		switch (_v0.$) {
-			case 'XS':
-				return _Utils_update(
-					options,
-					{
-						orderXs: $elm$core$Maybe$Just(order_)
-					});
-			case 'SM':
-				return _Utils_update(
-					options,
-					{
-						orderSm: $elm$core$Maybe$Just(order_)
-					});
-			case 'MD':
-				return _Utils_update(
-					options,
-					{
-						orderMd: $elm$core$Maybe$Just(order_)
-					});
-			case 'LG':
-				return _Utils_update(
-					options,
-					{
-						orderLg: $elm$core$Maybe$Just(order_)
-					});
-			default:
-				return _Utils_update(
-					options,
-					{
-						orderXl: $elm$core$Maybe$Just(order_)
-					});
-		}
-	});
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColPull = F2(
-	function (pull_, options) {
-		var _v0 = pull_.screenSize;
-		switch (_v0.$) {
-			case 'XS':
-				return _Utils_update(
-					options,
-					{
-						pullXs: $elm$core$Maybe$Just(pull_)
-					});
-			case 'SM':
-				return _Utils_update(
-					options,
-					{
-						pullSm: $elm$core$Maybe$Just(pull_)
-					});
-			case 'MD':
-				return _Utils_update(
-					options,
-					{
-						pullMd: $elm$core$Maybe$Just(pull_)
-					});
-			case 'LG':
-				return _Utils_update(
-					options,
-					{
-						pullLg: $elm$core$Maybe$Just(pull_)
-					});
-			default:
-				return _Utils_update(
-					options,
-					{
-						pullXl: $elm$core$Maybe$Just(pull_)
-					});
-		}
-	});
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColPush = F2(
-	function (push_, options) {
-		var _v0 = push_.screenSize;
-		switch (_v0.$) {
-			case 'XS':
-				return _Utils_update(
-					options,
-					{
-						pushXs: $elm$core$Maybe$Just(push_)
-					});
-			case 'SM':
-				return _Utils_update(
-					options,
-					{
-						pushSm: $elm$core$Maybe$Just(push_)
-					});
-			case 'MD':
-				return _Utils_update(
-					options,
-					{
-						pushMd: $elm$core$Maybe$Just(push_)
-					});
-			case 'LG':
-				return _Utils_update(
-					options,
-					{
-						pushLg: $elm$core$Maybe$Just(push_)
-					});
-			default:
-				return _Utils_update(
-					options,
-					{
-						pushXl: $elm$core$Maybe$Just(push_)
-					});
-		}
-	});
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColWidth = F2(
-	function (width_, options) {
-		var _v0 = width_.screenSize;
-		switch (_v0.$) {
-			case 'XS':
-				return _Utils_update(
-					options,
-					{
-						widthXs: $elm$core$Maybe$Just(width_)
-					});
-			case 'SM':
-				return _Utils_update(
-					options,
-					{
-						widthSm: $elm$core$Maybe$Just(width_)
-					});
-			case 'MD':
-				return _Utils_update(
-					options,
-					{
-						widthMd: $elm$core$Maybe$Just(width_)
-					});
-			case 'LG':
-				return _Utils_update(
-					options,
-					{
-						widthLg: $elm$core$Maybe$Just(width_)
-					});
-			default:
-				return _Utils_update(
-					options,
-					{
-						widthXl: $elm$core$Maybe$Just(width_)
-					});
-		}
-	});
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOption = F2(
-	function (modifier, options) {
-		switch (modifier.$) {
-			case 'ColAttrs':
-				var attrs = modifier.a;
-				return _Utils_update(
-					options,
-					{
-						attributes: _Utils_ap(options.attributes, attrs)
-					});
-			case 'ColWidth':
-				var width_ = modifier.a;
-				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColWidth, width_, options);
-			case 'ColOffset':
-				var offset_ = modifier.a;
-				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOffset, offset_, options);
-			case 'ColPull':
-				var pull_ = modifier.a;
-				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColPull, pull_, options);
-			case 'ColPush':
-				var push_ = modifier.a;
-				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColPush, push_, options);
-			case 'ColOrder':
-				var order_ = modifier.a;
-				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOrder, order_, options);
-			case 'ColAlign':
-				var align = modifier.a;
-				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColAlign, align, options);
-			default:
-				var align = modifier.a;
-				return _Utils_update(
-					options,
-					{
-						textAlign: $elm$core$Maybe$Just(align)
-					});
-		}
-	});
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$columnCountOption = function (size) {
-	switch (size.$) {
-		case 'Col':
-			return $elm$core$Maybe$Nothing;
-		case 'Col1':
-			return $elm$core$Maybe$Just('1');
-		case 'Col2':
-			return $elm$core$Maybe$Just('2');
-		case 'Col3':
-			return $elm$core$Maybe$Just('3');
-		case 'Col4':
-			return $elm$core$Maybe$Just('4');
-		case 'Col5':
-			return $elm$core$Maybe$Just('5');
-		case 'Col6':
-			return $elm$core$Maybe$Just('6');
-		case 'Col7':
-			return $elm$core$Maybe$Just('7');
-		case 'Col8':
-			return $elm$core$Maybe$Just('8');
-		case 'Col9':
-			return $elm$core$Maybe$Just('9');
-		case 'Col10':
-			return $elm$core$Maybe$Just('10');
-		case 'Col11':
-			return $elm$core$Maybe$Just('11');
-		case 'Col12':
-			return $elm$core$Maybe$Just('12');
-		default:
-			return $elm$core$Maybe$Just('auto');
-	}
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$colWidthClass = function (_v0) {
-	var screenSize = _v0.screenSize;
-	var columnCount = _v0.columnCount;
-	return $elm$html$Html$Attributes$class(
-		'col' + (A2(
-			$elm$core$Maybe$withDefault,
-			'',
-			A2(
-				$elm$core$Maybe$map,
-				function (v) {
-					return '-' + v;
-				},
-				$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(screenSize))) + A2(
-			$elm$core$Maybe$withDefault,
-			'',
-			A2(
-				$elm$core$Maybe$map,
-				function (v) {
-					return '-' + v;
-				},
-				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$columnCountOption(columnCount)))));
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$colWidthsToAttributes = function (widths) {
-	var width_ = function (w) {
-		return A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$colWidthClass, w);
-	};
-	return A2(
-		$elm$core$List$filterMap,
-		$elm$core$Basics$identity,
-		A2($elm$core$List$map, width_, widths));
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$defaultColOptions = {alignLg: $elm$core$Maybe$Nothing, alignMd: $elm$core$Maybe$Nothing, alignSm: $elm$core$Maybe$Nothing, alignXl: $elm$core$Maybe$Nothing, alignXs: $elm$core$Maybe$Nothing, attributes: _List_Nil, offsetLg: $elm$core$Maybe$Nothing, offsetMd: $elm$core$Maybe$Nothing, offsetSm: $elm$core$Maybe$Nothing, offsetXl: $elm$core$Maybe$Nothing, offsetXs: $elm$core$Maybe$Nothing, orderLg: $elm$core$Maybe$Nothing, orderMd: $elm$core$Maybe$Nothing, orderSm: $elm$core$Maybe$Nothing, orderXl: $elm$core$Maybe$Nothing, orderXs: $elm$core$Maybe$Nothing, pullLg: $elm$core$Maybe$Nothing, pullMd: $elm$core$Maybe$Nothing, pullSm: $elm$core$Maybe$Nothing, pullXl: $elm$core$Maybe$Nothing, pullXs: $elm$core$Maybe$Nothing, pushLg: $elm$core$Maybe$Nothing, pushMd: $elm$core$Maybe$Nothing, pushSm: $elm$core$Maybe$Nothing, pushXl: $elm$core$Maybe$Nothing, pushXs: $elm$core$Maybe$Nothing, textAlign: $elm$core$Maybe$Nothing, widthLg: $elm$core$Maybe$Nothing, widthMd: $elm$core$Maybe$Nothing, widthSm: $elm$core$Maybe$Nothing, widthXl: $elm$core$Maybe$Nothing, widthXs: $elm$core$Maybe$Nothing};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetCountOption = function (size) {
-	switch (size.$) {
-		case 'Offset0':
-			return '0';
-		case 'Offset1':
-			return '1';
-		case 'Offset2':
-			return '2';
-		case 'Offset3':
-			return '3';
-		case 'Offset4':
-			return '4';
-		case 'Offset5':
-			return '5';
-		case 'Offset6':
-			return '6';
-		case 'Offset7':
-			return '7';
-		case 'Offset8':
-			return '8';
-		case 'Offset9':
-			return '9';
-		case 'Offset10':
-			return '10';
-		default:
-			return '11';
-	}
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString = function (screenSize) {
-	var _v0 = $rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(screenSize);
-	if (_v0.$ === 'Just') {
-		var s = _v0.a;
-		return '-' + (s + '-');
-	} else {
-		return '-';
-	}
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetClass = function (_v0) {
-	var screenSize = _v0.screenSize;
-	var offsetCount = _v0.offsetCount;
-	return $elm$html$Html$Attributes$class(
-		'offset' + ($rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString(screenSize) + $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetCountOption(offsetCount)));
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetsToAttributes = function (offsets) {
-	var offset_ = function (m) {
-		return A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetClass, m);
-	};
-	return A2(
-		$elm$core$List$filterMap,
-		$elm$core$Basics$identity,
-		A2($elm$core$List$map, offset_, offsets));
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$orderColOption = function (size) {
-	switch (size.$) {
-		case 'OrderFirst':
-			return 'first';
-		case 'Order1':
-			return '1';
-		case 'Order2':
-			return '2';
-		case 'Order3':
-			return '3';
-		case 'Order4':
-			return '4';
-		case 'Order5':
-			return '5';
-		case 'Order6':
-			return '6';
-		case 'Order7':
-			return '7';
-		case 'Order8':
-			return '8';
-		case 'Order9':
-			return '9';
-		case 'Order10':
-			return '10';
-		case 'Order11':
-			return '11';
-		case 'Order12':
-			return '12';
-		default:
-			return 'last';
-	}
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$orderToAttributes = function (orders) {
-	var order_ = function (m) {
-		if (m.$ === 'Just') {
-			var screenSize = m.a.screenSize;
-			var moveCount = m.a.moveCount;
-			return $elm$core$Maybe$Just(
-				$elm$html$Html$Attributes$class(
-					'order' + ($rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString(screenSize) + $rundis$elm_bootstrap$Bootstrap$Grid$Internal$orderColOption(moveCount))));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	};
-	return A2(
-		$elm$core$List$filterMap,
-		$elm$core$Basics$identity,
-		A2($elm$core$List$map, order_, orders));
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$moveCountOption = function (size) {
-	switch (size.$) {
-		case 'Move0':
-			return '0';
-		case 'Move1':
-			return '1';
-		case 'Move2':
-			return '2';
-		case 'Move3':
-			return '3';
-		case 'Move4':
-			return '4';
-		case 'Move5':
-			return '5';
-		case 'Move6':
-			return '6';
-		case 'Move7':
-			return '7';
-		case 'Move8':
-			return '8';
-		case 'Move9':
-			return '9';
-		case 'Move10':
-			return '10';
-		case 'Move11':
-			return '11';
-		default:
-			return '12';
-	}
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$pullsToAttributes = function (pulls) {
-	var pull_ = function (m) {
-		if (m.$ === 'Just') {
-			var screenSize = m.a.screenSize;
-			var moveCount = m.a.moveCount;
-			return $elm$core$Maybe$Just(
-				$elm$html$Html$Attributes$class(
-					'pull' + ($rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString(screenSize) + $rundis$elm_bootstrap$Bootstrap$Grid$Internal$moveCountOption(moveCount))));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	};
-	return A2(
-		$elm$core$List$filterMap,
-		$elm$core$Basics$identity,
-		A2($elm$core$List$map, pull_, pulls));
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$pushesToAttributes = function (pushes) {
-	var push_ = function (m) {
-		if (m.$ === 'Just') {
-			var screenSize = m.a.screenSize;
-			var moveCount = m.a.moveCount;
-			return $elm$core$Maybe$Just(
-				$elm$html$Html$Attributes$class(
-					'push' + ($rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString(screenSize) + $rundis$elm_bootstrap$Bootstrap$Grid$Internal$moveCountOption(moveCount))));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	};
-	return A2(
-		$elm$core$List$filterMap,
-		$elm$core$Basics$identity,
-		A2($elm$core$List$map, push_, pushes));
-};
-var $rundis$elm_bootstrap$Bootstrap$Internal$Text$textAlignDirOption = function (dir) {
-	switch (dir.$) {
-		case 'Center':
-			return 'center';
-		case 'Left':
-			return 'left';
-		default:
-			return 'right';
-	}
-};
-var $rundis$elm_bootstrap$Bootstrap$Internal$Text$textAlignClass = function (_v0) {
-	var dir = _v0.dir;
-	var size = _v0.size;
-	return $elm$html$Html$Attributes$class(
-		'text' + (A2(
-			$elm$core$Maybe$withDefault,
-			'-',
-			A2(
-				$elm$core$Maybe$map,
-				function (s) {
-					return '-' + (s + '-');
-				},
-				$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(size))) + $rundis$elm_bootstrap$Bootstrap$Internal$Text$textAlignDirOption(dir)));
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$verticalAlignOption = function (align) {
-	switch (align.$) {
-		case 'Top':
-			return 'start';
-		case 'Middle':
-			return 'center';
-		default:
-			return 'end';
-	}
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignClass = F2(
-	function (prefix, _v0) {
-		var align = _v0.align;
-		var screenSize = _v0.screenSize;
-		return $elm$html$Html$Attributes$class(
-			_Utils_ap(
-				prefix,
-				_Utils_ap(
-					A2(
-						$elm$core$Maybe$withDefault,
-						'',
-						A2(
-							$elm$core$Maybe$map,
-							function (v) {
-								return v + '-';
-							},
-							$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(screenSize))),
-					$rundis$elm_bootstrap$Bootstrap$Grid$Internal$verticalAlignOption(align))));
-	});
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignsToAttributes = F2(
-	function (prefix, aligns) {
-		var align = function (a) {
-			return A2(
-				$elm$core$Maybe$map,
-				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignClass(prefix),
-				a);
-		};
-		return A2(
-			$elm$core$List$filterMap,
-			$elm$core$Basics$identity,
-			A2($elm$core$List$map, align, aligns));
-	});
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$colAttributes = function (modifiers) {
-	var options = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOption, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$defaultColOptions, modifiers);
-	var shouldAddDefaultXs = !$elm$core$List$length(
-		A2(
-			$elm$core$List$filterMap,
-			$elm$core$Basics$identity,
-			_List_fromArray(
-				[options.widthXs, options.widthSm, options.widthMd, options.widthLg, options.widthXl])));
-	return _Utils_ap(
-		$rundis$elm_bootstrap$Bootstrap$Grid$Internal$colWidthsToAttributes(
-			_List_fromArray(
-				[
-					shouldAddDefaultXs ? $elm$core$Maybe$Just(
-					A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width, $rundis$elm_bootstrap$Bootstrap$General$Internal$XS, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col)) : options.widthXs,
-					options.widthSm,
-					options.widthMd,
-					options.widthLg,
-					options.widthXl
-				])),
-		_Utils_ap(
-			$rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetsToAttributes(
-				_List_fromArray(
-					[options.offsetXs, options.offsetSm, options.offsetMd, options.offsetLg, options.offsetXl])),
-			_Utils_ap(
-				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$pullsToAttributes(
-					_List_fromArray(
-						[options.pullXs, options.pullSm, options.pullMd, options.pullLg, options.pullXl])),
-				_Utils_ap(
-					$rundis$elm_bootstrap$Bootstrap$Grid$Internal$pushesToAttributes(
-						_List_fromArray(
-							[options.pushXs, options.pushSm, options.pushMd, options.pushLg, options.pushXl])),
-					_Utils_ap(
-						$rundis$elm_bootstrap$Bootstrap$Grid$Internal$orderToAttributes(
-							_List_fromArray(
-								[options.orderXs, options.orderSm, options.orderMd, options.orderLg, options.orderXl])),
-						_Utils_ap(
-							A2(
-								$rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignsToAttributes,
-								'align-self-',
-								_List_fromArray(
-									[options.alignXs, options.alignSm, options.alignMd, options.alignLg, options.alignXl])),
-							_Utils_ap(
-								function () {
-									var _v0 = options.textAlign;
-									if (_v0.$ === 'Just') {
-										var a = _v0.a;
-										return _List_fromArray(
-											[
-												$rundis$elm_bootstrap$Bootstrap$Internal$Text$textAlignClass(a)
-											]);
-									} else {
-										return _List_Nil;
-									}
-								}(),
-								options.attributes)))))));
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$renderCol = function (column) {
-	switch (column.$) {
-		case 'Column':
-			var options = column.a.options;
-			var children = column.a.children;
-			return A2(
-				$elm$html$Html$div,
-				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$colAttributes(options),
-				children);
-		case 'ColBreak':
-			var e = column.a;
-			return e;
-		default:
-			var options = column.a.options;
-			var children = column.a.children;
-			return A3(
-				$elm$html$Html$Keyed$node,
-				'div',
-				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$colAttributes(options),
-				children);
-	}
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowHAlign = F2(
-	function (align, options) {
-		var _v0 = align.screenSize;
-		switch (_v0.$) {
-			case 'XS':
-				return _Utils_update(
-					options,
-					{
-						hAlignXs: $elm$core$Maybe$Just(align)
-					});
-			case 'SM':
-				return _Utils_update(
-					options,
-					{
-						hAlignSm: $elm$core$Maybe$Just(align)
-					});
-			case 'MD':
-				return _Utils_update(
-					options,
-					{
-						hAlignMd: $elm$core$Maybe$Just(align)
-					});
-			case 'LG':
-				return _Utils_update(
-					options,
-					{
-						hAlignLg: $elm$core$Maybe$Just(align)
-					});
-			default:
-				return _Utils_update(
-					options,
-					{
-						hAlignXl: $elm$core$Maybe$Just(align)
-					});
-		}
-	});
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowVAlign = F2(
-	function (align_, options) {
-		var _v0 = align_.screenSize;
-		switch (_v0.$) {
-			case 'XS':
-				return _Utils_update(
-					options,
-					{
-						vAlignXs: $elm$core$Maybe$Just(align_)
-					});
-			case 'SM':
-				return _Utils_update(
-					options,
-					{
-						vAlignSm: $elm$core$Maybe$Just(align_)
-					});
-			case 'MD':
-				return _Utils_update(
-					options,
-					{
-						vAlignMd: $elm$core$Maybe$Just(align_)
-					});
-			case 'LG':
-				return _Utils_update(
-					options,
-					{
-						vAlignLg: $elm$core$Maybe$Just(align_)
-					});
-			default:
-				return _Utils_update(
-					options,
-					{
-						vAlignXl: $elm$core$Maybe$Just(align_)
-					});
-		}
-	});
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowOption = F2(
-	function (modifier, options) {
-		switch (modifier.$) {
-			case 'RowAttrs':
-				var attrs = modifier.a;
-				return _Utils_update(
-					options,
-					{
-						attributes: _Utils_ap(options.attributes, attrs)
-					});
-			case 'RowVAlign':
-				var align = modifier.a;
-				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowVAlign, align, options);
-			default:
-				var align = modifier.a;
-				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowHAlign, align, options);
-		}
-	});
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$defaultRowOptions = {attributes: _List_Nil, hAlignLg: $elm$core$Maybe$Nothing, hAlignMd: $elm$core$Maybe$Nothing, hAlignSm: $elm$core$Maybe$Nothing, hAlignXl: $elm$core$Maybe$Nothing, hAlignXs: $elm$core$Maybe$Nothing, vAlignLg: $elm$core$Maybe$Nothing, vAlignMd: $elm$core$Maybe$Nothing, vAlignSm: $elm$core$Maybe$Nothing, vAlignXl: $elm$core$Maybe$Nothing, vAlignXs: $elm$core$Maybe$Nothing};
-var $rundis$elm_bootstrap$Bootstrap$General$Internal$horizontalAlignOption = function (align) {
-	switch (align.$) {
-		case 'Left':
-			return 'start';
-		case 'Center':
-			return 'center';
-		case 'Right':
-			return 'end';
-		case 'Around':
-			return 'around';
-		default:
-			return 'between';
-	}
-};
-var $rundis$elm_bootstrap$Bootstrap$General$Internal$hAlignClass = function (_v0) {
-	var align = _v0.align;
-	var screenSize = _v0.screenSize;
-	return $elm$html$Html$Attributes$class(
-		'justify-content-' + (A2(
-			$elm$core$Maybe$withDefault,
-			'',
-			A2(
-				$elm$core$Maybe$map,
-				function (v) {
-					return v + '-';
-				},
-				$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(screenSize))) + $rundis$elm_bootstrap$Bootstrap$General$Internal$horizontalAlignOption(align)));
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$hAlignsToAttributes = function (aligns) {
-	var align = function (a) {
-		return A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$General$Internal$hAlignClass, a);
-	};
-	return A2(
-		$elm$core$List$filterMap,
-		$elm$core$Basics$identity,
-		A2($elm$core$List$map, align, aligns));
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$rowAttributes = function (modifiers) {
-	var options = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowOption, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$defaultRowOptions, modifiers);
-	return _Utils_ap(
-		_List_fromArray(
-			[
-				$elm$html$Html$Attributes$class('row')
-			]),
-		_Utils_ap(
-			A2(
-				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignsToAttributes,
-				'align-items-',
-				_List_fromArray(
-					[options.vAlignXs, options.vAlignSm, options.vAlignMd, options.vAlignLg, options.vAlignXl])),
-			_Utils_ap(
-				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$hAlignsToAttributes(
-					_List_fromArray(
-						[options.hAlignXs, options.hAlignSm, options.hAlignMd, options.hAlignLg, options.hAlignXl])),
-				options.attributes)));
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$row = F2(
-	function (options, cols) {
-		return A2(
-			$elm$html$Html$div,
-			$rundis$elm_bootstrap$Bootstrap$Grid$Internal$rowAttributes(options),
-			A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Grid$renderCol, cols));
-	});
 var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Rows = function (a) {
 	return {$: 'Rows', a: a};
 };
@@ -14832,14 +14867,6 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Textarea$value = function (value_) {
 	return $rundis$elm_bootstrap$Bootstrap$Form$Textarea$Value(value_);
 };
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col8 = {$: 'Col8'};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$ColWidth = function (a) {
-	return {$: 'ColWidth', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$width = F2(
-	function (size, count) {
-		return $rundis$elm_bootstrap$Bootstrap$Grid$Internal$ColWidth(
-			A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width, size, count));
-	});
 var $rundis$elm_bootstrap$Bootstrap$Grid$Col$xs8 = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$XS, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col8);
 var $author$project$DungeonMap$dungeonMapView = function (model) {
 	return A2(

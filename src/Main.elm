@@ -22,6 +22,7 @@ import DungeonMap exposing (dungeonMapView)
 import FightingTool exposing (..)
 import Model exposing (..)
 import About exposing (aboutView)
+
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
@@ -84,8 +85,13 @@ update msg model =
             , Cmd.none
             )
 
-        MyDrop1Msg state ->
-            ( { model | myDrop1State = state }
+        MonsterDropdownMsg state ->
+            ( { model | monsterDropdownState = state }
+            , Cmd.none
+            )
+
+        EncounterDropdownMsg state ->
+            ( { model | encounterDropdownState = state }
             , Cmd.none
             )
 
@@ -352,7 +358,8 @@ main =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ Dropdown.subscriptions model.myDrop1State MyDrop1Msg ]
+        [ Dropdown.subscriptions model.monsterDropdownState MonsterDropdownMsg 
+        , Dropdown.subscriptions model.encounterDropdownState EncounterDropdownMsg]
 
 isNotId : Int -> CharacterIcon -> Bool
 isNotId id s =

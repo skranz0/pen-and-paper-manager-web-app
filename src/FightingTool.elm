@@ -15,6 +15,9 @@ import Bootstrap.Table as Table
 import Bootstrap.Form as Form
 import Bootstrap.Form.Input as Input
 import Bootstrap.Tab as Tab
+import Bootstrap.Grid as Grid
+import Bootstrap.Grid.Col as Col
+import Bootstrap.Grid.Row as Row
 import Array
 import Array.Extra as Array
 import Random
@@ -139,7 +142,14 @@ viewCustomEnemyModal model =
     |> Modal.body [ class "body"]
         [ div []
             [ Html.h5 [][text "Vordefiniert"] 
-            , dropdownMenu model
+            , Grid.container []
+                [ Grid.simpleRow 
+                    [ Grid.col [ Col.xsAuto ]
+                        [ dropdownMenuMonsters model ]
+                    , Grid.col [ Col.xsAuto ]
+                        [ dropdownMenuEncounters model ]
+                    ]
+                ]
             , Html.br [] []
             , Html.h5 [][text "Benutzerdefiniert"]
             , Tab.config ModalTabMsg
@@ -281,13 +291,13 @@ deathAlert model =
         |> Modal.footer [] []
         |> Modal.view model.showDeathAlert
 
-dropdownMenu : Model -> Html Msg
-dropdownMenu model =
+dropdownMenuMonsters : Model -> Html Msg
+dropdownMenuMonsters model =
     div []
         [ Dropdown.dropdown
-            model.myDrop1State
+            model.monsterDropdownState
             { options = [ Dropdown.dropRight ]
-            , toggleMsg = MyDrop1Msg
+            , toggleMsg = MonsterDropdownMsg
             , toggleButton =
                 Dropdown.toggle [Button.attrs [class "metalButton"]] [ text "Monster" ]
             , items =
@@ -310,6 +320,25 @@ dropdownMenu model =
                 , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "tatzelwurm" ] [ text "Tatzelwurm" ]
                 , Dropdown.header [ text "Pflanze"]
                 , Dropdown.buttonItem [ Html.Events.onClick <| LoadEnemy "waldschrat" ] [ text "Waldschrat" ]
+                ]
+            }
+        ]
+
+-- choose an environment to get according random encounters
+dropdownMenuEncounters : Model -> Html Msg
+dropdownMenuEncounters model =
+    div []
+        [ Dropdown.dropdown
+            model.encounterDropdownState
+            { options = [ Dropdown.dropRight ]
+            , toggleMsg = EncounterDropdownMsg
+            , toggleButton =
+                Dropdown.toggle [Button.attrs [class "metalButton"]] [ text "zufällige Begegnung" ]
+            , items =
+                -- give a name to the LoadEnemy method and it will pull up the corresponding JSON
+                [ Dropdown.buttonItem [] [ text "Wald" ]
+                , Dropdown.buttonItem [] [ text "Wüste" ]
+                , Dropdown.buttonItem [] [ text "Stadt" ]
                 ]
             }
         ]
