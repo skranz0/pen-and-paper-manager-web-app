@@ -5,7 +5,6 @@ module Model exposing (..)
 import Bootstrap.Tab as Tab
 import Bootstrap.Dropdown as Dropdown
 import Bootstrap.Modal as Modal
-import Bootstrap.Form.Textarea as Textarea
 import Http
 import Array
 import Array.Extra as Array
@@ -160,7 +159,7 @@ type CharacterIcon
     | MonsterIcon Int String String String
     --            ID  x-coord y-coord name
     | ObjectIcon Int     String  String  String (Maybe Color.Color) Int
-    --           type-ID x-coord y-coord Text custom-color          ident
+    --           type-ID x-coord y-coord Text   custom-color        ident
     -- ID in ObjectIcon type is not an identifier for a concrete ObjectIcon, its an identifier for the used png
 
 type alias MousePosition =

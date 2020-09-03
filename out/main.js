@@ -6829,16 +6829,13 @@ var $author$project$Main$generateIconIdents = function (list) {
 						var y = _char.c;
 						var t = _char.d;
 						var c = _char.e;
-						var ident = _char.f;
 						return A6($author$project$Model$ObjectIcon, typeID, x, y, t, c, id + 1);
 					case 'PlayerIcon':
-						var ident = _char.a;
 						var x = _char.b;
 						var y = _char.c;
 						var name = _char.d;
 						return A4($author$project$Model$PlayerIcon, id + 1, x, y, name);
 					default:
-						var ident = _char.a;
 						var x = _char.b;
 						var y = _char.c;
 						var name = _char.d;
@@ -8146,7 +8143,14 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
+							activeTooltip: '',
+							characterList: $author$project$Main$generateIconIdents(
+								A2(
+									$elm$core$List$filter,
+									$author$project$Main$isNotId(index + 1),
+									model.characterList)),
 							enemy: A2($elm_community$array_extra$Array$Extra$removeAt, index, model.enemy),
+							highlightedTableRow: 0,
 							showAttackModal: $rundis$elm_bootstrap$Bootstrap$Modal$hidden,
 							showDeathAlert: $rundis$elm_bootstrap$Bootstrap$Modal$shown
 						}),
@@ -8189,7 +8193,6 @@ var $author$project$Main$update = F2(
 				var _v3 = model.addCharacterIcon;
 				if ((_v3.$ === 'DrawIcon') && (_v3.a.$ === 'ObjectIcon')) {
 					var _v4 = _v3.a;
-					var i = _v4.a;
 					var x = _v4.b;
 					var y = _v4.c;
 					var t = _v4.d;
@@ -8290,9 +8293,6 @@ var $author$project$Main$update = F2(
 					switch (characterIcon.$) {
 						case 'PlayerIcon':
 							var i = characterIcon.a;
-							var x = characterIcon.b;
-							var y = characterIcon.c;
-							var n = characterIcon.d;
 							return _Utils_eq(
 								$elm$core$List$length(model.characterList),
 								$elm$core$List$length(
@@ -8316,9 +8316,6 @@ var $author$project$Main$update = F2(
 								$elm$core$Platform$Cmd$none);
 						case 'MonsterIcon':
 							var i = characterIcon.a;
-							var x = characterIcon.b;
-							var y = characterIcon.c;
-							var n = characterIcon.d;
 							return _Utils_eq(
 								$elm$core$List$length(model.characterList),
 								$elm$core$List$length(
@@ -8344,8 +8341,6 @@ var $author$project$Main$update = F2(
 							var i = characterIcon.a;
 							var x = characterIcon.b;
 							var y = characterIcon.c;
-							var t = characterIcon.d;
-							var c = characterIcon.e;
 							var ident = characterIcon.f;
 							return _Utils_Tuple2(
 								_Utils_update(
@@ -8578,12 +8573,6 @@ var $author$project$Main$update = F2(
 				var _v11 = model.addCharacterIcon;
 				if ((_v11.$ === 'DrawIcon') && (_v11.a.$ === 'ObjectIcon')) {
 					var _v12 = _v11.a;
-					var i = _v12.a;
-					var x = _v12.b;
-					var y = _v12.c;
-					var t = _v12.d;
-					var c = _v12.e;
-					var ident = _v12.f;
 					var _v13 = A3($simonh1000$elm_colorpicker$ColorPicker$update, cpMsg, model.colour, model.colorPicker);
 					var m = _v13.a;
 					var colour = _v13.b;
@@ -8620,11 +8609,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{
-							activeTooltip: name,
-							highlightedTableRow: id,
-							mouseInIcon: (!id) ? false : true
-						}),
+						{activeTooltip: name, highlightedTableRow: id, mouseInIcon: !(!id)}),
 					$elm$core$Platform$Cmd$none);
 			default:
 				var iconType = msg.a;

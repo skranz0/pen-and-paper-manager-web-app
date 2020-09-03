@@ -16,7 +16,6 @@ import Task
 import File.Select as Select
 import File
 import ColorPicker
-import Color
 
 --our Modules
 import DungeonMap exposing (dungeonMapView)
@@ -76,12 +75,13 @@ update msg model =
             )
 
         CharacterDeath index ->
-            (
-                { model | showDeathAlert = Modal.shown
-                , enemy = Array.removeAt index model.enemy
-                , showAttackModal = Modal.hidden
-                }
-                , Cmd.none
+            ( { model | showDeathAlert = Modal.shown
+                      , enemy = Array.removeAt index model.enemy
+                      , showAttackModal = Modal.hidden
+                      , characterList = generateIconIdents (List.filter (isNotId (index+1)) model.characterList)
+                      , highlightedTableRow = 0
+                      , activeTooltip = "" }
+            , Cmd.none
             )
 
         MyDrop1Msg state ->
@@ -106,7 +106,7 @@ update msg model =
 
         ChangeIcon id ->
             case model.addCharacterIcon of
-                DrawIcon (ObjectIcon i x y t c ident) ->
+                DrawIcon (ObjectIcon _ x y t c ident) ->
                     case id of
                         3 -> ( { model | addCharacterIcon = DrawIcon (ObjectIcon id x y t c ident)
                                        , radioCheckedID = id }
@@ -156,18 +156,18 @@ update msg model =
             case addCharacterIconMsg of
                 MouseClick characterIcon ->
                     case characterIcon of
-                        PlayerIcon i x y n ->
+                        PlayerIcon i _ _ _ ->
                             if List.length model.characterList == List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID noch nicht in Liste
                             then    ( { model | characterList = model.characterList ++ [ characterIcon ], addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
-                        MonsterIcon i x y n ->
+                        MonsterIcon i _ _ _ ->
                             if List.length model.characterList == List.length (List.filter (isNotId i) model.characterList)     --wenn character mit ID noch nicht in Liste
                             then    ( { model | characterList = model.characterList ++ [ characterIcon ], addCharacterIcon = DrawingInactive }, Cmd.none )
                             else    ( { model | addCharacterIcon = DrawingInactive }, Cmd.none )
 
-                        ObjectIcon i x y t c ident ->
-                            ( { model | objectIconList = (generateIconIdents (model.objectIconList ++ [ ObjectIcon i x y model.iconText (Just model.colour) ident ]))
+                        ObjectIcon i x y _ _ ident ->
+                            ( { model | objectIconList = generateIconIdents (model.objectIconList ++ [ ObjectIcon i x y model.iconText (Just model.colour) ident ])
                                       , addCharacterIcon = DrawingInactive
                                       , showObjectIconModal = Modal.hidden
                                       , iconText = ""
@@ -261,14 +261,15 @@ update msg model =
 
         ColorPickerMsg cpMsg ->
             case model.addCharacterIcon of
-                DrawIcon (ObjectIcon i x y t c ident) ->    let
-                                                                ( m, colour ) = ColorPicker.update cpMsg model.colour model.colorPicker
-                                                            in
-                                                            ( { model | colorPicker = m
-                                                                      , colour = colour |> Maybe.withDefault model.colour
-                                                              }
-                                                            , Cmd.none
-                                                            )
+                DrawIcon (ObjectIcon _ _ _ _ _ _) ->    
+                    let
+                        ( m, colour ) = ColorPicker.update cpMsg model.colour model.colorPicker
+                    in
+                        ( { model | colorPicker = m
+                                    , colour = colour |> Maybe.withDefault model.colour
+                            }
+                        , Cmd.none
+                        )
 
                 _ -> ( model, Cmd.none )
 
@@ -287,7 +288,7 @@ update msg model =
         HighlightTableRow id name ->
             ( { model | highlightedTableRow = id
                       , activeTooltip = name
-                      , mouseInIcon = (if id==0 then False else True) }
+                      , mouseInIcon = id /= 0 }
             , Cmd.none
             )
 
@@ -353,17 +354,6 @@ subscriptions model =
     Sub.batch
         [ Dropdown.subscriptions model.myDrop1State MyDrop1Msg ]
 
-giveDungeonMap_CharacterIds : List CharacterIcon -> List CharacterIcon
-giveDungeonMap_CharacterIds charList =
-    List.indexedMap putIdInCharIcon charList
-
-putIdInCharIcon : Int -> CharacterIcon -> CharacterIcon
-putIdInCharIcon id charIcon =
-    case charIcon of
-        PlayerIcon _ x y n -> PlayerIcon (id+1) x y n
-        MonsterIcon _ x y n -> MonsterIcon (id+1) x y n
-        ObjectIcon _ x y t c ident -> ObjectIcon (id+1) x y t c ident
-
 isNotId : Int -> CharacterIcon -> Bool
 isNotId id s =
     case s of
@@ -381,12 +371,12 @@ generateIconIdents list =
     List.indexedMap
         (\id char ->
             case char of
-                ObjectIcon typeID x y t c ident ->
+                ObjectIcon typeID x y t c _ ->
                     ObjectIcon typeID x y t c (id+1)
 
-                PlayerIcon ident x y name ->
+                PlayerIcon _ x y name ->
                     PlayerIcon (id+1) x y name
 
-                MonsterIcon ident x y name ->
+                MonsterIcon _ x y name ->
                     MonsterIcon (id+1) x y name
         ) list
