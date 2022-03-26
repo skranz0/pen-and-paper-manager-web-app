@@ -1,6 +1,6 @@
 # Pen and Paper Manager Web App
 
-[Hier geht es zur Demo!](https://skranz27.github.io/pen-and-paper-manager-web-app/)
+[Hier geht es zur Demo!](https://skranz0.github.io/pen-and-paper-manager-web-app/)
 
 ## Über Pen and Paper
 
